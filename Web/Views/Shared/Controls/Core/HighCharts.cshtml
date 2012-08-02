@@ -1,0 +1,26 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Models.Chart
+
+@{
+    Html.RegisterScript(Model.ScriptPath + "highcharts.js", true);
+    if (Model.Theme != Models.Chart.ChartTheme.none)
+    {
+        Html.RegisterScript(Model.ScriptPath + string.Format("themes/{0}.js", Model.Theme.ToString()), true);
+    }
+    Html.RegisterControlPresenter(Model, "videre.controls.chart", new Dictionary<string, object>()
+    {
+        {"seriesType", Model.Type.ToString()},
+        {"title", Model.Title},
+        {"subTitle", Model.SubTitle},
+        {"yAxis", Model.yAxis},
+        {"xAxis", Model.xAxis},
+        {"seriesData", Model.Data},
+        {"legend", Model.Legend},
+        {"toolTip", Model.ToolTip}
+    });
+}
+<div id="@Model.ClientId" class="@Model.Css" style="@Model.Style"></div>

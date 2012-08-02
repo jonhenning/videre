@@ -1,0 +1,36 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@using Models = Videre.Blog.Widgets.Models;
+@using Videre.Core.Services;
+@model CoreModels.Widget
+@{
+    var blog = Model.GetContent<Models.Blog>();
+    var totalTags = blog.Entries.SelectMany(t => t.Tags).Count();
+    var groupedTags = blog.Entries.SelectMany(e => e.Tags).GroupBy(t => t).Select(t => new { name = t.Key, count = t.Count() });
+        
+    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+        @{Html.RenderPartial("WidgetHeader", Model);}
+        <h4>@Model.GetText("Tags.Text", "Tags")</h4>
+    <ul class="unstyled">
+    @foreach (var tag in groupedTags.OrderBy(t => t.name))
+    {
+        <li style="float: left; margin-right: 5px;">
+            <a href="@Portal.ResolveCurrentUrl("")?tag=@tag.name" style="font-size: @GetTagSize(tag.count, totalTags)">
+                @tag.name
+            </a>
+        </li>   
+    }
+    </ul>
+</div>
+
+}
+
+@functions
+{
+    string GetTagSize(int tagCount, int totalTagCount)
+    {
+        return (10 + (int)(((decimal)tagCount / (decimal)totalTagCount) * 10)) + "px";
+    }
+}
+

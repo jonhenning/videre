@@ -1,0 +1,24 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@using Models = Videre.Core.Widgets.Models;
+@using Videre.Core.Services;
+@model CoreModels.Widget
+@{
+    var blog = Model.GetContent<Models.Blog>();
+    var tagCount = blog.Entries.SelectMany(e => e.Tags).GroupBy(t => t).Select(t => new { name = t.Key, count = t.Count() });
+        
+    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+        @{Html.RenderPartial("WidgetHeader", Model);}
+
+    <ul class="unstyled">
+    @foreach (var tag in tagCount)
+    {
+        <li>
+            @tag.name @tag.count
+        </li>   
+    }
+    </ul>
+</div>
+
+}

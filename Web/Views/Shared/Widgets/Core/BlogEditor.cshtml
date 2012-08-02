@@ -1,0 +1,63 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Models.WidgetEditor
+
+@{
+    Html.RegisterControlPresenter(Model, "videre.widgets.editor.blog");
+
+}
+
+<div id="@Model.GetId("Widget")">
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px;">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("BlogEditor.Text", "Blog Editor")
+        </div>
+        <div class="modal-body">
+            @{Html.RenderPartial("WidgetHeader", Model);}
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>
+                <li><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
+                    @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+                </div>
+                <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
+                    <div class="control-group">
+                        <label class="control-label">@Model.GetText("Name.Text", "Name")</label>
+                        <div class="controls">
+                            <select id="@Model.GetId("ddlName")" data-column="Id"></select>
+                            <button class="btn" type="button" id="@Model.GetId("btnNewBlog")"><i class="icon-plus"></i> @Model.GetPortalText("New.Text", "New")</button>
+                            <button class="btn" type="button" id="@Model.GetId("btnDeleteBlog")"><i class="icon-trash"></i> @Model.GetPortalText("Delete.Text", "Delete")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
+            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+        </div>
+    </div>
+
+    <div id="@Model.GetId("NewBlogDialog")" data-target="#@Model.GetId("NewBlogDialog")" class="modal fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("NewBlog.Text", "New Blog")
+        </div>
+        <div class="modal-body" style="padding: 5px;  ">
+            <div class="form-horizontal">
+                @Html.InputControlGroup(Model, "txtNewBlog", "BlogName.Text", "Blog Name")
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnOkNewBlog")">@Model.GetPortalText("Ok.Text", "Ok")</a>
+        </div>
+    </div>
+
+</div>
+

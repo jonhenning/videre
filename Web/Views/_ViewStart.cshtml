@@ -1,0 +1,59 @@
+﻿@using CodeEndeavors.Extensions;
+@using Videre.Core.Extensions;
+@using Videre.Core.Services;
+
+@{
+    
+    //Html.RegisterScript("~/Scripts/jquery-1.7.1.min.js", true);
+    //Html.RegisterScript("~/Scripts/jquery-ui-1.8.11.min.js", true);
+    
+    //Html.RegisterScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", true);
+    //Html.RegisterScript("https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js", true);
+    //Html.RegisterStylesheet("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/themes/base/jquery-ui.css", true);
+
+    Html.RegisterScript("~/Scripts/jquery-ui-1.8.18/js/jquery-1.7.1.min.js", true);
+    Html.RegisterScript("~/Scripts/jquery-ui-1.8.18/js/jquery-ui-1.8.18.custom.min.js", true);
+    Html.RegisterStylesheet("~/Scripts/jquery-ui-1.8.18/css/smoothness/jquery-ui-1.8.18.custom.css", true);
+
+    Html.RegisterScript("~/Scripts/jsrender.js", true);
+    
+    //todo: separate out to load on demand?
+    Html.RegisterScript("~/Scripts/jqBootstrapValidation.js", true);
+        
+    //Html.RegisterStylesheet("~/Content/site.css", true);
+    //Html.RegisterStylesheet("~/Content/themes/readymade/css/custom-theme/jquery-ui-1.8.13.custom.css", true);
+    //Html.RegisterStylesheet("~/Content/jquery-ui-bootstrap/css/custom-theme/jquery-ui-1.8.16.custom.css", true);
+    //Html.RegisterStylesheet("~/scripts/slickgrid/slick.grid.css", true);
+    
+    
+    //Html.RegisterStylesheet("~/Content/themes/readymade/css/all.css", true);
+    //Html.RegisterStylesheet("~/Content/themes/readymade/themes/orangebeam/orangebeam.css", true);
+    //Html.RegisterStylesheet("~/Content/themes/readymade/css/nav.css", true);
+    
+    //Html.RegisterStylesheet("~/Content/twitter-bootstrap/bootstrap.css", true);
+    //Html.RegisterScript("~/Content/twitter-bootstrap/js/bootstrap-dropdown.js", true);
+    //Html.RegisterStylesheet("~/Content/bootstrap/css/bootstrap.css", true);
+    //Html.RegisterScript("~/Content/bootstrap/js/bootstrap.js", true);
+
+    Html.RegisterStylesheet("~/scripts/bootstrap-2.0.4/css/bootstrap.css", true);
+    Html.RegisterScript("~/scripts/bootstrap-2.0.4/js/bootstrap.js", true);
+    
+    Html.RegisterStylesheet("~/Content/videre.css", true);
+
+    Html.RegisterTheme();
+    
+    //if (!string.IsNullOrEmpty(Portal.CurrentPortal.ThemeCss))
+    //{
+    //}
+    //todo:  logic to select a template here                
+        var template = ViewContext.ViewData.Model as Videre.Core.Models.PageTemplate;
+        if (template != null)
+        {
+            Layout = UI.GetLayoutPath(template.LayoutName);
+        }
+    //else 
+    //{
+    //    Layout = UI.GetDefaultLayoutPath();
+    //}
+   
+}

@@ -1,0 +1,83 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Models.Widget
+
+@{
+    Html.RegisterDataTableScript();
+    Html.RegisterScript("~/scripts/fileuploader.js", true);
+    var portal = Videre.Core.Services.Portal.CurrentPortal;
+    Html.RegisterControlPresenter(Model, "videre.widgets.admin.portal", new Dictionary<string, object>() {
+        { "data", portal }, 
+        { "installedThemes", Videre.Core.Services.UI.GetThemes() }, 
+        { "attributeDefs", Portal.AttributeDefinitions }}
+        );
+}
+
+<div id="@Model.GetId("Widget")">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+    
+    <fieldset>
+        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Portal Administration")</legend>
+
+        <p>@Html.Raw(Model.GetText("Instructions.Text", "Settings specific to the current portal can be configured here."))</p>
+
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#@Model.GetId("GeneralTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("General.Text", "General")</a>
+                        </li>
+                        <li>
+                            <a href="#@Model.GetId("ThemeTab")" data-toggle="tab"><i class="icon-picture"></i> @Model.GetText("Themes.Text", "Themes")</a>
+                        </li>
+@{
+                        foreach (var groupName in Portal.AttributeDefinitions.Keys.OrderBy(s => s))
+                        {
+                            var safeGroupName = groupName.Replace(" ", "-").Replace(".", "-");
+                            <li>
+                                <a href="#@Model.GetId("tab" + safeGroupName)" data-toggle="tab"><i class="icon-list-alt"></i> @groupName</a>
+                            </li>
+                        }
+}                   </ul>
+
+                    <div class="tab-content" style="min-height:  400px;">
+                        <div class="tab-pane active" id="@Model.GetId("GeneralTab")">
+                            <div class="form-horizontal">
+                                @Html.InputControlGroup(Model, "Name", "Name.Text", "Name", "Name", readOnly: true)
+                                @Html.InputControlGroup(Model, "Title", "Title.Text", "Title", "Title")
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="@Model.GetId("ThemeTab")">
+                            @{Html.RenderPartial("Widgets/Core/Admin/Theme", Model);}
+                        </div>
+@{
+                foreach (var groupName in Portal.AttributeDefinitions.Keys)
+                    {
+                        var safeGroupName = groupName.Replace(" ", "-").Replace(".", "-");
+                        <div class="tab-pane" id="@Model.GetId("tab" + safeGroupName)">
+                            <div class="form-horizontal" id="@Model.GetId("AttributeList-" + safeGroupName)"></div>
+                            <script id="@Model.GetId("AttributeListTemplate-" + safeGroupName)" type="text/html">
+                                <div class="control-group">
+                                    <label class="control-label"><#=LabelText#></label>
+                                    <div class="controls" data-type="input" data-group="@groupName"></div>
+                                </div>
+                            </script>
+                        </div>
+                    }
+}
+                    </div>
+                    <div class="videre actions form-actions">
+                        <a class="btn" href="@Url.Content("~/core/Portal/ExportPortal")"><i class="icon-file"></i> @Model.GetPortalText("ExportPortal.Text", "Export Portal")</a>
+                        <a class="btn" id="@Model.GetId("btnImport")"><i class="icon-gift"></i> @Model.GetPortalText("ImportPackage.Text", "Import Package")</a>
+                        <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>

@@ -1,0 +1,33 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@using Models = Videre.Core.Widgets.Models;
+@using Videre.Core.Services;
+@model CoreModels.Widget
+@{
+    Models.Carousel carousel = Model.GetContent<Models.Carousel>();
+    Html.RegisterDocumentReadyScript("carousel" + Model.Id, ";$('#" + Model.GetId("Carousel") + "').carousel({interval: 5000});", true);
+}
+
+<div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+    <div id="@Model.GetId("Carousel")" class="carousel slide" style="@carousel.Style">
+        <!-- Carousel items -->
+        <div class="carousel-inner">
+            @{
+                for (var i = 0; i < carousel.Items.Count; i++)
+                {
+                    var item = carousel.Items[i];
+            <div class="item @(i == 0 ? "active" : "")">
+                <img src="@item.ImageUrl" alt="" />
+                <div class="carousel-caption">
+                    <p>@Html.Raw(item.Text)</p>
+                </div>
+            </div>
+                }
+            }
+        </div>
+        <!-- Carousel nav -->
+        <a class="carousel-control left" href="#@Model.GetId("Carousel")" data-slide="prev">&lsaquo;</a> 
+        <a class="carousel-control right" href="#@Model.GetId("Carousel")" data-slide="next">&rsaquo;</a>
+    </div>
+</div>

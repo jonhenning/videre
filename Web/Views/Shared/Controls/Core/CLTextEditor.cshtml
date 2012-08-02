@@ -1,0 +1,14 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Models.TextEditor
+
+@{
+    
+    Html.RegisterScript(Model.ScriptPath + "CLEditor1_3_0/jquery.cleditor.min.js", true);
+    Html.RegisterStylesheet(Model.ScriptPath + "CLEditor1_3_0/jquery.cleditor.css", true);
+    Html.RegisterControlPresenter(Model, "videre.controls.texteditor.cl");
+}
+<textarea id="@Model.ClientId" data-column="@Model.DataColumn"></textarea>

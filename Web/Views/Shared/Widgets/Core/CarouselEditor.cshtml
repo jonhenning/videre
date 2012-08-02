@@ -1,0 +1,68 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Models.WidgetEditor
+
+@{
+    Html.RegisterControlPresenter(Model, "videre.widgets.editor.carousel");
+}
+
+<div id="@Model.GetId("Widget")">
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px; display: none;">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("CarouselEditor.Text", "Carousel Editor")
+        </div>
+        <div class="modal-body">
+            @{Html.RenderPartial("WidgetHeader", Model);}
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>
+                <li><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
+                <li><a href="#@Model.GetId("CarouselTab")" data-toggle="tab">@Model.GetText("Carousel.Text", "Carousel")</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
+                    @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+                </div>
+                <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
+                    @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name", required: true)
+                    @Html.InputControlGroup(Model, "txtStyle", "Style.Text", "Style", "Style")
+                </div>
+                <div class="tab-pane" id="@Model.GetId("CarouselTab")">
+                    <div class="row">
+                        <div class="span3">
+                            <div class="btn-toolbar" id="@Model.GetId("ActionButtons")" style="margin-top:0; margin-bottom:0;">
+                                <div class="btn-group">
+                                    <a class="btn btn-mini" data-action="add"><i class="icon-plus"></i></a>
+                                    <a class="btn btn-mini" data-action="remove"><i class="icon-trash"></i></a>
+                                    <a class="btn btn-mini" data-action="up"><i class="icon-arrow-up"></i></a>
+                                    <a class="btn btn-mini" data-action="down"><i class="icon-arrow-down"></i></a>
+                                </div>
+                            </div>
+                            <div style="height: 300px; overflow: auto; padding: 2px; margin-top:0; margin-bottom:0;" class="well">
+                                <ul id="@Model.GetId("CarouselList")" class="nav nav-list"></ul>
+                            </div>
+                        </div>
+                        <div class="span5 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none;">
+                            @*@Html.DropDownControlGroup(Model, "ddlParent", "Parent.Text", "Parent", "parentId", "", new List<SelectListItem>())*@
+                            @Html.InputFileBrowserControlGroup(Model, "txtImageUrl", "ImageUrl.Text", "Image Url", "ImageUrl", "span2", required: true)
+                            @Html.TextEditorControl(Model, "txtItemText", "Text", required: true, labelText: Model.GetText("SlideText.Text", "Slide Text"))
+                            <div class="form-actions">
+                                <a class="btn" id="@Model.GetId("btnApply")">@Model.GetPortalText("Apply.Text", "Apply")</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
+            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+        </div>
+    </div>
+
+
+</div>
+

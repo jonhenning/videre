@@ -1,0 +1,71 @@
+﻿@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@model CoreModels.View
+@{
+    //Html.RegisterStylesheet(string.Format("~/Content/Layouts/General.css"), true);
+
+    Html.RegisterControlPresenter(Model, "videre.widgets.installer");
+    
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Videre")</title>
+
+    @(Html.RenderDeferredWidgets())
+    @(new HtmlString(Html.RenderScripts()))
+    @(new HtmlString(Html.RenderStylesheets()))
+</head>
+<body style="padding-top: 40px;">
+    <div class="container template-header shaded">
+        <h3>Videre Installation</h3>
+    </div>
+    <div class="container">
+        <div class="content" style="min-height: 500px;" id="@Model.GetId("Widget")">
+            @{Html.RenderPartial("WidgetHeader", Model);}
+
+            <form class="form-horizontal">
+            <fieldset>
+                <legend>Portal</legend>
+                <div class="control-group">
+                    <label class="control-label" for="txtUserName">Theme:</label>
+                    <div class="controls">
+                        <select id="ddlTheme">
+                            <option value="">Default</option>
+                            @foreach (var theme in Videre.Core.Services.UI.GetThemes())
+                            {
+                                <option value="@theme.Name">@theme.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="optionsCheckboxList">Packages</label>
+                    <div class="controls" id="@Model.GetId("Packages")">
+                        @foreach (var package in Videre.Core.Services.Update.GetPackages())
+                        {
+                            <label class="checkbox" title="@package.Description">
+                                <input type="checkbox" value="@package.Name" checked="checked">
+                                @package.Name
+                            </label>
+                        }
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset id="@Model.GetId("AdminUser")">
+                <legend>Admin User</legend>
+                @Html.InputControlGroup(Model, "txtUserName", "UserName.Text", "UserName", new Dictionary<string, string>() { { "column", "Name" } }, true)
+                @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", new Dictionary<string, string>() { { "column", "Email" } }, true, inputType: "email")
+                @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", new Dictionary<string, string>() { { "column", "Password" } }, true, inputType: "password")
+                @Html.InputControlGroup(Model, "txtPassword2", "ConfirmPassword.Text", "Confirm Password", new Dictionary<string, string>() { { "validation-matches-match", Model.GetId("txtPassword") }, {"validation-matches-message", string.Format(Model.GetPortalText("MustMatch.Text", "Must match {0} entered above"), "password")} }, false, inputType: "password")
+            </fieldset>
+            </form>
+        </div>
+        <div class="videre actions form-actions">
+            <a class="btn btn-primary" id="@Model.GetId("btnInstall")">Install</a>
+        </div>
+
+    </div>
+</body>

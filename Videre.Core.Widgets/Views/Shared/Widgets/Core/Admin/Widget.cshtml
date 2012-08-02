@@ -1,0 +1,23 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Widget
+
+@{
+}
+
+<div id="@Model.GetId("Widget")">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+    
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#@Model.GetId("WidgetManifestTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("Manifests.Text", "Manifests")</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetManifestTab")">
+            @Html.RenderWidget("Core/Admin/WidgetManifest")
+        </div>
+    </div>
+</div>
+

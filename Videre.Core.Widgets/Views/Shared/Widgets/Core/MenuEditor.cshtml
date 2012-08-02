@@ -1,0 +1,100 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Models.WidgetEditor
+
+@{
+    //var menus = Videre.Core.Services.Menu.Get();
+    Html.RegisterControlPresenter(Model, "videre.widgets.editor.menu");//, new Dictionary<string, object>() { { "menus", menus } });
+}
+
+<div id="@Model.GetId("Widget")">
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px; margin-left: -350px; margin-top: -300px;">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("MenuEditor.Text", "Menu Editor")
+        </div>
+        <div class="modal-body">
+            @{Html.RenderPartial("WidgetHeader", Model);}
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>
+                <li><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
+                <li><a href="#@Model.GetId("MenuTab")" data-toggle="tab">@Model.GetText("Menu.Text", "Menu")</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
+                    @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+                </div>
+                <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
+                    @*@Html.DropDownControlGroup(Model, "ddlMenuType", "MenuType.Text", "Menu Type", "MenuType", "", Enum.GetNames(typeof(Models.Menu.MenuType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.Menu.MenuType>()).ToString(), Text = t }))*@
+                    <div class="control-group">
+                        <label class="control-label">@Model.GetText("Name.Text", "Name")</label>
+                        <div class="controls">
+                            <select id="@Model.GetId("ddlName")" data-column="Id"></select>
+                            <button class="btn" type="button" id="@Model.GetId("btnNewMenu")"><i class="icon-plus"></i> @Model.GetPortalText("New.Text", "New")</button>
+                            <button class="btn" type="button" id="@Model.GetId("btnDeleteMenu")"><i class="icon-trash"></i> @Model.GetPortalText("Delete.Text", "Delete")</button>
+                        </div>
+                    </div>
+                    @*@Html.DropDownControlGroup(Model, "ddlName", "Name.Text", "Name", "Name", new List<SelectListItem>())*@
+                    
+                    @Html.InputControlGroup(Model, "txtText", "Text.Text", "Text", "Text")
+                    @Html.InputControlGroup(Model, "txtCss", "Css.Text", "Css", "Css")
+                    @Html.DropDownControlGroup(Model, "ddlShowSearch", "ShowSearch.Text", "Show Search", "ShowSearch", new List<SelectListItem>() {{new SelectListItem() { Value = "false", Text="No"}}, {new SelectListItem() {Value = "true", Text = "Yes"} } })
+                </div>
+                <div class="tab-pane" id="@Model.GetId("MenuTab")">
+                    <div class="row">
+                        <div class="span3">
+                            <div class="btn-toolbar" id="@Model.GetId("ActionButtons")" style="margin-top:0; margin-bottom:0;">
+                                <div class="btn-group">
+                                    <a class="btn btn-mini" data-action="add"><i class="icon-plus"></i></a>
+                                    <a class="btn btn-mini" data-action="remove"><i class="icon-trash"></i></a>
+                                    <a class="btn btn-mini" data-action="up"><i class="icon-arrow-up"></i></a>
+                                    <a class="btn btn-mini" data-action="down"><i class="icon-arrow-down"></i></a>
+                                    <a class="btn btn-mini" data-action="left"><i class="icon-arrow-left"></i></a>
+                                    <a class="btn btn-mini" data-action="right"><i class="icon-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            <div style="height: 270px; overflow: auto; padding: 2px; margin-top:0; margin-bottom:0;" class="well">
+                                <ul id="@Model.GetId("MenuList")" class="nav nav-list"></ul>
+                            </div>
+                        </div>
+                        <div class="span5 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none; margin-top: 30px;">
+                            @*@Html.DropDownControlGroup(Model, "ddlParent", "Parent.Text", "Parent", "parentId", "", new List<SelectListItem>())*@
+                            @Html.InputControlGroup(Model, "txtItemText", "Text.Text", "Text", "Text", required: true)
+                            @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url")
+                            @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles")
+                            @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")
+
+                            <div class="form-actions">
+                                <a class="btn" id="@Model.GetId("btnApply")">@Model.GetPortalText("Apply.Text", "Apply")</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
+            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+        </div>
+    </div>
+
+    <div id="@Model.GetId("NewMenuDialog")" data-target="#@Model.GetId("NewMenuDialog")" class="modal fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("NewMenu.Text", "New Menu")
+        </div>
+        <div class="modal-body" style="padding: 5px;  ">
+            <div class="form-horizontal">
+                @Html.InputControlGroup(Model, "txtNewMenu", "MenuName.Text", "Menu Name")
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnOkNewMenu")">@Model.GetPortalText("Ok.Text", "Ok")</a>
+        </div>
+    </div>
+
+</div>
+

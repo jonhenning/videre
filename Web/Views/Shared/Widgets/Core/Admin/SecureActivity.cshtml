@@ -1,0 +1,77 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Models.Widget
+
+@{
+    Html.RegisterDataTableScript();
+    
+    Html.RegisterControlPresenter(Model, "videre.widgets.admin.secureactivity", new Dictionary<string, object>() {
+        {"data", Videre.Core.Services.Security.GetSecureActivities() },
+        {"roleData", Account.GetRoles() }});
+}
+
+<div id="@Model.GetId("Widget")">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+    
+    <fieldset>
+        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Secure Activity Administration")</legend>
+        
+        <p>@Html.Raw(Model.GetText("Instructions.Text", "Secure activities allow the user to secure the AJAX calls exposed by the widget controllers.  The author of the widget decides how to group a set of Activities requiring a given role."))</p>
+
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                        <thead>
+                            <tr>
+                                <th style="width: 31px"></th>
+                                <th>@Model.GetText("Area.Text", "Area")</th>
+                                <th>@Model.GetText("Name.Text", "Name")</th>
+                                <th>@Model.GetText("Roles.Text", "Roles")</th>
+                            </tr>
+                        </thead>
+                        <tbody id="@Model.GetId("ItemList")"></tbody>
+                    </table>
+                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                        <tr>
+                            <td>
+                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="edit"><i class="icon-pencil"></i></a>
+                            </td>
+                            <td>{{:Area}}</td>
+                            <td>{{:Name}}</td>
+                            <td>
+                                {{for Roles}}
+                                {{:#ctx.roleDataDict[#data].Name}}
+                                {{/for}}
+                            </td>
+                        </tr>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("EditDialogText.Text", "Secure Activity Permissions")
+        </div>
+        <div class="modal-body">
+            @{Html.RenderPartial("WidgetHeader", Model);}
+
+            <div class="form-horizontal">
+                @Html.InputControlGroup(Model, "txtArea", "Area.Text", "Area", "Area", readOnly: true)
+                @Html.InputControlGroup(Model, "txtActivity", "Activity.Text", "Name", "Name", readOnly: true)
+                @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles")
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
+            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,58 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@using Models = Videre.Core.Widgets.Models;
+@using Videre.Core.Services;
+@model CoreModels.Widget
+@{
+    
+    var entryName = Portal.GetCurrentUrlSegment("entry", "");
+    var canEdit = Portal.IsActivityAuthorized("Blog", "Administration"); ;
+
+    var blog = Model.GetContent<Models.Blog>();
+    var entry = blog.Entries.Where(e => e.Url.Equals(entryName, StringComparison.InvariantCultureIgnoreCase) && (canEdit || e.PostDate.HasValue)).FirstOrDefault();
+
+    if (canEdit && blog.Id != null)  
+    {
+        Html.RegisterControlPresenter(Model, "videre.widgets.blog", new Dictionary<string,object>() { 
+            {"blogUrl", entry == null ? Portal.CurrentUrl : Portal.CurrentUrl.Replace(Portal.GetCurrentUrlSegment("entry", "", false), "")}, //todo: a bit hacky
+            {"blogId", blog.Id },
+            {"entryId", entry != null ? entry.Id : null },
+        });
+    }        
+        
+<div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+@if (canEdit)  
+{
+    ViewBag.entry = entry;
+    Html.RenderPartial("Widgets/Core/BlogAdminMarkup", Model);
+}
+        <h4>@blog.Name</h4>
+
+    
+@if (entry == null)
+{
+    var i = 0;
+    <ul class="unstyled">
+    @foreach (var item in blog.Entries.Where(e => canEdit || e.PostDate.HasValue).OrderByDescending(e => e.PostDate))
+    {
+        i++;
+        <li style="padding: 10px;" class="@(i % 2 == 0 ? "" : "")">
+            <h3><a href="@Portal.ResolveCurrentUrl(item.Url)">@item.Title</a></h3>
+            <div>@Html.Raw(item.Summary)</div>
+            <hr />
+        </li>   
+    }
+    </ul>
+}
+else 
+{
+    <h3>@entry.Title</h3>
+    <p>@Html.Raw(entry.Body)</p>
+    <p>@(entry.PostDate.HasValue ? entry.PostDate.Value.ToLocalTime().ToString("M/d/yyyy h:mm tt") : "")</p>
+}
+</div>
+
+
+}

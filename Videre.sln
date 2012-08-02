@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Videre.Core", "Videre.Core\Videre.Core.csproj", "{BC045A52-AEF1-49CA-9021-255C82F7E7C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Videre.Core.Layouts", "Videre.Core.Layouts\Videre.Core.Layouts.csproj", "{F68C280C-8313-406D-88DC-CD5F27A5520E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{8CCC87E7-C8F9-4412-BAAB-716D0E8019A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Videre.Core.Widgets", "Videre.Core.Widgets\Videre.Core.Widgets.csproj", "{3966477C-8503-40F9-852E-9908C2890366}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3966477C-8503-40F9-852E-9908C2890366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3966477C-8503-40F9-852E-9908C2890366}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3966477C-8503-40F9-852E-9908C2890366}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3966477C-8503-40F9-852E-9908C2890366}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CCC87E7-C8F9-4412-BAAB-716D0E8019A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CCC87E7-C8F9-4412-BAAB-716D0E8019A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CCC87E7-C8F9-4412-BAAB-716D0E8019A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CCC87E7-C8F9-4412-BAAB-716D0E8019A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC045A52-AEF1-49CA-9021-255C82F7E7C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC045A52-AEF1-49CA-9021-255C82F7E7C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC045A52-AEF1-49CA-9021-255C82F7E7C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC045A52-AEF1-49CA-9021-255C82F7E7C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F68C280C-8313-406D-88DC-CD5F27A5520E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F68C280C-8313-406D-88DC-CD5F27A5520E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F68C280C-8313-406D-88DC-CD5F27A5520E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F68C280C-8313-406D-88DC-CD5F27A5520E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,42 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Videre.Core.Models;
+@using System.Web.Mvc.Html;
+
+@model Widget
+
+@{
+    var props = new Dictionary<String, Object>();
+    if (!string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]))
+    {
+        props["returnUrl"] = Request.QueryString["ReturnUrl"];
+    }
+    else
+    {
+        props["returnUrl"] = VirtualPathUtility.ToAbsolute("~/");
+    }
+    
+    Html.RegisterControlPresenter(Model, "videre.widgets.account.logon", props);
+
+}
+
+<div id="@Model.GetId("Widget")">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+    <fieldset>
+        <legend class="videre section-header">@Model.GetText("Login.Text", "Log On")</legend>
+        <div class="container">
+            <div class="row">
+                <div class="span4">
+                    <div class="form-horizontal">
+                        @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "", "span2")
+                        @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", "", "span2", "password")
+                    </div>
+                    <div class="videre actions form-actions">
+                        <a class="btn btn-primary" id="@Model.GetId("btnLogon")">@Model.GetText("Logon.Text", "Log On")</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+

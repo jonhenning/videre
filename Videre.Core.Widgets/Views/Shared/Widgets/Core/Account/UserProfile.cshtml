@@ -1,0 +1,38 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Widget
+
+@{
+    
+    Html.RegisterControlPresenter(Model, "videre.widgets.account.userprofile", new Dictionary<string, object>() {{"data", Account.GetUserProfile() }});
+
+}
+
+<div id="@Model.GetId("Widget")">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+    
+    <fieldset>
+        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "User Profile")</legend>
+
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <div class="form-horizontal">
+                        @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
+                        @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", "Email")
+                        @Html.InputControlGroup(Model, "txtLocale", "Locale.Text", "Locale", "Locale")
+                        @Html.InputControlGroup(Model, "txtPassword1", "ChangePassword.Text", "Change Password", "Password1", "", "password")
+                        @Html.InputControlGroup(Model, "txtPassword2", "ConfirmPassword.Text", "Confirm Password", "Password2", "", "password")
+                    </div>
+                    <div class="videre actions form-actions">
+                        <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetText("Save.Text", "Save")</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+

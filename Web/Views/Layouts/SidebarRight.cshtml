@@ -1,0 +1,46 @@
+﻿@using Videre.Core.Extensions;
+@model Videre.Core.Models.Template
+
+@{
+    Html.RegisterStylesheet(string.Format("~/Content/Layouts/SidebarRight.css"), true);
+}
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Videre")</title>
+        @(new HtmlString(Html.RenderScripts()))
+        @(new HtmlString(Html.RenderStylesheets()))
+
+    </head>
+    <body style="padding-top: 40px;">
+        <div class="container template-header shaded">
+            <h3>@(this.Model != null ? this.Model.Title : "Videre")</h3>
+        </div>
+		<div class="container">			
+			<div class="content" style="min-height: 500px;">	
+				@RenderBody()
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <div>
+                            @Html.RenderWidgets(this.Model, "Main")
+                        </div>
+                        <div>
+                            @Html.RenderWidgets(this.Model, "Sidebar")
+                        </div>
+                    </div>
+                </div>
+			</div> 
+	
+            <footer>		
+	            <div class="content well">
+                    @Html.RenderWidgets(this.Model, "Footer")
+	            </div> 
+            <footer>
+        </div>         
+        @(Html.RenderDeferredWidgets())           
+        @(new HtmlString(Html.RenderScripts()))
+        @(new HtmlString(Html.RenderStylesheets()))
+        
+    </body>
+</html>

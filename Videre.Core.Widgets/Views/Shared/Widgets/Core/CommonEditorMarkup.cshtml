@@ -1,0 +1,23 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model WidgetEditor
+
+<div id="@Model.GetId("CommonProperties")">
+    @Html.InputControlGroup(Model, "txtCommonCss", "Css.Text", "Css", "Css", "span4")
+    @Html.InputControlGroup(Model, "txtCommonStyle", "Style.Text", "Style", "Style", "span4")
+    @Html.RoleControlGroup(Model, "ddlCommonRoles", "Roles.Text", "Roles", "Roles", inputCss: "span4")
+    @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")
+
+    <div id="@Model.GetId("AttributeList")" style="display: none;" class="form-horizontal">
+    </div>
+    <script id="@Model.GetId("AttributeListTemplate")" type="text/html">
+        <div class="control-group">
+            <label class="control-label"><#=LabelText#></label>
+            <div class="controls" data-type="input"></div>
+        </div>
+    </script>
+</div>
+

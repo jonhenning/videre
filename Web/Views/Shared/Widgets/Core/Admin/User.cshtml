@@ -1,0 +1,82 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Models.Widget
+
+@{
+    Html.RegisterDataTableScript();
+    
+    Html.RegisterControlPresenter(Model, "videre.widgets.admin.user", new Dictionary<string, object>() {{ "data", Videre.Core.Services.Account.GetUsers() }});
+}
+
+<div id="@Model.GetId("Widget")">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+    
+    <fieldset>
+        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "User Administration")</legend>
+
+        <p>@Html.Raw(Model.GetText("Instructions.Text", "User administration can be performed here.  This widget is intended for use by admins only."))</p>
+
+        <div class="container">
+            <div class="row">
+                <div class="btn-toolbar span12">
+                    <div class="btn-group">
+                        <a class="btn btn-small" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                        <thead>
+                            <tr>
+                                <th style="width: 62px"></th>
+                                <th>@Model.GetText("Name.Text", "Name")</th>
+                                <th>@Model.GetText("Email.Text", "Email")</th>
+                                <th>@Model.GetText("Locale.Text", "Locale")</th>
+                            </tr>
+                        </thead>
+                        <tbody id="@Model.GetId("ItemList")"></tbody>
+                    </table>
+                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                        <tr>
+                            <td>
+                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="edit"><i class="icon-pencil"></i></a>
+                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete"><i class="icon-trash"></i></a>
+                            </td>
+                            <td>{{:Name}}</td>
+                            <td>{{:Email}}</td>
+                            <td>{{:Locale}}</td>
+                        </tr>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("EditDialogText.Text", "Edit User")
+        </div>
+        <div class="modal-body">
+            @{Html.RenderPartial("WidgetHeader", Model);}
+            <div class="form-horizontal">
+                @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
+                @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", "Email")
+                @Html.InputControlGroup(Model, "txtLocale", "Locale.Text", "Locale", "Locale")
+                @Html.InputControlGroup(Model, "txtPassword", "NewPassword.Text", "New Password", "Password", "", "password")
+                @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles")
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
+            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+        </div>
+    </div>
+
+
+</div>
+

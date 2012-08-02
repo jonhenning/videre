@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT (unless using VisualStudio 2012 :)! -->
+    <PropertyGroup>
+        <Name>Videre.Core.Layouts</Name>
+        <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+        <RedistDir>$(RootDir)\redist</RedistDir>
+        <DeployDir>$(RootDir)\Web</DeployDir>
+        <CommonLibDir>$(RootDir)\lib</CommonLibDir>
+        <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
+    </PropertyGroup>
+    <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets')"/>
+
+    <Target Name="AfterBuild">
+        <CallTarget Targets="CreatePackage" />
+        <CallTarget Targets="Deploy" />
+    </Target>
+
+    <Target Name="CreatePackage">
+        <!--DependsOnTargets="MergeDlls">-->
+        <MakeDir Directories="$(RedistDir)"/>
+        <CreateItem Include="$(MSBuildProjectDirectory)\**\*.js;
+                $(MSBuildProjectDirectory)\**\*.css;
+                $(MSBuildProjectDirectory)\**\*.cshtml;
+                $(MSBuildProjectDirectory)\**\*.manifest;
+                ">
+            <Output TaskParameter="Include" ItemName="Widgets" />
+        </CreateItem>
+        <Zip Files="@(Widgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(Name).zip" />
+    </Target>
+
+    <Target Name="Deploy">
+        <MakeDir Directories="$(DeployDir)\_updates"/>
+        <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(DeployDir)\_updates" />
+        <MakeDir Directories="$(PackageDir)\_packages"/>
+        <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(PackageDir)\_packages" />
+    </Target>
+
+</Project>

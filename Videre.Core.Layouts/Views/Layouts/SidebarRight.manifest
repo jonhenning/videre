@@ -1,0 +1,8 @@
+﻿{
+	Name: "SidebarRight",
+	Panes: 
+	[
+		[ {Name: "Main", DesignerCss: 'span4', DesignerStyle: 'height: 300px;' }, {Name: "Sidebar", DesignerCss: 'span2', DesignerStyle: 'height: 300px;' } ], 
+		[ {Name: "Footer", DesignerStyle: "min-height: 50px", DesignerCss: 'span6'} ]
+	]
+}

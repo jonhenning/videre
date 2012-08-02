@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BC045A52-AEF1-49CA-9021-255C82F7E7C7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Videre.Core</RootNamespace>
+    <AssemblyName>Videre.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CodeEndeavors.Extensions">
+      <HintPath>..\lib\CodeEndeavors.ResourceManager\CodeEndeavors.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeEndeavors.ResourceManager">
+      <HintPath>..\lib\CodeEndeavors.ResourceManager\CodeEndeavors.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\lib\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.0.8.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\CodeEndeavors.ResourceManager.File\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\lib\CodeEndeavors.ResourceManager\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionFilters\ETagAttribute.cs" />
+    <Compile Include="ActionResults\AtomResult.cs" />
+    <Compile Include="ActionResults\JsonNetResult.cs" />
+    <Compile Include="ActionResults\JsonResult.cs" />
+    <Compile Include="ActionResults\RssResult.cs" />
+    <Compile Include="Binders\DecimalModelBinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binders\EnumModelBinder.cs" />
+    <Compile Include="Binders\DefaultDictionaryBinder.cs" />
+    <Compile Include="Binders\DictionaryModelBinder.cs" />
+    <Compile Include="Binders\JsonNetModelBinder.cs" />
+    <Compile Include="Extensions\PortalExtensions.cs" />
+    <Compile Include="ContentProviders\IWidgetContentProvider.cs" />
+    <Compile Include="Models\Chart.cs" />
+    <Compile Include="Models\AttributeDefinition.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CommentContainer.cs" />
+    <Compile Include="Models\CommentControl.cs" />
+    <Compile Include="Models\View.cs" />
+    <Compile Include="Models\Package.cs" />
+    <Compile Include="Models\IWidgetRegistration.cs" />
+    <Compile Include="Models\ReferenceFile.cs" />
+    <Compile Include="Models\Theme.cs" />
+    <Compile Include="Models\RouteSegment.cs" />
+    <Compile Include="Models\SearchResult.cs" />
+    <Compile Include="Models\SearchProvider.cs" />
+    <Compile Include="Models\PortalExport.cs" />
+    <Compile Include="Models\IManifest.cs" />
+    <Compile Include="Models\LayoutPane.cs" />
+    <Compile Include="Models\SearchDocument.cs" />
+    <Compile Include="Models\TextEditor.cs" />
+    <Compile Include="Models\UserProfile.cs" />
+    <Compile Include="Models\SecureActivity.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\IClientControl.cs" />
+    <Compile Include="ContentProviders\LocalizationContentProvider.cs" />
+    <Compile Include="Models\Menu.cs" />
+    <Compile Include="Models\PageTemplate.cs" />
+    <Compile Include="Models\WidgetEditor.cs" />
+    <Compile Include="Models\Layout.cs" />
+    <Compile Include="Models\File.cs" />
+    <Compile Include="Models\Localization.cs" />
+    <Compile Include="Models\Portal.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\LayoutTemplate.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Widget.cs" />
+    <Compile Include="Extensions\HtmlExtensions.cs" />
+    <Compile Include="Models\WidgetManifest.cs" />
+    <Compile Include="Services\Account.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\API.cs" />
+    <Compile Include="Services\Comment.cs" />
+    <Compile Include="Services\Logging.cs" />
+    <Compile Include="Services\Security.cs" />
+    <Compile Include="Services\UI.cs" />
+    <Compile Include="Services\RouteParser.cs" />
+    <Compile Include="Services\Search.cs" />
+    <Compile Include="Services\DefaultAccount.cs" />
+    <Compile Include="Services\IAccountService.cs" />
+    <Compile Include="Services\ISearchProvider.cs" />
+    <Compile Include="Services\Menu.cs" />
+    <Compile Include="Services\File.cs" />
+    <Compile Include="Services\Update.cs" />
+    <Compile Include="Services\Localization.cs" />
+    <Compile Include="Services\Repository.cs" />
+    <Compile Include="Services\Portal.cs" />
+    <Compile Include="Services\Validation.cs" />
+    <Compile Include="Web.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="build.targets">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\build.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

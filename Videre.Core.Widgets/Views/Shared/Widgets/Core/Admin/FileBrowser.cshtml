@@ -1,0 +1,99 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Services = Videre.Core.Services;
+@model Models.Widget
+
+@{
+    //Html.RegisterDataTableScript();
+    //Html.RegisterTreeScript();
+    var editorData = new Dictionary<string, object>() { };
+    var isModal = true;
+    if (!string.IsNullOrEmpty(Request.QueryString["CKEditor"]))
+    {
+        isModal = false;
+        editorData["CKEditor"] = Request.QueryString["CKEditor"];
+        editorData["CKEditorFuncNum"] = Request.QueryString["CKEditorFuncNum"];
+        editorData["langCode"] = Request.QueryString["langCode"];
+    }
+    var mimeType = Request.QueryString["MimeType"] ?? Model.GetAttribute("MimeType", "");
+    
+    Html.RegisterControlPresenter(Model, "videre.widgets.admin.filebrowser", new Dictionary<string,object>() {
+        {"data", Services.File.GetByMimeType(mimeType)},
+        {"editorData", editorData},
+        {"filePath", Url.Content("~/Core/f/")},
+        {"mimeType", mimeType},
+        {"isModal", isModal}
+    });
+}
+
+<div id="@Model.GetId("Widget")">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+
+    @{if (isModal)
+      { <text>
+    <div id="@Model.GetId("Dialog")" class="modal fade" style="width: 700px; display: none;">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("BrowseImages.Text", "Browse Images")
+        </div>
+        <div class="modal-body">
+        </text>
+     }}
+    
+            <div class="container">
+                <div class="row">
+                    <div class="span12">
+                        <ul class="breadcrumb" id="@Model.GetId("BreadcrumbList")">
+                        </ul>
+                        <script id="@Model.GetId("BreadcrumbListTemplate")" type="text/html">
+                            <li class="{{:active ? 'active' : ''}}">
+                                {{if !active}}
+                                    <a data-path="{{:path}}" data-action="navigate">{{:name}}</a>
+                                    <span class="divider">/</span>
+                                {{/if}}
+                                {{if active}}
+                                    {{:name}} 
+                                {{/if}}
+                            </li>
+                        </script>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span12">
+                        <ul class="thumbnails" id="@Model.GetId("ImageList")">
+                        </ul>
+                        <script id="@Model.GetId("ImageListTemplate")" type="text/html">
+                            <li class="span3">
+                                    {{if !isFolder}}
+                                        <a class="thumbnail" data-id="{{:Id}}" data-action="select">
+                                            <img src="@Url.Content("~/Core/f/"){{:Url}}" />
+                                        </a>
+                                    {{/if}}
+                                    {{if isFolder}}
+                                        <a class="thumbnail" data-path="{{:path}}" data-action="navigate">
+                                            <img src="@Url.Content("~/Content/Images/folder.png")" />
+                                            <p>
+                                            {{:name}}
+                                            </p>
+                                        </a>
+                                    {{/if}}
+                            </li>
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+    @{if (isModal)
+      { 
+@:        </div>
+@:        <div class="modal-footer">
+@*@:            <a class="btn btn-primary" id="@Model.GetId("btnOkBrowseImage")">@Model.GetText("Ok.Text", "Ok")</a>*@
+@:            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+@:        </div>
+@:    </div>
+      }
+      }
+</div>
+
