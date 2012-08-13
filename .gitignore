@@ -10,7 +10,8 @@ _packages
 _updates
 Web/Content/layouts/*
 Web/Content/themes/*
+Web/Scripts/widgets/*
+logs/*
 *.pubxml
-
 # mstest test results
 TestResults
