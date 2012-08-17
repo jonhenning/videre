@@ -62,7 +62,7 @@
                         </div>
                         <div class="span5 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none; margin-top: 30px;">
                             @*@Html.DropDownControlGroup(Model, "ddlParent", "Parent.Text", "Parent", "parentId", "", new List<SelectListItem>())*@
-                            @Html.InputControlGroup(Model, "txtItemText", "Text.Text", "Text", "Text")
+                            @Html.InputControlGroup(Model, "txtItemText", "Text.Text", "Text", "Text", required: true)
                             @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url")
                             @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles")
                             @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")

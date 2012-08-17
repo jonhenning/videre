@@ -1,18 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Hosting;
-using System.Web.Mvc;
-using CodeEndeavors.Extensions;
-using CodeEndeavors.ResourceManager.Extensions;
-using Videre.Core.Models;
-using DomainObjects = CodeEndeavors.ResourceManager.DomainObjects;
 
 namespace Videre.Core.Services
 {

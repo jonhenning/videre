@@ -37,7 +37,7 @@
         <MakeDir Directories="$(DeployDir)\_updates"/>
         <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(DeployDir)\_updates" />
         <MakeDir Directories="$(PackageDir)\_packages"/>
-        <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(PackageDir)\_packages" />
+        <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(DeployDir)\_packages" />
     </Target>
 
 </Project>

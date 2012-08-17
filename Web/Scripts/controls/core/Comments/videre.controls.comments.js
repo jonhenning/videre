@@ -35,7 +35,7 @@ videre.controls.comments = videre.widgets.base.extend(
 
     addComment: function()
     {
-        if (this.validControls(this._widget, this._widget))
+        if (this.validControls(this._widget))
         {
             var comment = this.persistData({}, true, this._widget);
             this.ajax('~/core/Comment/AddComment', { comment: comment, containerType: this._data.ContainerType, containerId: this._data.ContainerId }, this._delegates.onAddCommentReturn);
