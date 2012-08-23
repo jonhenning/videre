@@ -107,5 +107,9 @@ namespace Videre.Core.Services
             return role != null;
         }
 
+        public List<Models.CustomDataElement> CustomUserElements
+        {
+            get { return new List<Models.CustomDataElement>(); }
+        }
     }
 }

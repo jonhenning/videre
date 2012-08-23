@@ -37,6 +37,14 @@ namespace Videre.Core.Services
             }
         }
 
+        public static List<Models.CustomDataElement> CustomUserElements
+        {
+            get
+            {
+                return AccountService.CustomUserElements;
+            }
+        }
+
         public static bool ReadOnly { get { return AccountService.ReadOnly; } } //todo: kinda hacky...
 
         public static bool IsAuthenticated
@@ -160,7 +168,10 @@ namespace Videre.Core.Services
             {
                 var existing = GetUserById(user.Id);
                 if (existing != null)
+                {
                     user.PasswordHash = existing.PasswordHash;  //not sending hash to client, so we need to get it from server.
+                    user.PasswordSalt = existing.PasswordSalt;
+                }
             }
 
             Validate(user);

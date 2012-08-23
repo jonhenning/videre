@@ -7,6 +7,8 @@ videre.widgets.admin.user = videre.widgets.base.extend(
     set_data: function(v)
     {
         this._data = v;
+        if (this._hasCustomAttributes && this._data.Attributes == null)
+            this._data.Attributes = {};
         this._dataDict = v.toDictionary(function(d) { return d.Id; });
     },
 
@@ -17,6 +19,7 @@ videre.widgets.admin.user = videre.widgets.base.extend(
         this._data = null;
         this._dataDict = null;
         this._selectedItem = null;
+        this._hasCustomAttributes = false;
 
         this._dialog = null;
 
@@ -33,6 +36,7 @@ videre.widgets.admin.user = videre.widgets.base.extend(
         this._dialog = this.getControl('Dialog').modal('hide');
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
         this.getControl('btnNew').click(videre.createDelegate(this, this._onNewClicked));
+        this._hasCustomAttributes = this.getControl('CustomTab').length > 0;
         this.bind();
 
     },
@@ -65,14 +69,19 @@ videre.widgets.admin.user = videre.widgets.base.extend(
         if (this._selectedItem != null)
         {
             this._dialog.modal('show');
-            this.bindData(this._selectedItem, this._dialog);
+            this.bindData(this._selectedItem, this.getControl('GeneralTab'));
+            if (this._hasCustomAttributes)
+                this.bindData(this._selectedItem.Attributes, this.getControl('CustomTab'));
         }
     },
 
     save: function()
     {
         //todo: validation!
-        var user = this.persistData(this._selectedItem, true, this._dialog);
+        var user = this.persistData(this._selectedItem, true, this.getControl('GeneralTab'));
+        if (this._hasCustomAttributes)
+            this.persistData(user.Attributes, false, this.getControl('CustomTab'));
+
         this.ajax('~/core/Account/SaveUser', { user: user }, this._delegates.onSaveReturn, null, this._dialog);
     },
 

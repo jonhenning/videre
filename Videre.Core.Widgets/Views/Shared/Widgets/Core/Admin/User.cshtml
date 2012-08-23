@@ -63,12 +63,37 @@
         </div>
         <div class="modal-body">
             @{Html.RenderPartial("WidgetHeader", Model);}
-            <div class="form-horizontal">
-                @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
-                @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", "Email")
-                @Html.InputControlGroup(Model, "txtLocale", "Locale.Text", "Locale", "Locale")
-                @Html.InputControlGroup(Model, "txtPassword", "NewPassword.Text", "New Password", "Password", "", "password")
-                @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles")
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#@Model.GetId("GeneralTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("General.Text", "General")</a></li>
+                <li class=""><a href="#@Model.GetId("CustomTab")" data-toggle="tab"><i class="icon-upload"></i> @Model.GetText("Custom.Text", "Custom")</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active form-horizontal" id="@Model.GetId("GeneralTab")">
+                    @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
+                    @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", "Email")
+                    @Html.InputControlGroup(Model, "txtLocale", "Locale.Text", "Locale", "Locale")
+                    @Html.InputControlGroup(Model, "txtPassword", "NewPassword.Text", "New Password", "Password", "", "password")
+                    @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles")
+                </div>
+                @{
+                if (Account.CustomUserElements.Count > 0)
+                {
+                <div class="tab-pane form-horizontal" id="@Model.GetId("CustomTab")">
+                    @foreach (var element in Account.CustomUserElements)
+                    {
+                        if (element.Values != null)
+                        {
+                            @Html.DropDownControlGroup(Model, "ddlCustom" + element.SafeName, element.SafeName + ".Text", element.Name, element.Name, element.Values)
+                        }
+                        else
+                        {
+                            @Html.InputControlGroup(Model, "txtCustom" + element.SafeName, element.SafeName + ".Text", element.Name, element.Name, required: element.Required)
+                        }
+                    }
+                </div>
+                }
+                }
             </div>
         </div>
         <div class="modal-footer">

@@ -21,5 +21,6 @@ namespace Videre.Core.Services
         string SaveRole(Models.Role role, string userId);
         bool DeleteRole(string id, string userId);
 
+        List<Models.CustomDataElement> CustomUserElements { get; }
     }
 }
