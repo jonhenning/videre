@@ -264,7 +264,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
                 this.bindMenu();
             }
 
-            if (dir == 1 && this._selectedItem.parentId == null && itemPos > 0)
+            if (dir == 1 && itemPos > 0)
             {
                 items[itemPos - 1].Items.push(this._selectedItem);
                 items.remove(itemPos);

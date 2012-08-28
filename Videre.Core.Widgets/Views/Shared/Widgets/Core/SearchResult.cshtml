@@ -39,7 +39,8 @@
                     <div class="span4">
                         <div class="controls">
                             <div class="input-append">
-                                <input type="text" id="@Model.GetId("Term")" value="@term" class="span3" autocomplete="off" /><button class="btn" type="button" id="@Model.GetId("btnSearch")"><i class="icon-search"></i></button>
+                                <input type="text" id="@Model.GetId("Term")" value="@term" class="span3" autocomplete="off" />
+                                <button class="btn" type="button" id="@Model.GetId("btnSearch")" style="line-height: 10px;"><i class="icon-search"></i></button>    @*TODO: remove hack for button line-height*@
                             </div>
                         </div>
                     </div>

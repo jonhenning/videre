@@ -23,6 +23,7 @@ namespace Videre.Core.Models
         public string Name { get; set; }
         public string Css { get; set; }
         public bool ShowSearch { get; set; }
+        public bool InverseColors { get; set; }
         public MenuType Type { get; set; }
         public List<MenuItem> Items { get; set; }
     }
