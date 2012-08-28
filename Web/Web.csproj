@@ -50,7 +50,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeEndeavors.Extensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="CodeEndeavors.Extensions">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\CodeEndeavors.ResourceManager\CodeEndeavors.Extensions.dll</HintPath>
     </Reference>
@@ -76,9 +76,9 @@
       <HintPath>..\lib\Lucene.Net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=4.0.8.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\CodeEndeavors.ResourceManager.File\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="RouteDebug">
       <HintPath>..\lib\RouteDebug.dll</HintPath>
@@ -89,23 +89,28 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Razor">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\System.Web.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.WebPages">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\System.Web.WebPages.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.WebPages.Deployment">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
@@ -140,6 +145,14 @@
     <Content Include="Scripts\bootstrap-2.0.4\js\bootstrap.min.js">
       <DependentUpon>bootstrap.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\bootstrap-2.1.0\css\bootstrap-responsive.css" />
+    <Content Include="Scripts\bootstrap-2.1.0\css\bootstrap-responsive.min.css" />
+    <Content Include="Scripts\bootstrap-2.1.0\css\bootstrap.css" />
+    <Content Include="Scripts\bootstrap-2.1.0\css\bootstrap.min.css" />
+    <Content Include="Scripts\bootstrap-2.1.0\img\glyphicons-halflings-white.png" />
+    <Content Include="Scripts\bootstrap-2.1.0\img\glyphicons-halflings.png" />
+    <Content Include="Scripts\bootstrap-2.1.0\js\bootstrap.js" />
+    <Content Include="Scripts\bootstrap-2.1.0\js\bootstrap.min.js" />
     <Content Include="Scripts\DataTables-1.9.0\media\css\jquery.dataTables.bootstrap.css" />
     <Content Include="Scripts\DataTables-1.9.0\media\css\jquery.dataTables.css" />
     <Content Include="Scripts\DataTables-1.9.0\media\css\jquery.dataTables_themeroller.css" />
@@ -204,7 +217,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Layouts\" />
-    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\Shared\Widgets\" />
   </ItemGroup>
   <ItemGroup>
