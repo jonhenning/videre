@@ -188,5 +188,43 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
+        public JsonResult<bool> SaveWidget(string templateId, string layoutName, CoreModels.Widget widget)
+        {
+            return API.Execute<bool>(r =>
+            {
+                CoreServices.Security.VerifyActivityAuthorized("Content", "Administration");
+                var pageTemplate = CoreServices.Portal.GetPageTemplateById(templateId);
+                var layoutTemplate = CoreServices.Portal.GetLayoutTemplate(CoreServices.Portal.CurrentPortalId, layoutName);
+                if (pageTemplate != null)
+                {
+                    if (ReplaceWidget(pageTemplate.Widgets, widget))
+                        CoreServices.Portal.Save(pageTemplate);
+                }
+                
+                if (layoutTemplate != null)
+                {
+                    if (ReplaceWidget(layoutTemplate.Widgets, widget))
+                        CoreServices.Portal.Save(layoutTemplate);
+                }
+
+                //widget.Manifest.GetContentProvider().Save(widget.ContentJson);
+                r.Data = true;
+            });
+        }
+
+        private bool ReplaceWidget(List<CoreModels.Widget> widgets, CoreModels.Widget widget)
+        {
+            for (var i = 0; i < widgets.Count; i++)
+            {
+                if (widgets[i].Id == widget.Id)
+                {
+                    widgets[i] = widget;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
     }
 }

@@ -176,7 +176,7 @@ namespace Videre.Core.Services
                 //todo: not creating/mapping new widget ids?
                 if (widgetContent.ContainsKey(widget.Id))
                 {
-                    var contentProvider = widget.GetContentProvider();
+                    var contentProvider = widget.Manifest.GetContentProvider();
                     if (contentProvider != null)
                         widget.ContentIds = contentProvider.Import(portalId, widgetContent[widget.Id], idMap).Values.ToList(); //returns mapped dictionary of old id to new id... we just need to use the new ids
                 }
@@ -290,7 +290,7 @@ namespace Videre.Core.Services
                 //todo: not creating/mapping new widget ids?
                 if (widgetContent.ContainsKey(widget.Id))
                 {
-                    var contentProvider = widget.GetContentProvider();
+                    var contentProvider = widget.Manifest.GetContentProvider();
                     if (contentProvider != null)
                         widget.ContentIds = contentProvider.Import(portalId, widgetContent[widget.Id], idMap).Values.ToList(); //returns mapped dictionary of old id to new id... we just need to use the new ids
                 }
@@ -485,8 +485,8 @@ namespace Videre.Core.Services
             //grab all widgets that have a content provider and create dictionary of <WidgetId, ContentJson>
             //TODO:  guard against no widgets with content???!?
             var allWidgets = new List<Models.Widget>();
-            allWidgets.AddRange(export.Templates.SelectMany(w => w.Widgets).Where(w => w.GetContentProvider() != null));
-            allWidgets.AddRange(export.LayoutTemplates.SelectMany(w => w.Widgets).Where(w => w.GetContentProvider() != null));
+            allWidgets.AddRange(export.Templates.SelectMany(w => w.Widgets).Where(w => w.Manifest.GetContentProvider() != null));
+            allWidgets.AddRange(export.LayoutTemplates.SelectMany(w => w.Widgets).Where(w => w.Manifest.GetContentProvider() != null));
             allWidgets = allWidgets.Distinct(w => w.Id).ToList();   //since content can be shared between widgets, we only want to store it once!
             export.WidgetContent = allWidgets.ToDictionary(w => w.Id, wc => wc.GetContentJson());
 

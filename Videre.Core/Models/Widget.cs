@@ -11,7 +11,7 @@ namespace Videre.Core.Models
     {
         private string _id = null;
         //private string _clientId = null;
-        private ContentProviders.IWidgetContentProvider _contentProvider = null;
+        //private ContentProviders.IWidgetContentProvider _contentProvider = null;
 
         public Widget()
         {
@@ -94,26 +94,26 @@ namespace Videre.Core.Models
         [SerializeIgnore("db")]
         public string ContentJson { get; set; }
 
-        public ContentProviders.IWidgetContentProvider GetContentProvider()
-        {
-            if (_contentProvider == null && !string.IsNullOrEmpty(Manifest.ContentProvider))
-                _contentProvider = Manifest.ContentProvider.GetInstance<ContentProviders.IWidgetContentProvider>();
-            return _contentProvider ;
-        }
+        //public ContentProviders.IWidgetContentProvider GetContentProvider()
+        //{
+        //    if (_contentProvider == null && !string.IsNullOrEmpty(Manifest.ContentProvider))
+        //        _contentProvider = Manifest.GetContentProvider();//.ContentProvider.GetInstance<ContentProviders.IWidgetContentProvider>();
+        //    return _contentProvider ;
+        //}
 
         public string GetContentJson()
         {
-            if (!string.IsNullOrEmpty(Manifest.ContentProvider))
-                return GetContentProvider().GetJson(ContentIds);
-            return null;
+            var provider = Manifest.GetContentProvider();
+            return provider != null ? provider.GetJson(ContentIds) : null;
         }
 
         public void SaveContentJson(string json)
         {
-            if (!string.IsNullOrEmpty(Manifest.ContentProvider))   
+            var provider = Manifest.GetContentProvider();
+            if (provider != null)   
             {
                 if (json != null && json != "null") //todo: kinda hacky looking for string "null"
-                    ContentIds = GetContentProvider().Save(json);
+                    ContentIds = provider.Save(json);
                 else
                     ContentIds = new List<string>();
             }
@@ -121,16 +121,15 @@ namespace Videre.Core.Models
 
         public void RemoveContent()
         {
-            var provider = GetContentProvider();
+            var provider = Manifest.GetContentProvider();
             if (provider != null && ContentIds.Count > 0)
                 provider.Delete(ContentIds);
         }
 
         public T GetContent<T>() where T : class, new()
         {
-            if (!string.IsNullOrEmpty(Manifest.ContentProvider))
-                return GetContentProvider().Get<T>(ContentIds);
-            return new T();
+            var provider = Manifest.GetContentProvider();
+            return provider != null ? provider.Get<T>(ContentIds) : new T();
         }
 
         public string GetId(string id)

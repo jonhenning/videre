@@ -16,5 +16,7 @@ Web/Scripts/widgets/*
 logs/*
 *.suo
 *.pubxml
+*.test
+*.production
 # mstest test results
 TestResults

@@ -1,16 +1,46 @@
 @using System.Collections.Generic;
+@using Videre.Core.Extensions;
 @using Models = Videre.Core.Models;
 @using Videre.Core.Services;
 
 @model Models.Widget
-    
+
 @{
     //var ns = ViewBag.Template.Id + "/" + Model.Id;
     var locs = Model.GetContent<List<Models.Localization>>();
     locs.AddRange(Model.GetContent<List<Models.Localization>>());  //todo: hack?
+
+    var canEdit = Security.IsActivityAuthorized("Content", "Administration");
+
+    if (canEdit)
+    {
+        Model.ContentJson = Model.GetContentJson();
+        Html.RegisterControlPresenter(Model, "videre.widgets.texthtml", new Dictionary<string, object>(){
+            {"templateId", Portal.CurrentTemplate.Id},
+            {"layoutName", Portal.CurrentTemplate.LayoutName},
+            {"widget", Model},
+            {"manifest", Model.Manifest}
+        });
+
+    }
+    
 }
 
 <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
-@(new HtmlString(Localization.GetContent(locs, "Content.Text", Model.GetText("ContentMissing.Text", "[Content Missing]"))))
+
+    @if (canEdit)
+    {
+        <div id="@Model.GetId("AdminMenu")" class="dropdown pull-right">
+            <a class="dropdown-toggle" data-toggle="dropdown" style="padding-left: 0"><b class="caret" data-target="#"></b></a>
+            <ul class="dropdown-menu">
+                <li><a data-action="edit"><i class="icon-pencil"></i>@Model.GetPortalText("Edit.Text", "Edit")</a></li>
+            </ul>
+        </div>
+               
+        Html.RenderWidgetEditor(Model.Manifest);
+    }
+
+    @(new HtmlString(Localization.GetContent(locs, "Content.Text", Model.GetText("ContentMissing.Text", "[Content Missing]"))))
+
 </div>
 

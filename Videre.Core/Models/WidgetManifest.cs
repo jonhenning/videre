@@ -5,6 +5,8 @@ namespace Videre.Core.Models
 {
     public class WidgetManifest : IManifest //: CodeEndeavors.ResourceManager.IId
     {
+        private ContentProviders.IWidgetContentProvider _contentProvider = null;
+
         public WidgetManifest()
         {
             //Properties = new Dictionary<string, string>();  
@@ -26,6 +28,13 @@ namespace Videre.Core.Models
             {
                 return Path.PathCombine(Name);
             }
+        }
+
+        public ContentProviders.IWidgetContentProvider GetContentProvider()
+        {
+            if (_contentProvider == null && !string.IsNullOrEmpty(ContentProvider))
+                _contentProvider = ContentProvider.GetInstance<ContentProviders.IWidgetContentProvider>();
+            return _contentProvider;
         }
 
         //public Dictionary<string, string> Properties {get;set;} //Widget Settings Property Names

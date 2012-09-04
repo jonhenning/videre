@@ -101,6 +101,7 @@ namespace Videre.Core.Widgets
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Upload", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Account", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Content", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Search", Name = "Upload", Roles = new List<string>() {CoreServices.Update.AdminRoleId} }//,
                 //new CoreModels.SecureActivity() { Area = "Blog", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} }
             });

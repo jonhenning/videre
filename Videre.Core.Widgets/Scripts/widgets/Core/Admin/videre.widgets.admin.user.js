@@ -80,7 +80,11 @@ videre.widgets.admin.user = videre.widgets.base.extend(
         //todo: validation!
         var user = this.persistData(this._selectedItem, true, this.getControl('GeneralTab'));
         if (this._hasCustomAttributes)
+        {
+            if (user.Attributes == null)
+                user.Attributes = {};
             this.persistData(user.Attributes, false, this.getControl('CustomTab'));
+        }
 
         this.ajax('~/core/Account/SaveUser', { user: user }, this._delegates.onSaveReturn, null, this._dialog);
     },
