@@ -12,6 +12,7 @@ Web/Content/layouts/*
 Web/Content/themes/*
 Web/Content/Widgets/*
 Web/Views/Shared/Widgets/*
+Web/Views/Shared/Controls/*
 Web/Scripts/widgets/*
 logs/*
 *.suo

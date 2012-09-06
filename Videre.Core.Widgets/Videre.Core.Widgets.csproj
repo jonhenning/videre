@@ -146,7 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\widgets\core\account\videre.widgets.account.userprofile.js" />
-    <Content Include="Scripts\widgets\core\videre.widgets.texthtml.js" />
+    <Content Include="Scripts\widgets\core\videre.widgets.widgetadmincontextmenu.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.theme.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.search.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.portal.js" />
@@ -203,6 +203,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\Shared\Controls\Core\WidgetAdminContextMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">

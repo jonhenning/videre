@@ -1,7 +1,9 @@
 ﻿videre.registerNamespace('videre.widgets');
 
-videre.widgets.texthtml = videre.widgets.base.extend(
+videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
 {
+    get_containerId: function() { return this._containerId; },
+    set_containerId: function(v) { this._containerId = v; },
     get_widget: function() { return this._widgetModel; },
     set_widget: function(v) { this._widgetModel = v; },
     get_manifest: function() { return this._manifest; },
@@ -30,7 +32,8 @@ videre.widgets.texthtml = videre.widgets.base.extend(
     _onLoad: function(src, args)
     {
         this._base(); //call base
-        this.getControl('AdminMenu').find('a[data-action]').click(videre.createDelegate(this, this._onAdminClick));
+        this._widget.find('a[data-action]').click(videre.createDelegate(this, this._onAdminClick));
+        $('#' + this._containerId).bind("contextmenu", videre.createDelegate(this, this._onContextMenu));
         this._widgetModel.Content = videre.deserialize(this._widgetModel.ContentJson);
     },
 
@@ -49,6 +52,11 @@ videre.widgets.texthtml = videre.widgets.base.extend(
     save: function(widget)
     {
         this.ajax('~/core/Portal/SaveWidget', { templateId: this._templateId, layoutName: this._layoutName, widget: widget }, this._delegates.onSaveReturn, null, this._dialog);
+    },
+
+    toggleMenu: function()
+    {
+        this._widget.find('.dropdown-toggle').dropdown('toggle');
     },
 
     _onWidgetSave: function(e, args)
@@ -71,7 +79,15 @@ videre.widgets.texthtml = videre.widgets.base.extend(
         var action = $(e.target).data('action');
         if (action == 'edit')
             this.edit();
-    }
+        this.toggleMenu();
+    },
+
+    _onContextMenu: function(e)
+    {
+        this._widget.css({ top: e.pageY, left: e.pageX });
+        this.toggleMenu();
+        return false;
+    },
 
 });
 

@@ -1,0 +1,30 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+
+@model Models.Widget
+@{
+    Model.ContentJson = Model.GetContentJson(); //pull potential content
+    var editorModel = new Models.WidgetEditor(Model.ManifestId)
+    {
+        ClientId = Portal.NextClientId()
+    };
+
+    Html.RegisterControlPresenter(editorModel, "videre.widgets.widgetadmincontextmenu", new Dictionary<string, object>(){
+            {"templateId", Portal.CurrentTemplate.Id},
+            {"layoutName", Portal.CurrentTemplate.LayoutName},
+            {"widget", Model},
+            {"manifest", Model.Manifest},
+            {"containerId", Model.GetId("Widget")}
+        });
+    Html.RenderWidgetEditor(Model.Manifest);
+    
+}
+<div id="@editorModel.GetId("Widget")" class="dropdown" style="position: absolute; z-index: 10000">
+    <a class="dropdown-toggle" data-toggle="dropdown" style="padding: 0"></a>
+    <ul class="dropdown-menu">
+        <li><a data-action="edit"><i class="icon-pencil"></i> @editorModel.GetPortalText("Edit.Text", "Edit")</a></li>
+    </ul>
+</div>
