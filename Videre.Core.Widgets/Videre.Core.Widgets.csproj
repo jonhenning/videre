@@ -96,12 +96,9 @@
     <Compile Include="Controllers\PageTemplateController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\LocalizationController.cs" />
-    <Compile Include="ContentProviders\CarouselContentProvider.cs" />
     <Compile Include="ContentProviders\MenuContentProvider.cs" />
-    <Compile Include="Models\Carousel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration.cs" />
-    <Compile Include="Services\Carousel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\controls\core\CKTextEditor\ckeditor_3.6.2\adapters\jquery.js" />
@@ -158,7 +155,6 @@
     <Content Include="Scripts\widgets\core\videre.widgets.search.js" />
     <Content Include="Scripts\widgets\core\videre.widgets.searchresults.js" />
     <Content Include="Scripts\widgets\core\videre.widgets.editor.common.js" />
-    <Content Include="Scripts\widgets\core\videre.widgets.editor.carousel.js" />
     <Content Include="Scripts\widgets\core\videre.widgets.editor.menu.js" />
     <Content Include="Scripts\widgets\core\videre.widgets.editor.texthtml.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.template.js" />
@@ -191,8 +187,6 @@
     <Content Include="Views\Shared\Widgets\Core\Admin\FileBrowser.cshtml" />
     <Content Include="Views\Shared\Controls\Core\CKTextEditor.cshtml" />
     <Content Include="Views\Shared\Controls\Core\CLTextEditor.cshtml" />
-    <Content Include="Views\Shared\Widgets\Core\Carousel.cshtml" />
-    <Content Include="Views\Shared\Widgets\Core\CarouselEditor.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\CommonEditor.cshtml" />
     <Content Include="Views\Shared\Controls\Core\HighCharts.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\Portal.cshtml" />
@@ -211,7 +205,10 @@
       <Name>Videre.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

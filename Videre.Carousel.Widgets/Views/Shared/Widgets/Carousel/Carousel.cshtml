@@ -1,0 +1,78 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@using Models = Videre.Carousel.Widgets.Models;
+@using Videre.Core.Services;
+@model CoreModels.Widget
+@{
+    Models.Carousel carousel = Model.GetContent<Models.Carousel>();
+
+    var canEdit = Security.IsActivityAuthorized("Content", "Administration");
+    if (canEdit)
+    {
+        Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model);
+    }
+    
+    if (string.IsNullOrEmpty(carousel.Type))
+    {
+        carousel.Type = "Bootstrap";
+    }
+    
+    if (carousel.Type.StartsWith("Camera"))
+    {
+        Html.RegisterScript("~/Scripts/jquery.mobile.customized.min.js", true);
+        Html.RegisterScript("~/Scripts/jquery.easing.1.3.js", true);
+        Html.RegisterScript("~/Scripts/camera-1.3.3/scripts/camera.min.js", true);
+        Html.RegisterStylesheet("~/Scripts/camera-1.3.3/css/camera.css", true);
+
+        Html.RegisterDocumentReadyScript("carousel" + Model.Id, string.Format("$('#{0}').camera({{thumbnails: true, imagePath: '{1}'}});", Model.GetId("Carousel"), Url.Content("~/Scripts/camera-1.3.3/")), true);
+
+<div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+    <div id="@Model.GetId("Carousel")" class="camera_wrap" style="@carousel.Style">
+        <!-- Carousel items -->
+        @{
+            for (var i = 0; i < carousel.Items.Count; i++)
+            {
+                var item = carousel.Items[i];
+        <div data-src="@item.ImageUrl">
+            <div class="camera_caption fadeFromBottom">
+                <p>@Html.Raw(item.Text)</p>
+            </div>
+        </div>
+            }
+        }
+    </div>
+</div>
+            
+    } 
+    else 
+    {
+        Html.RegisterDocumentReadyScript("carousel" + Model.Id, ";$('#" + Model.GetId("Carousel") + "').carousel({interval: 5000});", true);
+        
+<div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+    <div id="@Model.GetId("Carousel")" class="carousel slide" style="@carousel.Style">
+        <!-- Carousel items -->
+        <div class="carousel-inner">
+            @{
+                for (var i = 0; i < carousel.Items.Count; i++)
+                {
+                    var item = carousel.Items[i];
+            <div class="item @(i == 0 ? "active" : "")">
+                <img src="@item.ImageUrl" alt="" />
+                <div class="carousel-caption">
+                    <p>@Html.Raw(item.Text)</p>
+                </div>
+            </div>
+                }
+            }
+        </div>
+        <!-- Carousel nav -->
+        <a class="carousel-control left" href="#@Model.GetId("Carousel")" data-slide="prev">&lsaquo;</a> 
+        <a class="carousel-control right" href="#@Model.GetId("Carousel")" data-slide="next">&rsaquo;</a>
+    </div>
+</div>
+        
+    }
+
+}
+

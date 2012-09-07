@@ -3,7 +3,7 @@ using CodeEndeavors.Extensions;
 using Videre.Core.ContentProviders;
 using CoreServices = Videre.Core.Services;
 
-namespace Videre.Core.Widgets.ContentProviders
+namespace Videre.Carousel.Widgets.ContentProviders
 {
     public class CarouselContentProvider : IWidgetContentProvider 
     {

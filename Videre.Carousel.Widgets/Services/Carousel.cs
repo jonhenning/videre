@@ -8,7 +8,7 @@ using Videre.Core.Services;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
 
-namespace Videre.Core.Widgets.Services
+namespace Videre.Carousel.Widgets.Services
 {
     public class Carousel
     {
