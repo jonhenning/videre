@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT IN VERSIONS OF VISUAL STUDIO PRIOR TO 11 -->
+    <PropertyGroup>
+        <Name>Videre.Blog.Widgets</Name>
+        <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+        <RedistDir>$(RootDir)\redist</RedistDir>
+        <DeployDir>$(RootDir)\Web</DeployDir>
+        <CommonLibDir>$(RootDir)\lib</CommonLibDir>
+        <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
+    </PropertyGroup>
+    <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets')"/>
+
+    <!--<Target Name="BeforeBuild">
+        <CallTarget Targets="CopyLib" />
+    </Target>-->
+    <Target Name="AfterBuild">
+        <CallTarget Targets="CreatePackage" />
+        <CallTarget Targets="Deploy" />
+    </Target>
+
+    <!--<Target Name="CopyLib">
+        <CreateItem Include="
+                $(VidereDir)\lib\*.dll;
+                $(VidereDir)\lib\*.pdb">
+            <Output TaskParameter="Include" ItemName="LibDlls" />
+        </CreateItem>
+        <Copy SourceFiles="@(LibDlls)" DestinationFolder="$(CommonLibDir)" />
+    </Target>-->
+
+    <Target Name="CreatePackage">
+        <MakeDir Directories="$(RedistDir)"/>
+        <CreateItem Include="
+                $(MSBuildProjectDirectory)\**\*.js;
+                $(MSBuildProjectDirectory)\**\*.css;
+                $(MSBuildProjectDirectory)\**\*.gif;
+                $(MSBuildProjectDirectory)\**\*.jpg;
+                $(MSBuildProjectDirectory)\**\*.png;
+                $(MSBuildProjectDirectory)\**\*.cshtml;
+                $(TargetDir)$(Name).dll;
+                $(TargetDir)$(Name).pdb">
+            <Output TaskParameter="Include" ItemName="Widgets" />
+        </CreateItem>
+        <Zip Files="@(Widgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(Name).zip" />
+    </Target>
+
+    <Target Name="Deploy" Condition="Exists('$(DeployDir)')">
+        <MakeDir Directories="$(DeployDir)\_updates"/>
+        <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(DeployDir)\_updates" />
+        <MakeDir Directories="$(PackageDir)\_packages"/>
+        <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(PackageDir)\_packages" />
+    </Target>
+
+</Project>

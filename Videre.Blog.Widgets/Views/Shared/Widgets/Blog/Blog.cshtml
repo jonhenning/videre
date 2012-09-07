@@ -1,0 +1,76 @@
+@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@using Models = Videre.Blog.Widgets.Models;
+@using Videre.Core.Services;
+@model CoreModels.Widget
+@{    
+    var entryName = Portal.GetCurrentUrlSegment("entry", "", false);
+    var canEdit = Security.IsActivityAuthorized("Blog", "Administration");
+
+    var tag = Request.QueryString["tag"];
+    var blog = Model.GetContent<Models.Blog>();
+    if (blog != null)
+    {
+        var entry = blog.Entries.Where(e => e.Url.Equals(entryName, StringComparison.InvariantCultureIgnoreCase) && (canEdit || e.PostDate.HasValue)).FirstOrDefault();
+        var blogUrl = Portal.ResolveUrl("~/" + (entry == null ? Portal.CurrentUrl : Portal.CurrentUrl.Replace(entryName, "")));   //todo: a bit hacky
+
+        if (canEdit && blog.Id != null)
+        {
+            Html.RegisterControlPresenter(Model, "videre.widgets.blog", new Dictionary<string, object>() { 
+            {"blogUrl", blogUrl }, 
+            {"blogId", blog.Id },
+            {"entryId", entry != null ? entry.Id : null }
+        });
+        }        
+        
+    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+        @{Html.RenderPartial("WidgetHeader", Model);}
+        @if (canEdit)
+        {
+            ViewBag.entry = entry;
+            Html.RenderPartial("Widgets/Blog/BlogAdminMarkup", Model);
+        }
+        <h4>
+            <a href="@blogUrl">
+                @blog.Name
+            </a>
+            @if (!string.IsNullOrEmpty(tag))
+            {
+                <text>- (@tag)</text>
+            }
+        </h4>
+
+
+        @if (entry == null)
+        {
+            var i = 0;
+            <ul class="unstyled">
+                @foreach (var item in blog.Entries.Where(e =>
+        (string.IsNullOrEmpty(tag) || e.Tags.Contains(tag)) &&
+        (canEdit || e.PostDate.HasValue)).OrderByDescending(e => e.PostDate))
+                {
+                    i++;
+                    <li style="padding: 10px;" class="@(i % 2 == 0 ? "" : "")">
+                        <h3><a href="@Portal.ResolveCurrentUrl(item.Url)">@item.Title</a></h3>
+                        <div>@Html.Raw(item.Summary)</div>
+                        <hr />
+                    </li>   
+                }
+            </ul>
+        }
+        else
+        {
+            <h3>@entry.Title</h3>
+            <p>@Html.Raw(entry.Body)</p>
+            <p>@(entry.PostDate.HasValue ? entry.PostDate.Value.ToLocalTime().ToString("") : "")</p>
+    
+            <hr />
+            if (true)
+            {
+                Html.RenderPartial("Controls/Core/Comments", new CoreModels.CommentControl("BlogEntry", entry.Id));
+            }
+        }
+    </div>
+
+    }
+}
