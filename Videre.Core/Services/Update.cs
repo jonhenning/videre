@@ -235,30 +235,10 @@ namespace Videre.Core.Services
             var count = 0;
             var files = dir.GetFiles("*.zip");
             foreach (var file in files)
-            {
-                Logging.Logger.InfoFormat("Applying update for file: {0}", file.FullName);
-                var zip = new FastZip();
-                zip.ExtractZip(file.FullName, rootDir, FastZip.Overwrite.Always, null, null, null, true);
-                System.IO.File.Delete(file.FullName);
-                count++;
-            }
+                count += InstallFile(file.FullName) ? 1 : 0;
             files = dir.GetFiles("*.json");
             foreach (var file in files)
-            {
-                try
-                {
-                    Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
-                    var portalExport = file.FullName.GetFileJSONObject<Models.PortalExport>(false);
-                    Services.Portal.Import(portalExport);
-                    System.IO.File.Delete(file.FullName);
-                }
-                catch (Exception ex)
-                {
-                    Logging.Logger.Error("Error Applying Updates", ex);
-                }
-                count++;
-            }
-
+                count += InstallFile(file.FullName) ? 1 : 0;
             return count;
         }
 
@@ -375,11 +355,48 @@ namespace Videre.Core.Services
             var package = GetPackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
             if (package != null)
             {
-                System.IO.File.Copy(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName), Path.Combine(Portal.ResolvePath(UpdateDir), package.FileName), true);
+                InstallFile(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName));
+                //System.IO.File.Copy(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName), Path.Combine(Portal.ResolvePath(UpdateDir), package.FileName), true);
                 return true;
             }
             return false;
         }
+
+        private static bool InstallFile(string fileName)
+        {
+            var rootDir = Portal.ResolvePath("~/");
+            var file = new FileInfo(fileName);
+            if (file != null)
+            {
+                switch (file.Extension.ToLower())
+                {
+                    case ".zip":
+                        {
+                            Logging.Logger.InfoFormat("Applying update for file: {0}", file.FullName);
+                            var zip = new FastZip();
+                            zip.ExtractZip(file.FullName, rootDir, FastZip.Overwrite.Always, null, null, null, true);
+                            System.IO.File.Delete(file.FullName);
+                            return true;
+                        }
+                    case ".json":
+                        {
+                            Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
+                            var portalExport = file.FullName.GetFileJSONObject<Models.PortalExport>(false);
+                            Services.Portal.Import(portalExport);
+                            System.IO.File.Delete(file.FullName);
+                            return true;
+                        }
+                    default:
+                        {
+                            Logging.Logger.Error("Unknown File Extension: " + file.Extension);
+                            break;
+                            //throw new Exception("Unknown File Extension: " + file.Extension);
+                        }
+                }
+            }
+            return false;
+        }
+
 
     }
 }
