@@ -387,7 +387,24 @@ namespace Videre.Core.Services
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             var res = Repository.Current.GetResourceById<Models.WidgetManifest>(id);
             if (res != null)
+            {
+                // remove from all templates first!
+                var pageTemplates = GetPageTemplates().Where(t => t.Widgets.Exists(w => w.ManifestId == id)).ToList();
+                pageTemplates.ForEach(t =>
+                {
+                    t.Widgets.RemoveAll(w => w.ManifestId == id);
+                    Save(t);
+                });
+
+                var layoutTemplates = GetLayoutTemplates().Where(t => t.Widgets.Exists(w => w.ManifestId == id)).ToList();
+                layoutTemplates.ForEach(t =>
+                {
+                    t.Widgets.RemoveAll(w => w.ManifestId == id);
+                    Save(t);
+                });
+
                 Repository.Current.Delete(res);
+            }
             return res != null;
         }
 
