@@ -15,8 +15,10 @@
     </div>
     <script id="@Model.GetId("AttributeListTemplate")" type="text/html">
         <div class="control-group">
-            <label class="control-label"><#=LabelText#></label>
-            <div class="controls" data-type="input"></div>
+            <label class="control-label">{{:LabelText}}</label>
+            <div class="controls" data-type="input">
+                {{:~bindInputs(#data, ~attributes)}}
+            </div>
         </div>
     </script>
 </div>

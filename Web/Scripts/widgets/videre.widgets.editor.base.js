@@ -39,7 +39,7 @@ videre.widgets.editor.base = videre.widgets.base.extend(
 
     bindAttributes: function()
     {
-        videre.UI.parseTemplate(this.getControl('AttributeListTemplate'), this.getControl('AttributeList'), this._manifestData.AttributeDefinitions, this._baseEditorDelegates.onItemBind);
+        this.getControl('AttributeList').html(this.getControl('AttributeListTemplate').render(this._manifestData.AttributeDefinitions, { attributes: this._widgetData.Attributes }));
         this.getControl('AttributeList').toggle(this._manifestData.AttributeDefinitions.length > 0);
     },
 
@@ -54,32 +54,6 @@ videre.widgets.editor.base = videre.widgets.base.extend(
         this.persistData(this._widgetData.Attributes, false, this.getControl('AttributeList'));
         this.raiseCustomEvent('Save', this._widgetData);
         this._dialog.modal('hide');
-    },
-
-    _onItemBind: function(ctr, data)
-    {
-        var td = $(ctr).find('[data-type="input"]');
-        var ctl;
-        if (data.Values.length > 0)
-        {
-            ctl = $('<select>').attr('data-column', data.Name);
-            $.each(data.Values, function (idx, item)
-            {
-                $('<option>').attr('value', item).html(item).appendTo(ctl);
-            });
-            ctl.val(data.DefaultValue);
-        }
-        else
-        {
-            ctl = $('<input>').attr({ type: 'text', 'data-column': data.Name }).val(data.DefaultValue);
-        }
-
-        if (data.Required)
-            ctl.attr('data-required', 'true');
-        ctl.appendTo(td);
-        if (this._widgetData.Attributes[data.Name] != null)
-            ctl.val(this._widgetData.Attributes[data.Name]);
-
     },
 
     _onOkClicked: function(e)

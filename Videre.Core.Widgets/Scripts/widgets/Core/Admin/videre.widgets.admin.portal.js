@@ -63,8 +63,7 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
 
     bindAttributes: function(groupName, defs)
     {
-        videre.UI.parseTemplate(this.getControl('AttributeListTemplate-' + groupName), this.getControl('AttributeList-' + groupName), defs, this._delegates.onAttributeItemBind);
-        //this.getControl('AttributeList-' + groupName).html(this.getControl('AttributeListTemplate-' + groupName).render(defs, { roleDataDict: this._roleDataDict }));
+        this.getControl('AttributeList-' + groupName).html(this.getControl('AttributeListTemplate').render(defs, { groupName: groupName, roleDataDict: this._roleDataDict, attributes: this._data.Attributes }));
     },
 
     save: function()
@@ -81,33 +80,6 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
     _getSafeGroupName: function(name)
     {
         return name.replace(new RegExp(' ', 'g'), '-').replace(new RegExp('\\.', 'g'), '-');
-    },
-
-    //this logic is shared from widget.editor.base - todo:  common location?
-    _onAttributeItemBind: function(ctr, data)
-    {
-        var td = $(ctr).find('[data-type="input"]');
-        var groupName = td.data('group');
-        var keyName = groupName + '.' + data.Name;
-        var ctl;
-        if(data.Values.length > 0)
-        {
-            ctl = $('<select>').attr('data-column', keyName);
-            $.each(data.Values, function(idx, item)
-            {
-                $('<option>').attr('value', item).html(item).appendTo(ctl);
-            });
-            ctl.val(data.DefaultValue);
-        }
-        else
-            ctl = $('<input>').attr({ type: 'text', 'data-column': keyName }).val(data.DefaultValue);
-
-        if(data.Required)
-            ctl.attr('data-required', 'true');
-        ctl.appendTo(td);
-        if(this._data.Attributes[keyName] != null)
-            ctl.val(this._data.Attributes[keyName]);
-
     },
 
     _onDataReturn: function(result, ctx)

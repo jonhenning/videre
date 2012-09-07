@@ -148,62 +148,6 @@ videre.registerNamespace('videre.UI');
 
 videre.UI = {
 
-    //http://www.west-wind.com/Weblog/posts/509108.aspx
-    _tmplCache: {},
-    _dialogs: {},
-
-    parseTemplate: function (template, ctr, data, onrendering)
-    {
-        /// <summary>
-        /// Client side template parser that uses &lt;#= #&gt; and &lt;# code #&gt; expressions.
-        /// and # # code blocks for template expansion.
-        /// NOTE: chokes on single quotes in the document in some situations
-        ///       use &amp;rsquo; for literals in text and avoid any single quote
-        ///       attribute delimiters.
-        /// </summary>    
-        /// <param name="str" type="string">The text of the template to expand</param>    
-        /// <param name="data" type="var">
-        /// Any data that is to be merged. Pass an object and
-        /// that object's properties are visible as variables.
-        /// </param>    
-        /// <returns type="string" />  
-        var err = "";
-        try
-        {
-            ctr.html('');
-            var str = $(template).html();
-            var func = videre.UI._tmplCache[str];
-            if (!func)
-            {
-                var strFunc =
-                "var p=[],print=function(){p.push.apply(p,arguments);};" +
-                            "with(obj){p.push('" +
-
-                str.replace(/[\r\t\n]/g, " ")
-                   .replace(/'(?=[^#]*#>)/g, "\t")
-                   .split("'").join("\\'")
-                   .split("\t").join("'")
-                   .replace(/<#=(.+?)#>/g, "',$1,'")
-                   .split("<#").join("');")
-                   .split("#>").join("p.push('")
-                   + "');}return p.join('');";
-
-                func = new Function("obj", strFunc);
-                videre.UI._tmplCache[str] = func;
-            }
-
-            for (var i = 0; i < data.length; i++)
-            {
-                data[i].__index = i;
-                var item = $(func(data[i]));
-                ctr.append(item);
-                if (onrendering)
-                    onrendering(item, data[i]);
-            }
-            return ctr;
-        } catch (e) { alert(e + '\r\n' + e.message); }
-    },
-
     handleEnter: function(ctl, func)
     {
         ctl.keypress(function(e) 
@@ -799,5 +743,33 @@ $.views.helpers({
     resolveUrl: function(val) { return val != null ? videre.resolveUrl(val) : ''; },
     formatDateTime: function(val) { return val != null ? videre.toDate(val).format(videre.localization.dateFormats.datetime) : ''; },
     formatDate: function(val) { return val != null ? videre.toDate(val).format(videre.localization.dateFormats.date) : ''; },
-    formatTime: function(val) { return val != null ? videre.toDate(val).format(videre.localization.dateFormats.time) : ''; }
+    formatTime: function(val) { return val != null ? videre.toDate(val).format(videre.localization.dateFormats.time) : ''; },
+    bindInputs: function(data, attributes, keyName)
+    {
+        keyName = keyName != null ? keyName : data.Name;
+        var ctl;
+        var tempParent = $('<div></div>');
+        var dataValue = (attributes != null && attributes[keyName] != null) ? attributes[keyName] : data.DefaultValue;
+        if (data.Values.length > 0)
+        {
+            ctl = $('<select>').attr('data-column', keyName);
+            $.each(data.Values, function(idx, item)
+            {
+                $('<option>').attr('value', item).html(item).appendTo(ctl);
+            });
+            ctl.val(dataValue);
+            ctl.find(':selected').attr('selected', 'selected'); //need value written into html
+        }
+        else
+        {
+            ctl = $('<input>').attr({ type: 'text', 'data-column': keyName });//.val(dataValue);
+            if (dataValue != null)
+                ctl.attr('value', dataValue);   //need value written into html
+        }
+
+        if (data.Required)
+            ctl.attr('data-required', 'true');
+        ctl.appendTo(tempParent);
+        return tempParent.clone().html();   //get minor hack to get outerHTML
+    }
 });
