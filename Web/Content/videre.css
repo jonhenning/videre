@@ -53,7 +53,7 @@ legend
 
 .designer-panes .widget-container
 {
-    margin: 5px;
+    margin-bottom: 5px;
 }
 
 a
@@ -64,4 +64,15 @@ a
 .alt
 {
     background-color: #f4f4f4;
+}
+
+.hide-overflow
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    -moz-binding: url('ellipsis.xml#ellipsis');
+    display: block;
 }
