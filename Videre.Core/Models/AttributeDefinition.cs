@@ -8,6 +8,7 @@ namespace Videre.Core.Models
         public AttributeDefinition()
         {
             Values = new List<string>();
+            Dependencies = new List<AttributeDependency>();
         }
 
         public string LabelKey { get; set; }
@@ -17,6 +18,7 @@ namespace Videre.Core.Models
 
         public List<string> Values { get; set; }    //todo: if values is set then dropdown, otherwise textbox???
         public object DefaultValue { get; set; }
+        public List<AttributeDependency> Dependencies { get; set; }
     }
 
 }

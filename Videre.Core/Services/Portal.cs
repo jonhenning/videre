@@ -700,6 +700,12 @@ namespace Videre.Core.Services
         {
             return Path.Combine(GetTempFileDir(portalId), fileName);
         }
+
+        public static List<Models.PageTemplate> GetPageTemplatesByContentId(string contentId)
+        {
+            return Portal.GetPageTemplates().Where(t => t.Widgets.Exists(w => w.ContentIds.Contains(contentId))).ToList();
+        }
+
         //public static string MapPath(string path)
         //{
         //    if (System.Web.HttpContext.Current != null)

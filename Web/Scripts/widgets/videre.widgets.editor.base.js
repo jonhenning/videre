@@ -13,7 +13,8 @@ videre.widgets.editor.base = videre.widgets.base.extend(
         this._dirty = false;
 
         this._baseEditorDelegates = {
-            onItemBind: videre.createDelegate(this, this._onItemBind)
+            onItemBind: videre.createDelegate(this, this._onItemBind),
+            onDependencyControlChange: videre.createDelegate(this, this._onDependencyControlChange)
         }
     },
 
@@ -23,6 +24,7 @@ videre.widgets.editor.base = videre.widgets.base.extend(
         this._dialog = this.getControl('Dialog').modal('hide').hide();
         this.getControl('btnOk').click(videre.createDelegate(this, this._onOkClicked));
         this._widget.find('[data-column]').change(videre.createDelegate(this, this._onDataChange));
+
         //this._widget.find('input,select,textarea').jqBootstrapValidation();
     },
 
@@ -39,8 +41,12 @@ videre.widgets.editor.base = videre.widgets.base.extend(
 
     bindAttributes: function()
     {
-        this.getControl('AttributeList').html(this.getControl('AttributeListTemplate').render(this._manifestData.AttributeDefinitions, { attributes: this._widgetData.Attributes }));
-        this.getControl('AttributeList').toggle(this._manifestData.AttributeDefinitions.length > 0);
+        var ctr = this.getControl('AttributeList');
+        ctr.html(this.getControl('AttributeListTemplate').render(this._manifestData.AttributeDefinitions, { attributes: this._widgetData.Attributes }));
+        ctr.toggle(this._manifestData.AttributeDefinitions.length > 0);
+        //ctr.find('[data-dependencies]').change(this._baseEditorDelegates.onDependencyControlChange);    //JON:  YOU NEED TO GET RELATED CONTROLS!
+        this._handleDependencies(ctr);
+
     },
 
     validate: function()
@@ -65,8 +71,53 @@ videre.widgets.editor.base = videre.widgets.base.extend(
     _onDataChange: function (e)
     {
         this._dirty = true;
-    }
+    },
 
+    _onDependencyControlChange: function(e)
+    {
+        this._handleDependencies(this.getControl('AttributeList'));
+    },
+
+    _handleDependencies: function(ctr)
+    {
+        var self = this;
+        $.each(this._getDependencyCtrls(ctr), function(idx, item)
+        {
+            var match = self._getDependencyMatch(item);
+            if (!match)
+                item.ctl.val('');
+            item.controlGroup.toggle(match);
+        });
+    },
+
+    _getDependencyMatch: function(d)
+    {
+        var ret = true;
+        for (var i = 0; i < d.dependencies.length; i++)
+        {
+            var val = d.dependencies[i].ctl.val();
+            ret = ret && d.dependencies[i].HasValue ? !String.isNullOrEmpty(val) : d.dependencies[i].Values.contains(val);
+        }
+        return ret;
+    },
+
+    _getDependencyCtrls: function(ctr)
+    {
+        var ret = [];
+        var ctls = ctr.find('[data-dependencies]');
+        
+        for (var i = 0; i < ctls.length; i++)
+        {
+            var o = {};
+            o.ctl = $(ctls[i]);
+            o.dependencies = o.ctl.data('dependencies'); 
+            for (var i = 0; i < o.dependencies.length; i++)
+                o.dependencies[i].ctl = ctr.find('[data-column="' + o.dependencies[i].DependencyName + '"]').change(this._baseEditorDelegates.onDependencyControlChange);
+            o.controlGroup = o.ctl.closest('.control-group');
+            ret.push(o);
+        }
+        return ret;
+    }
 
 });
 

@@ -165,7 +165,7 @@ videre.UI = {
         ddl[0].options.length = 0;
         if (blankText != null)
             ddl.append($('<option></option>').html(blankText));
-        $.each(data, function(val, text)
+        $.each(data, function(idx, item)
         {
             ddl.append($('<option></option>').val(this[valCol]).html(this[textCol]));
         });
@@ -769,6 +769,9 @@ $.views.helpers({
 
         if (data.Required)
             ctl.attr('data-required', 'true');
+        if (data.Dependencies != null && data.Dependencies.length > 0)
+            ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
+
         ctl.appendTo(tempParent);
         return tempParent.clone().html();   //get minor hack to get outerHTML
     }

@@ -109,6 +109,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentContainer.cs" />
     <Compile Include="Models\CommentControl.cs" />
+    <Compile Include="Models\AttributeDependency.cs" />
     <Compile Include="Models\CustomDataElement.cs" />
     <Compile Include="Models\View.cs" />
     <Compile Include="Models\Package.cs" />
