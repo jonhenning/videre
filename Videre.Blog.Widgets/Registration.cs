@@ -22,8 +22,35 @@ namespace Videre.Blog.Widgets
 
             var updates = Videre.Core.Services.Update.Register(new List<CoreModels.WidgetManifest>()
             {
-                new CoreModels.WidgetManifest() { Path = "Blog", Name = "Blog", Title = "Blog", EditorPath = "Widgets/Blog/BlogEditor", EditorType = "videre.widgets.editor.blog", ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "General" },
+                new CoreModels.WidgetManifest() { Path = "Blog", Name = "Blog", Title = "Blog", EditorPath = "Widgets/Blog/BlogEditor", EditorType = "videre.widgets.editor.blog", ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "General", AttributeDefinitions = new List<AttributeDefinition>()
+                {
+                    new AttributeDefinition()
+                    {
+                        Name = "CommentProvider",
+                        Values = new List<string>() { "None", "Videre", "Disquss" },
+                        DefaultValue = "None",
+                        Required = true,
+                        LabelKey = "CommentProvider.Text",
+                        LabelText = "Comment Provider"
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "DisqussShortName",
+                        DefaultValue = "",
+                        Required = true,
+                        LabelKey = "DisqussShortName.Text",
+                        LabelText = "Disquss Short Name",
+                        Dependencies = new List<AttributeDependency>() { new AttributeDependency() { DependencyName = "CommentProvider", Values = new List<string>() { "Disquss" }}}
+                    }
+                }},
                 new CoreModels.WidgetManifest() { Path = "Blog", Name = "BlogTags", Title = "Blog Tags", EditorType = "videre.widgets.editor.blog",  ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "General" }
+            });
+
+            updates += CoreServices.Update.Register(new CoreModels.SearchProvider()
+            {
+                Name = "Blog Search Provider",
+                ProviderType = "Videre.Blog.Widgets.Services.BlogSearchProvider, Videre.Blog.Widgets",
+                DocumentTypes = new List<string>() { "Blog" }
             });
 
             updates += CoreServices.Update.Register(new List<CoreModels.SecureActivity>()

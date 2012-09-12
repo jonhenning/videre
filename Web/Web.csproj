@@ -130,6 +130,7 @@
   <ItemGroup>
     <Content Include="Content\images\document.png" />
     <Content Include="Content\images\folder.png" />
+    <Content Include="Content\images\icon-rss.png" />
     <Content Include="Content\images\ui-bg_glass_75_e6e6e6_1x400.png" />
     <Content Include="Content\themes\img\glyphicons-halflings-white.png" />
     <Content Include="Content\themes\img\glyphicons-halflings.png" />

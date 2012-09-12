@@ -31,6 +31,7 @@
             Html.RenderPartial("Widgets/Blog/BlogAdminMarkup", Model);
         }
         <h4>
+            <a class="pull-right" href="@Portal.ResolveUrl("~/blogapi/feed/rss/" + blog.Name)"><img src="@Portal.ResolveUrl("~/content/images/icon-rss.png")" /></a>
             <a href="@blogUrl">
                 @blog.Name
             </a>
@@ -65,9 +66,10 @@
             <p>@(entry.PostDate.HasValue ? entry.PostDate.Value.ToLocalTime().ToString("") : "")</p>
     
             <hr />
-            if (true)
+            var commentProvider = Model.GetAttribute("CommentProvider", "None");
+            if (commentProvider != "None")
             {
-                Html.RenderPartial("Controls/Core/Comments", new CoreModels.CommentControl("BlogEntry", entry.Id));
+                Html.RenderPartial("Controls/Core/Comments." + commentProvider, new CoreModels.CommentControl(Model, "BlogEntry", entry.Id));
             }
         }
     </div>

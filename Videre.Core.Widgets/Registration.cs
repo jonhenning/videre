@@ -43,7 +43,6 @@ namespace Videre.Core.Widgets
             });
 
             CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition() { Name = "SearchIndexDir", DefaultValue = "~/App_Data/SearchIndex", Required = true, LabelKey = "SearchIndexDir.Text", LabelText = "Search Index Directory" });
-
             CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition() { Name = "SearchUrl", DefaultValue = "~/search", Required = true, LabelKey = "SearchUrl.Text", LabelText = "Search Url" });
 
             //App init
@@ -102,6 +101,7 @@ namespace Videre.Core.Widgets
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Upload", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Account", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Content", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Comment", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Search", Name = "Upload", Roles = new List<string>() {CoreServices.Update.AdminRoleId} }//,
                 //new CoreModels.SecureActivity() { Area = "Blog", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} }
             });

@@ -193,11 +193,12 @@
     <Content Include="Views\Shared\Widgets\Core\SearchResult.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\Search.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\Theme.cshtml" />
-    <Content Include="Views\Shared\Controls\Core\Comments.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Shared\Controls\Core\WidgetAdminContextMenu.cshtml" />
+    <Content Include="Views\Shared\Controls\Core\Comments.Disquss.cshtml" />
+    <Content Include="Views\Shared\Controls\Core\Comments.Videre.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">

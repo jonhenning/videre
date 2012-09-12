@@ -5,8 +5,7 @@
 @using Videre.Core.Services;
 @model Models.CommentControl
 @{
-    var isAdmin = Security.IsActivityAuthorized("Blog", "Administration");
-
+    var isAdmin = Security.IsActivityAuthorized("Comment", "Administration");
     Html.RegisterControlPresenter(Model, "videre.controls.comments", new Dictionary<string, object>() {
         {"data", Model.Container},
         {"isAdmin", isAdmin}

@@ -1,22 +1,31 @@
-﻿
+﻿using System;
+using System.Linq;
+
 namespace Videre.Core.Models
 {
     public class CommentControl : IClientControl
     {
-        public CommentControl(string containerType, string containerId, string portalId = null)
+        public CommentControl(Models.Widget widget, string containerType, string containerId, string portalId = null)
         {
             ClientId = Services.Portal.NextClientId();
+            Widget = widget;
+            Provider = widget.GetAttribute("CommentProvider", "None");
 
-            Container = Services.Comment.Get(containerType, containerId, portalId);
-            if (Container == null)
+            if (Provider.Equals("Videre", StringComparison.InvariantCultureIgnoreCase))
             {
-                Container = new CommentContainer() { ContainerType = containerType, ContainerId = containerId };
-                Services.Comment.Save(Container);
+                Container = Services.Comment.Get(containerType, containerId, portalId);
+                if (Container == null)
+                {
+                    Container = new CommentContainer() { ContainerType = containerType, ContainerId = containerId };
+                    Services.Comment.Save(Container);
+                }
             }
         }
 
         public CommentContainer Container {get;set;}
         public string ClientId { get; set; }    //must be assigned every time the widget is rendered
+        public Models.Widget Widget { get; set; }
+        public string Provider { get; set; }
 
         public string Path
         {

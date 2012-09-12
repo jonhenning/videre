@@ -57,6 +57,10 @@
     <Reference Include="CodeEndeavors.ResourceManager">
       <HintPath>..\lib\CodeEndeavors.ResourceManager\CodeEndeavors.ResourceManager.dll</HintPath>
     </Reference>
+    <Reference Include="Lucene.Net, Version=2.9.4.1, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Lucene.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ServiceModel" />
@@ -120,6 +124,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration.cs" />
     <Compile Include="Services\Blog.cs" />
+    <Compile Include="Services\BlogSearchProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\widgets\Blog\videre.widgets.blog.js" />
