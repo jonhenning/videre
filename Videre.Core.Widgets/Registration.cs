@@ -35,7 +35,7 @@ namespace Videre.Core.Widgets
             var updates = CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition()
             {
                 Name = "TextEditor",
-                Values = new List<string>() { "Core/CKTextEditor", "Core/CLTextEditor" },
+                Values = new List<string>() { "Core/CKTextEditor", "Core/CLTextEditor", "Core/WYSIHTML5TextEditor" },
                 DefaultValue = "Core/CKTextEditor",
                 Required = true,
                 LabelKey = "TextEditor.Text",
@@ -93,17 +93,17 @@ namespace Videre.Core.Widgets
             //portal init
             updates += CoreServices.Update.Register(new List<CoreModels.SecureActivity>()
             {
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Portal", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "PageTemplate", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "LayoutTemplate", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Localization", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Upload", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Account", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Content", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Comment", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Search", Name = "Upload", Roles = new List<string>() {CoreServices.Update.AdminRoleId} }//,
-                //new CoreModels.SecureActivity() { Area = "Blog", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} }
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Portal", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "PageTemplate", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "LayoutTemplate", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Localization", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Upload", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Account", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Content", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Comment", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Search", Name = "Upload", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }//,
+                //new CoreModels.SecureActivity() { Area = "Blog", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }
             });
 
             //Moved to PortalInstall
@@ -111,7 +111,7 @@ namespace Videre.Core.Widgets
             //{
             //    updates += CoreServices.Update.Register(new List<CoreModels.User>()
             //    {
-            //        new CoreModels.User() { PortalId = portalId, Name = "admin", Password = "videre", Roles = new List<string>() {CoreServices.Update.AdminRoleId} }
+            //        new CoreModels.User() { PortalId = portalId, Name = "admin", Password = "videre", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }
             //    });
             //}
 

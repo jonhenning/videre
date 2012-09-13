@@ -65,7 +65,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
 
         this.bindData(content, this.getControl('GeneralTab'));
         this.bindData(content, this.getControl('ContentProperties'));
-        this._editor.bind();
+        this._editor.bind(content);
     },
 
     bindLinks: function()

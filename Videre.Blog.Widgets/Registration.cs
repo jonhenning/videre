@@ -53,17 +53,16 @@ namespace Videre.Blog.Widgets
                 DocumentTypes = new List<string>() { "Blog" }
             });
 
-            updates += CoreServices.Update.Register(new List<CoreModels.SecureActivity>()
-            {
-                new CoreModels.SecureActivity() { PortalId = CoreServices.Portal.CurrentPortalId, Area = "Blog", Name = "Administration", Roles = new List<string>() {CoreServices.Update.AdminRoleId} }
-            });
-
             return updates;
         }
 
         public int RegisterPortal(string portalId)
         {
             var updates = 0;
+            updates += CoreServices.Update.Register(new List<CoreModels.SecureActivity>()
+            {
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Blog", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }
+            });
             return updates;        
         }
     }

@@ -24,12 +24,12 @@
 
 <div id="@Model.GetId("Widget")">
     <form>
-        <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px; max-height: 600px;">
+        <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="margin-left: -450px; width: 900px;">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
                 @Model.GetText("TextHtmlEditor.Text", "Text / Html Editor")
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="min-height: 450px;">
                 @{Html.RenderPartial("WidgetHeader", Model);}
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>

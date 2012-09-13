@@ -21,6 +21,7 @@ namespace Videre.Core.Models
         public string Name { get; set; }
         public string Title { get; set; }
         public string ThemeName { get; set; }
+        public bool Default { get; set; }
         public List<string> Aliases {get;set;}
         //public string ThemeCss { get; set; }
 

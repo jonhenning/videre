@@ -3,8 +3,14 @@ videre.registerNamespace('videre.widgets.admin');
 
 videre.widgets.admin.portal = videre.widgets.base.extend(
 {
-    get_data: function() { return this._data; },
-    set_data: function(v) { this._data = v; },
+    get_portals: function() { return this._portals; },
+    set_portals: function(v)
+    {
+        this._portals = v;
+        this._portalDict = this._portals.toDictionary(function(d) { return d.Id; });
+    },
+    get_selectedPortalId: function() { return this._selectedPortalId; },
+    set_selectedPortalId: function(v) { this._selectedPortalId = v; },
     get_installedThemes: function() { return this._installedThemes; },
     set_installedThemes: function(v) { this._installedThemes = v; },
     get_attributeDefs: function() { return this._attributeDefs; },
@@ -17,14 +23,16 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
     init: function()
     {
         this._base();  //call base method
-        this._data = null;
+        this._portals = null;
+        this._selectedPortal = null;
+        this._selectedPortalId = null;
         this._installedThemes = null;
         this._themeWidget = null;
         this._attributeDefs = {};
+        this._createPortalDialog = null;
 
         this._delegates = {
             onAttributeItemBind: videre.createDelegate(this, this._onAttributeItemBind),
-            onDataReturn: videre.createDelegate(this, this._onDataReturn),
             onSaveReturn: videre.createDelegate(this, this._onSaveReturn)
         };
     },
@@ -32,8 +40,13 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
     _onLoad: function(src, args)
     {
         this._base(); //call base
-        this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));       
+        this._createPortalDialog = this.getControl('CreatePortalDialog').hide().modal('hide');
 
+        this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
+        this.getControl('btnNew').click(videre.createDelegate(this, this._onNewClicked));
+        this.getControl('btnCreate').click(videre.createDelegate(this, this._onCreateClicked));
+        this.getControl('ddlPortals').change(videre.createDelegate(this, this._onPortalChanged));
+        this._selectedPortal = this._portalDict[this._selectedPortalId];
         var uploader = new qq.FileUploaderBasic({
             button: this.getControl('btnImport')[0],
             params: {},
@@ -44,7 +57,8 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
             debug: true
         });
 
-        this._themeWidget = videre.widgets.register(this._id, videre.widgets.admin.theme, {id:this._id, ns: this._ns, data: this._data, installedThemes: this._installedThemes});
+        //todo: fix theme for multi-portals!
+        this._themeWidget = videre.widgets.register(this._id, videre.widgets.admin.theme, { id: this._id, ns: this._ns, data: this._selectedPortal, installedThemes: this._installedThemes });
 
         //this.refreshThemes();
         this.bind();
@@ -53,9 +67,10 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
 
     bind: function()
     {
+        videre.UI.bindDropdown(this.getControl('ddlPortals'), this._portals, 'Id', 'Name', null, this._selectedPortalId);
         this._themeWidget.bind();
 
-        this.bindData(this._data);
+        this.bindData(this._selectedPortal);
         for(var key in this._attributeDefs)
             this.bindAttributes(this._getSafeGroupName(key), this._attributeDefs[key]);
 
@@ -63,13 +78,13 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
 
     bindAttributes: function(groupName, defs)
     {
-        this.getControl('AttributeList-' + groupName).html(this.getControl('AttributeListTemplate').render(defs, { groupName: groupName, roleDataDict: this._roleDataDict, attributes: this._data.Attributes }));
+        this.getControl('AttributeList-' + groupName).html(this.getControl('AttributeListTemplate').render(defs, { groupName: groupName, roleDataDict: this._roleDataDict, attributes: this._selectedPortal.Attributes }));
     },
 
     save: function()
     {
         //todo: validation!
-        var portal = this.persistData(this._data, true, this.getControl('GeneralTab'));
+        var portal = this.persistData(this._selectedPortal, true, this.getControl('GeneralTab'));
         this._themeWidget.persistData(portal);
         //portal.ThemeName = this._selectedTheme != null ? this._selectedTheme.Name : '';
         for(var key in this._attributeDefs)
@@ -77,32 +92,64 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         this.ajax('~/core/Portal/SavePortal', { portal: portal }, this._delegates.onSaveReturn);
     },
 
+    newPortal: function()
+    {
+        this.bindData({}, this._createPortalDialog);
+        this._createPortalDialog.modal('show');
+    },
+
+    createPortal: function()
+    {
+        if (this.validControls(this._createPortalDialog))
+        {
+            var user = this.persistData({}, true, this.getControl('AdminUser'));
+            var portal = {
+                Name: this.getControl('txtName').val()
+            };
+            var packages = [];
+            this.getControl('Packages').find(':checked').each(function() { packages.push($(this).val()) });
+
+            this.ajax('~/core/Portal/CreatePortal', { adminUser: user, portal: portal, packages: packages }, this._delegates.onSaveReturn, null, this._createPortalDialog);
+        }
+    },
+
     _getSafeGroupName: function(name)
     {
         return name.replace(new RegExp(' ', 'g'), '-').replace(new RegExp('\\.', 'g'), '-');
-    },
-
-    _onDataReturn: function(result, ctx)
-    {
-        if (!result.HasError)
-        {
-            this.set_data(result.Data);
-            this.bind();
-        }
     },
 
     _onSaveReturn: function(result)
     {
         if(!result.HasError && result.Data)
         {
-            this._data = result.Data;
+            this._selectedPortalId = result.Data.selectedId;
+            this.set_portals(result.Data.portals);
+            this._selectedPortal = this._portalDict[this._selectedPortalId];
             this.bind();
+            this._createPortalDialog.modal('hide');
         }
     },
 
     _onSaveClicked: function(e)
     {
         this.save();
+    },
+
+    _onNewClicked: function(e)
+    {
+        this.newPortal();
+    },
+
+    _onCreateClicked: function(e)
+    {
+        this.createPortal();
+    },
+
+    _onPortalChanged: function(e)
+    {
+        this._selectedPortalId = this.getControl('ddlPortals').val();
+        this._selectedPortal = this._portalDict[this._selectedPortalId];
+        this.bind();
     },
 
     _onFileSubmit: function(id, fileName)

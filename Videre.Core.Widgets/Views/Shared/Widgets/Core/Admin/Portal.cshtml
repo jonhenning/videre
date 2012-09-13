@@ -8,9 +8,12 @@
 @{
     Html.RegisterDataTableScript();
     Html.RegisterScript("~/scripts/fileuploader.js", true);
-    var portal = Videre.Core.Services.Portal.CurrentPortal;
+    //var portal = Videre.Core.Services.Portal.CurrentPortal;
+    var currentPortalId = Videre.Core.Services.Portal.CurrentPortalId;
+    var portals = Videre.Core.Services.Portal.GetPortals();
     Html.RegisterControlPresenter(Model, "videre.widgets.admin.portal", new Dictionary<string, object>() {
-        { "data", portal }, 
+        { "portals", portals }, 
+        { "selectedPortalId", currentPortalId }, 
         { "installedThemes", Videre.Core.Services.UI.GetThemes() }, 
         { "attributeDefs", Portal.AttributeDefinitions }}
         );
@@ -25,6 +28,14 @@
         <p>@Html.Raw(Model.GetText("Instructions.Text", "Settings specific to the current portal can be configured here."))</p>
 
         <div class="container">
+            <div class="row">
+                <div class="span4">
+                    <select id="@Model.GetId("ddlPortals")" class="span4"></select>
+                </div>
+                <div class="span4">
+                    <a class="btn" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetText("NewPortal.Text", "New Portal")</a>
+                </div>
+            </div>
             <div class="row">
                 <div class="span12">
 
@@ -48,8 +59,10 @@
                     <div class="tab-content" style="min-height:  400px;">
                         <div class="tab-pane active" id="@Model.GetId("GeneralTab")">
                             <div class="form-horizontal">
-                                @Html.InputControlGroup(Model, "Name", "Name.Text", "Name", "Name", readOnly: true)
+                                @Html.InputControlGroup(Model, "Name", "Name.Text", "Name", "Name")
                                 @Html.InputControlGroup(Model, "Title", "Title.Text", "Title", "Title")
+                                @Html.TextAreaControlGroup(Model, "Aliases", "Aliases.Text", "Aliases", "Aliases", "list", "span6", 3)
+                                @Html.DropDownControlGroup(Model, "Default", "Default.Text", "Default", "Default", new List<SelectListItem>() {{new SelectListItem() { Value = "false", Text="No"}}, {new SelectListItem() {Value = "true", Text = "Yes"} } })
                             </div>
                         </div>
                         <div class="tab-pane" id="@Model.GetId("ThemeTab")">
@@ -83,4 +96,47 @@
             </div>
         </div>
     </fieldset>
+
+    <div id="@Model.GetId("CreatePortalDialog")" data-target="#@Model.GetId("CreatePortalDialog")" class="modal fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("NewPortal.Text", "New Portal")
+        </div>
+        <div class="modal-body">
+            @{Html.RenderPartial("WidgetHeader", Model);}
+            <div class="form-horizontal">
+
+                <div>
+                    <h5>@Model.GetText("Portal.Text", "Portal")</h5>
+                    <div class="control-group">
+                        <label class="control-label" for="optionsCheckboxList">Packages</label>
+                        <div class="controls" id="@Model.GetId("Packages")">
+                            @foreach (var package in Videre.Core.Services.Update.GetPackages().Where(p => p.Type == "Data"))
+                            {
+                                <label class="checkbox" title="@package.Description">
+                                    <input type="checkbox" value="@package.Name" checked="checked">
+                                    @package.Name
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
+                </div>
+                <div id="@Model.GetId("AdminUser")">
+                    <h5>@Model.GetText("AdminUser.Text", "Admin User")</h5>
+
+                    @Html.InputControlGroup(Model, "txtUserName", "UserName.Text", "UserName", new Dictionary<string, string>() { { "column", "Name" } }, true)
+                    @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", new Dictionary<string, string>() { { "column", "Email" } }, true, inputType: "email")
+                    @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", new Dictionary<string, string>() { { "column", "Password" } }, true, inputType: "password")
+                    @Html.InputControlGroup(Model, "txtPassword2", "ConfirmPassword.Text", "Confirm Password", new Dictionary<string, string>() { { "validation-matches-match", Model.GetId("txtPassword") }, {"validation-matches-message", string.Format(Model.GetPortalText("MustMatch.Text", "Must match {0} entered above"), "password")} }, false, inputType: "password")
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnCreate")">@Model.GetPortalText("Create.Text", "Create")</a>
+            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+        </div>
+    </div>
+
 </div>

@@ -160,7 +160,7 @@ videre.UI = {
         });
     },
 
-    bindDropdown: function(ddl, data, valCol, textCol, blankText)
+    bindDropdown: function(ddl, data, valCol, textCol, blankText, selectedVal)
     {
         ddl[0].options.length = 0;
         if (blankText != null)
@@ -169,6 +169,8 @@ videre.UI = {
         {
             ddl.append($('<option></option>').val(this[valCol]).html(this[textCol]));
         });
+        if (selectedVal != null)
+            ddl.val(selectedVal);
         return ddl;
     }
 
@@ -480,6 +482,7 @@ videre.widgets.base = videre.Class.extend(
                                 ctl.html(val);
                             else 
                                 ctl.val(val);
+                            break;
                         }
                 }
             }
@@ -771,8 +774,8 @@ $.views.helpers({
             ctl.attr('data-required', 'true');
         if (data.Dependencies != null && data.Dependencies.length > 0)
             ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
-
         ctl.appendTo(tempParent);
-        return tempParent.clone().html();   //get minor hack to get outerHTML
+        //return tempParent.clone().html();   //get minor hack to get outerHTML
+        return tempParent.html();   //get minor hack to get outerHTML
     }
 });

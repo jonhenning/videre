@@ -10,6 +10,7 @@ using CodeEndeavors.Extensions;
 using CodeEndeavors.ResourceManager.Extensions;
 using Videre.Core.Models;
 using DomainObjects = CodeEndeavors.ResourceManager.DomainObjects;
+using CodeEndeavors.Cache;
 
 namespace Videre.Core.Services
 {
@@ -129,36 +130,46 @@ namespace Videre.Core.Services
             var templates = Repository.Current.GetResources<Models.PageTemplate>("Template", t => t.Data.PortalId == portalId).Select(t => t.Data);
             if (!string.IsNullOrEmpty(url))
             {
-                var urls = templates.SelectMany(t => t.Urls);
-                var queries = new List<DomainObjects.Query<string>>() {
-                    new DomainObjects.Query<string>(u => Services.RouteParser.Parse(u, url).Keys.Count > 0, 1)//,// 
-                    //exact match score
-                    //new DomainObjects.Query<string>(u => u.Equals(url, StringComparison.InvariantCultureIgnoreCase), 3), 
-                    //regex match score
-                    //new DomainObjects.Query<string>(u => !string.IsNullOrEmpty(url) && (u.StartsWith("regex:") && Regex.Match(url, u.Replace("regex:", ""), RegexOptions.IgnoreCase).Success), 2)
-            };
-
-                var matchedUrls = queries.GetMatches(urls, false);
-                if (matchedUrls.Count > 0)
+                var bestMatch = GetBestMatchedUrl(url, templates.SelectMany(t => t.Urls));
+                if (!string.IsNullOrEmpty(bestMatch))
                 {
-                    //our most specific match is determined by number of matching groups from regex... - if tie then use length of matchedUrl
-                    var bestMatch = (from u in matchedUrls
-                                     orderby Services.RouteParser.Parse(u, url).Keys.Count descending, u.Length descending
-                                     select u).FirstOrDefault();
+                //var urls = templates.SelectMany(t => t.Urls);
+                //var queries = new List<DomainObjects.Query<string>>() {
+                //    new DomainObjects.Query<string>(u => Services.RouteParser.Parse(u, url).Keys.Count > 0, 1)};
 
-                    //MatchedUrl = matchedUrls[0];
+                //var matchedUrls = queries.GetMatches(urls, false);
+                //if (matchedUrls.Count > 0)
+                //{
+                //    //our most specific match is determined by number of matching groups from regex... - if tie then use length of matchedUrl
+                //    var bestMatch = (from u in matchedUrls
+                //                     orderby Services.RouteParser.Parse(u, url).Keys.Count descending, u.Length descending
+                //                     select u).FirstOrDefault();
+
                     if (IsInRequest)    //todo: only need this when in request, otherwise ignore... perhaps should be moved out to controller...
                     {
                         Portal.CurrentUrlMatchedGroups = Services.RouteParser.Parse(bestMatch, url);
                         CurrentUrl = Portal.CurrentUrlMatchedGroups["0"];
                     }
-                    //if (MatchedUrl.StartsWith("regex:"))
-                    //    MatchedUrl = Regex.Match(url, MatchedUrl.Replace("regex:", ""), RegexOptions.IgnoreCase).Value;
                     return templates.Where(t => t.Urls.Contains(bestMatch)).SingleOrDefault();
                 }
             }
             CurrentUrl = "";
             return templates.Where(t => t.Urls.Count == 0).FirstOrDefault();  //grab default template
+        }
+
+        public static string GetBestMatchedUrl(string url, IEnumerable<string> urls)
+        {
+            var queries = new List<DomainObjects.Query<string>>() { new DomainObjects.Query<string>(u => Services.RouteParser.Parse(u, url).Keys.Count > 0, 1) };
+
+            var matchedUrls = queries.GetMatches(urls, false);
+            if (matchedUrls.Count > 0)
+            {
+                //our most specific match is determined by number of matching groups from regex... - if tie then use length of matchedUrl
+                return (from u in matchedUrls
+                        orderby Services.RouteParser.Parse(u, url).Keys.Count descending, u.Length descending
+                        select u).FirstOrDefault();
+            }
+            return null;
         }
 
         public static string Import(string portalId, Models.PageTemplate pageTemplate, Dictionary<string, string> widgetContent, Dictionary<string, string> idMap, string userId = null)
@@ -184,7 +195,7 @@ namespace Videre.Core.Services
             Logging.Logger.DebugFormat("Importing page template {0}", pageTemplate.ToJson());
             return Portal.Save(pageTemplate);
         }
-        public static string Save(Models.PageTemplate pageTemplate, string userId = null)   
+        public static string Save(Models.PageTemplate pageTemplate, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             pageTemplate.PortalId = string.IsNullOrEmpty(pageTemplate.PortalId) ? CurrentPortalId : pageTemplate.PortalId;
@@ -412,17 +423,24 @@ namespace Videre.Core.Services
         {
             get
             {
-                var domain = HttpRuntime.AppDomainAppPath;
-                var vdir = ResolveUrl("~/");
-                var portal = GetPortal("Default");
-                return portal != null ? portal.Id : null;// GetPortal("Default").Id;   //eventually allow multiple portals...
+                var portal = CurrentPortal;
+                return portal != null ? portal.Id : null;
             }
         }
         public static Models.Portal CurrentPortal
         {
             get
             {
-                return GetPortalById(CurrentPortalId);
+                //TODO: cache this beyond current request
+                return CacheState.PullRequestCache<Models.Portal>("CurrentPortal", delegate()
+                {
+                    var portals = GetPortals();
+                    var bestMatch = GetBestMatchedUrl(RequestRootUrl, portals.SelectMany(t => t.Aliases));
+                    Models.Portal portal = null;
+                    if (!string.IsNullOrEmpty(bestMatch))
+                        portal = portals.Where(t => t.Aliases.Contains(bestMatch)).FirstOrDefault();
+                    return portal != null ? portal : GetDefaultPortal();
+                });
             }
         }
         public static List<Models.Portal> GetPortals()
@@ -437,11 +455,29 @@ namespace Videre.Core.Services
         {
             return GetPortals().Where(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
+        public static Models.Portal GetDefaultPortal()
+        {
+            return GetPortals().Where(m => m.Default).FirstOrDefault();
+        }
         public static bool Save(Models.Portal portal, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             if (!IsDuplicate(portal))
+            {
+                var portals = Portal.GetPortals();
+                if (portal.Default)
+                {
+                    foreach (var p in portals.Where(p => p.Default))
+                    {
+                        p.Default = false;
+                        Repository.Current.StoreResource("Portal", null, p, userId);
+                    }
+                }
+                else if (!portals.Exists(p => p.Default && p.Id != portal.Id))
+                    throw new Exception(string.Format(Localization.GetLocalization(LocalizationType.Exception, "DefaultPortalRequired.Error", "At least one portal must be marked as the default.", "Core"), "Portal"));
+
                 Repository.Current.StoreResource("Portal", null, portal, userId);
+            }
             else
                 throw new Exception(string.Format(Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error", "{0} already exists.   Duplicates Not Allowed.", "Core"), "Portal"));
             return true;
@@ -534,17 +570,21 @@ namespace Videre.Core.Services
             return export;
         }
 
-        public static bool Import(Models.PortalExport export)
+        public static bool Import(Models.PortalExport export, string portalId)
         {
             var idMap = new Dictionary<string, string>();
 
-            var portal = GetPortal(export.Portal.Name);
+            var portal = GetPortalById(portalId);
             if (portal != null)
+            {
                 export.Portal.Id = portal.Id;
+                export.Portal.Name = portal.Name;   //IMPORTANT:  since we pass in the portalId that we want to import into, we need to ensure that is used, therefore, the name must match as that is how the duplicate lookup is done.  (i.e. {Id: 1, Name=Default} {Id: 2, Name=Foo}.  If we import Id:2 and its name importing is Default)
+                export.Portal.Default = portal.Default;
+            }
             else
-                export.Portal.Id = null;
+                throw new Exception("Portal Not found: " + portalId);
 
-            Save(export.Portal);   //todo: what about audits?!?!?
+            Save(export.Portal);
             portal = GetPortal(export.Portal.Name);
             SetIdMap<Models.Portal>(portal.Id, export.Portal.Id, idMap);
 
@@ -664,6 +704,16 @@ namespace Videre.Core.Services
                 return ResolveUrl("~/" + CurrentUrl + url);
             return ResolveUrl("~/" + CurrentUrl + "/" + url);
         }
+        public static string RequestRootUrl
+        {
+            get
+            {
+                if (IsInRequest)
+                    return HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority).PathCombine(ResolveUrl("~/"), "/");
+                return null;
+            }
+        }
+
         public static string ResolvePath(string path)
         {
             if (path.StartsWith("~/"))

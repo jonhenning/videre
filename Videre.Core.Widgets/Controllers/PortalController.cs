@@ -1,28 +1,36 @@
 ﻿using System;
-using System.Linq;
+using CodeEndeavors.Extensions;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
 using Videre.Core.ActionResults;
 using Videre.Core.Services;
-//using DomainObjects = CodeEndeavors.ResourceManager.DomainObjects;
-using CodeEndeavors.Extensions;
-using Videre.Core.Extensions;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
-using System.IO;
 
 namespace Videre.Core.Widgets.Controllers
 {
     public class PortalController : Controller
     {
-
-        public JsonResult<CoreModels.Portal> SavePortal(CoreModels.Portal portal)
+        public JsonResult<dynamic> CreatePortal(CoreModels.User adminUser, CoreModels.Portal portal, List<string> packages)
         {
-            return API.Execute<CoreModels.Portal>(r =>
+            return API.Execute<dynamic>(r =>
+            {
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                var portalId = Core.Services.Update.InstallPortal(adminUser, portal);
+                foreach (var package in packages)
+                    Update.InstallPackage(package, portalId);
+                r.Data = new { selectedId = portalId, portals = CoreServices.Portal.GetPortals() };
+            });
+        }
+
+        public JsonResult<dynamic> SavePortal(CoreModels.Portal portal)
+        {
+            return API.Execute<dynamic>(r =>
             {
                 Security.VerifyActivityAuthorized("Portal", "Administration");
                 if (CoreServices.Portal.Save(portal))
-                    r.Data = portal;
+                    r.Data = new { selectedId = portal.Id, portals = CoreServices.Portal.GetPortals() };
             });
         }
 

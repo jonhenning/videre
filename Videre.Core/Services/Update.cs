@@ -16,23 +16,21 @@ namespace Videre.Core.Services
     public class Update
     {
         private static Dictionary<string, string> _adminRoleIdDict = new Dictionary<string, string>();
-        public static string AdminRoleId
+        public static string GetAdminRoleId(string portalId = null)
         {
-            get
+            portalId = !string.IsNullOrEmpty(portalId) ? portalId : Services.Portal.CurrentPortalId;
+            if (!_adminRoleIdDict.ContainsKey(portalId))
             {
-                if (!_adminRoleIdDict.ContainsKey(Services.Portal.CurrentPortalId))
+                var updates = Register(new List<Models.Role>()
                 {
-                    var updates = Register(new List<Models.Role>()
-                    {
-                        new Models.Role() { Name = "admin", PortalId = Services.Portal.CurrentPortalId, Description = "Administrative Priviledges" }
-                    });
+                    new Models.Role() { Name = "admin", PortalId = portalId, Description = "Administrative Priviledges" }
+                });
 
-                    if (updates > 0)
-                        Services.Repository.SaveChanges();
-                    _adminRoleIdDict[Services.Portal.CurrentPortalId] = Services.Account.GetRole("admin").Id;
-                }
-                return _adminRoleIdDict[Services.Portal.CurrentPortalId];
+                if (updates > 0)
+                    Services.Repository.SaveChanges();
+                _adminRoleIdDict[portalId] = Services.Account.GetRole("admin", portalId).Id;
             }
+            return _adminRoleIdDict[portalId];
         }
 
         public static string UpdateDir
@@ -236,20 +234,23 @@ namespace Videre.Core.Services
             var files = dir.GetFiles("*.zip");
             foreach (var file in files)
                 count += InstallFile(file.FullName) ? 1 : 0;
-            files = dir.GetFiles("*.json");
-            foreach (var file in files)
-                count += InstallFile(file.FullName) ? 1 : 0;
+            
+            //These are specific to a portal!
+            //files = dir.GetFiles("*.json");
+            //foreach (var file in files)
+            //    count += InstallFile(file.FullName) ? 1 : 0;
             return count;
         }
 
         //todo: allowing passing in of objects, but currently using very little of them
-        public static void InstallPortal(Core.Models.User adminUser, Core.Models.Portal portal)
+        public static string InstallPortal(Core.Models.User adminUser, Core.Models.Portal portal)
         {
             //todo: hardcoding default for now...
-            if (Core.Services.Update.Register(new Videre.Core.Models.Portal() { Name = portal.Name, ThemeName = portal.ThemeName }) > 0)
+            //if (Core.Services.Update.Register(new Videre.Core.Models.Portal() { Name = portal.Name, ThemeName = portal.ThemeName }) > 0)
+            if (Core.Services.Update.Register(portal) > 0)
                 Core.Services.Repository.SaveChanges();
 
-            var portalId = Core.Services.Portal.CurrentPortalId;
+            var portalId = Core.Services.Portal.GetPortal(portal.Name).Id; //Core.Services.Portal.CurrentPortalId;
             var updates = 0;
 
             //portal Init
@@ -262,22 +263,25 @@ namespace Videre.Core.Services
             {
                 updates += Core.Services.Update.Register(new List<Core.Models.User>()
                 {
-                    new Core.Models.User() { PortalId = portalId, Name = adminUser.Name, Email = adminUser.Email, Password = adminUser.Password, Roles = new List<string>() {Core.Services.Update.AdminRoleId} }
+                    new Core.Models.User() { PortalId = portalId, Name = adminUser.Name, Email = adminUser.Email, Password = adminUser.Password, Roles = new List<string>() {Core.Services.Update.GetAdminRoleId(portalId)} }
                 });
             }
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();
 
+            return portalId;
+
         }
 
         public static void Register()
         {
-            if (Services.Portal.CurrentPortal != null)  //todo: best way to handle this?
-            {
-                if (Services.Update.Register(new Videre.Core.Models.Portal() { Name = "Default" }) > 0)
-                    Services.Repository.SaveChanges();
-                Services.Update.RegisterWidgets();
-            }
+            //if (Services.Portal.CurrentPortal != null)  //todo: best way to handle this?
+            //{
+            //    if (Services.Update.Register(new Videre.Core.Models.Portal() { Name = "Default" }) > 0)
+            //        Services.Repository.SaveChanges();
+            //    Services.Update.RegisterWidgets();
+            //}
+            Services.Update.RegisterWidgets();
         }
 
         public static void RegisterWidgets()
@@ -337,6 +341,8 @@ namespace Videre.Core.Services
         public static List<Models.Package> GetPackages()
         {
             var packages = new List<Models.Package>();
+            var widgets = new List<Models.Package>();
+            var data = new List<Models.Package>();
             var packageDir = Portal.ResolvePath(PackageDir);
             if (!Directory.Exists(packageDir))
                 Directory.CreateDirectory(packageDir);
@@ -345,24 +351,29 @@ namespace Videre.Core.Services
             foreach (var file in Directory.GetFiles(packageDir, "*.manifest"))
             {
                 var package = file.GetFileJSONObject<Models.Package>(true);
-                packages.Add(package);
+                if (package.Type == "Widget")
+                    widgets.Add(package);
+                else
+                    data.Add(package);
             }
+            packages.AddRange(widgets);
+            packages.AddRange(data);
             return packages;
         }
 
-        public static bool InstallPackage(string name)
+        public static bool InstallPackage(string name, string portalId)
         {
             var package = GetPackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
             if (package != null)
             {
-                InstallFile(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName));
+                InstallFile(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName), portalId, false);
                 //System.IO.File.Copy(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName), Path.Combine(Portal.ResolvePath(UpdateDir), package.FileName), true);
                 return true;
             }
             return false;
         }
 
-        private static bool InstallFile(string fileName)
+        private static bool InstallFile(string fileName, string portalId = null, bool removeFile = true)
         {
             var rootDir = Portal.ResolvePath("~/");
             var file = new FileInfo(fileName);
@@ -375,15 +386,17 @@ namespace Videre.Core.Services
                             Logging.Logger.InfoFormat("Applying update for file: {0}", file.FullName);
                             var zip = new FastZip();
                             zip.ExtractZip(file.FullName, rootDir, FastZip.Overwrite.Always, null, null, null, true);
-                            System.IO.File.Delete(file.FullName);
+                            if (removeFile)
+                                System.IO.File.Delete(file.FullName);
                             return true;
                         }
                     case ".json":
                         {
                             Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
                             var portalExport = file.FullName.GetFileJSONObject<Models.PortalExport>(false);
-                            Services.Portal.Import(portalExport);
-                            System.IO.File.Delete(file.FullName);
+                            Services.Portal.Import(portalExport, portalId);
+                            if (removeFile)
+                                System.IO.File.Delete(file.FullName);
                             return true;
                         }
                     default:

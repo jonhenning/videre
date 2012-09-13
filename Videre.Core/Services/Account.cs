@@ -240,7 +240,7 @@ namespace Videre.Core.Services
         public static Models.Role GetRole(string name, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return GetRoles().Where(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            return GetRoles(portalId).Where(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
         public static string ImportRole(string portalId, Models.Role role, string userId = null)

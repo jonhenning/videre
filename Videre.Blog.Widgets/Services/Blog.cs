@@ -121,12 +121,11 @@ namespace Videre.Blog.Widgets.Services
 
         public static string GetBlogUrl(string blogId, string entryUrl)
         {
-            var rootUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority).PathCombine(CoreServices.Portal.ResolveUrl("~/"), "/");
             //todo: move this search for template by contentid to central location
             var url = CoreServices.Portal.GetPageTemplatesByContentId(blogId).SelectMany(t => t.Urls).Where(u => u.IndexOf("{entry:string}") > -1).FirstOrDefault();
             if (url == null)
                 url = "";//BAD!
-            return rootUrl.PathCombine(url.Replace("{entry:string}", entryUrl), "/");
+            return CoreServices.Portal.RequestRootUrl.PathCombine(url.Replace("{entry:string}", entryUrl), "/");
         }
 
     }

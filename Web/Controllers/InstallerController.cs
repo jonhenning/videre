@@ -22,9 +22,10 @@ namespace Videre.Web.Controllers
                 if (Portal.CurrentPortal == null)
                 {
                     portal.Name = "Default";
-                    Core.Services.Update.InstallPortal(adminUser, portal);
+                    portal.Default = true;
+                    var portalId = Core.Services.Update.InstallPortal(adminUser, portal);
                     foreach (var package in packages)
-                        Update.InstallPackage(package);
+                        Update.InstallPackage(package, portalId);
 
                 }
                 else 
