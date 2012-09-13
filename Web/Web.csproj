@@ -258,12 +258,6 @@
     <Content Include="ConnectionStrings.config" />
     <None Include="ConnectionStrings.config.debug" />
     <None Include="ConnectionStrings.config.release" />
-    <None Include="Properties\PublishProfiles\codeendeavors - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\codeendeavors - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\digitalthyme - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\digitalthyme - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\zippy - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\zippy - Web Deploy.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.config.debug" />

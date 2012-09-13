@@ -72,7 +72,7 @@ videre.widgets.blog = videre.widgets.base.extend(
 
     reload: function()
     {
-        window.location.href = videre.resolveUrl('~/' + this._blogUrl);
+        window.location.href = videre.resolveUrl(this._blogUrl);
     },
 
     _handleAdminAction: function(action)

@@ -12,7 +12,7 @@
     if (blog != null)
     {
         var entry = blog.Entries.Where(e => e.Url.Equals(entryName, StringComparison.InvariantCultureIgnoreCase) && (canEdit || e.PostDate.HasValue)).FirstOrDefault();
-        var blogUrl = Portal.ResolveUrl("~/" + (entry == null ? Portal.CurrentUrl : Portal.CurrentUrl.Replace(entryName, "")));   //todo: a bit hacky
+        var blogUrl = Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, "");
 
         if (canEdit && blog.Id != null)
         {
