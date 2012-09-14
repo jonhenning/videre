@@ -13,6 +13,8 @@ namespace Videre.Web.Controllers
         public JavaScriptResult GlobalClientTranslations()
         {
             Services.Localization.GetPortalText("RequiredField.Client", "{0} is a required field");
+            Services.Localization.GetPortalText("DataTypeInvalid.Client", "{0} is not a valid {1}");
+            Services.Localization.GetPortalText("ValuesMustMatch.Client", "{0} requires a matching value");
             Services.Localization.GetPortalText("None.Client", "(None)");
             if (Services.Repository.Current.PendingUpdates > 0)
                 Services.Repository.SaveChanges();

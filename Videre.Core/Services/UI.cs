@@ -9,6 +9,11 @@ namespace Videre.Core.Services
 {
     public class UI
     {
+        public static string ThemeAPIUrl
+        {
+            get { return Portal.CurrentPortal.GetAttribute("Core", "ThemeAPIUrl", "http://api.bootswatch.com/"); }
+        }
+
         public static string ThemePath
         {
             get { return "~/Content/Themes/"; }

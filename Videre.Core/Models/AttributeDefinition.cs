@@ -14,6 +14,7 @@ namespace Videre.Core.Models
         public string LabelKey { get; set; }
         public string LabelText { get; set; }
         public string Name { get; set; }
+        public string DataType { get; set; }
         public bool Required { get; set; }  //todo!
 
         public List<string> Values { get; set; }    //todo: if values is set then dropdown, otherwise textbox???

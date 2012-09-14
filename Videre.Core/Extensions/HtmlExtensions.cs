@@ -158,9 +158,11 @@ namespace Videre.Core.Extensions
         //                            widget.GetId(id), GetDataAttributeMarkup(GetDataAttributeDict(dataColumn)), css));
         //}
 
-        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn = null, string inputCss = null, string inputType = null, bool readOnly = false, bool required = false, string dataType = null)
+        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn = null, string inputCss = null, string inputType = null, bool readOnly = false, bool required = false, string dataType = null, string valueMatchControl = null)
         {
-            return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType), required, inputCss, inputType, readOnly);
+            if (!string.IsNullOrEmpty(valueMatchControl))
+                valueMatchControl = widget.GetId(valueMatchControl);    //todo: right place for this?
+            return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType, valueMatchControl: valueMatchControl), required, inputCss, inputType, readOnly);
         }
         public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = null, string inputType = null, bool readOnly = false)
         {
@@ -338,7 +340,7 @@ namespace Videre.Core.Extensions
                                 controlsCss,
                                 controlMarkup));
         }
-        private static Dictionary<string, string> GetDataAttributeDict(string dataColumn, string controlType = "", string dataType = "")
+        private static Dictionary<string, string> GetDataAttributeDict(string dataColumn, string controlType = "", string dataType = "", string valueMatchControl = "")
         {
             var dataAttributes = new Dictionary<string, string>();
             //if (required)
@@ -349,6 +351,8 @@ namespace Videre.Core.Extensions
                 dataAttributes["controltype"] = controlType;
             if (!string.IsNullOrEmpty(dataType))
                 dataAttributes["datatype"] = dataType;
+            if (!string.IsNullOrEmpty(valueMatchControl))
+                dataAttributes["match"] = valueMatchControl;
             return dataAttributes;
         }
         private static string GetDataAttributeMarkup(Dictionary<string, string> dataAttributes)

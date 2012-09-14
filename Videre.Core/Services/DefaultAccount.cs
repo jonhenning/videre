@@ -40,18 +40,16 @@ namespace Videre.Core.Services
                 user.PasswordHash = GeneratePasswordHash(user.Password, user.PasswordSalt);
                 user.Password = null;
             }
-            //else if (!string.IsNullOrEmpty(user.Id))    //todo:  hmmm, is this the best way to do this?
-            //{
-            //    var existing = GetById(user.Id);
-            //    user.PasswordHash = existing.PasswordHash;
-            //}
             var res = Repository.Current.StoreResource("User", null, user, userId);
             return res.Id;
         }
 
         public bool Delete(string id, string userId)
         {
-            throw new NotImplementedException();
+            var user = Repository.Current.GetResourceById<Models.User>(id);
+            if (user != null)
+                Repository.Current.Delete(user);
+            return user != null;
         }
 
         public Models.User GetById(string id)

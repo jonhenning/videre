@@ -13,6 +13,8 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
     set_selectedPortalId: function(v) { this._selectedPortalId = v; },
     get_installedThemes: function() { return this._installedThemes; },
     set_installedThemes: function(v) { this._installedThemes = v; },
+    get_themeAPIUrl: function() { return this._themeAPIUrl; },
+    set_themeAPIUrl: function(v) { this._themeAPIUrl = v; },
     get_attributeDefs: function() { return this._attributeDefs; },
     set_attributeDefs: function(v)
     {
@@ -30,6 +32,7 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         this._themeWidget = null;
         this._attributeDefs = {};
         this._createPortalDialog = null;
+        this._themeAPIUrl = null;
 
         this._delegates = {
             onAttributeItemBind: videre.createDelegate(this, this._onAttributeItemBind),
@@ -58,7 +61,7 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         });
 
         //todo: fix theme for multi-portals!
-        this._themeWidget = videre.widgets.register(this._id, videre.widgets.admin.theme, { id: this._id, ns: this._ns, data: this._selectedPortal, installedThemes: this._installedThemes });
+        this._themeWidget = videre.widgets.register(this._id, videre.widgets.admin.theme, { id: this._id, ns: this._ns, installedThemes: this._installedThemes, themeAPIUrl: this._themeAPIUrl });
 
         //this.refreshThemes();
         this.bind();
@@ -68,7 +71,7 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
     bind: function()
     {
         videre.UI.bindDropdown(this.getControl('ddlPortals'), this._portals, 'Id', 'Name', null, this._selectedPortalId);
-        this._themeWidget.bind();
+        this._themeWidget.changeTheme(this._selectedPortal.ThemeName);
 
         this.bindData(this._selectedPortal);
         for(var key in this._attributeDefs)
@@ -85,7 +88,8 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
     {
         //todo: validation!
         var portal = this.persistData(this._selectedPortal, true, this.getControl('GeneralTab'));
-        this._themeWidget.persistData(portal);
+        portal.ThemeName = this._themeWidget.get_selectedTheme() != null ? this._themeWidget.get_selectedTheme().Name : '';
+        //this._themeWidget.persistData(portal);
         //portal.ThemeName = this._selectedTheme != null ? this._selectedTheme.Name : '';
         for(var key in this._attributeDefs)
             this.persistData(portal.Attributes, false, this.getControl('tab' + this._getSafeGroupName(key)));

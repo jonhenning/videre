@@ -42,6 +42,15 @@ namespace Videre.Core.Widgets
                 LabelText = "Text Editor"
             });
 
+            updates += CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition()
+            {
+                Name = "ThemeAPIUrl",
+                DefaultValue = "http://api.bootswatch.com/",
+                Required = true,
+                LabelKey = "ThemeAPIUrl.Text",
+                LabelText = "Theme API Url"
+            });
+
             CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition() { Name = "SearchIndexDir", DefaultValue = "~/App_Data/SearchIndex", Required = true, LabelKey = "SearchIndexDir.Text", LabelText = "Search Index Directory" });
             CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition() { Name = "SearchUrl", DefaultValue = "~/search", Required = true, LabelKey = "SearchUrl.Text", LabelText = "Search Url" });
 

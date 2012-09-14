@@ -68,6 +68,7 @@ videre.widgets.admin.user = videre.widgets.base.extend(
     {
         if (this._selectedItem != null)
         {
+            this.clearMsgs(this._dialog);
             this._dialog.modal('show');
             this.bindData(this._selectedItem, this.getControl('GeneralTab'));
             if (this._hasCustomAttributes)
@@ -77,16 +78,18 @@ videre.widgets.admin.user = videre.widgets.base.extend(
 
     save: function()
     {
-        //todo: validation!
-        var user = this.persistData(this._selectedItem, true, this.getControl('GeneralTab'));
-        if (this._hasCustomAttributes)
+        if (this.validControls(this._dialog, this._dialog))
         {
-            if (user.Attributes == null)
-                user.Attributes = {};
-            this.persistData(user.Attributes, false, this.getControl('CustomTab'));
-        }
+            var user = this.persistData(this._selectedItem, true, this.getControl('GeneralTab'));
+            if (this._hasCustomAttributes)
+            {
+                if (user.Attributes == null)
+                    user.Attributes = {};
+                this.persistData(user.Attributes, false, this.getControl('CustomTab'));
+            }
 
-        this.ajax('~/core/Account/SaveUser', { user: user }, this._delegates.onSaveReturn, null, this._dialog);
+            this.ajax('~/core/Account/SaveUser', { user: user }, this._delegates.onSaveReturn, null, this._dialog);
+        }
     },
 
     deleteUser: function(id)

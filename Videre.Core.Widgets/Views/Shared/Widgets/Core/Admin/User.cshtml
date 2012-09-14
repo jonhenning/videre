@@ -66,14 +66,18 @@
 
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#@Model.GetId("GeneralTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("General.Text", "General")</a></li>
+                @if (Account.CustomUserElements.Count > 0)
+                {
                 <li class=""><a href="#@Model.GetId("CustomTab")" data-toggle="tab"><i class="icon-upload"></i> @Model.GetText("Custom.Text", "Custom")</a></li>
+                }
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active form-horizontal" id="@Model.GetId("GeneralTab")">
-                    @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
-                    @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", "Email")
-                    @Html.InputControlGroup(Model, "txtLocale", "Locale.Text", "Locale", "Locale")
-                    @Html.InputControlGroup(Model, "txtPassword", "NewPassword.Text", "New Password", "Password", "", "password")
+                    @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", dataColumn: "Name", required: true)
+                    @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", dataColumn: "Email", required: true, dataType: "email")
+                    @Html.InputControlGroup(Model, "txtLocale", "Locale.Text", "Locale", dataColumn: "Locale")
+                    @Html.InputControlGroup(Model, "txtPassword", "NewPassword.Text", "New Password", dataColumn: "Password", inputType: "password")
+                    @Html.InputControlGroup(Model, "txtConfirmPassword", "ConfirmPassword.Text", "Confirm Password", dataColumn: "Password", inputType: "password", valueMatchControl: "txtPassword")
                     @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles")
                 </div>
                 @{

@@ -106,6 +106,11 @@ Array.prototype.values = function(f)
     return values;
 };
 
+Array.prototype.forEach = function(f)
+{
+    for (var i = 0; i < this.length; i++)
+        f(this[i], i);
+};
 
 Array.prototype.addRange = function(b) { this.push.apply(this, b); return this; };
 Array.prototype.clear = function() { this.length = 0 };

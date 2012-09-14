@@ -56,10 +56,13 @@ videre.widgets.editor.base = videre.widgets.base.extend(
 
     save: function()
     {
-        this.persistData(this._widgetData, false, this.getControl('CommonProperties'));
-        this.persistData(this._widgetData.Attributes, false, this.getControl('AttributeList'));
-        this.raiseCustomEvent('Save', this._widgetData);
-        this._dialog.modal('hide');
+        if (this.validControls(this._dialog, this._dialog))
+        {
+            this.persistData(this._widgetData, false, this.getControl('CommonProperties'));
+            this.persistData(this._widgetData.Attributes, false, this.getControl('AttributeList'));
+            this.raiseCustomEvent('Save', this._widgetData);
+            this._dialog.modal('hide');
+        }
     },
 
     _onOkClicked: function(e)
@@ -86,6 +89,7 @@ videre.widgets.editor.base = videre.widgets.base.extend(
             var match = self._getDependencyMatch(item);
             if (!match)
                 item.ctl.val('');
+            item.ctl.data('dependencymatch', match);
             item.controlGroup.toggle(match);
         });
     },

@@ -180,6 +180,7 @@ namespace Videre.Core.Services
 
         public static void Validate(Models.User user)
         {
+            Validation.ValidateEmail(user.Email);
             if (string.IsNullOrEmpty(user.Name) || (string.IsNullOrEmpty(user.Password) && string.IsNullOrEmpty(user.PasswordHash)))
                 throw new Exception(Localization.GetExceptionText("InvalidResource.Error", "{0} is invalid.", "User"));
             if (Exists(user))

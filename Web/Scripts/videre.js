@@ -32,9 +32,6 @@ var videre =
 
     deserialize: function(data)
     {
-        //msajax
-        //var exp = data.replace(new RegExp('(^|[^\\\\])\\"\\\\/Date\\((-?[0-9]+)\\)\\\\/\\"', 'g'), "$1new Date($2)");
-        //return eval('(' + exp + ')');
         return JSON.parse(data);
     },
 
@@ -230,7 +227,6 @@ videre.UI.eventHandlerList.prototype =
         }
         return e;
     }
-
 }
 
 //JSON Parsing - See http://www.JSON.org/js.html
@@ -496,22 +492,22 @@ videre.widgets.base = videre.Class.extend(
         
         messageCtr = messageCtr != null ? messageCtr : controlCtr;
         this.clearMsgs();
-
-        var ctls = controlCtr.find('[required]');
+        var ctls = videre.validation.getValidationCtls(controlCtr);
         var errors = [];
-        ctls.each(function(idx, element)
+        ctls.forEach(function(item)
         {
-            var ctl = $(element);
-            var lbl = controlCtr.find('[for="' + ctl.attr('id') + '"]').html();
-            if (lbl == null)
-                lbl = ctl.data('label-text');
-            if (ctl.val() == '')
-                errors.push({ id: ctl.attr('id') + 'Required', text: String.format(videre.localization.getText('global', 'RequiredField'), lbl), isError: true });
+            var error = videre.validation.validateCtl(item);
+            if (error != null)
+            {
+                item.group.addClass('error');
+                errors.push(error);
+            }
+            else 
+                item.group.removeClass('error');
         });
         this.addMsgs(errors, messageCtr);
         return errors.length == 0;
     },
-
 
     persistData: function(data, clone, parent, includeReadOnly)
     {
@@ -655,6 +651,7 @@ videre.widgets.base = videre.Class.extend(
     {
         this._messages = [];
         this.refreshMsgs(parent);
+        videre.validation.getValidationCtls(parent != null ? parent : this._widget).forEach(function(item) { item.group.removeClass('error'); });
     },
 
     //events
@@ -738,8 +735,55 @@ videre.localization = {
     }
 };
 
-$(window).unload(videre.cleanUp);
+//todo:  wish there was a clean library for this...  hate writing my own...
+videre.validation = {
+    getValidationCtls: function(ctr)
+    {
+        var ret = [];
+        var ctls = ctr.find('[required="required"],[data-datatype],[data-match]');
+        ctls.each(function(idx, element)
+        {
+            var item = { ctl: $(element) };
+            item.lbl = ctr.find('[for="' + item.ctl.attr('id') + '"]');
+            item.group = item.ctl.closest('.control-group');
+            item.labelText = item.lbl.html();
+            if (item.labelText == null)
+                item.labelText = item.ctl.data('label-text');
+            ret.push(item);
+        });
+        return ret;
+    },
 
+    validateCtl: function(item)
+    {
+        if (item.ctl.data('dependencymatch') == false)  //if dependent control and it is not matched (shown) it is valid!
+            return null;
+        if (item.ctl.attr('required') && item.ctl.val() == '')
+            return { id: item.ctl.attr('id') + 'Required', text: String.format(videre.localization.getText('global', 'RequiredField'), item.labelText), isError: true };
+        if (item.ctl.data('datatype') != null && !videre.validation.validDataType(item.ctl.data('datatype'), item.ctl.val()))
+            return { id: item.ctl.attr('id') + 'DataTypeInvalid', text: String.format(videre.localization.getText('global', 'DataTypeInvalid'), item.labelText, item.ctl.data('datatype')), isError: true };
+        if (item.ctl.data('match') != null && item.ctl.val() != $('#' + item.ctl.data('match')).val())
+            return { id: item.ctl.attr('id') + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
+    },
+
+    validDataType: function(type, val)
+    {
+        var item = videre.validation.datatypes[type];
+        if (item != null)
+        {
+            if (item.type == 'regex')
+                return (new RegExp(item.regex).test(val));
+            return false;
+        }
+        else
+            alert('Invalid data type: ' + type);    //todo: what to do?
+    },
+
+    datatypes:
+    {
+        email: { type: 'regex', regex: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i }   //http://ask.altervista.org/demo/jquery-validate-e-mail-address-regex/
+    }
+};
 
 //jsrender helpers
 $.views.helpers({
@@ -769,13 +813,16 @@ $.views.helpers({
             if (dataValue != null)
                 ctl.attr('value', dataValue);   //need value written into html
         }
-
+        ctl.attr('data-label-text', keyName);   //todo: mini-hack as labels have no for="" specified
         if (data.Required)
-            ctl.attr('data-required', 'true');
+            ctl.attr('required', 'required');
+        if (data.DataType)
+            ctl.attr('data-datatype', data.DataType);
         if (data.Dependencies != null && data.Dependencies.length > 0)
             ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
         ctl.appendTo(tempParent);
-        //return tempParent.clone().html();   //get minor hack to get outerHTML
-        return tempParent.html();   //get minor hack to get outerHTML
+        return tempParent.html();   //minor hack to get outerHTML
     }
 });
+
+$(window).unload(videre.cleanUp);

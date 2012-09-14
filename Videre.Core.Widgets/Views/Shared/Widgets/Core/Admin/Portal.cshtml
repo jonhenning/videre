@@ -9,12 +9,13 @@
     Html.RegisterDataTableScript();
     Html.RegisterScript("~/scripts/fileuploader.js", true);
     //var portal = Videre.Core.Services.Portal.CurrentPortal;
-    var currentPortalId = Videre.Core.Services.Portal.CurrentPortalId;
-    var portals = Videre.Core.Services.Portal.GetPortals();
+    var currentPortalId = Portal.CurrentPortalId;
+    var portals = Portal.GetPortals();
     Html.RegisterControlPresenter(Model, "videre.widgets.admin.portal", new Dictionary<string, object>() {
         { "portals", portals }, 
         { "selectedPortalId", currentPortalId }, 
-        { "installedThemes", Videre.Core.Services.UI.GetThemes() }, 
+        { "installedThemes", UI.GetThemes() }, 
+        {"themeAPIUrl", UI.ThemeAPIUrl},
         { "attributeDefs", Portal.AttributeDefinitions }}
         );
 }
