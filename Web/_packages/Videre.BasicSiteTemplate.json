@@ -1,0 +1,776 @@
+{
+  "Portal": {
+    "Id": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+    "Name": "Default",
+    "Title": null,
+    "ThemeName": "",
+    "Aliases": [],
+    "Attributes": {}
+  },
+  "Roles": [
+    {
+      "Id": "2552434e-8b8d-4e9c-bf99-db05ff72f235",
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Name": "admin",
+      "Description": "Administrative Priviledges"
+    }
+  ],
+  "SecureActivities": [
+    {
+      "Id": "2e7b8100-c023-460f-b2ed-6c5f502a34ce",
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Area": "File",
+      "Name": "Upload",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "b7453eed-1a24-4a7f-a11c-e6dd573dad5f",
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Area": "Account",
+      "Name": "Administration",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "d11e5fbf-f999-483b-b548-6f5819340591",
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Area": "LayoutTemplate",
+      "Name": "Administration",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "8da2c11c-1eb9-4fde-8d4f-bacb36043524",
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Area": "File",
+      "Name": "Administration",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "50d0cf75-28d1-4d9f-b4fe-27d1a07f6f1e",
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Area": "Localization",
+      "Name": "Administration",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "96375abe-c0dd-4358-9bf2-a19672a28d12",
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Area": "Search",
+      "Name": "Upload",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "55b50cd0-92ed-475d-9184-52ca6c1c0c69",
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Area": "Portal",
+      "Name": "Administration",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "810d6d67-fa67-4114-8d48-07679963aca9",
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Area": "PageTemplate",
+      "Name": "Administration",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null
+    }
+  ],
+  "Users": null,
+  "UserProfiles": null,
+  "Manifests": [
+    {
+      "Id": "6f2bbc86-56fa-46e9-b841-5740a877e41c",
+      "Path": "Core/Admin",
+      "Name": "File",
+      "Title": "File Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/File",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "fc5c82ee-8c4f-41cc-a9e6-c1ebe46d950c",
+      "Path": "Core/Admin",
+      "Name": "FileBrowser",
+      "Title": "File Browser",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/FileBrowser",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "0bccca92-5b20-43dd-8762-5b5131a4cbf8",
+      "Path": "Core/Admin",
+      "Name": "Localization",
+      "Title": "Localization Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Localization",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "f68f3776-5ba2-4744-98fd-b71980c01f36",
+      "Path": "Core/Account",
+      "Name": "LogOn",
+      "Title": "Log On",
+      "Category": "Account",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Account/LogOn",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "0342757e-ee01-4606-a286-05be43058b6c",
+      "Path": "Core",
+      "Name": "Menu",
+      "Title": "Menu",
+      "Category": "Navigation",
+      "ContentProvider": "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets",
+      "EditorType": "videre.widgets.editor.menu",
+      "EditorPath": "Widgets/Core/MenuEditor",
+      "FullName": "Core/Menu",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "850f2c9b-cbcb-4888-9a31-1b068445bd6e",
+      "Path": "Core/Admin",
+      "Name": "Portal",
+      "Title": "Portal Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Portal",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "e6415359-afb1-46f1-9611-feea977117b6",
+      "Path": "Core/Admin",
+      "Name": "Role",
+      "Title": "Role Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Role",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "4cc7caad-7cbe-4601-af1a-3e03608f3ed7",
+      "Path": "Core/Admin",
+      "Name": "Search",
+      "Title": "Search Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Search",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "0f7294c2-c6b1-4b18-9f9b-77b6812e912e",
+      "Path": "Core",
+      "Name": "SearchResult",
+      "Title": "Search Result",
+      "Category": "General",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/SearchResult",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "fb52a057-b390-49a8-ac12-20c81d6fd730",
+      "Path": "Core/Admin",
+      "Name": "SecureActivity",
+      "Title": "Secure Activity Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/SecureActivity",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "3d2866ce-3d98-417b-9ce1-ff4778961b09",
+      "Path": "Core/Admin",
+      "Name": "Security",
+      "Title": "Security Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Security",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "bef23641-d983-4400-bb74-eccce5bf05cf",
+      "Path": "Core/Admin",
+      "Name": "Template",
+      "Title": "Template Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Template",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "26f3ac29-fb31-4d13-a163-842361692f02",
+      "Path": "Core",
+      "Name": "TextHtml",
+      "Title": "Text Html",
+      "Category": "General",
+      "ContentProvider": "Videre.Core.ContentProviders.LocalizationContentProvider, Videre.Core",
+      "EditorType": "videre.widgets.editor.texthtml",
+      "EditorPath": "Widgets/Core/TextHtmlEditor",
+      "FullName": "Core/TextHtml",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "564857a4-f860-4f6a-a5d6-2a7e0c727e1b",
+      "Path": "Core/Admin",
+      "Name": "User",
+      "Title": "User Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/User",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "60931cdc-9d06-405c-9104-5af5136aced1",
+      "Path": "Core/Account",
+      "Name": "UserProfile",
+      "Title": "User Profile",
+      "Category": "Account",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Account/UserProfile",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "3c8584f1-9b5f-4631-969f-6da115956d23",
+      "Path": "Core/Admin",
+      "Name": "Widget",
+      "Title": "Widget Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Widget",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "8961ad84-28c7-4f76-9170-518cefe1206e",
+      "Path": "Core/Admin",
+      "Name": "WidgetManifest",
+      "Title": "Widget Manifest Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/WidgetManifest",
+      "AttributeDefinitions": []
+    }
+  ],
+  "Localizations": null,
+  "Files": [],
+  "Templates": [
+    {
+      "Id": "7374f6a3-3008-4b86-a8c4-292faad8357a",
+      "Title": "File Administration",
+      "LayoutName": "General",
+      "Urls": [
+        "Admin/File"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "612625a5-c44f-4aca-9fc1-6aa9a01547fb",
+          "ContentIds": [],
+          "ManifestId": "6f2bbc86-56fa-46e9-b841-5740a877e41c",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "9008ea0e-9bd8-4efd-bb52-c8a9d1ceb526",
+      "Title": "Search Administration",
+      "LayoutName": "General",
+      "Urls": [
+        "Admin/Search"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "2ba8c857-d1ca-40d8-9447-0350cda91f0c",
+          "ContentIds": [],
+          "ManifestId": "4cc7caad-7cbe-4601-af1a-3e03608f3ed7",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "42462497-f1ef-48c6-951d-ffdc8574a4f4",
+      "Title": "Page Template Administration",
+      "LayoutName": "General",
+      "Urls": [
+        "Admin/PageTemplate"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "1b0b884b-0196-46c3-a58e-d43c7fbfe649",
+          "ContentIds": [],
+          "ManifestId": "bef23641-d983-4400-bb74-eccce5bf05cf",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "72f1a379-9138-4138-aaa0-dfa9b57cccb5",
+      "Title": "Portal Administration",
+      "LayoutName": "General",
+      "Urls": [
+        "Admin/Portal"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "8f1f735e-d2e8-4b4a-a3b3-68fdad0b6c84",
+          "ContentIds": [],
+          "ManifestId": "850f2c9b-cbcb-4888-9a31-1b068445bd6e",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "943da950-3007-42d8-8bfe-3ac7943ae0a8",
+      "Title": "Localization Administration",
+      "LayoutName": "General",
+      "Urls": [
+        "Admin/Localization"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "4b00c185-5381-4936-8352-62579b6f2a4c",
+          "ContentIds": [],
+          "ManifestId": "0bccca92-5b20-43dd-8762-5b5131a4cbf8",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "8900e3fb-e91b-4d7c-8e28-5f7f0482ad32",
+      "Title": "Security Administration",
+      "LayoutName": "General",
+      "Urls": [
+        "Admin/Security"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "21c8d078-f2b2-4a60-a9dc-0f5e896afd9a",
+          "ContentIds": [],
+          "ManifestId": "3d2866ce-3d98-417b-9ce1-ff4778961b09",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "db51ef84-c109-49f3-aa04-0bb64897d394",
+      "Title": "Home",
+      "LayoutName": "General",
+      "Urls": [],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "31f993c7-0955-439b-a1fd-82b35004a806",
+          "ContentIds": [
+            "7ac27ddd-2330-40c7-b6a7-00abcbe5360b"
+          ],
+          "ManifestId": "26f3ac29-fb31-4d13-a163-842361692f02",
+          "Css": "",
+          "Style": "",
+          "PaneName": "Main",
+          "Seq": 1,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        },
+        {
+          "Id": "4148a0bd-6df5-486d-9b1b-381ceb73532b",
+          "ContentIds": [],
+          "ManifestId": "f68f3776-5ba2-4744-98fd-b71980c01f36",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 2,
+          "Roles": [],
+          "Authenticated": false,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "85212413-a742-49df-872f-63b058e525f7",
+      "Title": "User Profile",
+      "LayoutName": "General",
+      "Urls": [
+        "Account/UserProfile"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "526daf1b-a669-40e8-8990-0f32eb83be1e",
+          "ContentIds": [],
+          "ManifestId": "60931cdc-9d06-405c-9104-5af5136aced1",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "1207119e-6b0a-45ab-9cfe-5888e274ae8b",
+      "Title": "Widget Administration",
+      "LayoutName": "General",
+      "Urls": [
+        "Admin/Widget"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "7816b798-7c7f-4fe0-b190-e7a95fe8201c",
+          "ContentIds": [],
+          "ManifestId": "3c8584f1-9b5f-4631-969f-6da115956d23",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "f1cc7b5f-5842-45ae-b390-f9c01263f44c",
+      "Title": "File Browser",
+      "LayoutName": "Blank",
+      "Urls": [
+        "Admin/FileBrowser"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "8f447051-f75c-44f0-97cb-535b0d76facc",
+          "ContentIds": [],
+          "ManifestId": "fc5c82ee-8c4f-41cc-a9e6-c1ebe46d950c",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "7d3bb5a5-fe8d-4ef1-ad98-9d03a0e8311a",
+      "Title": "Search Results",
+      "LayoutName": "General",
+      "Urls": [
+        "search"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "cc0adac9-b03b-42da-8491-c1700531bd0f",
+          "ContentIds": [],
+          "ManifestId": "0f7294c2-c6b1-4b18-9f9b-77b6812e912e",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "f677ada0-2e7f-4e9f-a4cf-f407b4691336",
+      "Title": "Layout Template Administration",
+      "LayoutName": "General",
+      "Urls": [
+        "Admin/LayoutTemplate"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "c45a1b09-a661-472f-b331-1a50a725aac3",
+          "ContentIds": [],
+          "ManifestId": "bef23641-d983-4400-bb74-eccce5bf05cf",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {
+            "IsLayout": true
+          }
+        }
+      ]
+    },
+    {
+      "Id": "953388be-e4c5-4e88-8927-fd017d3fb3ce",
+      "Title": "LogOn",
+      "LayoutName": "General",
+      "Urls": [
+        "Account/LogOn"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "58b0045a-33ad-42f2-ac93-6fbc42519740",
+          "ContentIds": [],
+          "ManifestId": "f68f3776-5ba2-4744-98fd-b71980c01f36",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "0ceabf09-ed11-433d-93ab-b1356ab8188a",
+      "Title": "User Administration",
+      "LayoutName": "General",
+      "Urls": [
+        "Admin/User"
+      ],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
+      "Roles": [
+        "2552434e-8b8d-4e9c-bf99-db05ff72f235"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "eb2b27a9-16f4-4a45-9b4a-b48fc64f0af1",
+          "ContentIds": [],
+          "ManifestId": "564857a4-f860-4f6a-a5d6-2a7e0c727e1b",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    }
+  ],
+  "LayoutTemplates": [
+    {
+      "Id": "9d369b7e-a2c8-473d-bcd1-4d273035376d",
+      "LayoutName": "Blank",
+      "Widgets": [],
+      "Roles": [],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac"
+    },
+    {
+      "Id": "9136c606-a0e6-4bb1-9496-06dda6b96f0b",
+      "LayoutName": "General",
+      "Widgets": [
+        {
+          "Id": "88bb5da0-ab66-4421-bce2-d2e2e5820e93",
+          "ContentIds": [
+            "7926cc2f-84f6-441a-8ae7-bd2269ed4f78"
+          ],
+          "ManifestId": "0342757e-ee01-4606-a286-05be43058b6c",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ],
+      "Roles": [],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac"
+    },
+    {
+      "Id": "63e18e60-a00f-436f-b5cf-99be82423280",
+      "LayoutName": "TwoPane",
+      "Widgets": [
+        {
+          "Id": "b599b3d5-0b79-4f7b-94ca-82bb7059730d",
+          "ContentIds": [
+            "7926cc2f-84f6-441a-8ae7-bd2269ed4f78"
+          ],
+          "ManifestId": "0342757e-ee01-4606-a286-05be43058b6c",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ],
+      "Roles": [],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac"
+    },
+    {
+      "Id": "aa5e4776-1fd4-4c28-81c1-5ae333f49c1e",
+      "LayoutName": "SidebarRight",
+      "Widgets": [
+        {
+          "Id": "da320931-6b5c-4419-91df-09efeaa534c1",
+          "ContentIds": [
+            "7926cc2f-84f6-441a-8ae7-bd2269ed4f78"
+          ],
+          "ManifestId": "0342757e-ee01-4606-a286-05be43058b6c",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ],
+      "Roles": [],
+      "PortalId": "cc8adfcf-fc2e-49db-8737-2bd481954fac"
+    }
+  ],
+  "WidgetContent": {
+    "31f993c7-0955-439b-a1fd-82b35004a806": "[{\"Id\":\"7ac27ddd-2330-40c7-b6a7-00abcbe5360b\",\"Key\":\"Content.Text\",\"Text\":\"<div class=\\\"hero-unit\\\">\\n        <h1>Hello, world!</h1>\\n        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>\\n        <p><a class=\\\"btn btn-primary btn-large\\\">Learn more »</a></p>\\n      </div>\",\"Type\":4,\"PortalId\":\"cc8adfcf-fc2e-49db-8737-2bd481954fac\",\"Locale\":\"\",\"Namespace\":\"\"}]",
+    "b599b3d5-0b79-4f7b-94ca-82bb7059730d": "{\"Id\":\"7926cc2f-84f6-441a-8ae7-bd2269ed4f78\",\"PortalId\":\"cc8adfcf-fc2e-49db-8737-2bd481954fac\",\"Text\":\"Videre\",\"Name\":\"MainMenu\",\"Css\":\"navbar-fixed-top\",\"ShowSearch\":false,\"Type\":0,\"Items\":[{\"Text\":\"Home\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/\",\"Roles\":[],\"Authenticated\":null,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Admin\",\"Items\":[{\"Text\":\"Portal\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Portal\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Localization\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Localization\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"File\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/File\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Page Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/PageTemplate\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Layout Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/LayoutTemplate\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Security\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Security\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"User\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/User\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Widget\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Widget\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Search\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Search\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":true,\"IsAuthorized\":true},{\"Text\":\"Account\",\"Items\":[{\"Text\":\"User Profile\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/UserProfile\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Log On\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/LogOn\",\"Roles\":[],\"Authenticated\":false,\"AlignRight\":false,\"IsAuthorized\":false},{\"Text\":\"Log Off\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/core/Account/LogOff\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":null,\"Authenticated\":null,\"AlignRight\":true,\"IsAuthorized\":true}]}",
+    "da320931-6b5c-4419-91df-09efeaa534c1": "{\"Id\":\"7926cc2f-84f6-441a-8ae7-bd2269ed4f78\",\"PortalId\":\"cc8adfcf-fc2e-49db-8737-2bd481954fac\",\"Text\":\"Videre\",\"Name\":\"MainMenu\",\"Css\":\"navbar-fixed-top\",\"ShowSearch\":false,\"Type\":0,\"Items\":[{\"Text\":\"Home\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/\",\"Roles\":[],\"Authenticated\":null,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Admin\",\"Items\":[{\"Text\":\"Portal\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Portal\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Localization\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Localization\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"File\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/File\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Page Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/PageTemplate\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Layout Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/LayoutTemplate\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Security\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Security\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"User\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/User\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Widget\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Widget\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Search\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Search\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":true,\"IsAuthorized\":true},{\"Text\":\"Account\",\"Items\":[{\"Text\":\"User Profile\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/UserProfile\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Log On\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/LogOn\",\"Roles\":[],\"Authenticated\":false,\"AlignRight\":false,\"IsAuthorized\":false},{\"Text\":\"Log Off\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/core/Account/LogOff\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":null,\"Authenticated\":null,\"AlignRight\":true,\"IsAuthorized\":true}]}",
+    "88bb5da0-ab66-4421-bce2-d2e2e5820e93": "{\"Id\":\"7926cc2f-84f6-441a-8ae7-bd2269ed4f78\",\"PortalId\":\"cc8adfcf-fc2e-49db-8737-2bd481954fac\",\"Text\":\"Videre\",\"Name\":\"MainMenu\",\"Css\":\"navbar-fixed-top\",\"ShowSearch\":false,\"Type\":0,\"Items\":[{\"Text\":\"Home\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/\",\"Roles\":[],\"Authenticated\":null,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Admin\",\"Items\":[{\"Text\":\"Portal\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Portal\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Localization\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Localization\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"File\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/File\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Page Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/PageTemplate\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Layout Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/LayoutTemplate\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Security\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Security\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"User\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/User\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Widget\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Widget\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Search\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Search\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":[\"2552434e-8b8d-4e9c-bf99-db05ff72f235\"],\"Authenticated\":true,\"AlignRight\":true,\"IsAuthorized\":true},{\"Text\":\"Account\",\"Items\":[{\"Text\":\"User Profile\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/UserProfile\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Log On\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/LogOn\",\"Roles\":[],\"Authenticated\":false,\"AlignRight\":false,\"IsAuthorized\":false},{\"Text\":\"Log Off\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/core/Account/LogOff\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":null,\"Authenticated\":null,\"AlignRight\":true,\"IsAuthorized\":true}]}"
+  },
+  "FileContent": {}
+}
