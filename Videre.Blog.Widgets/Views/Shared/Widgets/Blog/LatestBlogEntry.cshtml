@@ -1,0 +1,32 @@
+@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@using Models = Videre.Blog.Widgets.Models;
+@using Videre.Core.Services;
+@model CoreModels.Widget
+@{    
+    var blog = Model.GetContent<Models.Blog>();
+    var showTitle = Model.GetAttribute("ShowBlogTitle", "Yes") == "Yes";
+    
+    if (blog != null)
+    {
+        var entry = blog.Entries.OrderByDescending(e => e.PostDate.HasValue ? e.PostDate.Value : DateTime.MinValue).FirstOrDefault();
+        var blogUrl = Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, "");
+
+       
+    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+        @{Html.RenderPartial("WidgetHeader", Model);}
+
+        @if (showTitle)
+        {
+            <a href="@blogUrl">@blog.Name</a>
+        }
+
+        @if (entry != null)
+        {
+            <h5>@entry.Title</h5>
+            <p>@Html.Raw(String.IsNullOrEmpty(entry.Summary) ? entry.Body.Substring(0, 100) : entry.Summary) <a href="@Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, entry.Url)">@Model.GetText("ReadMore.Text", "Read More")</a></p>
+        }
+    </div>
+
+    }
+}

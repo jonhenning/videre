@@ -22,7 +22,7 @@ namespace Videre.Blog.Widgets
 
             var updates = Videre.Core.Services.Update.Register(new List<CoreModels.WidgetManifest>()
             {
-                new CoreModels.WidgetManifest() { Path = "Blog", Name = "Blog", Title = "Blog", EditorPath = "Widgets/Blog/BlogEditor", EditorType = "videre.widgets.editor.blog", ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "General", AttributeDefinitions = new List<AttributeDefinition>()
+                new CoreModels.WidgetManifest() { Path = "Blog", Name = "Blog", Title = "Blog", EditorPath = "Widgets/Blog/BlogEditor", EditorType = "videre.widgets.editor.blog", ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "Blog", AttributeDefinitions = new List<AttributeDefinition>()
                 {
                     new AttributeDefinition()
                     {
@@ -41,9 +41,31 @@ namespace Videre.Blog.Widgets
                         LabelKey = "DisqussShortName.Text",
                         LabelText = "Disquss Short Name",
                         Dependencies = new List<AttributeDependency>() { new AttributeDependency() { DependencyName = "CommentProvider", Values = new List<string>() { "Disquss" }}}
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "ShowBlogTitle",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "Yes",
+                        Required = true,
+                        LabelKey = "ShowBlogTitle.Text",
+                        LabelText = "Show Blog Title"
                     }
-                }},
-                new CoreModels.WidgetManifest() { Path = "Blog", Name = "BlogTags", Title = "Blog Tags", EditorType = "videre.widgets.editor.blog",  ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "General" }
+                }
+                },
+                new CoreModels.WidgetManifest() { Path = "Blog", Name = "BlogTags", Title = "Blog Tags", EditorType = "videre.widgets.editor.blog",  ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "Blog" },
+                new CoreModels.WidgetManifest() { Path = "Blog", Name = "LatestBlogEntry", Title = "Latest Blog Entry", EditorType = "videre.widgets.editor.blog",  ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "Blog", AttributeDefinitions = new List<AttributeDefinition>()
+                {
+                    new AttributeDefinition()
+                    {
+                        Name = "ShowBlogTitle",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "Yes",
+                        Required = true,
+                        LabelKey = "ShowBlogTitle.Text",
+                        LabelText = "Show Blog Title"
+                    }
+                }}
             });
 
             updates += CoreServices.Update.Register(new CoreModels.SearchProvider()

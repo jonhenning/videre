@@ -6,6 +6,7 @@
 @{    
     var entryName = Portal.GetCurrentUrlSegment("entry", "", false);
     var canEdit = Security.IsActivityAuthorized("Blog", "Administration");
+    var showTitle = Model.GetAttribute("ShowBlogTitle", "Yes") == "Yes";
 
     var tag = Request.QueryString["tag"];
     var blog = Model.GetContent<Models.Blog>();
@@ -32,9 +33,10 @@
         }
         <h4>
             <a class="pull-right" href="@Portal.ResolveUrl("~/blogapi/feed/rss/" + blog.Name)"><img src="@Portal.ResolveUrl("~/content/images/icon-rss.png")" /></a>
-            <a href="@blogUrl">
-                @blog.Name
-            </a>
+            @if (showTitle)
+            {
+                <a href="@blogUrl">@blog.Name</a>
+            }
             @if (!string.IsNullOrEmpty(tag))
             {
                 <text>- (@tag)</text>
@@ -63,7 +65,7 @@
         {
             <h3>@entry.Title</h3>
             <p>@Html.Raw(entry.Body)</p>
-            <p>@(entry.PostDate.HasValue ? entry.PostDate.Value.ToLocalTime().ToString("") : "")</p>
+            <p>@(entry.PostDate.HasValue ? entry.PostDate.Value.ToLocalTime().ToShortDateString() : "")</p>
     
             <hr />
             var commentProvider = Model.GetAttribute("CommentProvider", "None");
