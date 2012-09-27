@@ -10,7 +10,7 @@
 }
 
 <div id="@Model.GetId("Widget")">
-    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px; display: none;">
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 900px; margin-left: -450px; display: none;">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
             @Model.GetText("CarouselEditor.Text", "Carousel Editor")
@@ -49,9 +49,9 @@
                                 <ul id="@Model.GetId("CarouselList")" class="nav nav-list"></ul>
                             </div>
                         </div>
-                        <div class="span5 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none;">
+                        <div class="span7 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none;">
                             @*@Html.DropDownControlGroup(Model, "ddlParent", "Parent.Text", "Parent", "parentId", "", new List<SelectListItem>())*@
-                            @Html.InputFileBrowserControlGroup(Model, "txtImageUrl", "ImageUrl.Text", "Image Url", "ImageUrl", "span2", required: true)
+                            @Html.InputFileBrowserControlGroup(Model, "txtImageUrl", "ImageUrl.Text", "Image Url", "ImageUrl", "span3", required: true)
                             @Html.TextEditorControl(Model, "txtItemText", "Text", required: true, labelText: Model.GetText("SlideText.Text", "Slide Text"))
                             <div class="form-actions">
                                 <a class="btn" id="@Model.GetId("btnApply")">@Model.GetPortalText("Apply.Text", "Apply")</a>

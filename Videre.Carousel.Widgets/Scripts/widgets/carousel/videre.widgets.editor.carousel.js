@@ -67,6 +67,7 @@ videre.widgets.editor.carousel = videre.widgets.editor.base.extend(
         if (this._selectedItem != null && this.validControls(this.getControl('EditCtr'), this._widget))
         {
             this.persistData(this._selectedItem, false, this.getControl('EditCtr'));    //CarouselTab
+            this._selectedItem = null;
             this.bindCarousel();
             this.getControl('EditCtr').hide();
             this._setDirty(false);
@@ -139,7 +140,7 @@ videre.widgets.editor.carousel = videre.widgets.editor.base.extend(
 
             this._itemDict[item.genId] = item;
 
-            var li = $('<li><a style="cursor: pointer;">' + item.Text + '</a></li>').appendTo(parent).data('item', item);
+            var li = $('<li><a style="cursor: pointer;">' + (String.isNullOrEmpty(item.Text) ? '(No Caption)' : item.Text) + '</a></li>').appendTo(parent).data('item', item);  //todo: localize?
             if (this._selectedItem != null && item.genId == this._selectedItem.genId)
                 li.addClass('active');
         }
@@ -214,7 +215,8 @@ videre.widgets.editor.carousel = videre.widgets.editor.base.extend(
 
     _onDataChange: function(e)  //override dirty change/// todo: hack?
     {
-        this._setDirty(true);
+        if (this._selectedItem != null) //if click apply when focus on changed control, we apply, dirty = false, then change...  so we stop that by checking to ensure we still are working on an item
+            this._setDirty(true);
     }
 
 });
