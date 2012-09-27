@@ -21,7 +21,7 @@ namespace Videre.Web.Controllers
 
             var template = Portal.GetPageTemplateFromUrl(name);
             if (!template.IsAuthorized)
-                FormsAuthentication.RedirectToLoginPage();
+                FormsAuthentication.RedirectToLoginPage();  //todo: not authorized may mean we are already logged in.  Fix!
 
             this.ViewBag.Template = template;   //todo: do we want/need this?
             this.ViewBag.Title = Portal.CurrentPortal != null ? Portal.CurrentPortal.Title : "Videre";

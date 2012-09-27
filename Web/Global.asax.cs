@@ -80,9 +80,9 @@ namespace Videre.Web
             //' Fires upon attempting to authenticate the use
             if (HttpContext.Current.User != null)
             {
-                var oIdentity = (FormsIdentity)HttpContext.Current.User.Identity;
+                var identity = (FormsIdentity)HttpContext.Current.User.Identity;
                 if (HttpContext.Current.User.Identity.IsAuthenticated)
-                    HttpContext.Current.User = new System.Security.Principal.GenericPrincipal(oIdentity, oIdentity.Ticket.UserData.Split(','));
+                    HttpContext.Current.User = new System.Security.Principal.GenericPrincipal(identity, identity.Ticket.UserData.Split(','));
 
             }
         }

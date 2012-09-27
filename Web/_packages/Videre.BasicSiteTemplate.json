@@ -2,6 +2,7 @@
   "Portal": {
     "Id": "cc8adfcf-fc2e-49db-8737-2bd481954fac",
     "Name": "Default",
+	"Default": true,
     "Title": null,
     "ThemeName": "",
     "Aliases": [],
