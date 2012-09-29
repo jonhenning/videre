@@ -23,6 +23,11 @@
 			<div class="content" style="min-height: 500px;">	
 				@RenderBody()
                 <div class="row">
+                    <div class="span12">
+                        @Html.RenderWidgets(this.Model, "Top")
+                    </div>
+                </div>
+                <div class="row">
                     <div class="span6">
                         @Html.RenderWidgets(this.Model, "Main")
                     </div>

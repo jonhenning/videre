@@ -2,6 +2,7 @@
 	Name: "TwoPane",
 	Panes: 
 	[
+		[ {Name: "Top", DesignerStyle: "min-height: 50px", DesignerCss: 'span6'} ],
 		[ {Name: "Main", DesignerCss: 'span3', DesignerStyle: 'height: 300px;' }, {Name: "Right", DesignerCss: 'span3', DesignerStyle: 'height: 300px;' } ], 
 		[ {Name: "Footer", DesignerStyle: "min-height: 50px", DesignerCss: 'span6'} ]
 	]
