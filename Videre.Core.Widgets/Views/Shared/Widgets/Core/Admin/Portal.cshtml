@@ -62,6 +62,7 @@
                             <div class="form-horizontal">
                                 @Html.InputControlGroup(Model, "Name", "Name.Text", "Name", "Name")
                                 @Html.InputControlGroup(Model, "Title", "Title.Text", "Title", "Title")
+                                @Html.InputFileBrowserControlGroup(Model, "LogoUrl", "LogoUrl.Text", "Logo Url", "LogoUrl", "span3")
                                 @Html.TextAreaControlGroup(Model, "Aliases", "Aliases.Text", "Aliases", "Aliases", "list", "span6", 3)
                                 @Html.DropDownControlGroup(Model, "Default", "Default.Text", "Default", "Default", new List<SelectListItem>() {{new SelectListItem() { Value = "false", Text="No"}}, {new SelectListItem() {Value = "true", Text = "Yes"} } })
                             </div>

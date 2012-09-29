@@ -72,7 +72,46 @@ namespace Videre.Core.Widgets
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Widget", Title = "Widget Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Security", Title = "Security Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Search", Title = "Search Admin", Category = "Admin" }, 
-                new CoreModels.WidgetManifest() { Path = "Core", Name = "Menu", Title = "Menu", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation" }, 
+                new CoreModels.WidgetManifest() { Path = "Core", Name = "Menu", Title = "Menu", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation" , AttributeDefinitions = new List<AttributeDefinition>()
+                {
+                    new AttributeDefinition()
+                    {
+                        Name = "AlwaysOnTop",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "Yes",
+                        Required = false,
+                        LabelKey = "AlwaysOnTop.Text",
+                        LabelText = "Always On Top"
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "InverseColors",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "No",
+                        Required = false,
+                        LabelKey = "InverseColors.Text",
+                        LabelText = "Inverse Colors"
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "ShowLogo",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "No",
+                        Required = false,
+                        LabelKey = "ShowLogo.Text",
+                        LabelText = "Show Logo"
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "ShowSearch",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "No",
+                        Required = false,
+                        LabelKey = "ShowSearch.Text",
+                        LabelText = "Show Search"
+                    }
+                }
+                },
                 new CoreModels.WidgetManifest() { Path = "Core", Name = "TextHtml", Title = "Text Html", EditorPath = "Widgets/Core/TextHtmlEditor", EditorType = "videre.widgets.editor.texthtml", ContentProvider = "Videre.Core.ContentProviders.LocalizationContentProvider, Videre.Core", Category = "General"
                     //, AttributeDefinitions= new List<CoreModels.WidgetAttributeDefinition>() { new CoreModels.WidgetAttributeDefinition() { Name = "foo", LabelKey = "foo.text", LabelText = "foo", Required = true}} 
                 },

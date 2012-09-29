@@ -40,9 +40,6 @@
                     @*@Html.DropDownControlGroup(Model, "ddlName", "Name.Text", "Name", "Name", new List<SelectListItem>())*@
                     
                     @Html.InputControlGroup(Model, "txtText", "Text.Text", "Text", "Text")
-                    @Html.InputControlGroup(Model, "txtCss", "Css.Text", "Css", "Css")
-                    @Html.DropDownControlGroup(Model, "ddlShowSearch", "ShowSearch.Text", "Show Search", "ShowSearch", new List<SelectListItem>() {{new SelectListItem() { Value = "false", Text="No"}}, {new SelectListItem() {Value = "true", Text = "Yes"} } })
-                    @Html.DropDownControlGroup(Model, "ddlInverseColors", "InverseColors.Text", "Inverse Colors", "InverseColors", new List<SelectListItem>() {{new SelectListItem() { Value = "false", Text="No"}}, {new SelectListItem() {Value = "true", Text = "Yes"} } })
                 </div>
                 <div class="tab-pane" id="@Model.GetId("MenuTab")">
                     <div class="row">
