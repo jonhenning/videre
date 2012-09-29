@@ -150,17 +150,31 @@ namespace Videre.Core.Widgets.Controllers
                 }
                 var ext = fileName.Substring(fileName.LastIndexOf(".") + 1);
                 var saveFileName = Update.UpdateDir + fileName;
-                if (Web.MimeTypes.ContainsKey(ext) && (ext.Equals("json", StringComparison.InvariantCultureIgnoreCase) || ext.Equals("zip", StringComparison.InvariantCultureIgnoreCase)))
+                if (Web.MimeTypes.ContainsKey(ext))
                 {
-                    var fileSize = stream.WriteStream(saveFileName);
-                    r.Data = new
+                    if (ext.Equals("json", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        uniqueName = new FileInfo(saveFileName).Name,
-                        fileName = fileName,
-                        fileSize = fileSize,
-                        mimeType = Web.MimeTypes[ext]
-                    };
-                    r.AddMessage(Localization.GetPortalText("ImportMessage.Text", "File has been placed in the update folder.  It will be applied shortly"));
+                        string json = null;
+                        using (var reader = new StreamReader(stream))
+                        {
+                            json = reader.ReadToEnd();
+                        }
+                        var portalExport = json.ToObject<Models.PortalExport>();
+                        Services.Portal.Import(portalExport, Portal.CurrentPortalId);
+                        r.AddMessage(Localization.GetPortalText("DataImportMessage.Text", "Data has been imported successfully.  You may need to refresh your page to see changes."));
+                    }
+                    else if (ext.Equals("zip", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var fileSize = stream.WriteStream(saveFileName);
+                        r.Data = new
+                        {
+                            uniqueName = new FileInfo(saveFileName).Name,
+                            fileName = fileName,
+                            fileSize = fileSize,
+                            mimeType = Web.MimeTypes[ext]
+                        };
+                        r.AddMessage(Localization.GetPortalText("ImportMessage.Text", "File has been placed in the update folder.  It will be applied shortly"));
+                    }
                 }
                 else
                     throw new Exception(Localization.GetExceptionText("InvalidMimeType.Error", "{0} is invalid.", ext));
