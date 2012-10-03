@@ -744,12 +744,15 @@ videre.validation = {
         ctls.each(function(idx, element)
         {
             var item = { ctl: $(element) };
-            item.lbl = ctr.find('[for="' + item.ctl.attr('id') + '"]');
-            item.group = item.ctl.closest('.control-group');
-            item.labelText = item.lbl.html();
-            if (item.labelText == null)
-                item.labelText = item.ctl.data('label-text');
-            ret.push(item);
+            if (item.ctl.attr('bypassvalidation') != 'true')    //todo:  we need a way to allow for panes to opt out of validation of their controls...  this is ok, but still feels a bit dirty
+            {
+                item.lbl = ctr.find('[for="' + item.ctl.attr('id') + '"]');
+                item.group = item.ctl.closest('.control-group');
+                item.labelText = item.lbl.html();
+                if (item.labelText == null)
+                    item.labelText = item.ctl.data('label-text');
+                ret.push(item);
+            }
         });
         return ret;
     },

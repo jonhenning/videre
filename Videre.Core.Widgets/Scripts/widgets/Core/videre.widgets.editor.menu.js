@@ -108,6 +108,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
     editItem: function()
     {
         this.getControl('EditCtr').show();
+        this.getControl('EditCtr').find('[required]').attr('bypassvalidation', null);   //todo:  we need a way to allow for panes to opt out of validation of their controls...  this is ok, but still feels a bit dirty
         this.bindData(this._selectedItem, this.getControl('EditCtr'));  //MenuTab
         this._setDirty(false);
     },
@@ -164,8 +165,8 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         this.persistData(this._widgetData.Content, false, this.getControl('GeneralTab'));
         this._widgetData.Content.Name = $('option:selected', this.getControl('ddlName')).text();   //todo:  have ability to persist text using attributes??
 
-        this.reset();
         this._base();
+        //this.reset();
     },
 
     reset: function()
@@ -173,6 +174,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         this._widget.find('.nav-tabs a:first').tab('show');
         this._selectedItem = null;
         this.getControl('EditCtr').hide();
+        this.getControl('EditCtr').find('[required]').attr('bypassvalidation', 'true'); //todo:  we need a way to allow for panes to opt out of validation of their controls...  this is ok, but still feels a bit dirty
         this._dirty = false;
     },
 

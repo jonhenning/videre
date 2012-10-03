@@ -30,7 +30,10 @@ namespace Videre.Core.Widgets.Controllers
             {
                 Security.VerifyActivityAuthorized("Portal", "Administration");
                 if (CoreServices.Portal.Save(portal))
+                {
                     r.Data = new { selectedId = portal.Id, portals = CoreServices.Portal.GetPortals() };
+                    r.AddMessage(Localization.GetPortalText("DataSave.Text", "Data has been saved."));
+                }
             });
         }
 

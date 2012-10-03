@@ -29,7 +29,7 @@ videre.widgets.installer = videre.widgets.base.extend(
             var user = this.persistData({}, true, this.getControl('AdminUser'));
             var portal = {
                 Name: 'Default',
-                ThemeName: this.getControl('ddlTheme').val()
+                Default: true
             };
             var packages = [];
             this.getControl('Packages').find(':checked').each(function() { packages.push($(this).val()) });

@@ -29,18 +29,6 @@
             <fieldset>
                 <legend>Portal</legend>
                 <div class="control-group">
-                    <label class="control-label" for="txtUserName">Theme:</label>
-                    <div class="controls">
-                        <select id="ddlTheme">
-                            <option value="">Default</option>
-                            @foreach (var theme in Videre.Core.Services.UI.GetThemes())
-                            {
-                                <option value="@theme.Name">@theme.Name</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
                     <label class="control-label" for="optionsCheckboxList">Packages</label>
                     <div class="controls" id="@Model.GetId("Packages")">
                         @foreach (var package in Videre.Core.Services.Update.GetPackages())
