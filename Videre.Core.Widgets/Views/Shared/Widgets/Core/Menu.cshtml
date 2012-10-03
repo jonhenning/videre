@@ -39,6 +39,8 @@ if (menu != null)
 
     <div class="navbar-inner">
       <div class="container" >
+          @if (!string.IsNullOrEmpty(menu.Text) || showLogo)
+          {
         <a class="brand" href="@Url.Content("~/")">
             @menu.Text
             @if (showLogo && !string.IsNullOrEmpty(Portal.CurrentPortal.LogoUrl))
@@ -46,7 +48,7 @@ if (menu != null)
                 <img src="@Portal.CurrentPortal.LogoUrl" />
             }
         </a>
-
+          }
         <div class="nav-collapse">
           <ul class="nav">
               @menuTemplate(menu.Items, 0)
