@@ -72,6 +72,19 @@ namespace Videre.Core.Services
                     Portal.Save(manifest, Account.AuditId);
                     count++;
                 }
+                else
+                {
+                    //todo: REALLY need to reconsider how to structure this logic...  
+                    var m = Portal.GetWidgetManifest(manifest.FullName);
+                    manifest.Id = m.Id;
+                    if (manifest.ToJson() != m.ToJson())
+                    {
+                        Logging.Logger.InfoFormat("Registering manifest: {0}", manifest.FullName);
+                        Portal.Save(manifest, Account.AuditId);
+                        count++;
+                    }
+
+                }
             }
             //Repository.Current.SaveChanges();
             return count;
