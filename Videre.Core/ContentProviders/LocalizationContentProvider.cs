@@ -15,7 +15,7 @@ namespace Videre.Core.ContentProviders
             return Services.Localization.Get(ids).ToJson(); 
         }
 
-        public List<string> Save(string json)
+        public List<string> Save(string ns, string json)
         {
             var ret = new List<string>();
             if (json != null)
@@ -24,14 +24,15 @@ namespace Videre.Core.ContentProviders
                 foreach (var loc in locs)
                 {
                     loc.Type = Models.LocalizationType.WidgetContent;
-                    //loc.Namespace = Namespace;
+                    if (string.IsNullOrEmpty(loc.Namespace))
+                        loc.Namespace = "__" + ns;  //using __ to allow distinction between shared content vs. single instance - minor hack!
                     ret.Add(Services.Localization.Save(loc));
                 }
             }
             return ret;
         }
 
-        public Dictionary<string, string> Import(string portalId, string json, Dictionary<string, string> idMap)
+        public Dictionary<string, string> Import(string portalId, string ns, string json, Dictionary<string, string> idMap)
         {
             var ret = new Dictionary<string, string>();
             if (json != null)
@@ -40,7 +41,8 @@ namespace Videre.Core.ContentProviders
                 foreach (var loc in locs)
                 {
                     loc.Type = Models.LocalizationType.WidgetContent;
-                    //loc.Namespace = Namespace;
+                    if (string.IsNullOrEmpty(loc.Namespace))    //todo: not necessary, as all exports should contain namespace!
+                        loc.Namespace = "__" + ns;
                     loc.PortalId = portalId;
                     ret[loc.Id] = Services.Localization.Import(portalId, loc);
                 }

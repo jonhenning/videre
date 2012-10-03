@@ -20,7 +20,7 @@ namespace Videre.Core.Widgets.ContentProviders
             return CoreServices.Menu.GetById(id).ToJson(); //todo:  pass in ignoreType? //hack:  [0]?
         }
 
-        public Dictionary<string, string> Import(string portalId, string json, Dictionary<string, string> idMap)
+        public Dictionary<string, string> Import(string portalId, string ns, string json, Dictionary<string, string> idMap)
         {
             var ret = new Dictionary<string, string>();
             if (json != null)
@@ -33,7 +33,7 @@ namespace Videre.Core.Widgets.ContentProviders
             return ret;
         }
 
-        public List<string> Save(string json)
+        public List<string> Save(string ns, string json)
         {
             var ret = new List<string>();
             if (json != null)

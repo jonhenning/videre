@@ -179,6 +179,7 @@ namespace Videre.Core.Services
             pageTemplate.PortalId = portalId;
             pageTemplate.Roles = Security.GetNewRoleIds(pageTemplate.Roles, idMap);
             pageTemplate.Id = existing != null ? existing.Id : null;
+
             foreach (var widget in pageTemplate.Widgets)
             {
                 widget.ManifestId = GetIdMap<Models.WidgetManifest>(widget.ManifestId, idMap);
@@ -189,12 +190,21 @@ namespace Videre.Core.Services
                 {
                     var contentProvider = widget.Manifest.GetContentProvider();
                     if (contentProvider != null)
-                        widget.ContentIds = contentProvider.Import(portalId, widgetContent[widget.Id], idMap).Values.ToList(); //returns mapped dictionary of old id to new id... we just need to use the new ids
+                        widget.ContentIds = contentProvider.Import(portalId, widget.Id, widgetContent[widget.Id], idMap).Values.ToList(); //returns mapped dictionary of old id to new id... we just need to use the new ids
                 }
             }
             Logging.Logger.DebugFormat("Importing page template {0}", pageTemplate.ToJson());
             return Portal.Save(pageTemplate);
         }
+
+        //grab content ids that are used by more than one widget
+        public static List<string> GetSharedContentIds()
+        {
+            var ids = GetPageTemplates().SelectMany(t => t.Widgets).SelectMany(w => w.ContentIds).ToList();
+            ids.AddRange(GetLayoutTemplates().SelectMany(t => t.Widgets).SelectMany(w => w.ContentIds));
+            return ids.GroupBy(i => i).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
+        }
+
         public static string Save(Models.PageTemplate pageTemplate, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
@@ -303,7 +313,7 @@ namespace Videre.Core.Services
                 {
                     var contentProvider = widget.Manifest.GetContentProvider();
                     if (contentProvider != null)
-                        widget.ContentIds = contentProvider.Import(portalId, widgetContent[widget.Id], idMap).Values.ToList(); //returns mapped dictionary of old id to new id... we just need to use the new ids
+                        widget.ContentIds = contentProvider.Import(portalId, widget.Id, widgetContent[widget.Id], idMap).Values.ToList(); //returns mapped dictionary of old id to new id... we just need to use the new ids
                 }
             }
             return Portal.Save(template);
@@ -314,6 +324,16 @@ namespace Videre.Core.Services
             template.PortalId = string.IsNullOrEmpty(template.PortalId) ? CurrentPortalId : template.PortalId;
             if (!IsDuplicate(template))
             {
+                var prevTemplate = GetPageTemplateById(template.Id);
+                if (prevTemplate != null)
+                {
+                    var missing = (from p in prevTemplate.Widgets
+                                   where !(from w in template.Widgets select w.Id).Contains(p.Id)
+                                   select p);
+                    foreach (var widget in missing)
+                        widget.RemoveContent();
+                }
+
                 Repository.Current.StoreResource("LayoutTemplate", null, template, userId);
                 foreach (var widget in template.Widgets)
                 {

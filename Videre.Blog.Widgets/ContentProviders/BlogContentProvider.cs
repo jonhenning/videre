@@ -18,7 +18,7 @@ namespace Videre.Blog.Widgets.ContentProviders
             return Services.Blog.GetById(id).ToJson(); //todo:  pass in ignoreType? //hack:  [0]? - exception when more than one?
         }
 
-        public Dictionary<string, string> Import(string portalId, string json, Dictionary<string, string> idMap)
+        public Dictionary<string, string> Import(string portalId, string ns, string json, Dictionary<string, string> idMap)
         {
             var ret = new Dictionary<string, string>();
             if (json != null)
@@ -32,7 +32,7 @@ namespace Videre.Blog.Widgets.ContentProviders
             return ret;
         }
 
-        public List<string> Save(string value)
+        public List<string> Save(string ns, string value)
         {
             var ret = new List<string>();
             if (value != null)

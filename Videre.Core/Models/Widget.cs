@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 //using System.Web.Script.Serialization;
 using CodeEndeavors.Extensions;
@@ -113,7 +114,7 @@ namespace Videre.Core.Models
             if (provider != null)   
             {
                 if (json != null && json != "null") //todo: kinda hacky looking for string "null"
-                    ContentIds = provider.Save(json);
+                    ContentIds = provider.Save(this.Id, json);
                 else
                     ContentIds = new List<string>();
             }
@@ -121,9 +122,16 @@ namespace Videre.Core.Models
 
         public void RemoveContent()
         {
-            var provider = Manifest.GetContentProvider();
-            if (provider != null && ContentIds.Count > 0)
-                provider.Delete(ContentIds);
+            var sharedContentIds = Services.Portal.GetSharedContentIds();
+            if (ContentIds.Count > 0)
+            {
+                var contentProvider = Manifest.GetContentProvider();
+                if (contentProvider != null)
+                {
+                    var nonSharedIds = ContentIds.Where(i => !sharedContentIds.Contains(i)).ToList();
+                    contentProvider.Delete(nonSharedIds);
+                }
+            }
         }
 
         public T GetContent<T>() where T : class, new()

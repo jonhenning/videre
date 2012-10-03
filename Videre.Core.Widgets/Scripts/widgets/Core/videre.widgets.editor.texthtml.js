@@ -60,6 +60,10 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
 
         //this.getControl('LinkGroup').toggle(!this._linked);
         var content = this._widgetData.Content[0];
+
+        if (content.Namespace != null && content.Namespace.indexOf('__') == 0)  //non-shared content has namespace of __widgetId - don't show user this as its ugly.  It will get re-applied on server
+            content.Namespace = '';
+
         this.getControl('ddlLink').val(this._sharedContentDict[content.Id] != null ? this._widgetData.Content[0].Id : '');
         this.getControl('lblLinkCount').html(String.format("({0})", this._linkCountDict[content.Id] != null ? this._linkCountDict[content.Id].length : '0'));
 

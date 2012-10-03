@@ -9,8 +9,8 @@ namespace Videre.Core.ContentProviders
     {
         string GetJson(List<string> ids);
         T Get<T>(List<string> ids) where T : class;
-        List<string> Save(string json);
-        Dictionary<string, string> Import(string portalId, string json, Dictionary<string, string> idMap); //return <oldId, newId>
+        List<string> Save(string ns, string json);
+        Dictionary<string, string> Import(string portalId, string ns, string json, Dictionary<string, string> idMap); //return <oldId, newId>
         void Delete(List<string> ids);
     }
 }

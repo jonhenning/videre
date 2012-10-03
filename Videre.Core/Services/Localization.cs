@@ -87,7 +87,9 @@ namespace Videre.Core.Services
         private static bool IsDuplicate(Models.Localization localization)
         {
             return Repository.Current.GetResources<Models.Localization>(localization.Type.ToString(), localization.Key,
-                l => l.Data.Locale == localization.Locale && l.Data.PortalId == localization.PortalId && l.Data.Namespace == localization.Namespace && l.Data.Type != LocalizationType.WidgetContent).Exists(l => l.Id != localization.Id);
+                l => l.Data.Locale == localization.Locale && l.Data.PortalId == localization.PortalId && l.Data.Namespace == localization.Namespace
+                    ).Exists(l => l.Id != localization.Id);
+                    //&& l.Data.Type != LocalizationType.WidgetContent).Exists(l => l.Id != localization.Id);
         }
 
         public static bool Delete(string id, string userId = null)

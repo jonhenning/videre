@@ -41,7 +41,7 @@ namespace Videre.Core.Widgets.Controllers
         {
             return API.Execute<object>(r =>
             {
-                var localizations = CoreServices.Localization.Get(CoreModels.LocalizationType.WidgetContent, CoreServices.Portal.CurrentPortalId).Where(l => !string.IsNullOrEmpty(l.Namespace)).ToList();
+                var localizations = CoreServices.Localization.Get(CoreModels.LocalizationType.WidgetContent, CoreServices.Portal.CurrentPortalId).Where(l => !string.IsNullOrEmpty(l.Namespace) && !l.Namespace.StartsWith("__")).ToList(); //todo: here is the mini-hack identifiying shared content from single instance.  See LocalizationContentProvider for other half
                 var locDict = localizations.ToDictionary(l => l.Id);
                 var dict = new Dictionary<string, List<string>>();  //[contentId, List<widgetId>]
                 //get all content ids
