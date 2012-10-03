@@ -1,8 +1,0 @@
-﻿{
-	Version: 1.0,
-	Name: "Videre Blog Widgets",
-	Type: "Widget",
-	Source: "Core",
-	Description: "Blog widgets",
-	FileName: "Videre.Blog.Widgets.zip"
-}

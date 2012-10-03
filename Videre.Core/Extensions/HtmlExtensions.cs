@@ -21,7 +21,7 @@ namespace Videre.Core.Extensions
         }
         public static void RegisterDataTableScript(this HtmlHelper helper)
         {
-            helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.min.js", true);
+            helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.js", true);
             helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.bootstrap.js", true);
             helper.RegisterStylesheet("~/Scripts/DataTables-1.9.0/media/css/jquery.dataTables.bootstrap.css", true);
         }

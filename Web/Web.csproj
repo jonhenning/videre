@@ -171,6 +171,7 @@
     <Content Include="Scripts\DataTables-1.9.0\media\js\jquery.dataTables.bootstrap.js" />
     <Content Include="Scripts\DataTables-1.9.0\media\js\jquery.dataTables.js" />
     <Content Include="Scripts\DataTables-1.9.0\media\js\jquery.dataTables.min.js" />
+    <Content Include="Scripts\DataTables-1.9.0\Readme.txt" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\fileuploader.js" />
     <Content Include="Scripts\dynatree1.1\GPL-LICENSE.txt" />
@@ -242,8 +243,6 @@
     <Content Include="_packages\Videre.Core.Widgets.manifest" />
     <Content Include="_packages\Videre.BasicSiteTemplate.json" />
     <Content Include="_packages\Videre.BasicSiteTemplate.manifest" />
-    <Content Include="_packages\Videre.Blog.Widgets.manifest" />
-    <Content Include="_packages\Videre.Blog.Widgets.zip" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">
