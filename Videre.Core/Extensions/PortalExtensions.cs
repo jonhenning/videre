@@ -132,6 +132,8 @@ namespace Videre.Core.Extensions
                         HtmlExtensions.RegisterScript(helper, file.Path, true, new Dictionary<string, string>() { { "type", "theme" } });
                 }
             }
+            else
+                HtmlExtensions.RegisterStylesheet(helper, "~/scripts/bootstrap-2.1.0/css/bootstrap.css", true);
         }
 
         public static MvcHtmlString RenderClientControl(this HtmlHelper helper, Models.IClientControl clientControl, string id, Models.Chart model)
