@@ -2,6 +2,7 @@
 @using System.Collections.Generic;
 @using Models = Videre.Core.Models;
 @using Videre.Core.Extensions;
+@using CodeEndeavors.Extensions;
 @using Videre.Core.Services;
 
 @model Models.Widget
@@ -25,6 +26,10 @@ var showLogo = Model.GetAttribute("ShowLogo", "No") == "Yes";
 Models.Menu menu = Model.GetContent<Models.Menu>();
 if (menu != null)
 {
+    var urls = menu.Items.Select(i => i.Url).ToList();
+    urls.AddRange(menu.Items.Descendants(i => i.Items).Select(i => i.Url));
+        
+    var bestMatchUrl = !string.IsNullOrEmpty(Portal.CurrentUrl) ? Portal.GetBestMatchedUrl("~/" + Portal.CurrentUrl, urls) : "~/";   //todo: need better url processing, as adding ~/ in front is kind of lame!
     
     if (showSearch)
     {
@@ -51,22 +56,22 @@ if (menu != null)
           }
         <div class="nav-collapse">
           <ul class="nav">
-              @menuTemplate(menu.Items, 0)
-            @helper menuTemplate(List<Models.MenuItem> items, int depth) 
+              @menuTemplate(menu.Items, 0, bestMatchUrl)
+            @helper menuTemplate(List<Models.MenuItem> items, int depth, string bestMatchUrl) 
             {
              foreach (var item in items.Where(i => i.IsAuthorized))
              {
-                 var css = "";  //active???
+                 var css = bestMatchUrl.Equals(item.Url, StringComparison.InvariantCultureIgnoreCase) ? "active" : "";
                  if (item.Items.Count == 0)
                  {
-                     <li><a href="@GetUrl(item.Url)">@item.Text</a></li>
+                     <li class="@css"><a href="@GetUrl(item.Url)">@item.Text</a></li>
                  }
                  else
                  {
-                    <li class="@(depth == 0 ? "dropdown" : "dropdown-submenu")">
+                    <li class="@(depth == 0 ? "dropdown" : "dropdown-submenu") @css">
                         <a href="@GetUrl(item.Url)" class="dropdown-toggle" data-toggle="dropdown">@item.Text @Html.Raw(depth == 0 ? "<i class=\"caret\"></i>" : "")</a>
                         <ul class="dropdown-menu">
-                            @menuTemplate(item.Items, depth + 1)
+                            @menuTemplate(item.Items, depth + 1, bestMatchUrl)
                         </ul>
                     </li>
                  }  
