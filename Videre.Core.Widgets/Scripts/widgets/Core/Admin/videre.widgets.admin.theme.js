@@ -24,6 +24,7 @@ videre.widgets.admin.theme = videre.widgets.base.extend(
         this._themeDataDict = null;
         this._selectedTheme = null;
         this._themeAPIUrl = null;
+        this._defaultTheme = null;
         /* Compile markup as named templates */
         $.templates({
             themeDropdown: '<li data-theme="{{:Name}}"><a>{{:Name}}</a></li>'
@@ -94,10 +95,13 @@ videre.widgets.admin.theme = videre.widgets.base.extend(
     {
         this.getControl('ThemeDropdown').find('.text').html(name);
         this._selectedTheme = this._installedThemeDict[name];
+        if (this._defaultTheme == null)
+            this._defaultTheme = $('[data-type="theme"]');
+
         $('[data-type="theme"]').remove();
+        var head = $('head');
         if (this._selectedTheme != null)
         {
-            var head = $('head');
             $.each(this._selectedTheme.Files, function(idx, file)
             {
                 if (file.Type == 'Css' || file.Type == 0)   //todo: 0???  Css... best practice?
@@ -109,6 +113,8 @@ videre.widgets.admin.theme = videre.widgets.base.extend(
                 }
             });
         }
+        else
+            head[0].appendChild(this._defaultTheme[0]);
         this.bindThemes();
     },
 

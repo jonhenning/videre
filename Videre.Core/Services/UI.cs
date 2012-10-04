@@ -29,7 +29,7 @@ namespace Videre.Core.Services
             get { return "~/Content/Layouts/"; }
         }
 
-        public static Models.Theme CurrentTheme
+        public static Models.Theme PortalTheme
         {
             get
             {

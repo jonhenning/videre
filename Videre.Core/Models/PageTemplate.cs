@@ -21,12 +21,22 @@ namespace Videre.Core.Models
         //public string Name { get; set; }
         public string Title { get; set; }
         public string LayoutName { get; set; }
+        public string ThemeName { get; set; }
         public List<string> Urls { get; set; }
         public string PortalId { get; set; }
         public List<string> Roles { get; set; }
         public bool? Authenticated { get; set; }
 
         public List<Widget> Widgets { get; set; }
+
+        [SerializeIgnore(new string[] { "db", "client" })]
+        public Models.Theme Theme
+        {
+            get
+            {
+                return Services.UI.GetTheme(ThemeName);
+            }
+        }
 
         [SerializeIgnore(new string[] {"db", "client"})]         
         public bool IsDefault
@@ -48,13 +58,23 @@ namespace Videre.Core.Models
             }
         }
 
+        [SerializeIgnore(new string[] { "db", "client" })]
+        public Models.LayoutTemplate Layout
+        {
+            get
+            {
+                return Services.Portal.GetLayoutTemplate(PortalId, LayoutName);
+            }
+        }
+
+
         //[ScriptIgnore, JsonIgnore()]
         [SerializeIgnore(new string[] {"db", "client"})]
         public List<Widget> LayoutWidgets
         {
             get
             {
-                var template = Services.Portal.GetLayoutTemplate(PortalId, LayoutName);
+                var template = Layout;
                 if (template != null && template.IsAuthorized)
                     return template.Widgets;
                 return new List<Widget>();

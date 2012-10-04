@@ -40,20 +40,14 @@
     
     Html.RegisterStylesheet("~/Content/videre.css", true);
 
-    Html.RegisterTheme();
-    
-    //if (!string.IsNullOrEmpty(Portal.CurrentPortal.ThemeCss))
-    //{
-    //}
-    //todo:  logic to select a template here                
-        var template = ViewContext.ViewData.Model as Videre.Core.Models.PageTemplate;
-        if (template != null)
-        {
-            Layout = UI.GetLayoutPath(template.LayoutName);
-        }
-    //else 
-    //{
-    //    Layout = UI.GetDefaultLayoutPath();
-    //}
+   
+    var template = ViewContext.ViewData.Model as Videre.Core.Models.PageTemplate;
+    if (template != null)
+    {
+        Layout = UI.GetLayoutPath(template.LayoutName);
+    }
+
+    Html.RegisterTheme(template);
+        
    
 }

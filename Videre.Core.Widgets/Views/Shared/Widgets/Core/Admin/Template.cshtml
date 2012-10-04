@@ -11,6 +11,7 @@
 
     var manifests = Videre.Core.Services.Portal.GetWidgetManifests();
     var layouts = Videre.Core.Services.UI.GetLayouts();
+    var themes = Videre.Core.Services.UI.GetThemes();
     var isLayout = Model.GetAttribute("IsLayout", false);
 
     Html.RegisterControlPresenter(Model, "videre.widgets.admin.template", new Dictionary<string,object>(){
@@ -77,6 +78,7 @@
                         <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
                             @Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }), "span6")
                             @Html.DropDownControlGroup(Model, "ddlLayout", "Layout.Text", "Layout", "LayoutName", layouts.Select(l => new SelectListItem() { Value = l.Name, Text = l.Name }), "span6")
+                            @Html.DropDownControlGroup(Model, "ddlTheme", "Theme.Text", "Theme", "ThemeName", themes.Select(l => new SelectListItem() { Value = l.Name, Text = l.Name }), "span6", new SelectListItem() { Text = "", Value = "" })
                             @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles", inputCss: "span6")
                             @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")
 

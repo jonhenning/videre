@@ -13,9 +13,19 @@ namespace Videre.Core.Models
 
         public string Id { get; set; }
         public string LayoutName { get; set; }
+        public string ThemeName { get; set; }
         public List<Widget> Widgets { get; set; }
         public List<string> Roles { get; set; }
         public string PortalId { get; set; }
+
+        [SerializeIgnore(new string[] { "db", "client" })]         
+        public Models.Theme Theme
+        {
+            get
+            {
+                return Services.UI.GetTheme(ThemeName);
+            }
+        }
 
         public Dictionary<string, string> GetWidgetContent()
         {

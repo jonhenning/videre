@@ -119,9 +119,14 @@ namespace Videre.Core.Extensions
             HtmlExtensions.ScriptMarkup(helper, "coreconstants", "var ROOT_URL = '" + Videre.Core.Extensions.HtmlExtensions.RootPath + "';");
         }
 
-        public static void RegisterTheme(this HtmlHelper helper)
+        public static void RegisterTheme(this HtmlHelper helper, Models.PageTemplate template)
         {
-            var theme = Services.UI.CurrentTheme;
+            var theme = Services.UI.PortalTheme;
+            if (template.Layout != null && template.Layout.Theme != null)
+                theme = template.Layout.Theme;
+            if (template != null && template.Theme != null)
+                theme = template.Theme;
+            
             if (theme != null)
             {
                 foreach (var file in theme.Files)
@@ -133,7 +138,7 @@ namespace Videre.Core.Extensions
                 }
             }
             else
-                HtmlExtensions.RegisterStylesheet(helper, "~/scripts/bootstrap-2.1.0/css/bootstrap.css", true);
+                HtmlExtensions.RegisterStylesheet(helper, "~/scripts/bootstrap-2.1.0/css/bootstrap.css", true, new Dictionary<string, string>() { { "type", "theme" } });
         }
 
         public static MvcHtmlString RenderClientControl(this HtmlHelper helper, Models.IClientControl clientControl, string id, Models.Chart model)
