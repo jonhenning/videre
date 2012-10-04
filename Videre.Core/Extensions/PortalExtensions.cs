@@ -122,9 +122,9 @@ namespace Videre.Core.Extensions
         public static void RegisterTheme(this HtmlHelper helper, Models.PageTemplate template)
         {
             var theme = Services.UI.PortalTheme;
-            if (template.Layout != null && template.Layout.Theme != null)
+            if (template != null && template.Layout != null && template.Layout.Theme != null)
                 theme = template.Layout.Theme;
-            if (template != null && template.Theme != null)
+            if (template != null && template != null && template.Theme != null)
                 theme = template.Theme;
             
             if (theme != null)
