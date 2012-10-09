@@ -11,11 +11,12 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
         this._sharedContent = null;
         this._sharedContentDict = null;
         this._linkCountDict = null;
-        //this._linked = false;
-        //this._shared = false;
+        this._newShareDialog = null;
+        this._newContent = { Id: '', Key: 'Content.Text', Namespace: '', Text: '', Locale: '', EffectiveDate: null, ExpirationDate: null };  
 
         this._delegates = {
-            onDataReceived: videre.createDelegate(this, this._onDataReceived)
+            onDataReceived: videre.createDelegate(this, this._onDataReceived),
+            onShareDeleted: videre.createDelegate(this, this._onShareDeleted)
         };
     },
 
@@ -23,9 +24,12 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
     {
         this._base(); //call base
         this._editor = videre.widgets.find(this.getId('txtHtml'));
-        //this.getControl('btnShare').click(videre.createDelegate(this, this._onShareClicked));
-        //this.getControl('btnLink').click(videre.createDelegate(this, this._onLinkClicked));
+        this._newShareDialog = this.getControl('NewShareDialog').modal('hide');
         this.getControl('ddlLink').change(videre.createDelegate(this, this._onLinkChanged));
+        this.getControl('btnNewShare').click(videre.createDelegate(this, this._onNewShareClicked));
+        this.getControl('btnDeleteShare').click(videre.createDelegate(this, this._onDeleteShareClicked));
+        this.getControl('btnOkNewShare').click(videre.createDelegate(this, this._onNewShareOkClicked));
+
     },
 
     show: function(widget, manifest)
@@ -34,7 +38,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
         if (widget.Content == null)
             widget.Content = [];
         if (widget.Content.length == 0)
-            widget.Content[0] = this.newContent();
+            widget.Content[0] = this._newContent;
 
         this._widget.find('.nav-tabs a:first').tab('show');
         if (this._sharedContent == null)
@@ -43,28 +47,27 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
             this.bind();
     },
 
-    newContent: function()
+    deleteShare: function(name)
     {
-        return { Id: '', Key: 'Content.Text', Namespace: '', Text: '', Locale: '', EffectiveDate: null, ExpirationDate: null };  //Namespace: widget.ResourcePath
+        if (this._sharedContentDict[name] != null && confirm('Are you sure you wish to delete this share?'))    //todo: localize
+            this.ajax('~/core/localization/delete', { id: this._sharedContentDict[name].Id }, this._delegates.onShareDeleted, null, null, this._sharedContentDict[name]);
+    },
+
+    showNewShareDialog: function()
+    {
+        this._newShareDialog.modal('show');
+        this.getControl('txtNewShare').val('').focus();
     },
 
     bind: function()
     {
-        //this._shared = !String.isNullOrEmpty(this._widgetData.Content[0].Namespace);
-        //this._linked = this._linkCountDict[this._widgetData.Content[0].Id] != null && this._linkCountDict[this._widgetData.Content[0].Id].Count > 1;
-
-        //this.getControl('ShareGroup').toggle(!this._linked);
-
-        //this.getControl('btnShare').removeClass('active').addClass(this._shared ? 'active' : '');
-        //this.getControl('btnLink').removeClass('active').addClass(this._linked ? 'active' : '');
-
-        //this.getControl('LinkGroup').toggle(!this._linked);
         var content = this._widgetData.Content[0];
 
         if (content.Namespace != null && content.Namespace.indexOf('__') == 0)  //non-shared content has namespace of __widgetId - don't show user this as its ugly.  It will get re-applied on server
             content.Namespace = '';
 
-        this.getControl('ddlLink').val(this._sharedContentDict[content.Id] != null ? this._widgetData.Content[0].Id : '');
+        this.getControl('ddlLink').val(this._sharedContentDict[content.Namespace] != null ? this._widgetData.Content[0].Namespace : '');
+
         this.getControl('lblLinkCount').html(String.format("({0})", this._linkCountDict[content.Id] != null ? this._linkCountDict[content.Id].length : '0'));
 
         this.bindData(content, this.getControl('GeneralTab'));
@@ -79,7 +82,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
         ddl.append($('<option></option>').val('').html(''));
         $.each(this._sharedContent, function(val, text)
         {
-            ddl.append($('<option></option>').val(this.Id).html(this.Namespace));
+            ddl.append($('<option></option>').val(this.Namespace).html(this.Namespace));
         });
     },
 
@@ -110,72 +113,98 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
 
     _handleShareChanged: function(id)
     {
-        this._removeWidgetLink();   //clear any links from this widget
         if (this._sharedContentDict[id] != null)
-        {
-            this.getControl('txtShareName').attr('readonly', 'readonly');
             this._widgetData.Content[0] = this._sharedContentDict[id];
-            this._addWidgetLink(id);
-        }
         else
-        {
-            this.getControl('txtShareName').attr('readonly', null);
-            this._widgetData.Content[0] = this.newContent();
-        }
+            this._widgetData.Content[0] = this._newContent;
         this.bind();
     },
 
-    _addWidgetLink: function(contentId)
+    _handleNewShare: function()
     {
-        if (!String.isNullOrEmpty(contentId))
+        var name = this.getControl('txtNewShare').val();
+        if (!String.isNullOrEmpty(name))    //todo: verify not exist in _menuData as well
         {
-            if (this._linkCountDict[contentId] == null)
-                this._linkCountDict[contentId] = [];
-            this._linkCountDict[contentId].push(this._widgetData.Id);  //add this widget to current count
-        }
+            if (this._sharedContentDict[name] == null)
+            {
+                var content = this._newContent;
+                content.Namespace = name;
+                this._widgetData.Content[0] = content;
+                this._sharedContent.push(content);
+                this._sharedContentDict[name] = content;
+                this.bindLinks();
+                this.getControl('ddlLink').val(name);
 
+                this._handleShareChanged(name);
+                this._newShareDialog.modal('hide');
+            }
+            else
+                alert('Share name must be unique!');    //todo: localize
+        }
     },
 
-    _removeWidgetLink: function()
+    _handleDeleteShare: function(id)
     {
-        for (var contentId in this._linkCountDict)
+        if (!String.isNullOrEmpty(this._sharedContentDict[id].Id))  //if its saved already
+            this.deleteShare(id);
+        else   //wss just on client (never saved)
+            this._removeShare(id);
+    },
+
+    _removeShare: function(name)
+    {
+        if (this._sharedContentDict[name] != null)
         {
-            for (var i = 0; i < this._linkCountDict[contentId].length; i++)
-            {
-                if (this._linkCountDict[contentId][i] == this._widgetData.Id)
-                {
-                    this._linkCountDict[contentId].remove(i);
-                    return; //get out
-                }
-            }
+            this._sharedContent = this._sharedContent.where(function(d) { return d.Namespace != name; });
+            this._sharedContentDict = this._sharedContent.toDictionary(function(d) { return d.Namespace; });
+            this.bindLinks();
+            this.getControl('ddlLink').val('');
+            this._handleShareChanged('');
         }
+    },
+
+    _onShareDeleted: function(result, ctx)
+    {
+        if (!result.HasError && result.Data)
+            this._removeShare(ctx.Namespace);
     },
 
     _onDataReceived: function(result)
     {
-        this._sharedContent = result.Data.localizations;
-        this._linkCountDict = result.Data.idCounts; //already a dictionary (id, count)
-        this._sharedContentDict = this._sharedContent.toDictionary(function(d) { return d.Id; });
-        //this.showImport();
-        this.bindLinks();
-        this.bind();
+        if (!result.HasError && result.Data)
+        {
+            this._sharedContent = result.Data.localizations;
+            this._linkCountDict = result.Data.idCounts; //already a dictionary (id, count)
+            this._sharedContentDict = this._sharedContent.toDictionary(function(d) { return d.Namespace; });
+
+            if (this._sharedContentDict[this._widgetData.Content[0].Namespace] == null) //if not shared content, we re-use whenever we create a new!
+                this._newContent = this._widgetData.Content[0];
+
+            //this.showImport();
+            this.bindLinks();
+            this.bind();
+        }
     },
 
-    _onShareClicked: function(e)
+    _onNewShareClicked: function(e)
     {
-        this.getSharedContent();
+        this.showNewShareDialog();
     },
 
-    _onLinkClicked: function(e)
+    _onDeleteShareClicked: function(e)
     {
-        this.getSharedContent();
+        this._handleDeleteShare(this.getControl('ddlLink').val());
+    },
+
+    _onNewShareOkClicked: function(e)
+    {
+        this._handleNewShare();
     },
 
     _onLinkChanged: function(e)
     {
         this._handleShareChanged(this.getControl('ddlLink').val());
     }
-
 
 });
 

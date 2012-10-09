@@ -6,71 +6,63 @@
 @model WidgetEditor
 
 @{
-    //Html.RegisterScript("~/Scripts/CLEditor1_3_0/jquery.cleditor.min.js", true);
-    //Html.RegisterStylesheet("~/Scripts/CLEditor1_3_0/jquery.cleditor.css", true);
-
-    //Html.RegisterScript("~/Scripts/markItUp-pack 1.1.12/markitup/jquery.markitup.js", true);
-    //Html.RegisterScript("~/Scripts/markItUp-pack 1.1.12/markitup/sets/default/set.js", true);
-    //Html.RegisterStylesheet("~/Scripts/markItUp-pack 1.1.12/markitup/skins/simple/style.css", true);
-    //Html.RegisterStylesheet("~/Scripts/markItUp-pack 1.1.12/markitup/sets/default/style.css", true);
-
-
-    //Html.RegisterScript("~/Scripts/ckeditor_3.6.2/ckeditor.js", true);
-    //Html.RegisterScript("~/Scripts/ckeditor_3.6.2/adapters/jquery.js", true);
-    
     Html.RegisterControlPresenter(Model, "videre.widgets.editor.texthtml");
-
 }
 
 <div id="@Model.GetId("Widget")">
-    <form>
-        <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="margin-left: -450px; width: 900px;">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">×</a>
-                @Model.GetText("TextHtmlEditor.Text", "Text / Html Editor")
-            </div>
-            <div class="modal-body" style="min-height: 450px;">
-                @{Html.RenderPartial("WidgetHeader", Model);}
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>
-                    <li><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
-                    <li><a href="#@Model.GetId("MarkupTab")" data-toggle="tab">@Model.GetText("Markup.Text", "Markup")</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
-                        @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
-                    </div>
-                    <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
-                        <div class="control-group" id="@Model.GetId("ShareGroup")">
-                            <label class="control-label">@Model.GetText("ShareName.Text", "Share Name")</label>
-                            <div class="controls">
-                                <input type="text" id="@Model.GetId("txtShareName")" data-column="Namespace" />
-                                @*<button class="btn" type="button" id="@Model.GetId("btnShare")" data-toggle="button"><i class="icon-share"></i> @Model.GetPortalText("Share.Text", "Share")</button>*@
-                            </div>
-                        </div>
-                        <div class="control-group" id="@Model.GetId("LinkGroup")">
-                            <label class="control-label">@Model.GetText("LinkName.Text", "Link Name")</label>
-                            <div class="controls">
-                                <select id="@Model.GetId("ddlLink")"></select>
-                                <span class="badge badge-info" id="@Model.GetId("lblLinkCount")"></span>
-                                @*<button class="btn" type="button" id="@Model.GetId("btnLink")" data-toggle="button"><i class="icon-share"></i> @Model.GetPortalText("Link.Text", "Link")</button>*@
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-horizontal tab-pane" id="@Model.GetId("MarkupTab")">
-                        <div id="@Model.GetId("ContentProperties")">
-                            @Html.TextEditorControl(Model, "txtHtml", "Text")
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="margin-left: -450px; width: 900px; display: none;">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("TextHtmlEditor.Text", "Text / Html Editor")
+        </div>
+        <div class="modal-body" style="min-height: 450px;">
+            @{Html.RenderPartial("WidgetHeader", Model);}
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>
+                <li><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
+                <li><a href="#@Model.GetId("MarkupTab")" data-toggle="tab">@Model.GetText("Markup.Text", "Markup")</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
+                    @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+                </div>
+                <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
+                    <div class="control-group">
+                        <label class="control-label">@Model.GetText("ShareName.Text", "Share Name")</label>
+                        <div class="controls">
+                            <select id="@Model.GetId("ddlLink")"></select>
+                            <span class="badge badge-info" id="@Model.GetId("lblLinkCount")"></span>
+                            <button class="btn" type="button" id="@Model.GetId("btnNewShare")"><i class="icon-plus"></i> @Model.GetPortalText("New.Text", "New")</button>
+                            <button class="btn" type="button" id="@Model.GetId("btnDeleteShare")"><i class="icon-trash"></i> @Model.GetPortalText("Delete.Text", "Delete")</button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
-                <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+                <div class="form-horizontal tab-pane" id="@Model.GetId("MarkupTab")">
+                    <div id="@Model.GetId("ContentProperties")">
+                        @Html.TextEditorControl(Model, "txtHtml", "Text")
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="@Model.GetId("ImageBrowser")" style="display: none;">IMAGE HERE</div>
-    </form>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
+            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+        </div>
+    </div>
 
+    <div id="@Model.GetId("NewShareDialog")" data-target="#@Model.GetId("NewShareDialog")" class="modal fade" style="display: none;">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("NewShare.Text", "New Share")
+        </div>
+        <div class="modal-body" style="padding: 5px;  ">
+            <div class="form-horizontal">
+                @Html.InputControlGroup(Model, "txtNewShare", "ShareName.Text", "Share Name")
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnOkNewShare")">@Model.GetPortalText("Ok.Text", "Ok")</a>
+        </div>
+    </div>
 </div>
 

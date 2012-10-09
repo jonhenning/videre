@@ -356,9 +356,13 @@ videre.widgets.admin.template = videre.widgets.base.extend(
 
     _onWidgetActionClicked: function(e)
     {
-        var mnu = e.target.tagName == 'A' ? $(e.target) : $(e.target).parents('a');
+        var mnu = $(e.target);
+        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
+            mnu = mnu.parents('a');
+
+        //var mnu = e.target.tagName == 'A' ? $(e.target) : $(e.target).parents('a');
+        var action = mnu.data('action');
         var widgetCtr = mnu.parents('.widget-container');
-        var action = $(e.target).data('action');
         var widgetId = widgetCtr.attr('id');
         widgetCtr.find('.dropdown-toggle').dropdown('toggle');  //hide menu
 
@@ -374,6 +378,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
         if (args.type == 'Save')
         {
             args.data.ContentJson = videre.serialize(args.data.Content);
+            args.src.hide();
         }
     },
 

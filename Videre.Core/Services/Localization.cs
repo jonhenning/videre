@@ -73,9 +73,9 @@ namespace Videre.Core.Services
         public static string Save(Models.Localization localization, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            localization.PortalId = string.IsNullOrEmpty(localization.PortalId) ? Services.Portal.CurrentPortalId : localization.PortalId;
             if (!IsDuplicate(localization))
             {
-                localization.PortalId = string.IsNullOrEmpty(localization.PortalId) ? Services.Portal.CurrentPortalId : localization.PortalId;
                 var res = Repository.Current.StoreResource(localization.Type.ToString(), localization.Key, localization, userId);
                 return res.Id;
             }
@@ -86,9 +86,10 @@ namespace Videre.Core.Services
         //make sure you treat like a single instance... no expiring, etc.
         private static bool IsDuplicate(Models.Localization localization)
         {
-            return Repository.Current.GetResources<Models.Localization>(localization.Type.ToString(), localization.Key,
-                l => l.Data.Locale == localization.Locale && l.Data.PortalId == localization.PortalId && l.Data.Namespace == localization.Namespace
-                    ).Exists(l => l.Id != localization.Id);
+            var items = Repository.Current.GetResources<Models.Localization>(localization.Type.ToString(), localization.Key,
+                l => l.Data.Locale == localization.Locale && l.Data.PortalId == localization.PortalId && l.Data.Namespace == localization.Namespace);
+            return items.Exists(l => l.Id != localization.Id);
+                //    ).Exists(l => l.Id != localization.Id);
                     //&& l.Data.Type != LocalizationType.WidgetContent).Exists(l => l.Id != localization.Id);
         }
 

@@ -24,8 +24,6 @@ videre.widgets.editor.base = videre.widgets.base.extend(
         this._dialog = this.getControl('Dialog').modal('hide').hide();
         this.getControl('btnOk').click(videre.createDelegate(this, this._onOkClicked));
         this._widget.find('[data-column]').change(videre.createDelegate(this, this._onDataChange));
-
-        //this._widget.find('input,select,textarea').jqBootstrapValidation();
     },
 
     show: function(widget, manifest)
@@ -44,9 +42,7 @@ videre.widgets.editor.base = videre.widgets.base.extend(
         var ctr = this.getControl('AttributeList');
         ctr.html(this.getControl('AttributeListTemplate').render(this._manifestData.AttributeDefinitions, { attributes: this._widgetData.Attributes }));
         ctr.toggle(this._manifestData.AttributeDefinitions.length > 0);
-        //ctr.find('[data-dependencies]').change(this._baseEditorDelegates.onDependencyControlChange);    //JON:  YOU NEED TO GET RELATED CONTROLS!
         this._handleDependencies(ctr);
-
     },
 
     validate: function()
@@ -61,8 +57,13 @@ videre.widgets.editor.base = videre.widgets.base.extend(
             this.persistData(this._widgetData, false, this.getControl('CommonProperties'));
             this.persistData(this._widgetData.Attributes, false, this.getControl('AttributeList'));
             this.raiseCustomEvent('Save', this._widgetData);
-            this._dialog.modal('hide');
+            //this._dialog.modal('hide');   //we don't know save was successful.. if errored we need to see the error, so cannot just assume we close.
         }
+    },
+
+    hide: function()
+    {
+        this._dialog.modal('hide');
     },
 
     _onOkClicked: function(e)

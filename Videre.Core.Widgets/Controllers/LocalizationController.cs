@@ -28,12 +28,12 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
-        public JsonResult<bool> Delete(string Id)
+        public JsonResult<bool> Delete(string id)
         {
             return API.Execute<bool>(r =>
             {
                 CoreServices.Security.VerifyActivityAuthorized("Localization", "Administration");
-                r.Data = CoreServices.Localization.Delete(Id);
+                r.Data = CoreServices.Localization.Delete(id);
             });
         }
 
