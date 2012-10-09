@@ -52,6 +52,7 @@
         (string.IsNullOrEmpty(tag) || e.Tags.Contains(tag)) &&
         (canEdit || e.PostDate.HasValue)).OrderByDescending(e => e.PostDate))
                 {
+                    Html.RegisterPrettifyScriptIfNeeded(item.Summary);
                     i++;
                     <li style="padding: 10px;" class="@(i % 2 == 0 ? "" : "")">
                         <h3><a href="@Portal.ResolveCurrentUrl(item.Url)">@item.Title</a></h3>
@@ -63,6 +64,7 @@
         }
         else
         {
+            Html.RegisterPrettifyScriptIfNeeded(entry.Body);
             <h3>@entry.Title</h3>
             <p>@Html.Raw(entry.Body)</p>
             <p>@(entry.PostDate.HasValue ? entry.PostDate.Value.ToLocalTime().ToShortDateString() : "")</p>

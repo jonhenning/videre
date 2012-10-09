@@ -21,9 +21,22 @@ namespace Videre.Core.Extensions
         }
         public static void RegisterDataTableScript(this HtmlHelper helper)
         {
-            helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.js", true);
+            helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.min.js", true);
             helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.bootstrap.js", true);
             helper.RegisterStylesheet("~/Scripts/DataTables-1.9.0/media/css/jquery.dataTables.bootstrap.css", true);
+        }
+
+        public static void RegisterPrettifyScriptIfNeeded(this HtmlHelper helper, string text)
+        {
+            if (text.Contains("prettyprint"))
+                helper.RegisterPrettifyScript();
+        }
+
+        public static void RegisterPrettifyScript(this HtmlHelper helper)
+        {
+            helper.RegisterScript("~/Scripts/prettify/prettify.js", true);
+            helper.RegisterStylesheet("~/Scripts/prettify/prettify.css", true);
+            helper.RegisterDocumentReadyScript("prettyPrint", "prettyPrint();", true);
         }
         public static void RegisterTreeScript(this HtmlHelper helper)
         {
