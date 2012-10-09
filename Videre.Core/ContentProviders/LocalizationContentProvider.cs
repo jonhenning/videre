@@ -24,8 +24,18 @@ namespace Videre.Core.ContentProviders
                 foreach (var loc in locs)
                 {
                     loc.Type = Models.LocalizationType.WidgetContent;
+                    loc.PortalId = string.IsNullOrEmpty(loc.PortalId) ? Services.Portal.CurrentPortalId : loc.PortalId;
+
+                    var singleInstanceNamespace = "__" + ns;//using __ to allow distinction between shared content vs. single instance - minor hack!
                     if (string.IsNullOrEmpty(loc.Namespace))
-                        loc.Namespace = "__" + ns;  //using __ to allow distinction between shared content vs. single instance - minor hack!
+                        loc.Namespace = singleInstanceNamespace;
+
+                    if (loc.Namespace != singleInstanceNamespace) //if we are sharing a namespace check for singleinstance existance and remove if found
+                    {
+                        var existing = Services.Localization.Get(loc.PortalId, loc.Type, singleInstanceNamespace, loc.Key, loc.Locale);
+                        if (existing != null)   //if single use exists, clean it up!
+                            Services.Localization.Delete(existing.Id);
+                    }
                     ret.Add(Services.Localization.Save(loc));
                 }
             }

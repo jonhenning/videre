@@ -18,7 +18,7 @@
     Html.RegisterScript("~/Scripts/jsrender.js", true);
     
     //todo: separate out to load on demand?
-    Html.RegisterScript("~/Scripts/jqBootstrapValidation.js", true);
+    //Html.RegisterScript("~/Scripts/jqBootstrapValidation.js", true);
         
     //Html.RegisterStylesheet("~/Content/site.css", true);
     //Html.RegisterStylesheet("~/Content/themes/readymade/css/custom-theme/jquery-ui-1.8.13.custom.css", true);
@@ -39,8 +39,7 @@
     Html.RegisterScript("~/scripts/bootstrap-2.1.0/js/bootstrap.js", true);
     
     Html.RegisterStylesheet("~/Content/videre.css", true);
-
-   
+    
     var template = ViewContext.ViewData.Model as Videre.Core.Models.PageTemplate;
     if (template != null)
     {

@@ -154,6 +154,8 @@
     <Content Include="Scripts\bootstrap-2.1.0\img\glyphicons-halflings.png" />
     <Content Include="Scripts\bootstrap-2.1.0\js\bootstrap.js" />
     <Content Include="Scripts\bootstrap-2.1.0\js\bootstrap.min.js" />
+    <Content Include="Scripts\prettify\prettify.css" />
+    <Content Include="Scripts\prettify\prettify.js" />
     <Content Include="Scripts\DataTables-1.9.0\media\css\jquery.dataTables.bootstrap.css" />
     <Content Include="Scripts\DataTables-1.9.0\media\css\jquery.dataTables.css" />
     <Content Include="Scripts\DataTables-1.9.0\media\css\jquery.dataTables_themeroller.css" />

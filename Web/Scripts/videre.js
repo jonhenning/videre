@@ -687,7 +687,7 @@ videre.widgets.base = videre.Class.extend(
     {
         var handler = this.get_events().getHandler('OnCustomEvent');
         if (handler)
-            handler(this, { type: type, data: data });
+            handler(this, { type: type, data: data, src: this });
         return true;
     }
 

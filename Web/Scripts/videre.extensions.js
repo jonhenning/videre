@@ -95,7 +95,7 @@ Array.prototype.singleOrDefault = function()
     return null;
 };
 
-Array.prototype.values = function(f)
+Array.prototype.values = function()
 {
     var values = [];
     for (var key in this)
@@ -191,13 +191,14 @@ Array.prototype.toListDictionary = function (key, nullKey)
     return dict;
 };
 
-Array.prototype.toList = function (key)
+Array.prototype.toList = function (f)
 {
     var list = [];
     for (var i = 0; i < this.length; i++)
     {
-        if (this[i] && this[i][key])
-            list.push(this[i][key]);
+        var v = f(this[i], i);
+        if (v != null)
+            list.push(v);
     }
     return list;
 };

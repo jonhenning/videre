@@ -117,7 +117,7 @@ videre.widgets.admin.localization = videre.widgets.base.extend(
     deleteItem: function(id)
     {
         if (confirm('Are you sure you wish to remove this entry?'))
-            this.ajax('~/core/Localization/Delete', { Id: id }, this._delegates.onSaveReturn);
+            this.ajax('~/core/Localization/Delete', { id: id }, this._delegates.onSaveReturn);
     },
 
     handleAction: function(action, id)

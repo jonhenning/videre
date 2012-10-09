@@ -51,7 +51,7 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
 
     save: function(widget)
     {
-        this.ajax('~/core/Portal/SaveWidget', { templateId: this._templateId, layoutName: this._layoutName, widget: widget }, this._delegates.onSaveReturn, null, this._dialog);
+        this.ajax('~/core/Portal/SaveWidget', { templateId: this._templateId, layoutName: this._layoutName, widget: widget }, this._delegates.onSaveReturn, null, this._editor._dialog);    //todo: minihack accessing _dialog
     },
 
     toggleMenu: function()
@@ -71,12 +71,20 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
     _onSaveReturn: function(e)
     {
         if (e.Data)
+        {
+            this._editor.hide();
             location.href = location.href;  //reload
+        }
     },
 
     _onAdminClick: function(e)
     {
-        var action = $(e.target).data('action');
+        //todo: would really love a cleaner way of handling the grabbing of the a tag...  used all over...
+        var ctl = $(e.target);
+        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
+            ctl = ctl.parent();
+
+        var action = ctl.data('action');
         if (action == 'edit')
             this.edit();
         this.toggleMenu();
@@ -90,4 +98,3 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
     },
 
 });
-
