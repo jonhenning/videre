@@ -54,7 +54,7 @@
                 {
                     i++;
                     <li style="padding: 10px;" class="@(i % 2 == 0 ? "" : "")">
-                        <h3><a href="@Portal.ResolveCurrentUrl(item.Url)">@item.Title</a></h3>
+                        <h3><a href="@Portal.ResolveCurrentUrl(item.Url)">@Html.Raw(!string.IsNullOrEmpty(item.TitleImageUrl) ? string.Format("<img src=\"{0}\" />", item.TitleImageUrl) : "")@item.Title</a></h3>
                         <div>@Html.Raw(item.Summary)</div>
                         <hr />
                     </li>   
@@ -63,7 +63,7 @@
         }
         else
         {
-            <h3>@entry.Title</h3>
+            <h3>@Html.Raw(!string.IsNullOrEmpty(entry.TitleImageUrl) ? string.Format("<img src=\"{0}\" />", entry.TitleImageUrl) : "")@entry.Title</h3>
             <p>@Html.Raw(entry.Body)</p>
             <p>@(entry.PostDate.HasValue ? entry.PostDate.Value.ToLocalTime().ToShortDateString() : "")</p>
     

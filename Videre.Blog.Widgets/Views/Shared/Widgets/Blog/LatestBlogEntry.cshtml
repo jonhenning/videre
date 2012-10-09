@@ -23,7 +23,7 @@
 
         @if (entry != null)
         {
-            <h5>@entry.Title</h5>
+            <h5>@Html.Raw(!string.IsNullOrEmpty(entry.TitleImageUrl) ? string.Format("<img src=\"{0}\" />", entry.TitleImageUrl) : "")@entry.Title</h5>
             <p>@Html.Raw(String.IsNullOrEmpty(entry.Summary) ? entry.Body.Substring(0, 100) : entry.Summary) <a href="@Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, entry.Url)">@Model.GetText("ReadMore.Text", "Read More")</a></p>
         }
     </div>

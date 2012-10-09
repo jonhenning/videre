@@ -41,6 +41,7 @@
             <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
                 @Html.InputControlGroup(Model, "txtTitle", "Title.Text", "Title", "Title", "span6")
                 @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url", "span6")
+                @Html.InputFileBrowserControlGroup(Model, "TitleImageUrl", "TitleImageUrl.Text", "Title Image Url", "TitleImageUrl", "span3")
                 @Html.TextAreaControlGroup(Model, "txtSummary", "Summary.Text", "Summary", "Summary", inputCss: "span6", rows: 3)
                 @Html.TextAreaControlGroup(Model, "txtTags", "Tags.Text", "Tags", "Tags", "list", "span6", 3)
                 @Html.InputControlGroup(Model, "txtPostDate", "PostDate.Text", "Post Date", "PostDate", "span2", dataType: "datetime")
