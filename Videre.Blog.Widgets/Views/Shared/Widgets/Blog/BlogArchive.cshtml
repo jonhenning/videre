@@ -1,0 +1,34 @@
+@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@using Models = Videre.Blog.Widgets.Models;
+@using Videre.Core.Services;
+@model CoreModels.Widget
+@{    
+    var blog = Model.GetContent<Models.Blog>();
+    
+    if (blog != null)
+    {
+        var blogUrl = Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, "");
+        var groupedEntries = blog.Entries.Where(e => e.PostDate.HasValue).GroupBy(e => e.PostDate.Value.ToString("MMMM yyyy"));
+
+       
+    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+        @{Html.RenderPartial("WidgetHeader", Model);}
+        <h4>@Model.GetText("Archive.Text", "Archive")</h4>
+
+        <ul class="unstyled">
+            @foreach (var g in groupedEntries.OrderByDescending(g => g.Key))
+            {
+                <li>
+                    <a href="@Portal.ResolveCurrentUrl("")?date=@g.Key">
+                        @g.Key - (@g.Count())
+                    </a>
+                </li>   
+            }
+        </ul>
+
+
+    </div>
+
+    }
+}

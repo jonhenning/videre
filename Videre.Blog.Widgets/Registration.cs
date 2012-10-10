@@ -54,6 +54,7 @@ namespace Videre.Blog.Widgets
                 }
                 },
                 new CoreModels.WidgetManifest() { Path = "Blog", Name = "BlogTags", Title = "Blog Tags", EditorType = "videre.widgets.editor.blog",  ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "Blog" },
+                new CoreModels.WidgetManifest() { Path = "Blog", Name = "BlogArchive", Title = "Blog Archive", EditorType = "videre.widgets.editor.blog",  ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "Blog" },
                 new CoreModels.WidgetManifest() { Path = "Blog", Name = "LatestBlogEntry", Title = "Latest Blog Entry", EditorType = "videre.widgets.editor.blog",  ContentProvider = "Videre.Blog.Widgets.ContentProviders.BlogContentProvider, Videre.Blog.Widgets", Category = "Blog", AttributeDefinitions = new List<AttributeDefinition>()
                 {
                     new AttributeDefinition()

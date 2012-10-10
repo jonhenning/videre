@@ -9,6 +9,7 @@
     var showTitle = Model.GetAttribute("ShowBlogTitle", "Yes") == "Yes";
 
     var tag = Request.QueryString["tag"];
+    var date = Request.QueryString["date"];
     var blog = Model.GetContent<Models.Blog>();
     if (blog != null)
     {
@@ -50,6 +51,7 @@
             <ul class="unstyled">
                 @foreach (var item in blog.Entries.Where(e =>
         (string.IsNullOrEmpty(tag) || e.Tags.Contains(tag)) &&
+        (string.IsNullOrEmpty(date) || (e.PostDate.HasValue && e.PostDate.Value.ToString("MMMM yyyy") == date)) &&
         (canEdit || e.PostDate.HasValue)).OrderByDescending(e => e.PostDate))
                 {
                     i++;
