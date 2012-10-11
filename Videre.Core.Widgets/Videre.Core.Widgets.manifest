@@ -1,0 +1,8 @@
+﻿{
+	Version: 1.0,
+	Name: "Videre Core Widgets",
+	Type: "Widget",
+	Source: "Core",
+	Description: "Core widgets, including all CMS admin, TextHTML, Search, and Menu widgets",
+	FileName: "Videre.Core.Widgets.zip"
+}

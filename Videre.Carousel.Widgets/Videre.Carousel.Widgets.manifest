@@ -1,0 +1,8 @@
+﻿{
+	Version: 1.0,
+	Name: "Videre Carousel Widgets",
+	Type: "Widget",
+	Source: "Core",
+	Description: "Carousel Widgets",
+	FileName: "Videre.Carousel.Widgets.zip"
+}

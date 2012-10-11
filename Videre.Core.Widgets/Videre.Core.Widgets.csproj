@@ -460,6 +460,7 @@
     <Content Include="Views\Shared\Controls\Core\WYSIHTML5TextEditor.cshtml" />
     <Content Include="Scripts\controls\core\WYSIHTML5TextEditor\WYSIHTML5_0.2\LICENCE" />
     <Content Include="Scripts\controls\core\WYSIHTML5TextEditor\WYSIHTML5_0.2\VERSION" />
+    <Content Include="Videre.Core.Widgets.manifest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">

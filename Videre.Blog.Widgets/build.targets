@@ -47,7 +47,9 @@
     <Target Name="Deploy" Condition="Exists('$(DeployDir)')">
         <MakeDir Directories="$(DeployDir)\_updates"/>
         <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(DeployDir)\_updates" />
+        <MakeDir Directories="$(DeployDir)\_packages"/>
         <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(DeployDir)\_packages" />
+        <Copy SourceFiles="$(MSBuildProjectDirectory)\$(Name).manifest" DestinationFolder="$(DeployDir)\_packages" />
     </Target>
 
 </Project>

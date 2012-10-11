@@ -114,6 +114,7 @@
     <Content Include="Views\Layouts\General.manifest" />
     <Content Include="Views\Layouts\SidebarRight.manifest" />
     <Content Include="Views\Layouts\TwoPane.manifest" />
+    <Content Include="Videre.Core.Layouts.manifest" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Layouts\Blank\" />
