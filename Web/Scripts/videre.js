@@ -622,7 +622,7 @@ videre.widgets.base = videre.Class.extend(
         if (this._messages.length > 0)
         {
             var msg = this._messages[0];
-            var text = this._messages.toList('text').join('<br/>');
+            var text = this._messages.toList(function(d) { return d.text; }).join('<br/>');
             if (text.length > 0)
             {
                 msgCtr.removeClass('alert-error').addClass(msg.isError ? 'alert-error' : '');

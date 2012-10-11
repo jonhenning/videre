@@ -23,9 +23,17 @@ namespace Videre.Web.Controllers
                 {
                     portal.Name = "Default";
                     portal.Default = true;
+
+                    var packagesToInstall = Videre.Core.Services.Update.GetPackages().Where(p => packages.Contains(p.Name));
+                    
+                    //need to install account providers before we start creating accounts!
+                    foreach (var package in packagesToInstall.Where(p => p.Type == "Account Provider"))
+                        Update.InstallPackage(package.Name, null);
+
                     var portalId = Core.Services.Update.InstallPortal(adminUser, portal);
-                    foreach (var package in packages)
-                        Update.InstallPackage(package, portalId);
+
+                    foreach (var package in packagesToInstall.Where(p => p.Type != "Account Provider"))
+                        Update.InstallPackage(package.Name, portalId);
 
                 }
                 else 

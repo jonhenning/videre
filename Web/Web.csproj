@@ -236,13 +236,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Shared\WidgetHeader.cshtml" />
-    <Content Include="_packages\Videre.Core.Layouts.zip" />
-    <Content Include="_packages\Videre.Core.Widgets.zip" />
     <Content Include="Views\Shared\Installer.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="_packages\Videre.Core.Layouts.manifest" />
-    <Content Include="_packages\Videre.Core.Widgets.manifest" />
     <Content Include="_packages\Videre.BasicSiteTemplate.json" />
     <Content Include="_packages\Videre.BasicSiteTemplate.manifest" />
   </ItemGroup>

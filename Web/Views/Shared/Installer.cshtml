@@ -18,10 +18,10 @@
     @(new HtmlString(Html.RenderStylesheets()))
 </head>
 <body style="padding-top: 40px;">
-    <div class="container template-header shaded">
-        <h3>Videre Installation</h3>
-    </div>
     <div class="container">
+        <div class="well">
+            <h3>Videre Installation</h3>
+        </div>
         <div class="content" style="min-height: 500px;" id="@Model.GetId("Widget")">
             @{Html.RenderPartial("WidgetHeader", Model);}
 

@@ -16,6 +16,7 @@ videre.widgets.installer = videre.widgets.base.extend(
     {
         this._base(); //call base
         this.getControl('btnInstall').click(videre.createDelegate(this, this._onInstallClicked));
+        videre.UI.handleEnter(this._widget, videre.createDelegate(this, this._onInstallClicked));
 
         //this._widget.find('input,select,textarea').jqBootstrapValidation();
 
