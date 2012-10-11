@@ -25,23 +25,26 @@ namespace Videre.Core.Services
         public static Dictionary<string, string> Parse(string pattern, string url)
         {
             var ret = new Dictionary<string, string>();
-            var segments = GetSegments(pattern);
-            var regPattern = pattern;
-            //for (var i = 0; i < segments.Count; i++)
-            foreach (var segment in segments)
+            if (pattern != null)    //todo:  not sure if best to do this check here
             {
-                //var segment = segments[i];
-                //regPattern += (!string.IsNullOrEmpty(regPattern) ? "/" : "") + segment.ToRegEx(i == 0, i == segments.Count - 1);
-                regPattern = regPattern.Replace(segment.Pattern, string.Format("(?<{0}>{1})", segment.Name, _parseTypes[segment.Type]));
-            }
-            if (!_compiledRegexes.ContainsKey(regPattern))
-                _compiledRegexes[regPattern] = new Regex(regPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var regex = _compiledRegexes[regPattern];
-            var match = regex.Match(url);
-            if (match.Success)
-            {
-                for (var i = 0; i < match.Groups.Count; i++)
-                    ret[regex.GroupNameFromNumber(i)] = match.Groups[i].Value;
+                var segments = GetSegments(pattern);
+                var regPattern = pattern;
+                //for (var i = 0; i < segments.Count; i++)
+                foreach (var segment in segments)
+                {
+                    //var segment = segments[i];
+                    //regPattern += (!string.IsNullOrEmpty(regPattern) ? "/" : "") + segment.ToRegEx(i == 0, i == segments.Count - 1);
+                    regPattern = regPattern.Replace(segment.Pattern, string.Format("(?<{0}>{1})", segment.Name, _parseTypes[segment.Type]));
+                }
+                if (!_compiledRegexes.ContainsKey(regPattern))
+                    _compiledRegexes[regPattern] = new Regex(regPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                var regex = _compiledRegexes[regPattern];
+                var match = regex.Match(url);
+                if (match.Success)
+                {
+                    for (var i = 0; i < match.Groups.Count; i++)
+                        ret[regex.GroupNameFromNumber(i)] = match.Groups[i].Value;
+                }
             }
             return ret;
         }
