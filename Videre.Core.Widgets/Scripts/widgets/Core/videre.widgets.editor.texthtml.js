@@ -12,7 +12,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
         this._sharedContentDict = null;
         this._linkCountDict = null;
         this._newShareDialog = null;
-        this._newContent = { Id: '', Key: 'Content.Text', Namespace: '', Text: '', Locale: '', EffectiveDate: null, ExpirationDate: null };  
+        this._newContent = null; 
 
         this._delegates = {
             onDataReceived: videre.createDelegate(this, this._onDataReceived),
@@ -35,6 +35,8 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
     show: function(widget, manifest)
     {
         this._base(widget, manifest);
+
+        this._newContent = { Id: '', Key: 'Content.Text', Namespace: '', Text: '', Locale: '', EffectiveDate: null, ExpirationDate: null };
         if (widget.Content == null)
             widget.Content = [];
         if (widget.Content.length == 0)
