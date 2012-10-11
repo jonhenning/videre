@@ -29,10 +29,6 @@
                 <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
                     @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name", required: true)
                     @Html.InputControlGroup(Model, "txtStyle", "Style.Text", "Style", "Style")
-                    @Html.DropDownControlGroup(Model, "ddlType", "Type.Text", "Type", "Type", new List<SelectListItem>() { 
-                        new SelectListItem() { Text = "Bootstrap", Value = "Bootstrap"},
-                        new SelectListItem() { Text = "Pixedelic Camera", Value = "CameraDefault"}
-                    })
                 </div>
                 <div class="tab-pane" id="@Model.GetId("CarouselTab")">
                     <div class="row">

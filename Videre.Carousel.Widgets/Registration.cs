@@ -22,7 +22,37 @@ namespace Videre.Carousel.Widgets
             // your widget manifest should be registered here.  
             var updates = CoreServices.Update.Register(new List<CoreModels.WidgetManifest>()
             {
-                new CoreModels.WidgetManifest() { Path = "Carousel", Category = "General", Name = "Carousel", Title = "Carousel", EditorPath = "Widgets/Carousel/CarouselEditor", EditorType = "videre.widgets.editor.carousel", ContentProvider = "Videre.Carousel.Widgets.ContentProviders.CarouselContentProvider, Videre.Carousel.Widgets" }
+                new CoreModels.WidgetManifest() { Path = "Carousel", Category = "General", Name = "Carousel", Title = "Carousel", EditorPath = "Widgets/Carousel/CarouselEditor", EditorType = "videre.widgets.editor.carousel", ContentProvider = "Videre.Carousel.Widgets.ContentProviders.CarouselContentProvider, Videre.Carousel.Widgets", AttributeDefinitions = new List<AttributeDefinition>()
+                {
+                    new AttributeDefinition()
+                    {
+                        Name = "CarouselProvider",
+                        Values = new List<string>() { "Pixedelic", "Boostrap" },
+                        DefaultValue = "Pixedelic",
+                        Required = true,
+                        LabelKey = "CarouselProvider.Text",
+                        LabelText = "Carousel Provider"
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "CropImages",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "Yes",
+                        LabelKey = "CropImages.Text",
+                        LabelText = "CropImages",
+                        Dependencies = new List<AttributeDependency>() { new AttributeDependency() { DependencyName = "CarouselProvider", Values = new List<string>() { "Pixedelic" }}}
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "AdvanceTime",
+                        DefaultValue = "7000",
+                        //DataType = "integer", //TODO:
+                        LabelKey = "AdvanceTime.Text",
+                        LabelText = "Advance Time (ms)",
+                        Dependencies = new List<AttributeDependency>() { new AttributeDependency() { DependencyName = "CarouselProvider", Values = new List<string>() { "Pixedelic" }}}
+                    }
+                }
+                }
             });
 
             // If you wish to secure an AJAX endpoint, you need to register an Area and a Name.
