@@ -151,8 +151,8 @@
     <Compile Include="Services\UI.cs" />
     <Compile Include="Services\RouteParser.cs" />
     <Compile Include="Services\Search.cs" />
-    <Compile Include="Services\DefaultAccount.cs" />
-    <Compile Include="Services\IAccountService.cs" />
+    <Compile Include="AccountProviders\VidereAccount.cs" />
+    <Compile Include="AccountProviders\IAccountService.cs" />
     <Compile Include="Services\ISearchProvider.cs" />
     <Compile Include="Services\Menu.cs" />
     <Compile Include="Services\File.cs" />

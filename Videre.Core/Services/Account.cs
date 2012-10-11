@@ -14,23 +14,15 @@ namespace Videre.Core.Services
 {
     public class Account
     {
-        private static IAccountService _accountService;
+        private static AccountProviders.IAccountService _accountService;
 
-        private static IAccountService AccountService
+        private static AccountProviders.IAccountService AccountService
         {
             get
             {
                 if (_accountService == null)
                 {
-                    //ObjectFactory.Configure(x =>
-                    //    x.Scan(scan =>
-                    //    {
-                    //        scan.Assembly(ConfigurationManager.AppSettings.GetSetting("AccountServicesProvider", "Videre.Core"));
-                    //        scan.AddAllTypesOf<IAccountService>();
-                    //    }));
-
-                    //_accountService = ObjectFactory.GetInstance<IAccountService>();
-                    _accountService = ConfigurationManager.AppSettings.GetSetting("AccountServicesProvider", "Videre.Core.Services.DefaultAccount, Videre.Core").GetInstance<IAccountService>();
+                    _accountService = ConfigurationManager.AppSettings.GetSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core").GetInstance<AccountProviders.IAccountService>();
                     _accountService.Initialize(ConfigurationManager.AppSettings.GetSetting("AccountServicesConnection", ""));
                 }
                 return _accountService;
@@ -133,7 +125,8 @@ namespace Videre.Core.Services
         public static Models.User GetUser(string name, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return Repository.Current.GetResourceData<Models.User>("User", m => m.Data.PortalId == portalId && m.Data.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase), null);
+            return AccountService.Get(portalId).Where(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            //return Repository.Current.GetResourceData<Models.User>("User", m => m.Data.PortalId == portalId && m.Data.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase), null);
             //return GetUsers(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && u.PortalId == portalId).SingleOrDefault(); 
         }
 

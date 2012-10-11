@@ -4,10 +4,11 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
+using Videre.Core.Services;
 
-namespace Videre.Core.Services
+namespace Videre.Core.AccountProviders
 {
-    public class DefaultAccount : IAccountService
+    public class VidereAccount : IAccountService
     {
         public bool ReadOnly { get { return false ; } }
 
