@@ -9,7 +9,7 @@
     
     if (blog != null)
     {
-        var entry = blog.Entries.OrderByDescending(e => e.PostDate.HasValue ? e.PostDate.Value : DateTime.MinValue).FirstOrDefault();
+        var entry = blog.Entries.Where(e => e.PostDate.HasValue).OrderByDescending(e => e.PostDate.HasValue ? e.PostDate.Value : DateTime.MinValue).FirstOrDefault();
         var blogUrl = Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, "");
 
        
