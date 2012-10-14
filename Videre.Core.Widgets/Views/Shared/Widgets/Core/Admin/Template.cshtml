@@ -24,7 +24,7 @@
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
     <fieldset>
-        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Template Administration")</legend>
+        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Template Administration")</legend>}
             
         <p>@Html.Raw(Model.GetText("Instructions.Text", "Template administration allows you to create new pages to view along with specifying their layout and widgets.  The general tab allows you to choose the layout, roles, title, and one or more urls to associate with your template.  The layout tabl allows you to drag widgets onto your layout's panes.  Additionally, some widgets like Text/Html provide an editor to put content in when you click the menu and then edit."))</p>
         <br />

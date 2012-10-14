@@ -23,7 +23,7 @@
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
     <fieldset>
-        <legend class="videre section-header">@Model.GetText("Login.Text", "Log On")</legend>
+        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("Login.Text", "Log On")</legend>}
         <div class="container">
             <div class="row">
                 <div class="span4">

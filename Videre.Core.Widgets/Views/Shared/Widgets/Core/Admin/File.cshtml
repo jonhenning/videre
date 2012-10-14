@@ -15,7 +15,7 @@
     @{Html.RenderPartial("WidgetHeader", Model);}
     
     <fieldset>
-        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "File Administration")</legend>
+        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "File Administration")</legend>}
         
         <p>@Html.Raw(Model.GetText("Instructions.Text", "File administration is where you can manage files. "))</p>
 

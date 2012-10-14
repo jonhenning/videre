@@ -16,7 +16,7 @@
     @{Html.RenderPartial("WidgetHeader", Model);}
     
     <fieldset>
-        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Localization Administration")</legend>
+        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Localization Administration")</legend>}
         
         <p>@Html.Raw(Model.GetText("Instructions.Text", "Localization administration is where you can alter the text displayed throughout the portal. "))</p>
 

@@ -16,7 +16,7 @@
     @{Html.RenderPartial("WidgetHeader", Model);}
     
     <fieldset>
-        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Widget Manifest Administration")</legend>
+        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Widget Manifest Administration")</legend>}
         
         <p>@Html.Raw(Model.GetText("Instructions.Text", "The Widget Manifest defines what widgets can be placed in a template.  You can organize your widgets into categories if you like.  Also, if your widget exposes custom content, you need to specify additional information to allow the content to be edited within the designer. "))</p>
 

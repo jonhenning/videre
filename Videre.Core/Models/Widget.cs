@@ -73,6 +73,7 @@ namespace Videre.Core.Models
         public string Css { get; set; }
         public string Style { get; set; }
         public string PaneName { get; set; }
+        public bool ShowHeader { get; set; }
         public int Seq { get; set; }
         public List<string> Roles { get; set; }
         public bool? Authenticated { get; set; }

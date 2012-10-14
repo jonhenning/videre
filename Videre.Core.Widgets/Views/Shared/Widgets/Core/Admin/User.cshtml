@@ -15,7 +15,7 @@
     @{Html.RenderPartial("WidgetHeader", Model);}
     
     <fieldset>
-        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "User Administration")</legend>
+        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "User Administration")</legend>}
 
         <p>@Html.Raw(Model.GetText("Instructions.Text", "User administration can be performed here.  This widget is intended for use by admins only."))</p>
 

@@ -17,7 +17,7 @@
     @{Html.RenderPartial("WidgetHeader", Model);}
     
     <fieldset>
-        <legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Secure Activity Administration")</legend>
+        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Secure Activity Administration")</legend>}
         
         <p>@Html.Raw(Model.GetText("Instructions.Text", "Secure activities allow the user to secure the AJAX calls exposed by the widget controllers.  The author of the widget decides how to group a set of Activities requiring a given role."))</p>
 
