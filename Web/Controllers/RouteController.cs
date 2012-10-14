@@ -16,6 +16,9 @@ namespace Videre.Web.Controllers
 
         public ActionResult Index(string name)
         {
+            if (name == null)   //todo: hacky?
+                name = "";
+
             if (Portal.CurrentPortal == null)
                 return View("Installer", new Core.Models.View() { ClientId = "installer" });
 

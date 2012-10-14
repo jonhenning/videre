@@ -8,6 +8,7 @@
 <div id="@Model.GetId("CommonProperties")">
     @Html.InputControlGroup(Model, "txtCommonCss", "Css.Text", "Css", "Css", "span4")
     @Html.InputControlGroup(Model, "txtCommonStyle", "Style.Text", "Style", "Style", "span4")
+    @Html.DropDownControlGroup(Model, "ddlShowHeader", "ShowHeader.Text", "Show Header", "ShowHeader", new List<SelectListItem>() { new SelectListItem() { Text="No", Value="false" }, new SelectListItem() { Text="Yes", Value="true"} }, "span4")
     @Html.RoleControlGroup(Model, "ddlCommonRoles", "Roles.Text", "Roles", "Roles", inputCss: "span4")
     @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")
 

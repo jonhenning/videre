@@ -29,7 +29,7 @@ namespace Videre.Core.Services
         {
             if (IsInRequest) //todo: allow this to be on thread?
                 return System.Web.HttpContext.Current.Items.GetSetting<T>(key, defaultValue);
-            return default(T);
+            return defaultValue; // default(T);
         }
         public static void SetRequestContextData<T>(string key, T value)
         {
