@@ -445,9 +445,9 @@ videre.widgets.admin.template = videre.widgets.base.extend(
                     '<div class="container" style="width: auto;">' +
                         '<ul class="nav"><li><a style="padding-right:0; padding-left: 4px;" class="hide-overflow" title="{1}"><i class="icon-cog"></i> {1}</a></li></ul>' +
                         '<ul class="nav pull-right">' +
-                            '<li class="divider-vertical"></li>' +
+                            '<li class="divider-vertical" style="margin:0;"></li>' +
                             '<li class="dropdown">' +
-                                '<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:0; padding-right:0"><b class="caret"></b></a>' +
+                                '<a class="dropdown-toggle" data-toggle="dropdown" ><b class="caret"></b></a>' +
                                 '<ul class="dropdown-menu">' +
                                     '<li><a data-action="edit"><i class="icon-pencil"></i> Edit</a></li>' +
                                     '<li><a data-action="remove"><i class="icon-trash"></i> Remove</a></li>' +
