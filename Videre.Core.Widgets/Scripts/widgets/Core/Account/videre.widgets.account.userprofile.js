@@ -43,7 +43,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     {
         //todo: validation!
         var user = this.persistData(this._data);    //todo: clone?
-        this.ajax('~/core/Account/SaveUserProfile', { User: user }, this._delegates.onSaveReturn);
+        this.ajax('~/core/Account/SaveUserProfile', { user: user }, this._delegates.onSaveReturn);
     },
 
     _onDataReturn: function(result, ctx)
