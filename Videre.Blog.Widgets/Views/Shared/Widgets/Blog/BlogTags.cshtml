@@ -8,8 +8,8 @@
     var blog = Model.GetContent<Models.Blog>();
     if (blog != null)
     {
-        var totalTags = blog.Entries.SelectMany(t => t.Tags).Count();
-        var groupedTags = blog.Entries.SelectMany(e => e.Tags).GroupBy(t => t).Select(t => new { name = t.Key, count = t.Count() });
+        var totalTags = blog.Entries.Where(e => e.IsPublished).SelectMany(t => t.Tags).Count();
+        var groupedTags = blog.Entries.Where(e => e.IsPublished).SelectMany(e => e.Tags).GroupBy(t => t).Select(t => new { name = t.Key, count = t.Count() });
         
     <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
         @{Html.RenderPartial("WidgetHeader", Model);}

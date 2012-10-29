@@ -19,5 +19,14 @@ namespace Videre.Blog.Widgets.Models
         public string Body { get; set; }
         public DateTime? PostDate { get; set; }
         public List<string> Tags { get; set; }
+
+        public bool IsPublished
+        {
+            get
+            {
+                return PostDate.HasValue && PostDate.Value < DateTime.UtcNow; //todo: utc?
+            }
+        }
+
     }
 }
