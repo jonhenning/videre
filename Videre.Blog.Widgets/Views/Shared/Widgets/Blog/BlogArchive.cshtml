@@ -9,7 +9,7 @@
     if (blog != null)
     {
         var blogUrl = Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, "");
-        var groupedEntries = blog.Entries.Where(e => e.PostDate.HasValue).GroupBy(e => e.PostDate.Value.ToString("MMMM yyyy"));
+        var groupedEntries = blog.Entries.Where(e => e.IsPublished).GroupBy(e => e.PostDate.Value.ToString("MMMM yyyy"));
 
        
     <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
