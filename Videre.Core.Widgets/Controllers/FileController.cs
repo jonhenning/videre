@@ -51,11 +51,12 @@ namespace Videre.Core.Widgets.Controllers
             {
                 var fileName = Portal.GetFile(CoreServices.Portal.CurrentPortalId, file.Id);
                 result = File(fileName, file.MimeType);
-
-                this.Response.Cache.SetCacheability(System.Web.HttpCacheability.Public);
+                
                 this.Response.AddFileDependency(fileName);
+                this.Response.Cache.SetCacheability(System.Web.HttpCacheability.Public);
                 this.Response.Cache.SetLastModifiedFromFileDependencies();
-            
+                this.Response.Cache.SetETagFromFileDependencies();
+                
             }
 
             return result;
