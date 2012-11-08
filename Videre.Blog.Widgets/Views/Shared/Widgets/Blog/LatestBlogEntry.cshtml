@@ -23,10 +23,8 @@
 
         @if (entry != null)
         {
-            var text = !string.IsNullOrEmpty(entry.Summary) ? entry.Summary : (!string.IsNullOrEmpty(entry.Body) ? entry.Body : "");    //todo: helper?
-            text = text.Length > 100 ? text.Substring(0, 100) : text;
             <h5>@Html.Raw(!string.IsNullOrEmpty(entry.TitleImageUrl) ? string.Format("<img src=\"{0}\" />", entry.TitleImageUrl) : "")@entry.Title</h5>
-            <p>@Html.Raw(text) <a href="@Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, entry.Url)">@Model.GetText("ReadMore.Text", "Read More")</a></p>
+            <p>@Html.Raw(entry.DisplaySummary) <a href="@Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, entry.Url)">@Model.GetText("ReadMore.Text", "Read More")</a></p>
         }
     </div>
 
