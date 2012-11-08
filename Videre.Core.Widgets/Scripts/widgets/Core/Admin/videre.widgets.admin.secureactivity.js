@@ -53,7 +53,7 @@ videre.widgets.admin.secureactivity = videre.widgets.base.extend(
     bind: function()
     {
         this.getControl('ItemTable').dataTable().fnDestroy();
-        this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data));
+        //this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data));
         this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data, { roleDataDict: this._roleDataDict }));
         this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
 

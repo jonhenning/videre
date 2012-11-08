@@ -430,7 +430,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
             this.getControl('Panes').find('[data-pane="' + pane + '"]').append(ctr);
 
 
-        var p = ctr.find('.hide-overflow').parent().width(ctr.parent().width() - 60);
+        var p = ctr.find('.hide-overflow').parent().width(ctr.parent().width() - 65);
 
         return widget;
     },
