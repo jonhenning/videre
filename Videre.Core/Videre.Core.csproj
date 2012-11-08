@@ -131,6 +131,7 @@
     <Compile Include="ContentProviders\LocalizationContentProvider.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\PageTemplate.cs" />
+    <Compile Include="Models\WebReference.cs" />
     <Compile Include="Models\WidgetEditor.cs" />
     <Compile Include="Models\Layout.cs" />
     <Compile Include="Models\File.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Services\Repository.cs" />
     <Compile Include="Services\Portal.cs" />
     <Compile Include="Services\Validation.cs" />
+    <Compile Include="Services\Web.cs" />
     <Compile Include="Web.cs" />
   </ItemGroup>
   <ItemGroup>

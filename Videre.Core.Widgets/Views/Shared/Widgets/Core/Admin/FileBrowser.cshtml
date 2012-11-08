@@ -6,8 +6,8 @@
 @model Models.Widget
 
 @{
-    //Html.RegisterDataTableScript();
-    //Html.RegisterTreeScript();
+    //Html.RegisterWebReferenceGroup("datatables");
+    //Html.RegisterWebReferenceGroup("dynatree");
     var editorData = new Dictionary<string, object>() { };
     var isModal = true;
     if (!string.IsNullOrEmpty(Request.QueryString["CKEditor"]))

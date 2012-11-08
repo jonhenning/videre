@@ -1,0 +1,17 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using Videre.Core.Services;
+
+@model Models.Widget
+
+@{
+
+}
+
+<div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+
+    @Localization.GetPortalText("WidgetLoadError.Text", "There was an error loading your widget")
+    <pre>@(ViewData.ContainsKey("Exception") ? (ViewData["Exception"] as Exception).Message : "")</pre>
+</div>
+

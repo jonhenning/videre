@@ -6,7 +6,7 @@
 @model Models.Widget
 
 @{
-    Html.RegisterDataTableScript();
+    Html.RegisterWebReferenceGroup("datatables");
     Html.RegisterScript("~/scripts/fileuploader.js", true);
     //var portal = Videre.Core.Services.Portal.CurrentPortal;
     var currentPortalId = Portal.CurrentPortalId;

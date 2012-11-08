@@ -7,7 +7,7 @@
 
 @{
     //Html.RegisterJQGridScript();
-    Html.RegisterDataTableScript();
+    Html.RegisterWebReferenceGroup("datatables");
     Html.RegisterControlPresenter(Model, "videre.widgets.admin.widgetmanifest", new Dictionary<string, object>() {
         {"data", Portal.GetWidgetManifests() }});
 }

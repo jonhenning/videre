@@ -13,40 +13,85 @@ namespace Videre.Core.Extensions
 {
     public static class HtmlExtensions
     {
-        public static void RegisterJQGridScript(this HtmlHelper helper)
+        public static void RegisterWebReference(this HtmlHelper helper, string name)
         {
-            helper.RegisterScript("~/Scripts/jqgrid-4.4/grid.locale-en.js", true);
-            helper.RegisterScript("~/Scripts/jqgrid-4.4/jquery.jqGrid.min.js", true);
-            helper.RegisterStylesheet("~/Scripts/jqgrid-4.4/ui.jqgrid.css", true);
+            var refs = Services.Web.GetWebReferences();
+            var wr = refs.Where(r => r.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+
+            if (wr != null)
+            {
+                foreach (var dep in wr.DependencyGroups)
+                    RegisterWebReferenceGroup(helper, dep);
+
+                if (wr.Type == Models.WebReferenceType.ScriptReference)
+                    helper.RegisterScript(wr.Url, wr.LoadType == Models.WebReferenceLoadType.Defer);
+                else if (wr.Type == Models.WebReferenceType.StyleSheetReference)
+                    helper.RegisterStylesheet(wr.Url, wr.LoadType == Models.WebReferenceLoadType.Defer);
+                else if (wr.Type == Models.WebReferenceType.Script)
+                {
+                    if (wr.LoadType == Models.WebReferenceLoadType.Inline)
+                        helper.RegisterScript(wr.Name, wr.Text);
+                    else
+                        helper.RegisterDocumentReadyScript(wr.Name, wr.Text, wr.LoadType == Models.WebReferenceLoadType.EndStartup);
+                }
+                else if (wr.Type == Models.WebReferenceType.StyleSheet)
+                {
+                    //if (wr.LoadType == Models.WebReferenceLoadType.Inline)
+                        helper.RegisterStylesheet(wr.Name, wr.Text);
+                    //else
+                }
+            }
         }
-        public static void RegisterDataTableScript(this HtmlHelper helper)
+
+        public static void RegisterWebReferenceGroup(this HtmlHelper helper, string name)
         {
-            helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.min.js", true);
-            helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.bootstrap.js", true);
-            helper.RegisterStylesheet("~/Scripts/DataTables-1.9.0/media/css/jquery.dataTables.bootstrap.css", true);
+            var refs = Services.Web.GetWebReferences();
+            var groupRefs = refs.Where(r => r.Group.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            foreach (var r in groupRefs.OrderBy(r => r.Sequence))
+                RegisterWebReference(helper, r.Name);
         }
+        
+        //public static void RegisterDataTableScript(this HtmlHelper helper)
+        //{
+        //    helper.RegisterWebReferenceGroup("datatables");
+        //    //helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.min.js", true);
+        //    //helper.RegisterScript("~/Scripts/DataTables-1.9.0/media/js/jquery.dataTables.bootstrap.js", true);
+        //    //helper.RegisterStylesheet("~/Scripts/DataTables-1.9.0/media/css/jquery.dataTables.bootstrap.css", true);
+        //}
 
         public static void RegisterPrettifyScriptIfNeeded(this HtmlHelper helper, string text)
         {
             if (text.Contains("prettyprint"))
-                helper.RegisterPrettifyScript();
+                helper.RegisterWebReferenceGroup("prettify");
         }
 
-        public static void RegisterPrettifyScript(this HtmlHelper helper)
+        //public static void RegisterPrettifyScript(this HtmlHelper helper)
+        //{
+        //    helper.RegisterWebReferenceGroup("prettify");
+        //    //helper.RegisterScript("~/Scripts/prettify/prettify.js", true);
+        //    //helper.RegisterStylesheet("~/Scripts/prettify/prettify.css", true);
+        //    //helper.RegisterDocumentReadyScript("prettyPrint", "prettyPrint();", true);
+        //}
+        //public static void RegisterTreeScript(this HtmlHelper helper)
+        //{
+        //    helper.RegisterWebReferenceGroup("dynatree");
+        //    //helper.RegisterScript("~/scripts/dynatree1.1/jquery.dynatree.min.js", true);
+        //    //helper.RegisterStylesheet("~/scripts/dynatree1.1/skin/ui.dynatree.css", true);
+        //}
+        //public static void RegisterDateTimePicker(this HtmlHelper helper)
+        //{
+        //    helper.RegisterWebReferenceGroup("timepicker");
+        //    //helper.RegisterScript("~/scripts/jquery-ui-timepicker-1.0.1/jquery-ui-timepicker-addon.js", true);
+        //    //helper.RegisterStylesheet("~/scripts/jquery-ui-timepicker-1.0.1/jquery-ui-timepicker-addon.css", true);
+        //}
+
+        public static void RegisterScript(this HtmlHelper helper, string key, string script)
         {
-            helper.RegisterScript("~/Scripts/prettify/prettify.js", true);
-            helper.RegisterStylesheet("~/Scripts/prettify/prettify.css", true);
-            helper.RegisterDocumentReadyScript("prettyPrint", "prettyPrint();", true);
-        }
-        public static void RegisterTreeScript(this HtmlHelper helper)
-        {
-            helper.RegisterScript("~/scripts/dynatree1.1/jquery.dynatree.min.js", true);
-            helper.RegisterStylesheet("~/scripts/dynatree1.1/skin/ui.dynatree.css", true);
-        }
-        public static void RegisterDateTimePicker(this HtmlHelper helper)
-        {
-            helper.RegisterScript("~/scripts/jquery-ui-timepicker-1.0.1/jquery-ui-timepicker-addon.js", true);
-            helper.RegisterStylesheet("~/scripts/jquery-ui-timepicker-1.0.1/jquery-ui-timepicker-addon.css", true);
+            if (!IsKeyRegistered(helper, key))
+            {
+                //todo: test
+                helper.ViewContext.HttpContext.Response.Write(string.Format("<script type=\"text/javascript\">{0}</script>", script));
+            }
         }
 
         public static void RegisterDocumentReadyScript(this HtmlHelper helper, string key, string script, bool runAtEnd = false)
@@ -81,6 +126,16 @@ namespace Videre.Core.Extensions
                 }
             //}
         }
+
+        public static void RegisterStylesheet(this HtmlHelper helper, string key, string css)
+        {
+            if (!IsKeyRegistered(helper, key))
+            {
+                //todo: test
+                helper.ViewContext.HttpContext.Response.Write(string.Format("<style>{0}</style>", css));
+            }
+        }
+
         public static void RegisterStylesheet(this HtmlHelper helper, string src, bool defer = true, Dictionary<string, string> dataAttributes = null)
         {
             //lock (_lockObj)
@@ -201,7 +256,8 @@ namespace Videre.Core.Extensions
 
         public static MvcHtmlString UploadButtonControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string buttonTextKey, string defaultButtonText, string inputCss = null, string inputType = null)
         {
-            helper.RegisterScript("~/scripts/fileuploader.js", true);
+            //helper.RegisterScript("~/scripts/fileuploader.js", true);
+            helper.RegisterWebReference("fileuploader");
             return GetControlGroup(widget, id, textKey, defaultText, 
                                     string.Format("   <a class=\"btn {1}\" id=\"{0}\" >{2}</a>",
                                 widget.GetId(id), inputCss, HttpUtility.HtmlEncode(widget.GetText(buttonTextKey, defaultButtonText))));
@@ -234,21 +290,32 @@ namespace Videre.Core.Extensions
         }
         public static MvcHtmlString RoleControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, List<string> selectedRoles = null, string inputCss = null)
         {
-            var clientId = widget.GetId(id);
-            helper.RegisterScript("~/scripts/multiselect/jquery.multiselect.min.js", true);
-            helper.RegisterStylesheet("~/scripts/multiselect/jquery.multiselect.css", true);
-            //helper.RegisterDocumentReadyScript(clientId + "multiselect", string.Format("$('#{0}').multiselect({{ selectedList: 3 }});", clientId));
-            //todo: localize text (Select Options)
-            helper.RegisterDocumentReadyScript("multiselect-init", string.Format("$('select[data-controltype=\"multiselect\"]').multiselect({{ selectedList: 3 }});", clientId));
-
             selectedRoles = selectedRoles == null ? new List<string>() : selectedRoles;
+            var items = Services.Account.GetRoles().Select(r => new SelectListItem() { Value = r.Id, Text = r.Name, Selected = selectedRoles.Contains(r.Id) }).ToList();
+            return MultiSelectControlGroup(helper, widget, id, textKey, defaultText, dataAttributes, required, items, inputCss);
+        }
 
-            var roles = Services.Account.GetRoles();
+        public static MvcHtmlString MultiSelectControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, bool required, List<SelectListItem> items, string inputCss = null)
+        {
+            return MultiSelectControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, "multiselect"), required, items, inputCss);
+        }
+
+        public static MvcHtmlString MultiSelectControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, List<SelectListItem> items, string inputCss = null)
+        {
+            var clientId = widget.GetId(id);
+            
+            helper.RegisterWebReferenceGroup("multiselect");
+            //helper.RegisterScript("~/scripts/multiselect/jquery.multiselect.min.js", true);
+            //helper.RegisterStylesheet("~/scripts/multiselect/jquery.multiselect.css", true);
+
+            //todo: localize text (Select Options)
+            //helper.RegisterDocumentReadyScript("multiselect-init", string.Format("$('select[data-controltype=\"multiselect\"]').multiselect({{ selectedList: 3 }});", clientId));
+
             var options = new System.Text.StringBuilder();
-            foreach (var role in roles)
-                options.AppendLine(string.Format("<option {0} value=\"{1}\">{2}</option>", selectedRoles.Contains(role.Name) ? "selected=\"selected\" " : "", role.Id, HttpUtility.HtmlEncode(role.Name)));
+            foreach (var item in items)
+                options.AppendLine(string.Format("<option {0} value=\"{1}\">{2}</option>", item.Selected ? "selected=\"selected\" " : "", item.Value, HttpUtility.HtmlEncode(item.Text)));
 
-            return GetControlGroup(widget, id, textKey, defaultText, 
+            return GetControlGroup(widget, id, textKey, defaultText,
                                     string.Format("   <select class=\"{2}\" id=\"{0}\" {1}  multiple=\"multiple\" {4}>{3}</select>",
                                 clientId, GetDataAttributeMarkup(dataAttributes), inputCss, options.ToString(), required ? "required=\"required\"" : ""));
         }
@@ -259,6 +326,24 @@ namespace Videre.Core.Extensions
             if (blankItem != null)
                 list.Insert(0, blankItem);
             return GetControlGroup(widget, id, textKey, defaultText, helper.DropDownList(id, list, new {@class = inputCss, data_column = dataColumn}).ToString());
+        }
+
+        public static List<SelectListItem> ToListItemList(this Enum type)//<T>(this T type) where T : Type//struct //todo: where is the enum constraint?!?!
+        {
+            //var names = Enum.GetNames(t);
+            //var values = Enum.GetValues(t);
+            //var ret = new List<SelectListItem>();
+            //for (var i = 0; i < names.Length; i++)
+            //    ret.Add(new SelectListItem() { Text = names[i], Value = values[i] });
+            //return ret;
+            //return Enum.GetNames(typeof(T)).Select(t => new SelectListItem() { Value = ((int)t.ToType<T>()).ToString(), Text = t });
+            
+            //return Enum.GetValues(typeof(T)).OfType<int>().Select(v => new SelectListItem() { Value = v.ToString(), Text = Enum.GetName(typeof(T), v) }).ToList();
+            var ret = new List<SelectListItem>();
+            foreach (var v in Enum.GetValues(type.GetType()))
+                ret.Add(new SelectListItem() { Text = v.ToString(), Value = ((int)v).ToString() });
+            return ret;           
+            //return Enum.GetValues(type.GetType()).OfType<T>().Select(v => new SelectListItem() { Value = ((int)v).ToString(), Text = Enum.GetName(type.GetType(), v) }).ToList();
         }
 
         // Properties

@@ -6,7 +6,7 @@
 @model Models.Widget
 
 @{
-    Html.RegisterDataTableScript();
+    Html.RegisterWebReferenceGroup("datatables");
     
     Html.RegisterControlPresenter(Model, "videre.widgets.admin.user", new Dictionary<string, object>() {{ "data", Videre.Core.Services.Account.GetUsers() }});
 }

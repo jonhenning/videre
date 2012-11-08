@@ -71,6 +71,17 @@ namespace Videre.Carousel.Widgets
         {
             var updates = 0;
             // add registration logic that is specific to a portal here
+
+            updates += CoreServices.Update.Register(
+                new List<WebReference>()
+                {
+                    new WebReference() { Name = "jQuery Mobile", Group = "jQuery Mobile", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/jquery.mobile.customized.min.js", DependencyGroups = new List<string>() {"jQuery"} },
+                    new WebReference() { Name = "jQuery Easing", Group = "jQuery Easing", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/jQuery.easing.1.3.js", DependencyGroups = new List<string>() {"jQuery"} },
+                    new WebReference() { Name = "Pixadelic Camera", Group = "Pixadelic Camera", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/camera-1.3.3/scripts/camera.min.js", DependencyGroups = new List<string>() {"jQuery Mobile", "jQuery Easing"} },
+                    new WebReference() { Name = "Pixadelic Camera css", Group = "Pixadelic Camera", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.StyleSheetReference, PortalId = portalId, Url = "~/scripts/camera-1.3.3/css/camera.css" }
+                }
+            );
+
             return updates;
         }
     }

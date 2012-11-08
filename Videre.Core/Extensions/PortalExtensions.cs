@@ -49,7 +49,14 @@ namespace Videre.Core.Extensions
                 if (!defer)
                 {
                     widget.ClientId = Services.Portal.NextClientId();
-                    helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
+                    try
+                    {
+                        helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
+                    }
+                    catch (Exception ex)
+                    {
+                        helper.RenderPartial("Widgets/Core/Error", widget, new ViewDataDictionary() {{ "Exception", ex }});
+                    }
                 }
                 else
                     DeferredWidgets.Add(widget);
@@ -111,12 +118,13 @@ namespace Videre.Core.Extensions
         public static void RegisterCoreScripts(this HtmlHelper helper)
         {
             //RegisterScript(helper, "~/scripts/date.js", true);
-            HtmlExtensions.RegisterScript(helper, "~/scripts/videre.extensions.js", true);
-            HtmlExtensions.RegisterScript(helper, "~/scripts/videre.js", true);
-            HtmlExtensions.RegisterScript(helper, "~/ServerJS/GlobalClientTranslations", true);
+            helper.RegisterWebReferenceGroup("videre");
+            //HtmlExtensions.RegisterScript(helper, "~/scripts/videre.extensions.js", true);
+            //HtmlExtensions.RegisterScript(helper, "~/scripts/videre.js", true);
+            helper.RegisterScript("~/ServerJS/GlobalClientTranslations", true);
 
             //todo: FIX!
-            HtmlExtensions.ScriptMarkup(helper, "coreconstants", "var ROOT_URL = '" + Videre.Core.Extensions.HtmlExtensions.RootPath + "';");
+            helper.ScriptMarkup("coreconstants", "var ROOT_URL = '" + Videre.Core.Extensions.HtmlExtensions.RootPath + "';");
         }
 
         public static void RegisterTheme(this HtmlHelper helper, Models.PageTemplate template)

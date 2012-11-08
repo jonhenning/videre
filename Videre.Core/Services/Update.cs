@@ -192,19 +192,19 @@ namespace Videre.Core.Services
             return count;
         }
 
-        public static int Register(Models.SecureActivity route)
+        public static int Register(Models.SecureActivity activity)
         {
-            return Register(new List<Models.SecureActivity>() { route });
+            return Register(new List<Models.SecureActivity>() { activity });
         }
-        public static int Register(List<Models.SecureActivity> routes)
+        public static int Register(List<Models.SecureActivity> activities)
         {
             var count = 0;
-            foreach (var route in routes)
+            foreach (var activity in activities)
             {
-                if (!Security.Exists(route))
+                if (!Security.Exists(activity))
                 {
-                    Logging.Logger.InfoFormat("Registering secure activity: {0}.{1}", route.Area, route.Name);
-                    Security.Save(route, Account.AuditId);
+                    Logging.Logger.InfoFormat("Registering secure activity: {0}.{1}", activity.Area, activity.Name);
+                    Security.Save(activity, Account.AuditId);
                     count++;
                 }
             }
@@ -217,6 +217,25 @@ namespace Videre.Core.Services
             var count = 0;
             foreach (var portal in portals)
                 count += Services.Portal.RegisterPortalAttribute(portal.Id, groupName, attribute) ? 1 : 0;
+            return count;
+        }
+
+        public static int Register(Models.WebReference reference)
+        {
+            return Register(new List<Models.WebReference>() { reference });
+        }
+        public static int Register(List<Models.WebReference> references)
+        {
+            var count = 0;
+            foreach (var reference in references)
+            {
+                if (!Web.Exists(reference))
+                {
+                    Logging.Logger.InfoFormat("Registering web reference: {0}", reference.Name);
+                    Web.Save(reference, Account.AuditId);
+                    count++;
+                }
+            }
             return count;
         }
 

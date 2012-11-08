@@ -7,8 +7,8 @@
 @model Models.Widget
 
 @{
-    Html.RegisterDataTableScript();
-    Html.RegisterTreeScript();
+    Html.RegisterWebReferenceGroup("datatables");
+    Html.RegisterWebReferenceGroup("dynatree");
     Html.RegisterControlPresenter(Model, "videre.widgets.admin.localization");
 }
 

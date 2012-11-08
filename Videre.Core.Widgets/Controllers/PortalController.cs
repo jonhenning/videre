@@ -240,6 +240,32 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
+        public JsonResult<List<CoreModels.WebReference>> GetWebReferences()
+        {
+            return API.Execute<List<CoreModels.WebReference>>(r =>
+            {
+                r.Data = CoreServices.Web.GetWebReferences();
+            });
+        }
+
+        public JsonResult<bool> SaveWebReference(CoreModels.WebReference webReference)
+        {
+            return API.Execute<bool>(r =>
+            {
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                r.Data = !string.IsNullOrEmpty(CoreServices.Web.Save(webReference));
+            });
+        }
+
+        public JsonResult<bool> DeleteWebReference(string id)
+        {
+            return API.Execute<bool>(r =>
+            {
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                r.Data = CoreServices.Web.DeleteWebReference(id);
+            });
+        }
+
         //todo: shouldn't there be a nice LINQ statement to accomplish this?
         private bool ReplaceWidget(List<CoreModels.Widget> widgets, CoreModels.Widget widget)
         {

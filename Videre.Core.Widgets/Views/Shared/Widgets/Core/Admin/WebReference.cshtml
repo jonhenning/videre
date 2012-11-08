@@ -7,34 +7,37 @@
 
 @{
     Html.RegisterWebReferenceGroup("datatables");
-    Html.RegisterControlPresenter(Model, "videre.widgets.admin.search", new Dictionary<string, object>() {
-        {"data", Search.GetSearchProviders() }});
+    var webReferences = Videre.Core.Services.Web.GetWebReferences();
+    Html.RegisterControlPresenter(Model, "videre.widgets.admin.webreference", new Dictionary<string, object>() {
+        {"data", webReferences }});
 }
 
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
     
     <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Search Administration")</legend>}
+        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Web Reference Administration")</legend>}
         
-        <p>@Html.Raw(Model.GetText("Instructions.Text", "Search administration allows you maintain your search providers. "))</p>
+        <p>@Html.Raw(Model.GetText("Instructions.Text", "Web references allow you to administer the scripts and stylesheets loaded on your site."))</p>
 
         <div class="container">
             <div class="row">
                 <div class="btn-toolbar span12">
-                    <a class="btn btn-small" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
-                    <a class="btn btn-small" id="@Model.GetId("btnClearIndex")"><i class="icon-trash"></i> @Model.GetPortalText("ClearIndex.Text", "Clear Index")</a>
+                    <div class="btn-group">
+                        <a class="btn btn-small" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
+                    </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="span12">
                     <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
                         <thead>
                             <tr>
-                                <th style="width: 93px"></th>
+                                <th style="width: 62px"></th>
                                 <th>@Model.GetText("Name.Text", "Name")</th>
-                                <th>@Model.GetText("ProviderType.Text", "Provider Type")</th>
-                                <th>@Model.GetText("LastGenerated.Text", "Last Generated")</th>
+                                <th>@Model.GetText("Group.Text", "Group")</th>
+                                <th>@Model.GetText("DependencyGroups.Text", "Dependency Groups")</th>
                             </tr>
                         </thead>
                         <tbody id="@Model.GetId("ItemList")"></tbody>
@@ -44,11 +47,10 @@
                             <td>
                                 <a class="btn btn-mini" data-id="{{:Id}}" data-action="edit"><i class="icon-pencil"></i></a>
                                 <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete"><i class="icon-trash"></i></a>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="generate" title="@Model.GetText("Generate.Text", "Generate")"><i class="icon-refresh"></i></a>
                             </td>
                             <td>{{:Name}}</td>
-                            <td>{{:ProviderType}}</td>
-                            <td>{{:~formatDateTime(LastGenerated)}}</td>
+                            <td>{{:Group}}</td>
+                            <td>{{:DependencyGroups.join(', ')}}</td>
                         </tr>
                     </script>
                 </div>
@@ -59,14 +61,20 @@
     <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
-            @Model.GetText("EditRole.Text", "Edit Search Provider")
+            @Model.GetText("EditDialogText.Text", "Edit Web Reference")
         </div>
         <div class="modal-body">
             @{Html.RenderPartial("WidgetHeader", Model);}
+
             <div class="form-horizontal">
-                @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
-                @Html.InputControlGroup(Model, "txtProviderType", "ProviderType.Text", "Provider Type", "ProviderType")
-                @Html.InputControlGroup(Model, "txtConnection", "Connection.Text", "Connection", "Connection")
+                @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name", required: true)
+                @Html.InputControlGroup(Model, "txtGroup", "Group.Text", "Group", "Group")
+                @Html.MultiSelectControlGroup(Model, "ddlDependencyGroups", "DependencyGroups.Text", "Dependency Groups", "DependencyGroups", false, webReferences.Select(r => r.Group).Distinct().Select(r => new SelectListItem() { Text = r, Value = r } ).ToList())
+                @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url")
+                @Html.DropDownControlGroup(Model, "ddlType", "Type.Text", "Type", "Type", default(Models.WebReferenceType).ToListItemList())
+                @Html.DropDownControlGroup(Model, "ddlLoadType", "LoadType.Text", "Load Type", "LoadType", default(Models.WebReferenceLoadType).ToListItemList())
+                @Html.TextAreaControlGroup(Model, "txtText", "Text.Text", "Text", "Text")
+                @Html.InputControlGroup(Model, "txtSequence", "Sequence.Text", "Sequence", "Sequence", "span1")
             </div>
         </div>
         <div class="modal-footer">
@@ -74,7 +82,5 @@
             <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
         </div>
     </div>
-
-
 </div>
 

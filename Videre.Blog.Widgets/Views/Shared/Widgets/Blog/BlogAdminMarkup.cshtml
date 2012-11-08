@@ -6,7 +6,7 @@
 @model Models.Widget
 
 @{
-    Html.RegisterDateTimePicker(); //todo: perhaps this is auto registered when datatype specified
+    Html.RegisterWebReferenceGroup("timepicker");   //todo: perhaps this is auto registered when datatype specified
     
     var entry = ViewBag.entry;
 }
