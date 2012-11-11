@@ -239,8 +239,6 @@
     <Content Include="Views\Shared\Installer.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="_packages\Videre.BasicSiteTemplate.json" />
-    <Content Include="_packages\Videre.BasicSiteTemplate.manifest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">
@@ -255,6 +253,10 @@
     <Content Include="ConnectionStrings.config" />
     <None Include="ConnectionStrings.config.debug" />
     <None Include="ConnectionStrings.config.release" />
+    <Content Include="_packages\Videre.CoreSiteTemplate.json" />
+    <Content Include="_packages\Videre.CoreSiteTemplate.manifest" />
+    <Content Include="_packages\Videre.FirstTimeUserContent.json" />
+    <Content Include="_packages\Videre.FirstTimeUserContent.manifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.config.debug" />

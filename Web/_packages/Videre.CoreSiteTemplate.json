@@ -1,0 +1,961 @@
+{
+  "Portal": {
+    "Id": "6d966452-2637-4565-9993-3898aa04a2b8",
+    "Name": "Default",
+    "Title": null,
+    "LogoUrl": null,
+    "ThemeName": "",
+    "Default": true,
+    "Aliases": [],
+    "Attributes": {}
+  },
+  "Roles": [
+    {
+      "Id": "012d4f5d-51e4-4529-bfa2-4139d6f58a26",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Name": "admin",
+      "Description": "Administrative Priviledges"
+    }
+  ],
+  "SecureActivities": [
+    {
+      "Id": "8e8b6bcb-ef22-454e-a550-b6674f0c8d29",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "Comment",
+      "Name": "Administration",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "4b4b2320-cfc7-4ec5-9c54-e1c2dab7b72e",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "File",
+      "Name": "Upload",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "8fe540c8-b4a2-4535-9e5d-5661389a01a2",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "File",
+      "Name": "Administration",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "4f74d0fe-f497-4604-a5f7-b87146ca8c72",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "Portal",
+      "Name": "Administration",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "057fa726-2db2-4479-8352-0c23b6c7bdb8",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "Localization",
+      "Name": "Administration",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "025ccab7-1350-4177-81a4-2ec66300646c",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "PageTemplate",
+      "Name": "Administration",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "7559ac8d-4607-4079-957e-0f0b4c92ba9a",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "LayoutTemplate",
+      "Name": "Administration",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "767e4be0-4a82-41c3-a9b2-07ddf5ab2e9d",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "Content",
+      "Name": "Administration",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "f70ae2ac-26da-4acc-8768-a4ce58aec534",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "Search",
+      "Name": "Upload",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    },
+    {
+      "Id": "da84a04a-2b37-4a8b-9f91-36b687123a97",
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Area": "Account",
+      "Name": "Administration",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null
+    }
+  ],
+  "Users": null,
+  "UserProfiles": null,
+  "Manifests": [
+    {
+      "Id": "edf7248a-4564-42b0-86f9-51e873375680",
+      "Path": "Core/Admin",
+      "Name": "File",
+      "Title": "File Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/File",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "2470cba9-1b5b-4390-b801-9d78b603ce19",
+      "Path": "Core/Admin",
+      "Name": "FileBrowser",
+      "Title": "File Browser",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/FileBrowser",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "54319c14-b9fe-4282-8c59-8efea228754b",
+      "Path": "Core/Admin",
+      "Name": "Localization",
+      "Title": "Localization Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Localization",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "215c715a-c864-49d6-a905-68adc324f830",
+      "Path": "Core/Account",
+      "Name": "LogOn",
+      "Title": "Log On",
+      "Category": "Account",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Account/LogOn",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "5cde1e82-411c-418e-9226-f25335b56725",
+      "Path": "Core",
+      "Name": "Menu",
+      "Title": "Menu",
+      "Category": "Navigation",
+      "ContentProvider": "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets",
+      "EditorType": "videre.widgets.editor.menu",
+      "EditorPath": "Widgets/Core/MenuEditor",
+      "FullName": "Core/Menu",
+      "AttributeDefinitions": [
+        {
+          "LabelKey": "AlwaysOnTop.Text",
+          "LabelText": "Always On Top",
+          "Name": "AlwaysOnTop",
+          "DataType": null,
+          "Required": false,
+          "Values": [
+            "Yes",
+            "No"
+          ],
+          "DefaultValue": "Yes",
+          "Dependencies": []
+        },
+        {
+          "LabelKey": "InverseColors.Text",
+          "LabelText": "Inverse Colors",
+          "Name": "InverseColors",
+          "DataType": null,
+          "Required": false,
+          "Values": [
+            "Yes",
+            "No"
+          ],
+          "DefaultValue": "No",
+          "Dependencies": []
+        },
+        {
+          "LabelKey": "ShowLogo.Text",
+          "LabelText": "Show Logo",
+          "Name": "ShowLogo",
+          "DataType": null,
+          "Required": false,
+          "Values": [
+            "Yes",
+            "No"
+          ],
+          "DefaultValue": "No",
+          "Dependencies": []
+        },
+        {
+          "LabelKey": "ShowSearch.Text",
+          "LabelText": "Show Search",
+          "Name": "ShowSearch",
+          "DataType": null,
+          "Required": false,
+          "Values": [
+            "Yes",
+            "No"
+          ],
+          "DefaultValue": "No",
+          "Dependencies": []
+        }
+      ]
+    },
+    {
+      "Id": "1aef27a8-f3c7-4086-81d7-bfff89200fb9",
+      "Path": "Core/Admin",
+      "Name": "Portal",
+      "Title": "Portal Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Portal",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "3b3b88a2-35cb-4235-af61-e59ddbf6b30c",
+      "Path": "Core/Admin",
+      "Name": "Role",
+      "Title": "Role Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Role",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "6458fb96-0f2f-4f14-b5a9-435941b4bf81",
+      "Path": "Core/Admin",
+      "Name": "Search",
+      "Title": "Search Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Search",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "23201a54-3e34-40dd-881e-9d35226f4d78",
+      "Path": "Core",
+      "Name": "SearchResult",
+      "Title": "Search Result",
+      "Category": "General",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/SearchResult",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "9c352a33-868b-4256-b080-8bc390ccaba9",
+      "Path": "Core/Admin",
+      "Name": "SecureActivity",
+      "Title": "Secure Activity Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/SecureActivity",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "5d4bba41-435f-4437-8fc3-5b0d540cb50a",
+      "Path": "Core/Admin",
+      "Name": "Security",
+      "Title": "Security Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Security",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "46bcf703-9635-42aa-adb4-7dd73a334ae0",
+      "Path": "Core/Admin",
+      "Name": "Template",
+      "Title": "Template Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Template",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "8c569f2c-f13d-4c38-a67b-eebfa7552bcf",
+      "Path": "Core",
+      "Name": "TextHtml",
+      "Title": "Text Html",
+      "Category": "General",
+      "ContentProvider": "Videre.Core.ContentProviders.LocalizationContentProvider, Videre.Core",
+      "EditorType": "videre.widgets.editor.texthtml",
+      "EditorPath": "Widgets/Core/TextHtmlEditor",
+      "FullName": "Core/TextHtml",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "d156c3c7-a430-487a-9f0a-109328723e96",
+      "Path": "Core/Admin",
+      "Name": "User",
+      "Title": "User Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/User",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "4250406c-0340-4082-89df-e7d38f588f62",
+      "Path": "Core/Account",
+      "Name": "UserProfile",
+      "Title": "User Profile",
+      "Category": "Account",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Account/UserProfile",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "83a9090b-239d-4258-b38e-b588558a8a26",
+      "Path": "Core/Admin",
+      "Name": "WebReference",
+      "Title": "Web Reference Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/WebReference",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "490b8baf-31d4-4589-875f-12a1cf6fe09c",
+      "Path": "Core/Admin",
+      "Name": "Widget",
+      "Title": "Widget Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/Widget",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "1a90eb5a-c110-4415-99ab-8ca6826b05a6",
+      "Path": "Core/Admin",
+      "Name": "WidgetManifest",
+      "Title": "Widget Manifest Admin",
+      "Category": "Admin",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Admin/WidgetManifest",
+      "AttributeDefinitions": []
+    }
+  ],
+  "Localizations": null,
+  "Files": [
+    {
+      "Id": "95ce76a0-3680-420d-9d90-57d93c62d4dc",
+      "MimeType": "image/png",
+      "Size": 8631,
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Url": "poweredby"
+    }
+  ],
+  "Templates": [
+    {
+      "Id": "512d8946-e150-4c76-9821-f1bed4dbd715",
+      "Title": "User Administration",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/User"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "eb2b27a9-16f4-4a45-9b4a-b48fc64f0af1",
+          "ContentIds": [],
+          "ManifestId": "d156c3c7-a430-487a-9f0a-109328723e96",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "f0d72c2b-310a-4e21-8b16-6e663b5780fb",
+      "Title": "Localization Administration",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/Localization"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "4b00c185-5381-4936-8352-62579b6f2a4c",
+          "ContentIds": [],
+          "ManifestId": "54319c14-b9fe-4282-8c59-8efea228754b",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "a0c00639-30fe-4648-9b75-6d68b0026d91",
+      "Title": "Widget Administration",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/Widget"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "7816b798-7c7f-4fe0-b190-e7a95fe8201c",
+          "ContentIds": [],
+          "ManifestId": "490b8baf-31d4-4589-875f-12a1cf6fe09c",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "6b8d131a-4929-412d-b93e-c0b98fd075a1",
+      "Title": "File Administration",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/File"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "612625a5-c44f-4aca-9fc1-6aa9a01547fb",
+          "ContentIds": [],
+          "ManifestId": "edf7248a-4564-42b0-86f9-51e873375680",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "51cb8b00-5bed-4468-a7d1-c4826a2585a2",
+      "Title": "File Browser",
+      "LayoutName": "Blank",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/FileBrowser"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "8f447051-f75c-44f0-97cb-535b0d76facc",
+          "ContentIds": [],
+          "ManifestId": "2470cba9-1b5b-4390-b801-9d78b603ce19",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "87bdc3d9-e8ea-4a83-9f92-9f7c93f5a870",
+      "Title": "Search Administration",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/Search"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "2ba8c857-d1ca-40d8-9447-0350cda91f0c",
+          "ContentIds": [],
+          "ManifestId": "6458fb96-0f2f-4f14-b5a9-435941b4bf81",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "9cafdfd1-3a6f-48df-b1a3-a211ce21036c",
+      "Title": "Layout Template Administration",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/LayoutTemplate"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "c45a1b09-a661-472f-b331-1a50a725aac3",
+          "ContentIds": [],
+          "ManifestId": "46bcf703-9635-42aa-adb4-7dd73a334ae0",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {
+            "IsLayout": true
+          }
+        }
+      ]
+    },
+    {
+      "Id": "f583fca0-5f1a-447f-a28e-08dd4666e00e",
+      "Title": "Search Results",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "search"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "cc0adac9-b03b-42da-8491-c1700531bd0f",
+          "ContentIds": [],
+          "ManifestId": "23201a54-3e34-40dd-881e-9d35226f4d78",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "39327db7-762a-493a-a1c8-50c4dd9d187b",
+      "Title": "Security Administration",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/Security"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "21c8d078-f2b2-4a60-a9dc-0f5e896afd9a",
+          "ContentIds": [],
+          "ManifestId": "5d4bba41-435f-4437-8fc3-5b0d540cb50a",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "19017428-d822-4ffb-b3de-49baa7f746cb",
+      "Title": "Page Template Administration",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/PageTemplate"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "1b0b884b-0196-46c3-a58e-d43c7fbfe649",
+          "ContentIds": [],
+          "ManifestId": "46bcf703-9635-42aa-adb4-7dd73a334ae0",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "71ab9868-fb52-47ec-a474-ec28a61ac839",
+      "Title": "Web Reference Administration",
+      "LayoutName": "General",
+      "ThemeName": "",
+      "Urls": [
+        "Admin/WebReference"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "a7054f2c-77aa-4b48-ab32-ffb8a7d43578",
+          "ContentIds": [],
+          "ManifestId": "83a9090b-239d-4258-b38e-b588558a8a26",
+          "Css": "",
+          "Style": "",
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 1,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "fe6c2336-db0c-4461-89e4-9a7f4019500d",
+      "Title": "User Profile",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Account/UserProfile"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "526daf1b-a669-40e8-8990-0f32eb83be1e",
+          "ContentIds": [],
+          "ManifestId": "4250406c-0340-4082-89df-e7d38f588f62",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "1bfac973-a008-4eea-8be9-c36f43b67428",
+      "Title": "Portal Administration",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Admin/Portal"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [
+        "012d4f5d-51e4-4529-bfa2-4139d6f58a26"
+      ],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "8f1f735e-d2e8-4b4a-a3b3-68fdad0b6c84",
+          "ContentIds": [],
+          "ManifestId": "1aef27a8-f3c7-4086-81d7-bfff89200fb9",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "3443d073-2a3a-47c6-9fc0-01e28110c70d",
+      "Title": "LogOn",
+      "LayoutName": "General",
+      "ThemeName": null,
+      "Urls": [
+        "Account/LogOn"
+      ],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "58b0045a-33ad-42f2-ac93-6fbc42519740",
+          "ContentIds": [],
+          "ManifestId": "215c715a-c864-49d6-a905-68adc324f830",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 0,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ]
+    },
+    {
+      "Id": "50acc076-bc81-4ab5-a059-d92659dfd871",
+      "Title": "Home",
+      "LayoutName": "General",
+      "ThemeName": "",
+      "Urls": [],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": []
+    }
+  ],
+  "LayoutTemplates": [
+    {
+      "Id": "7871c824-ea8d-41c0-a89a-81e28395f500",
+      "LayoutName": "Blank",
+      "ThemeName": null,
+      "Widgets": [],
+      "Roles": [],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8"
+    },
+    {
+      "Id": "a2c25b56-8a82-44c1-805c-827ea04d71f4",
+      "LayoutName": "SidebarRight",
+      "ThemeName": "",
+      "Widgets": [
+        {
+          "Id": "da320931-6b5c-4419-91df-09efeaa534c1",
+          "ContentIds": [
+            "346a0822-e944-4ebc-a448-24a7bb4523b6"
+          ],
+          "ManifestId": "5cde1e82-411c-418e-9226-f25335b56725",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 1,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        },
+        {
+          "Id": "e1a39f82-8b10-46ed-be04-385d6dc91e1f",
+          "ContentIds": [
+            "3ac9cd5b-57e1-462c-9723-9bdc03d5dedc"
+          ],
+          "ManifestId": "8c569f2c-f13d-4c38-a67b-eebfa7552bcf",
+          "Css": "",
+          "Style": "",
+          "PaneName": "Footer",
+          "ShowHeader": false,
+          "Seq": 1,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ],
+      "Roles": [],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8"
+    },
+    {
+      "Id": "60da9244-fb7e-4279-9e48-1580289f732f",
+      "LayoutName": "TwoPane",
+      "ThemeName": "",
+      "Widgets": [
+        {
+          "Id": "b599b3d5-0b79-4f7b-94ca-82bb7059730d",
+          "ContentIds": [
+            "346a0822-e944-4ebc-a448-24a7bb4523b6"
+          ],
+          "ManifestId": "5cde1e82-411c-418e-9226-f25335b56725",
+          "Css": null,
+          "Style": null,
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 1,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        },
+        {
+          "Id": "31140b7f-dd98-4433-a080-8660bb006e75",
+          "ContentIds": [
+            "3ac9cd5b-57e1-462c-9723-9bdc03d5dedc"
+          ],
+          "ManifestId": "8c569f2c-f13d-4c38-a67b-eebfa7552bcf",
+          "Css": "",
+          "Style": "",
+          "PaneName": "Footer",
+          "ShowHeader": false,
+          "Seq": 1,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ],
+      "Roles": [],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8"
+    },
+    {
+      "Id": "aa9f7800-4935-45f5-8569-2e695d68fcd5",
+      "LayoutName": "General",
+      "ThemeName": "",
+      "Widgets": [
+        {
+          "Id": "88bb5da0-ab66-4421-bce2-d2e2e5820e93",
+          "ContentIds": [
+            "346a0822-e944-4ebc-a448-24a7bb4523b6"
+          ],
+          "ManifestId": "5cde1e82-411c-418e-9226-f25335b56725",
+          "Css": "",
+          "Style": "",
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 1,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {
+            "AlwaysOnTop": "Yes",
+            "InverseColors": "No",
+            "ShowLogo": "No",
+            "ShowSearch": "No"
+          }
+        },
+        {
+          "Id": "4ad6946d-2801-40ce-8f66-2eca73f87632",
+          "ContentIds": [
+            "3ac9cd5b-57e1-462c-9723-9bdc03d5dedc"
+          ],
+          "ManifestId": "8c569f2c-f13d-4c38-a67b-eebfa7552bcf",
+          "Css": "",
+          "Style": "",
+          "PaneName": "Footer",
+          "ShowHeader": false,
+          "Seq": 1,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        }
+      ],
+      "Roles": [],
+      "PortalId": "6d966452-2637-4565-9993-3898aa04a2b8"
+    }
+  ],
+  "WidgetContent": {
+    "da320931-6b5c-4419-91df-09efeaa534c1": "{\"Id\":\"346a0822-e944-4ebc-a448-24a7bb4523b6\",\"PortalId\":\"6d966452-2637-4565-9993-3898aa04a2b8\",\"Text\":\"Videre\",\"TextCss\":\"videre-font\",\"Name\":\"MainMenu\",\"Type\":0,\"Items\":[{\"Text\":\"Home\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/\",\"Roles\":[],\"Authenticated\":null,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Admin\",\"Items\":[{\"Text\":\"Portal\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Portal\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Localization\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Localization\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"File\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/File\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Page Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/PageTemplate\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Layout Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/LayoutTemplate\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Web Reference\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/WebReference\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Security\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Security\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"User\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/User\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Widget\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Widget\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Search\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Search\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":true,\"IsAuthorized\":true},{\"Text\":\"Account\",\"Items\":[{\"Text\":\"User Profile\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/UserProfile\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Log On\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/LogOn\",\"Roles\":[],\"Authenticated\":false,\"AlignRight\":false,\"IsAuthorized\":false},{\"Text\":\"Log Off\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/core/Account/LogOff\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":[],\"Authenticated\":null,\"AlignRight\":true,\"IsAuthorized\":true}]}",
+    "e1a39f82-8b10-46ed-be04-385d6dc91e1f": "[{\"Id\":\"3ac9cd5b-57e1-462c-9723-9bdc03d5dedc\",\"Key\":\"Content.Text\",\"Text\":\"<p>\\n\\t<a href=\\\"http://www.viderecms.com\\\"><img alt=\\\"\\\" src=\\\"/videreclean/Core/f/poweredby\\\" /></a></p>\\n\",\"Type\":4,\"PortalId\":\"6d966452-2637-4565-9993-3898aa04a2b8\",\"Locale\":\"\",\"Namespace\":\"Powered By\"}]",
+    "b599b3d5-0b79-4f7b-94ca-82bb7059730d": "{\"Id\":\"346a0822-e944-4ebc-a448-24a7bb4523b6\",\"PortalId\":\"6d966452-2637-4565-9993-3898aa04a2b8\",\"Text\":\"Videre\",\"TextCss\":\"videre-font\",\"Name\":\"MainMenu\",\"Type\":0,\"Items\":[{\"Text\":\"Home\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/\",\"Roles\":[],\"Authenticated\":null,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Admin\",\"Items\":[{\"Text\":\"Portal\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Portal\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Localization\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Localization\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"File\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/File\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Page Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/PageTemplate\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Layout Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/LayoutTemplate\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Web Reference\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/WebReference\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Security\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Security\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"User\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/User\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Widget\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Widget\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Search\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Search\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":true,\"IsAuthorized\":true},{\"Text\":\"Account\",\"Items\":[{\"Text\":\"User Profile\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/UserProfile\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Log On\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/LogOn\",\"Roles\":[],\"Authenticated\":false,\"AlignRight\":false,\"IsAuthorized\":false},{\"Text\":\"Log Off\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/core/Account/LogOff\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":[],\"Authenticated\":null,\"AlignRight\":true,\"IsAuthorized\":true}]}",
+    "31140b7f-dd98-4433-a080-8660bb006e75": "[{\"Id\":\"3ac9cd5b-57e1-462c-9723-9bdc03d5dedc\",\"Key\":\"Content.Text\",\"Text\":\"<p>\\n\\t<a href=\\\"http://www.viderecms.com\\\"><img alt=\\\"\\\" src=\\\"/videreclean/Core/f/poweredby\\\" /></a></p>\\n\",\"Type\":4,\"PortalId\":\"6d966452-2637-4565-9993-3898aa04a2b8\",\"Locale\":\"\",\"Namespace\":\"Powered By\"}]",
+    "88bb5da0-ab66-4421-bce2-d2e2e5820e93": "{\"Id\":\"346a0822-e944-4ebc-a448-24a7bb4523b6\",\"PortalId\":\"6d966452-2637-4565-9993-3898aa04a2b8\",\"Text\":\"Videre\",\"TextCss\":\"videre-font\",\"Name\":\"MainMenu\",\"Type\":0,\"Items\":[{\"Text\":\"Home\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/\",\"Roles\":[],\"Authenticated\":null,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Admin\",\"Items\":[{\"Text\":\"Portal\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Portal\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Localization\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Localization\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"File\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/File\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Page Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/PageTemplate\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Layout Template\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/LayoutTemplate\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Web Reference\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/WebReference\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Security\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Security\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"User\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/User\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Widget\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Widget\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Search\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Admin/Search\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":[\"012d4f5d-51e4-4529-bfa2-4139d6f58a26\"],\"Authenticated\":true,\"AlignRight\":true,\"IsAuthorized\":true},{\"Text\":\"Account\",\"Items\":[{\"Text\":\"User Profile\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/UserProfile\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true},{\"Text\":\"Log On\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/Account/LogOn\",\"Roles\":[],\"Authenticated\":false,\"AlignRight\":false,\"IsAuthorized\":false},{\"Text\":\"Log Off\",\"Items\":[],\"TemplateId\":null,\"Url\":\"~/core/Account/LogOff\",\"Roles\":[],\"Authenticated\":true,\"AlignRight\":false,\"IsAuthorized\":true}],\"TemplateId\":null,\"Url\":\"\",\"Roles\":[],\"Authenticated\":null,\"AlignRight\":true,\"IsAuthorized\":true}]}",
+    "4ad6946d-2801-40ce-8f66-2eca73f87632": "[{\"Id\":\"3ac9cd5b-57e1-462c-9723-9bdc03d5dedc\",\"Key\":\"Content.Text\",\"Text\":\"<p>\\n\\t<a href=\\\"http://www.viderecms.com\\\"><img alt=\\\"\\\" src=\\\"/videreclean/Core/f/poweredby\\\" /></a></p>\\n\",\"Type\":4,\"PortalId\":\"6d966452-2637-4565-9993-3898aa04a2b8\",\"Locale\":\"\",\"Namespace\":\"Powered By\"}]"
+  },
+  "FileContent": {
+    "95ce76a0-3680-420d-9d90-57d93c62d4dc": "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\r\ng63/B5qVsIdR2VCYAAAAAElFTkSuQmCC"
+  }
+}

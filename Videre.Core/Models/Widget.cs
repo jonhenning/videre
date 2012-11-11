@@ -19,6 +19,7 @@ namespace Videre.Core.Models
             Attributes = new Dictionary<string, object>();
             ContentIds = new List<string>();
             Roles = new List<string>();
+            WebReferences = new List<string>();
         }
 
         public string Id
@@ -77,6 +78,7 @@ namespace Videre.Core.Models
         public int Seq { get; set; }
         public List<string> Roles { get; set; }
         public bool? Authenticated { get; set; }
+        public List<string> WebReferences { get; set; }
 
         //[JsonIgnore]
         [SerializeIgnore("db")]

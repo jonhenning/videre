@@ -8,6 +8,7 @@ using System.Web.Mvc.Html;
 using System.Web;
 using CodeEndeavors.Extensions;
 using Videre.Core.Extensions;
+using System.Text;
 
 namespace Videre.Core.Extensions
 {
@@ -28,7 +29,7 @@ namespace Videre.Core.Extensions
         }
 
         // Methods
-        public static string RenderWidgets(this HtmlHelper helper, Models.PageTemplate Template, string PaneName)
+        public static void RenderWidgets(this HtmlHelper helper, Models.PageTemplate Template, string PaneName)
         {
             if (Template != null)
             {
@@ -39,10 +40,10 @@ namespace Videre.Core.Extensions
                     RenderWidget(helper, widget);
 
             }
-            return "";
+            //return "";
         }        
         
-        public static string RenderWidget(this HtmlHelper helper, Models.Widget widget, bool defer = false)
+        public static void RenderWidget(this HtmlHelper helper, Models.Widget widget, bool defer = false)
         {
             if (widget.IsAuthorized)
             {
@@ -52,6 +53,7 @@ namespace Videre.Core.Extensions
                     try
                     {
                         helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
+                        helper.RegisterWebReferences(widget.WebReferences);
                     }
                     catch (Exception ex)
                     {
@@ -61,24 +63,53 @@ namespace Videre.Core.Extensions
                 else
                     DeferredWidgets.Add(widget);
             }
-            return "";
+            //return "";
         }
 
-        public static string RenderDeferredWidgets(this HtmlHelper helper)
+        public static void RenderLayoutHeader(this HtmlHelper helper)
+        {
+            helper.ViewContext.Writer.WriteLine(helper.RenderScripts());
+            helper.ViewContext.Writer.WriteLine(helper.RenderStylesheets());
+            //return "";
+        }
+
+        public static void RenderLayoutDeferred(this HtmlHelper helper)
         {
             foreach (var widget in DeferredWidgets)
                 RenderWidget(helper, widget);
-            return "";  //TODO: return string?????
+
+            if (Services.Portal.CurrentTemplate != null)
+            {
+                helper.RegisterWebReferences(Services.Portal.CurrentTemplate.Layout.WebReferences);
+                helper.RegisterWebReferences(Services.Portal.CurrentTemplate.WebReferences);
+            }
+
+            helper.ViewContext.Writer.WriteLine(helper.RenderScripts());
+            helper.ViewContext.Writer.WriteLine(helper.RenderStylesheets());
+
+
+            //return "";//todo: why?!?
+            //var sb = new StringBuilder();
+            //sb.AppendLine(helper.RenderScripts());
+            //sb.AppendLine(helper.RenderStylesheets());
+            //return sb.ToString();
         }
 
-        public static string RenderWidget(this HtmlHelper helper, string manifestFullName, Dictionary<string, object> attributes = null, bool defer = false, string css = null, string style = null)
+        //public static string RenderDeferredWidgets(this HtmlHelper helper)
+        //{
+        //    foreach (var widget in DeferredWidgets)
+        //        RenderWidget(helper, widget);
+        //    return "";  //TODO: return string?????
+        //}
+
+        public static void RenderWidget(this HtmlHelper helper, string manifestFullName, Dictionary<string, object> attributes = null, bool defer = false, string css = null, string style = null)
         {
             var manifest = Services.Portal.GetWidgetManifest(manifestFullName);
             var widget = new Models.Widget() { ManifestId = manifest.Id, Css = css, Style = style };
             if (attributes != null)
                 widget.Attributes = attributes;
             RenderWidget(helper, widget, defer);
-            return "";
+            //return "";
         }
 
         public static void RenderWidgetEditor(this HtmlHelper helper, Models.WidgetManifest manifest)

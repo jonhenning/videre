@@ -1,8 +1,0 @@
-﻿{
-	Version: 1.0,
-	Name: "Videre Basic Site Template",
-	Type: "Data",
-	Source: "Core",
-	Description: "Basic Site structure",
-	FileName: "Videre.BasicSiteTemplate.json"
-}

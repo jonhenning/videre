@@ -13,9 +13,15 @@ namespace Videre.Core.Extensions
 {
     public static class HtmlExtensions
     {
+        public static void RegisterWebReferences(this HtmlHelper helper, List<string> names)
+        {
+            if (names != null)
+                names.ForEach(n => RegisterWebReference(helper, n));
+        }
+
         public static void RegisterWebReference(this HtmlHelper helper, string name)
         {
-            var refs = Services.Web.GetWebReferences();
+            var refs = Services.Web.GetWebReferences(); //todo: detect compat mode (query string???)
             var wr = refs.Where(r => r.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
             if (wr != null)
@@ -45,7 +51,7 @@ namespace Videre.Core.Extensions
 
         public static void RegisterWebReferenceGroup(this HtmlHelper helper, string name)
         {
-            var refs = Services.Web.GetWebReferences();
+            var refs = Services.Web.GetWebReferences(); //todo: detect compat mode (query string???)
             var groupRefs = refs.Where(r => r.Group.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             foreach (var r in groupRefs.OrderBy(r => r.Sequence))
                 RegisterWebReference(helper, r.Name);
@@ -226,17 +232,17 @@ namespace Videre.Core.Extensions
         //                            widget.GetId(id), GetDataAttributeMarkup(GetDataAttributeDict(dataColumn)), css));
         //}
 
-        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn = null, string inputCss = null, string inputType = null, bool readOnly = false, bool required = false, string dataType = null, string valueMatchControl = null)
+        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn = null, string inputCss = null, string inputType = null, bool readOnly = false, bool required = false, string dataType = null, string valueMatchControl = null, bool disableAutoComplete = false)
         {
             if (!string.IsNullOrEmpty(valueMatchControl))
                 valueMatchControl = widget.GetId(valueMatchControl);    //todo: right place for this?
-            return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType, valueMatchControl: valueMatchControl), required, inputCss, inputType, readOnly);
+            return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType, valueMatchControl: valueMatchControl), required, inputCss, inputType, readOnly, disableAutoComplete);
         }
-        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = null, string inputType = null, bool readOnly = false)
+        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = null, string inputType = null, bool readOnly = false, bool disableAutoComplete = false)
         {
             return GetControlGroup(widget, id, textKey, defaultText, 
-                                string.Format("<input type=\"{3}\" class=\"{2}\" id=\"{0}\" name=\"{0}\" {1} {4} {5} />",
-                                    widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, inputType, readOnly ? "readonly=\"readonly\"" : "", required ? "required=\"required\"" : ""));
+                                string.Format("<input type=\"{3}\" class=\"{2}\" id=\"{0}\" name=\"{0}\" {1} {4} {5} {6}/>",
+                                    widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, inputType, readOnly ? "readonly=\"readonly\"" : "", required ? "required=\"required\"" : "", disableAutoComplete ? "autocomplete=\"off\"" : ""));
         }
 
         public static MvcHtmlString InputFileBrowserControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, string inputCss = null, string mimeType = "", bool required = false)

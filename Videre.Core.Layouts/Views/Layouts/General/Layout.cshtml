@@ -11,8 +11,7 @@
 <html>
     <head>
         <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Videre")</title>
-        @(new HtmlString(Html.RenderScripts()))
-        @(new HtmlString(Html.RenderStylesheets()))
+        @{Html.RenderLayoutHeader();}
 
     </head>
     <body style="padding-top: 40px;">
@@ -22,18 +21,15 @@
 		<div class="container">			
 			<div class="content" style="min-height: 500px;">	
 				@RenderBody()
-                @Html.RenderWidgets(this.Model, "Main")
+                @{Html.RenderWidgets(this.Model, "Main");}
 			</div> 
 	
             <footer>		
 	            <div class="content well">
-                    @Html.RenderWidgets(this.Model, "Footer")
+                    @{Html.RenderWidgets(this.Model, "Footer");}
 	            </div> 
             </footer>
         </div>                    
-        @(Html.RenderDeferredWidgets())
-        @(new HtmlString(Html.RenderScripts()))
-        @(new HtmlString(Html.RenderStylesheets()))
-        
+        @{Html.RenderLayoutDeferred();}
     </body>
 </html>

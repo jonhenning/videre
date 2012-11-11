@@ -14,6 +14,7 @@ namespace Videre.Core.Models
             Widgets = new List<Widget>();
             Urls = new List<string>();
             Roles = new List<string>();
+            WebReferences = new List<string>();
         }
 
         //[JsonIgnore()]
@@ -26,6 +27,7 @@ namespace Videre.Core.Models
         public string PortalId { get; set; }
         public List<string> Roles { get; set; }
         public bool? Authenticated { get; set; }
+        public List<string> WebReferences { get; set; }
 
         public List<Widget> Widgets { get; set; }
 

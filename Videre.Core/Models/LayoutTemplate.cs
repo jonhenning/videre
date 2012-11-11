@@ -9,6 +9,7 @@ namespace Videre.Core.Models
         {
             Widgets = new List<Widget>();
             Roles = new List<string>();
+            WebReferences = new List<string>();
         }
 
         public string Id { get; set; }
@@ -17,6 +18,7 @@ namespace Videre.Core.Models
         public List<Widget> Widgets { get; set; }
         public List<string> Roles { get; set; }
         public string PortalId { get; set; }
+        public List<string> WebReferences { get; set; }
 
         [SerializeIgnore(new string[] { "db", "client" })]         
         public Models.Theme Theme

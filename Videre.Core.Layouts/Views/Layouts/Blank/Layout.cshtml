@@ -11,17 +11,13 @@
 <html>
     <head>
         <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Videre")</title>
-        @(new HtmlString(Html.RenderScripts()))
-        @(new HtmlString(Html.RenderStylesheets()))
+        @{Html.RenderLayoutHeader();}
 
     </head>
     <body>
 		@RenderBody()
-        @Html.RenderWidgets(this.Model, "Main")
+        @{Html.RenderWidgets(this.Model, "Main");}
 
-        @(Html.RenderDeferredWidgets())
-        @(new HtmlString(Html.RenderScripts()))
-        @(new HtmlString(Html.RenderStylesheets()))
-        
+        @{Html.RenderLayoutDeferred();}
     </body>
 </html>

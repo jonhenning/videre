@@ -44,10 +44,13 @@ namespace Videre.Core.Services
             };
         }
 
-        public static List<Models.WebReference> GetWebReferences(string portalId = null)
+        public static List<Models.WebReference> GetWebReferences(string portalId = null, bool compat = false)    
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return Repository.Current.GetResources<Models.WebReference>("WebReference").Select(m => m.Data).Where(r => r.PortalId.Equals(portalId, StringComparison.InvariantCultureIgnoreCase)).OrderBy(r => r.Group).ToList();
+            var refs = Repository.Current.GetResources<Models.WebReference>("WebReference").Select(m => m.Data).Where(r => r.PortalId.Equals(portalId, StringComparison.InvariantCultureIgnoreCase)).OrderBy(r => r.Group).ToList();
+            if (refs.Count == 0 || compat)    
+                refs = GetDefaultWebReferences(portalId);
+            return refs;
         }
         public static Models.WebReference GetWebReference(string portalId, string name)
         {

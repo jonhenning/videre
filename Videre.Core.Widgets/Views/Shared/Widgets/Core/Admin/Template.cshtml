@@ -42,7 +42,7 @@
                     <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
                         <thead>
                             <tr>
-                                <th style="width: 64px"></th>
+                                <th style="width: 62px"></th>
                                 @{if (!isLayout)
                                 {                               
                                 <th>@Model.GetText("Title.Text", "Title")</th>
@@ -81,6 +81,7 @@
                             @Html.DropDownControlGroup(Model, "ddlTheme", "Theme.Text", "Theme", "ThemeName", themes.Select(l => new SelectListItem() { Value = l.Name, Text = l.Name }), "span6", new SelectListItem() { Text = "", Value = "" })
                             @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles", inputCss: "span6")
                             @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")
+                            @Html.MultiSelectControlGroup(Model, "ddlWebReferences", "WebReferences.Text", "Web References", "WebReferences", false, Videre.Core.Services.Web.GetWebReferences().Select(r => new SelectListItem() { Text = r.Name, Value = r.Name } ).ToList())
 
                             @{if (!isLayout)
                             {                               

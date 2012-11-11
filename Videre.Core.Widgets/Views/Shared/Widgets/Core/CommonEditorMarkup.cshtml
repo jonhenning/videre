@@ -11,6 +11,7 @@
     @Html.DropDownControlGroup(Model, "ddlShowHeader", "ShowHeader.Text", "Show Header", "ShowHeader", new List<SelectListItem>() { new SelectListItem() { Text="No", Value="false" }, new SelectListItem() { Text="Yes", Value="true"} }, "span4")
     @Html.RoleControlGroup(Model, "ddlCommonRoles", "Roles.Text", "Roles", "Roles", inputCss: "span4")
     @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")
+    @Html.MultiSelectControlGroup(Model, "ddlWebReferences", "WebReferences.Text", "Web References", "WebReferences", false, Videre.Core.Services.Web.GetWebReferences().Select(r => new SelectListItem() { Text = r.Name, Value = r.Name } ).ToList())
 
     <div id="@Model.GetId("AttributeList")" style="display: none;" class="form-horizontal">
     </div>

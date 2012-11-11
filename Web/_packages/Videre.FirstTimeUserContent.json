@@ -1,0 +1,103 @@
+{
+  "Portal": {
+    "Id": "3be22049-d6d5-477a-b1f9-bd929a38499f",
+    "Name": "Default",
+    "Title": null,
+    "LogoUrl": null,
+    "ThemeName": "",
+    "Default": true,
+    "Aliases": [],
+    "Attributes": {}
+  },
+  "Manifests": [
+    {
+      "Id": "f19a751d-0eba-4eec-85ca-d300eed1a37f",
+      "Path": "Core/Account",
+      "Name": "LogOn",
+      "Title": "Log On",
+      "Category": "Account",
+      "ContentProvider": null,
+      "EditorType": null,
+      "EditorPath": null,
+      "FullName": "Core/Account/LogOn",
+      "AttributeDefinitions": []
+    },
+    {
+      "Id": "1e63c71f-834e-4a48-8672-573bef75518e",
+      "Path": "Core",
+      "Name": "TextHtml",
+      "Title": "Text Html",
+      "Category": "General",
+      "ContentProvider": "Videre.Core.ContentProviders.LocalizationContentProvider, Videre.Core",
+      "EditorType": "videre.widgets.editor.texthtml",
+      "EditorPath": "Widgets/Core/TextHtmlEditor",
+      "FullName": "Core/TextHtml",
+      "AttributeDefinitions": []
+    }
+  ],
+  "Localizations": null,
+  "Files": null,
+  "Templates": [
+    {
+      "Id": "49663d02-14e0-4bda-948a-bdb06b528df8",
+      "Title": "Home",
+      "LayoutName": "General",
+      "ThemeName": "",
+      "Urls": [],
+      "PortalId": "3be22049-d6d5-477a-b1f9-bd929a38499f",
+      "Roles": [],
+      "Authenticated": null,
+      "Widgets": [
+        {
+          "Id": "5d8a62ac-6cfa-4d98-8caa-82427838e19b",
+          "ContentIds": [
+            "74ac2733-2e3d-4f63-9ae7-04dcb1ae39b9"
+          ],
+          "ManifestId": "1e63c71f-834e-4a48-8672-573bef75518e",
+          "Css": "",
+          "Style": "",
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 1,
+          "Roles": [],
+          "Authenticated": null,
+          "Attributes": {}
+        },
+        {
+          "Id": "209c8d17-078c-41ed-9241-afb6f9203667",
+          "ContentIds": [
+            "e0e603c8-8c2a-471f-b821-cf925cbc6efb"
+          ],
+          "ManifestId": "1e63c71f-834e-4a48-8672-573bef75518e",
+          "Css": "",
+          "Style": "",
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 2,
+          "Roles": [],
+          "Authenticated": true,
+          "Attributes": {}
+        },
+        {
+          "Id": "d9979496-9617-48f1-bc05-6b94112778ad",
+          "ContentIds": [],
+          "ManifestId": "f19a751d-0eba-4eec-85ca-d300eed1a37f",
+          "Css": "",
+          "Style": "",
+          "PaneName": "Main",
+          "ShowHeader": false,
+          "Seq": 3,
+          "Roles": [],
+          "Authenticated": false,
+          "Attributes": {}
+        }
+      ]
+    }
+  ],
+  "LayoutTemplates": null,
+  "WidgetContent": {
+    "5d8a62ac-6cfa-4d98-8caa-82427838e19b": "[{\"Id\":\"74ac2733-2e3d-4f63-9ae7-04dcb1ae39b9\",\"Key\":\"Content.Text\",\"Text\":\"<div class=\\\"well\\\">\\n\\t<h3>\\n\\t\\tCongratulations on installing your Videre CMS.</h3>\\n\\t<br />\\n\\tThe logon control should be displaying below. &nbsp;Simply enter the user/password you used during installation and you will be on your way to administering your portal.</div>\\n<p>\\n\\t&nbsp;</p>\\n\",\"Type\":4,\"PortalId\":\"3be22049-d6d5-477a-b1f9-bd929a38499f\",\"Locale\":\"\",\"Namespace\":\"__5d8a62ac-6cfa-4d98-8caa-82427838e19b\"}]",
+    "209c8d17-078c-41ed-9241-afb6f9203667": "[{\"Id\":\"e0e603c8-8c2a-471f-b821-cf925cbc6efb\",\"Key\":\"Content.Text\",\"Text\":\"<p>\\n\\tNow that your logged in, there are a couple quick tips you should be aware of</p>\\n<ul>\\n\\t<li>\\n\\t\\tYou can administer the content of some widgets (like this one) by right-clicking on the text. &nbsp;This will show a context menu giving the ability to edit your content.</li>\\n\\t<li>\\n\\t\\tThere are two types of templates: &nbsp;<em>Layout</em> and <em>Page</em>. &nbsp; A Layout Template is responsible for defining the panes (rows/columns) for your widgets. &nbsp;A <em>Page Template</em> is comprised of a <em>Layout</em> and one or more endpoints (urls).</li>\\n\\t<li>\\n\\t\\tWidgets can be placed on a <em>Layout Template</em> or a <em>Page Template</em>. &nbsp;The <img alt=\\\"\\\" src=\\\"/videreclean/Core/f/poweredby\\\" style=\\\"width: 56px; height: 20px; \\\" />&nbsp;image in the footer is an example of a widget placed on the layout, as it is shared by all pages with the General <em>Layout Template</em>.</li>\\n\\t<li>\\n\\t\\tWidgets can be shown based off of Authentication status of the user. &nbsp;This includes: Authenticated, &nbsp;Not Authenticated, and None. &nbsp;An example of this is the Logon widget is only displayed to Not Authenticated Users, whereas this Text/Html widget is displayed only to Authenticated users. &nbsp;Finally, a widget can be shown based off of a user&#39;s role.</li>\\n</ul>\\n\",\"Type\":4,\"PortalId\":\"3be22049-d6d5-477a-b1f9-bd929a38499f\",\"Locale\":\"\",\"Namespace\":\"__209c8d17-078c-41ed-9241-afb6f9203667\"}]"
+  },
+  "FileContent": null
+}
