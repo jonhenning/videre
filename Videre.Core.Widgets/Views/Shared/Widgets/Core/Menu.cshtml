@@ -46,7 +46,7 @@ if (menu != null)
       <div class="container" >
           @if (!string.IsNullOrEmpty(menu.Text) || showLogo)
           {
-        <a class="brand" href="@Url.Content("~/")">
+        <a class="brand @menu.TextCss" href="@Url.Content("~/")">
             @menu.Text
             @if (showLogo && !string.IsNullOrEmpty(Portal.CurrentPortal.LogoUrl))
             {
