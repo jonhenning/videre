@@ -22,9 +22,7 @@
 <head>
     <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Videre")</title>
 
-    @(Html.RenderDeferredWidgets())
-    @(new HtmlString(Html.RenderScripts()))
-    @(new HtmlString(Html.RenderStylesheets()))
+    @{Html.RenderLayoutHeader();}
 </head>
 <body style="padding-top: 40px;">
     <div class="container">
@@ -63,4 +61,5 @@
         </div>
 
     </div>
+    @{Html.RenderLayoutDeferred();}
 </body>
