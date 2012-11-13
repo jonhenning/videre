@@ -20,7 +20,14 @@ namespace Videre.Core.Services
         {
             get
             {
-                return HttpContext.Current != null && HttpContext.Current.Request != null;
+                try
+                {
+                    return HttpContext.Current != null && HttpContext.Current.Request != null;
+                }
+                catch (Exception ex)    //todo: why would this occur?
+                {
+                    return false;
+                }
             }
         }
 

@@ -7,8 +7,9 @@
 
 @{
     
-    Html.RegisterScript(Model.ScriptPath + "ckeditor_3.6.4/ckeditor.js", true);
-    Html.RegisterScript(Model.ScriptPath + "ckeditor_3.6.4/adapters/jquery.js", true);
+    Html.RegisterWebReferenceGroup("CKTextEditor");
+    //Html.RegisterScript(Model.ScriptPath + "ckeditor_3.6.4/ckeditor.js", true);
+    //Html.RegisterScript(Model.ScriptPath + "ckeditor_3.6.4/adapters/jquery.js", true);
     Html.RegisterControlPresenter(Model, "videre.controls.texteditor.ck");
 
 }

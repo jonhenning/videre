@@ -20,7 +20,7 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="@Model.GetId("RoleTab")">
-                        @Html.RenderWidget("Core/Admin/Role")
+                        @{Html.RenderWidget("Core/Admin/Role");}
                     </div>
                     <div class="tab-pane" id="@Model.GetId("SecureActivityTab")">
                         @Html.RenderWidget("Core/Admin/SecureActivity")

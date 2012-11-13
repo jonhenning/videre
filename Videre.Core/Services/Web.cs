@@ -40,7 +40,20 @@ namespace Videre.Core.Services
 
                 new WebReference() { Name = "multiselect", Group = "multiselect", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/multiselect/jquery.multiselect.min.js", DependencyGroups = new List<string>() {"jQuery", "jQuery UI"} },
                 new WebReference() { Name = "multiselect css", Group = "multiselect", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.StyleSheetReference, PortalId = portalId, Url = "~/scripts/multiselect/jquery.multiselect.css", DependencyGroups = new List<string>() {"jQuery", "jQuery UI"} },
-                new WebReference() { Name = "multiselect startup", Group = "multiselect", LoadType = WebReferenceLoadType.Startup, Type = WebReferenceType.Script, PortalId = portalId, Text = "$('select[data-controltype=\"multiselect\"]').multiselect({ selectedList: 3 });" }
+                new WebReference() { Name = "multiselect startup", Group = "multiselect", LoadType = WebReferenceLoadType.Startup, Type = WebReferenceType.Script, PortalId = portalId, Text = "$('select[data-controltype=\"multiselect\"]').multiselect({ selectedList: 3 });" },
+
+                new WebReference() { Name = "CLTextEditor", Group = "CLTextEditor", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/controls/core/CLTextEditor/CLEditor1_3_0/jquery.cleditor.min.js", DependencyGroups = new List<string>() {"jQuery"} },
+                new WebReference() { Name = "CLTextEditor css", Group = "CLTextEditor", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.StyleSheetReference, PortalId = portalId, Url = "~/scripts/controls/core/CLTextEditor/CLEditor1_3_0/jquery.cleditor.css", DependencyGroups = new List<string>() {"jQuery"} },
+
+                new WebReference() { Name = "CKTextEditor", Group = "CKTextEditor", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/controls/core/CKTextEditor/ckeditor_3.6.4/ckeditor.js", DependencyGroups = new List<string>() {"jQuery"} },
+                new WebReference() { Name = "CKTextEditor jQuery adapter", Group = "CKTextEditor", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/controls/core/CKTextEditor/ckeditor_3.6.4/adapters/jquery.js", DependencyGroups = new List<string>() {"jQuery"} },
+
+                new WebReference() { Name = "WYSIHTML5", Group = "WYSIHTML5TextEditor", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/controls/core/WYSIHTML5TextEditor/WYSIHTML5_0.2/lib/js/wysihtml5-0.3.0.min.js", DependencyGroups = new List<string>() {"jQuery"} },
+                new WebReference() { Name = "WYSIHTML5 bootstrap", Group = "WYSIHTML5TextEditor", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/controls/core/WYSIHTML5TextEditor/WYSIHTML5_0.2/dist/bootstrap-wysihtml5-0.0.2.min.js", DependencyGroups = new List<string>() {"jQuery"} },
+                new WebReference() { Name = "WYSIHTML5 css", Group = "WYSIHTML5TextEditor", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.StyleSheetReference, PortalId = portalId, Url = "~/scripts/controls/core/WYSIHTML5TextEditor/WYSIHTML5_0.2/dist/bootstrap-wysihtml5-0.0.2.css", DependencyGroups = new List<string>() {"jQuery"} },
+
+                new WebReference() { Name = "highcharts", Group = "highcharts", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/controls/core/highcharts/highcharts.js", DependencyGroups = new List<string>() {} }
+
             };
         }
 

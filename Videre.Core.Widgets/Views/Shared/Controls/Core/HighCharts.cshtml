@@ -6,7 +6,8 @@
 @model Models.Chart
 
 @{
-    Html.RegisterScript(Model.ScriptPath + "highcharts.js", true);
+    //Html.RegisterScript(Model.ScriptPath + "highcharts.js", true);
+    Html.RegisterWebReferenceGroup("highcharts");
     if (Model.Theme != Models.Chart.ChartTheme.none)
     {
         Html.RegisterScript(Model.ScriptPath + string.Format("themes/{0}.js", Model.Theme.ToString()), true);
