@@ -43,36 +43,10 @@ videre.widgets.admin.widgetmanifest = videre.widgets.base.extend(
 
     bind: function()
     {
-        this.getControl('ItemTable').dataTable().fnDestroy();
+        videre.dataTables.clear(this.getControl('ItemTable'));
         this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data));
         this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
-
-        //http://datatables.net/blog/Twitter_Bootstrap_2
-        this.getControl('ItemTable').dataTable({ sPaginationType: 'bootstrap',
-            aoColumns: [{ bSortable: false }, null, null, null]
-        });
-        //this.getControl('ItemTable').jqGrid({
-        //    autowidth: true,
-        //    height: '100%',
-        //    //shrinkToFit: false,
-        //    url: videre.resolveUrl('~/core/Portal/GetManifestsPaged/'),
-        //    datatype: 'json',
-        //    mtype: 'POST',
-        //    colNames: ['Category', 'Name', 'Title'],
-        //    colModel: [
-        //{ name: 'Category', index: 'Category', align: 'left' },
-        //{ name: 'Name', index: 'Name', align: 'left' },
-        //{ name: 'Title', index: 'Title', align: 'left' }],
-        //    pager: this.getControl('ItemPager'),
-        //    rowNum: 10,
-        //    rowList: [5, 10, 20, 50],
-        //    sortname: 'Name',
-        //    sortorder: "desc",
-        //    viewrecords: true,
-        //    imgpath: '',
-        //    caption: 'My first grid'
-        //});
-
+        videre.dataTables.bind(this.getControl('ItemTable'), [{ bSortable: false, sWidth: '62px' }]);
     },
 
     newItem: function()

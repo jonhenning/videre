@@ -693,6 +693,7 @@ videre.widgets.base = videre.Class.extend(
 
 });
 
+//todo:  specific code to dynatree... should it go here?
 videre.tree = {
 
     getTreeData: function(rootName, data, func, delim)
@@ -720,6 +721,26 @@ videre.tree = {
         return root;
     }
 };
+
+//todo:  specific code to datatables... should it go here?
+videre.dataTables = {
+
+    clear: function(tbl)
+    {
+        tbl.dataTable().fnDestroy();
+    },
+
+    bind: function(tbl, columns)
+    {
+        var cellCount = tbl.find('th').length;
+        if (columns != null && cellCount > 0)
+            columns.length = cellCount;
+        //http://datatables.net/blog/Twitter_Bootstrap_2
+        tbl.dataTable({ sPaginationType: 'bootstrap', aoColumns: columns });
+    }
+
+};
+
 
 videre.localization = {
     items: [],

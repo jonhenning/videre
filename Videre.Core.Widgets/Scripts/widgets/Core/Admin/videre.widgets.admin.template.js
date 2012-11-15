@@ -111,11 +111,10 @@ videre.widgets.admin.template = videre.widgets.base.extend(
             this._templateDataDict = items.toDictionary(function(d) { return d.Id; });
 
             this.showList();
-            this.getControl('ItemTable').dataTable().fnDestroy();
+            videre.dataTables.clear(this.getControl('ItemTable'));
             this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(items));
             this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
-            this.getControl('ItemTable').dataTable({ sPaginationType: 'full_numbers', sPaginationType: 'bootstrap' }); //http://datatables.net/blog/Twitter_Bootstrap_2
-
+            videre.dataTables.bind(this.getControl('ItemTable'), [{ bSortable: false, sWidth: '62px' }]);
         }
         else
             this._templateCtr.hide();

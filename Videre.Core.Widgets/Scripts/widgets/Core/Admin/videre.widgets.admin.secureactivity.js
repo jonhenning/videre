@@ -52,16 +52,12 @@ videre.widgets.admin.secureactivity = videre.widgets.base.extend(
 
     bind: function()
     {
-        this.getControl('ItemTable').dataTable().fnDestroy();
+        videre.dataTables.clear(this.getControl('ItemTable'));
         //this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data));
         this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data, { roleDataDict: this._roleDataDict }));
         this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
 
-        //http://datatables.net/blog/Twitter_Bootstrap_2
-        this.getControl('ItemTable').dataTable({ sPaginationType: 'full_numbers', sPaginationType: 'bootstrap', bAutoWidth: false,
-            aoColumns: [{ bSortable: false, sWidth: '31px' }, null, null, null]
-        });
-
+        videre.dataTables.bind(this.getControl('ItemTable'), [{ bSortable: false, sWidth: '31px' }]);
         this.getControl('ItemTable').width('500px');    //todo:  hack necessary for when its hidden in non-shown tab during bind
     },
 

@@ -44,14 +44,10 @@ videre.widgets.admin.webreference = videre.widgets.base.extend(
 
     bind: function()
     {
-        this.getControl('ItemTable').dataTable().fnDestroy();
+        videre.dataTables.clear(this.getControl('ItemTable'));
         this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data));
         this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
-
-        //http://datatables.net/blog/Twitter_Bootstrap_2
-        this.getControl('ItemTable').dataTable({ sPaginationType: 'full_numbers', sPaginationType: 'bootstrap',
-            aoColumns: [{ bSortable: false, sWidth: '62px' }, null, null, null]
-        });
+        videre.dataTables.bind(this.getControl('ItemTable'), [{ bSortable: false, sWidth: '62px' }]);
     },
 
     reset: function()
