@@ -286,7 +286,7 @@ namespace Videre.Core.Extensions
 
         public static MvcHtmlString TextEditorControl(this HtmlHelper helper, Models.IClientControl clientControl, string id, string dataColumn, bool required = false, string labelText = null)
         {
-            var model = new Models.TextEditor(dataColumn, Services.Portal.CurrentPortal.GetAttribute("Core", "TextEditor", "Core/CKTextEditor"));
+            var model = new Models.DataControl(dataColumn, Services.Portal.CurrentPortal.GetAttribute("Core", "TextEditor", "Core/CKTextEditor"));
             model.ClientId = clientControl.GetId(id);
             model.Required = required;
             model.LabelText = labelText;

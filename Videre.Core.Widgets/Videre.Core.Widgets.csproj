@@ -400,7 +400,7 @@
   <ItemGroup>
     <Content Include="Scripts\widgets\core\account\videre.widgets.account.userprofile.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.webreference.js" />
-    <Content Include="Scripts\widgets\core\videre.widgets.widgetadmincontextmenu.js" />
+    <Content Include="Scripts\controls\core\videre.widgets.widgetadmincontextmenu.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.theme.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.search.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.portal.js" />

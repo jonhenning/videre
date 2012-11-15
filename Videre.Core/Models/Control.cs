@@ -1,20 +1,16 @@
 ﻿
 namespace Videre.Core.Models
 {
-    public class TextEditor : IClientControl
+    public class Control : IClientControl
     {
         private string _path = null;
 
-        public TextEditor(string dataColumn, string path)
+        public Control(string path)
         {
-            DataColumn = dataColumn;
             _path = path;
         }
 
         public string Path { get { return _path; } }
-        public string DataColumn { get; set; }
-        public bool Required { get; set; }
-        public string LabelText { get; set; }
         public string ClientId { get; set; }    //must be assigned every time the widget is rendered
 
         public string ScriptPath

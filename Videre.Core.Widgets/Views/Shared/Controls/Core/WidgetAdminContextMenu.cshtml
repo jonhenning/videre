@@ -7,7 +7,7 @@
 @model Models.Widget
 @{
     Model.ContentJson = Model.GetContentJson(); //pull potential content
-    var editorModel = new Models.WidgetEditor(Model.ManifestId)
+    var editorModel = new Models.Control("Core")
     {
         ClientId = Portal.NextClientId()
     };
