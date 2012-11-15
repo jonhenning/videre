@@ -23,7 +23,7 @@
             Html.RegisterWebReferenceGroup("Pixadelic Camera");
             
 
-            Html.RegisterDocumentReadyScript("carousel" + Model.Id, string.Format("$('#{0}').camera({{thumbnails: true, imagePath: '{1}', portrait: {2}, time: {3}}});", Model.GetId("Carousel"), Url.Content("~/Scripts/camera-1.3.3/"), (!cropImages).ToString().ToLower(), advanceTime), true);
+            Html.RegisterDocumentReadyScript("carousel" + Model.Id, string.Format("$('#{0}').camera({{thumbnails: false, imagePath: '{1}', portrait: {2}, time: {3}}});", Model.GetId("Carousel"), Url.Content("~/Scripts/camera-1.3.3/"), (!cropImages).ToString().ToLower(), advanceTime), true);
 
     <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
         <div id="@Model.GetId("Carousel")" class="camera_wrap" style="@carousel.Style">
