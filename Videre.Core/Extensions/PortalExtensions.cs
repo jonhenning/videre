@@ -68,6 +68,7 @@ namespace Videre.Core.Extensions
 
         public static void RenderLayoutHeader(this HtmlHelper helper)
         {
+            helper.ViewContext.Writer.WriteLine(helper.RenderBase());
             helper.ViewContext.Writer.WriteLine(helper.RenderScripts());
             helper.ViewContext.Writer.WriteLine(helper.RenderStylesheets());
             //return "";
@@ -132,18 +133,18 @@ namespace Videre.Core.Extensions
 
         public static void RegisterControlPresenter(this HtmlHelper helper, Models.IClientControl model, string clientType, string instanceName, Dictionary<string, object> properties = null)
         {
-            properties = properties == null ? new Dictionary<string, object>() : properties;
+            properties = properties ?? new Dictionary<string, object>();
             RegisterCoreScripts(helper);
 
             if (!string.IsNullOrEmpty(model.ScriptPath))
-                HtmlExtensions.RegisterScript(helper, model.ScriptPath + clientType + ".js", true);
+                helper.RegisterScript(model.ScriptPath + clientType + ".js", true);
 
             properties["id"] = model.ClientId;  //todo: not necessary now... same as ns?
             properties["ns"] = model.ClientId;
 
             //Properties["user"] = Services.Account.GetClientUser();
             //var ser = new System.Web.Script.Serialization.JavaScriptSerializer();   //no binders for date conversions...
-            HtmlExtensions.RegisterDocumentReadyScript(helper, model.ClientId + "Presenter", string.Format("videre.widgets.register('{0}', {1}, {2});", model.ClientId, clientType, properties.ToJson(ignoreType: "client")));
+            helper.RegisterDocumentReadyScript(model.ClientId + "Presenter", string.Format("videre.widgets.register('{0}', {1}, {2});", model.ClientId, clientType, properties.ToJson(ignoreType: "client")));
         }
 
         public static void RegisterCoreScripts(this HtmlHelper helper)
@@ -152,10 +153,7 @@ namespace Videre.Core.Extensions
             helper.RegisterWebReferenceGroup("videre");
             //HtmlExtensions.RegisterScript(helper, "~/scripts/videre.extensions.js", true);
             //HtmlExtensions.RegisterScript(helper, "~/scripts/videre.js", true);
-            helper.RegisterScript("~/ServerJS/GlobalClientTranslations", true);
-
-            //todo: FIX!
-            helper.ScriptMarkup("coreconstants", "var ROOT_URL = '" + Videre.Core.Extensions.HtmlExtensions.RootPath + "';");
+            helper.RegisterScript("~/ServerJS/GlobalClientTranslations");
         }
 
         public static void RegisterTheme(this HtmlHelper helper, Models.PageTemplate template)
@@ -163,7 +161,7 @@ namespace Videre.Core.Extensions
             var theme = Services.UI.PortalTheme;
             if (template != null && template.Layout != null && template.Layout.Theme != null)
                 theme = template.Layout.Theme;
-            if (template != null && template != null && template.Theme != null)
+            if (template != null && template.Theme != null)
                 theme = template.Theme;
             
             if (theme != null)
@@ -171,13 +169,13 @@ namespace Videre.Core.Extensions
                 foreach (var file in theme.Files)
                 {
                     if (file.Type == Models.ReferenceFileType.Css)
-                        HtmlExtensions.RegisterStylesheet(helper, file.Path, true, new Dictionary<string,string>() {{"type", "theme"}});
+                        helper.RegisterStylesheet(file.Path, true, new Dictionary<string,string>() {{"type", "theme"}});
                     if (file.Type == Models.ReferenceFileType.Script)
-                        HtmlExtensions.RegisterScript(helper, file.Path, true, new Dictionary<string, string>() { { "type", "theme" } });
+                        helper.RegisterScript(file.Path, true, new Dictionary<string, string>() { { "type", "theme" } });
                 }
             }
             else
-                HtmlExtensions.RegisterStylesheet(helper, "~/scripts/bootstrap-2.1.0/css/bootstrap.css", true, new Dictionary<string, string>() { { "type", "theme" } });
+                helper.RegisterStylesheet("~/scripts/bootstrap-2.1.0/css/bootstrap.css", true, new Dictionary<string, string>() { { "type", "theme" } });
         }
 
         public static MvcHtmlString RenderClientControl(this HtmlHelper helper, Models.IClientControl clientControl, string id, Models.Chart model)

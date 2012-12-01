@@ -161,43 +161,52 @@ namespace Videre.Core.Extensions
                 }
             //}
         }
+
+        public static string RenderBase(this HtmlHelper helper) 
+        {
+            return string.Format(
+                "<base href=\"{0}\" />", 
+                helper.ViewContext.HttpContext.Request.Url.Scheme + "://" + helper.ViewContext.HttpContext.Request.Url.Authority + RootPath);
+        }
+
         public static string RenderScripts(this HtmlHelper helper)
         {
             //lock (_lockObj)
             //{
-                var sb = new System.Text.StringBuilder();
+            var sb = new System.Text.StringBuilder();
 
-                var list = GetUnrenderedMarkupList(helper, "js");
-                foreach (string src in list)
-                {
-                    sb.AppendLine(string.Format("<script src=\"{0}\" type=\"text/javascript\"></script>", src));
-                }
-                SetMarkupListRendered(helper, "js");
+            var list = GetUnrenderedMarkupList(helper, "js");
+            foreach (string src in list)
+            {
+                sb.AppendLine(string.Format("<script src=\"{0}\" type=\"text/javascript\"></script>", src));
+            }
+            SetMarkupListRendered(helper, "js");
 
-                list = GetUnrenderedMarkupList(helper, "inlinejs");
-                if (list.Count > 0)
-                {
-                    sb.AppendLine(string.Format("<script type=\"text/javascript\">{0}</script>", String.Join("\r\n", list.ToArray())));
-                }
-                SetMarkupListRendered(helper, "inlinejs");
+            list = GetUnrenderedMarkupList(helper, "inlinejs");
+            if (list.Count > 0)
+            {
+                sb.AppendLine(string.Format("<script type=\"text/javascript\">{0}</script>", String.Join("\r\n", list.ToArray())));
+            }
+            SetMarkupListRendered(helper, "inlinejs");
 
-                list = GetUnrenderedMarkupList(helper, "documentreadyjs");
-                if (list.Count > 0)
-                {
-                    sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", list.ToArray())));
-                }
-                SetMarkupListRendered(helper, "documentreadyjs");
+            list = GetUnrenderedMarkupList(helper, "documentreadyjs");
+            if (list.Count > 0)
+            {
+                sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", list.ToArray())));
+            }
+            SetMarkupListRendered(helper, "documentreadyjs");
 
-                list = GetUnrenderedMarkupList(helper, "documentreadyendjs");
-                if (list.Count > 0)
-                {
-                    sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", list.ToArray())));
-                }
-                SetMarkupListRendered(helper, "documentreadyendjs");
+            list = GetUnrenderedMarkupList(helper, "documentreadyendjs");
+            if (list.Count > 0)
+            {
+                sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", list.ToArray())));
+            }
+            SetMarkupListRendered(helper, "documentreadyendjs");
 
-                return sb.ToString();
+            return sb.ToString();
             //}
         }
+
         public static string RenderStylesheets(this HtmlHelper helper)
         {
             var sb = new System.Text.StringBuilder();

@@ -51,13 +51,9 @@ videre.widgets.installer = videre.widgets.base.extend(
             this.addMsg('wait', 'Please Wait...', false);
             setTimeout(function()
             {
-                window.location.href = window.ROOT_URL;
+                window.location.href = $('base').attr('href');
             }, 3000);
         }
     }
-
-
-
-
 });
 

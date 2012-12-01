@@ -105,11 +105,9 @@ var videre =
         //jQuery('*').unbind();
     },
 
-    rootUrl: function() //todo: hacky!
+    rootUrl: function()
     {
-        if (window.ROOT_URL != null)
-            return window.ROOT_URL;
-        return '';
+        return $('base').attr('href');
     },
 
     resolveUrl: function(url)
