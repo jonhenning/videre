@@ -41,6 +41,7 @@ namespace Videre.Core.Services
 
         public static string Save(Models.File file, string userId = null)
         {
+            file.PortalId = string.IsNullOrEmpty(file.PortalId) ? Portal.CurrentPortalId : file.PortalId;
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             Validate(file);
             var res = Repository.Current.StoreResource("File", null, file, userId);

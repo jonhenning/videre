@@ -61,7 +61,7 @@
                     <div class="modal-body">
                         @{Html.RenderPartial("WidgetHeader", Model);}
                         <div class="form-horizontal">
-                            @Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }))
+                            @*@Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }))*@
                             @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url")
                             @Html.UploadButtonControlGroup(Model, "btnUpload", "File.Text", "File", "Upload.Text", "Upload")
                             @Html.InputControlGroup(Model, "txtFileSize", "FileSize.Text", "File Size", "Size", inputCss: "span3", readOnly: true)

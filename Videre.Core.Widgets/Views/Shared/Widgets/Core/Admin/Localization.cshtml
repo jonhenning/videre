@@ -63,7 +63,7 @@
                     <div class="modal-body">
                         @{Html.RenderPartial("WidgetHeader", Model);}
                         <div class="form-horizontal">
-                            @Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }))
+                            @*@Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }))*@
                             @Html.DropDownControlGroup(Model, "ddlType", "Type.Text", "Type", "Type", Enum.GetNames(typeof(Models.LocalizationType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.LocalizationType>()).ToString(), Text = t }))
                             @Html.InputControlGroup(Model, "txtLocale", "Locale.Text", "Locale", "Locale", "span2")
                             @Html.InputControlGroup(Model, "txtNamespace", "Namespace.Text", "Namespace", "Namespace", "span5")

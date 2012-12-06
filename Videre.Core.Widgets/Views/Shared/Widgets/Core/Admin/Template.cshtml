@@ -76,7 +76,7 @@
 
                     <div class="tab-content" style="overflow: auto; height: 420px;">
                         <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
-                            @Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }), "span6")
+                            @*@Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }), "span6")*@
                             @Html.DropDownControlGroup(Model, "ddlLayout", "Layout.Text", "Layout", "LayoutName", layouts.Select(l => new SelectListItem() { Value = l.Name, Text = l.Name }), "span6")
                             @Html.DropDownControlGroup(Model, "ddlTheme", "Theme.Text", "Theme", "ThemeName", themes.Select(l => new SelectListItem() { Value = l.Name, Text = l.Name }), "span6", new SelectListItem() { Text = "", Value = "" })
                             @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles", inputCss: "span6")
