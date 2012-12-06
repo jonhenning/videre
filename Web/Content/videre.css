@@ -83,3 +83,14 @@ a
     -moz-binding: url('ellipsis.xml#ellipsis');
     display: block;
 }
+
+/*todo: does bootstrap already do something for this?*/
+.videre-compact .form-horizontal .control-group
+{
+    margin-bottom: 4px;
+}
+
+.videre-modal-noscroll .modal-body
+{
+    max-height: 1000px;
+}
