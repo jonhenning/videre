@@ -15,7 +15,10 @@ namespace Videre.Core.Services
             }
             catch (Exception ex)
             {
+                //todo: some flag needed to show friendly errors 
                 result.AddError(ex);
+                if (ex.InnerException != null)
+                    result.AddError(ex.InnerException);
             }
             return result;
         }
