@@ -18,7 +18,7 @@
             @foreach (var tag in groupedTags.OrderBy(t => t.name))
             {
                 <li style="float: left; margin-right: 5px;">
-                    <a href="@Portal.ResolveCurrentUrl("")?tag=@tag.name" style="font-size: @GetTagSize(tag.count, totalTags)">
+                    <a href="@Portal.ResolveCurrentUrl("")?tag=@Url.Encode(tag.name)" style="font-size: @GetTagSize(tag.count, totalTags)">
                         @tag.name
                     </a>
                 </li>   
