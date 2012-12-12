@@ -465,9 +465,14 @@ videre.widgets.base = videre.Class.extend(
                 var val = data[ctl.data('column')];
                 switch (ctl.data('datatype'))
                 {
-                    case 'datetime': case 'date': case 'time':
+                    case 'datetime': case 'time':
                         {
                             ctl.datetimepicker('setDate', videre.toDate(val));
+                            break;
+                        }
+                    case 'date': 
+                        {
+                            ctl.datepicker('setDate', videre.toDate(val));
                             break;
                         }
                     default:
@@ -739,6 +744,14 @@ videre.dataTables = {
         tbl.dataTable({ sPaginationType: 'bootstrap', aoColumns: columns });
     }
 
+};
+
+videre.modals =
+{
+    autoWidth: function(modal)
+    {
+        return modal.css({ width: 'auto', 'margin-left': function() { return -($(this).width() / 2); } }); //https://github.com/twitter/bootstrap/issues/675
+    }
 };
 
 
