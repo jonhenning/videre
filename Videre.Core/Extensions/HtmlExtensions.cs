@@ -240,6 +240,10 @@ namespace Videre.Core.Extensions
         {
             if (!string.IsNullOrEmpty(valueMatchControl))
                 valueMatchControl = widget.GetId(valueMatchControl);    //todo: right place for this?
+
+            if (dataType == "datetime") //todo: auto do this?
+                helper.RegisterWebReferenceGroup("timepicker");
+
             return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType, valueMatchControl: valueMatchControl), required, inputCss, inputType, readOnly, disableAutoComplete);
         }
         public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = null, string inputType = null, bool readOnly = false, bool disableAutoComplete = false)
