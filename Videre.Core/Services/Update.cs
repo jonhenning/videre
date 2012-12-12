@@ -286,13 +286,13 @@ namespace Videre.Core.Services
             var updates = 0;
 
             //portal Init
-            updates += Core.Services.Update.Register(new List<Core.Models.Role>()
-            {
-                new Core.Models.Role() { Name = "admin", PortalId = portalId, Description = "Administrative Priviledges" }
-            });
-
             if (!Core.Services.Account.ReadOnly)    //todo:  don't allow this?!?!  or does UI disable this?
             {
+                updates += Core.Services.Update.Register(new List<Core.Models.Role>()
+                {
+                    new Core.Models.Role() { Name = "admin", PortalId = portalId, Description = "Administrative Priviledges" }
+                });
+
                 updates += Core.Services.Update.Register(new List<Core.Models.User>()
                 {
                     new Core.Models.User() { PortalId = portalId, Name = adminUser.Name, Email = adminUser.Email, Password = adminUser.Password, Roles = new List<string>() {Core.Services.Update.GetAdminRoleId(portalId)} }

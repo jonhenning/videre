@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 //using System.Web.Script.Serialization;
 //using Newtonsoft.Json;
 using CodeEndeavors.Extensions.Serialization;
@@ -30,7 +31,17 @@ namespace Videre.Core.Models
         [SerializeIgnore(new string[] { "client" })]
         public string PasswordSalt { get; set; }
 
-        public List<string> Roles { get; set; }
+        public List<string> Roles { get; set; } //misleading - really roleId
+        
+        [SerializeIgnore(new string[] { "db" })]
+        public List<string> RoleNames   //todo: not sure I like this!
+        {
+            get
+            {
+                var roles = Services.Account.GetRoles(PortalId);
+                return roles.Where(r => Roles.Contains(r.Id)).Select(r => r.Name).ToList();
+            }
+        }
         public Dictionary<string, object> Attributes { get; set; }
 
     }
