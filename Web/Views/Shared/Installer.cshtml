@@ -46,7 +46,8 @@
                     </div>
                 </div>
             </fieldset>
-
+@if (!Videre.Core.Services.Account.ReadOnly)
+{
             <fieldset id="@Model.GetId("AdminUser")">
                 <legend>Admin User<small> - Enter the user information for the portal administrator</small></legend>
                 @Html.InputControlGroup(Model, "txtUserName", "UserName.Text", "UserName", "Name", required: true, disableAutoComplete: true)
@@ -54,6 +55,7 @@
                 @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", "Password", required: true, inputType: "password" , disableAutoComplete: true)
                 @Html.InputControlGroup(Model, "txtPassword2", "ConfirmPassword.Text", "Confirm Password", new Dictionary<string, string>() { { "validation-matches-match", Model.GetId("txtPassword") }, {"validation-matches-message", string.Format(Model.GetPortalText("MustMatch.Text", "Must match {0} entered above"), "password")} }, false, inputType: "password", disableAutoComplete: true)
             </fieldset>
+}
             </form>
         </div>
         <div class="videre actions form-actions">
