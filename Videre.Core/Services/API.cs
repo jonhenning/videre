@@ -17,6 +17,7 @@ namespace Videre.Core.Services
             {
                 //todo: some flag needed to show friendly errors 
                 result.AddError(ex);
+                Logging.Logger.Error("API Error", ex);
                 if (ex.InnerException != null)
                     result.AddError(ex.InnerException);
             }
