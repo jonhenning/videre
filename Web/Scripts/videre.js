@@ -589,7 +589,7 @@ videre.widgets.base = videre.Class.extend(
     {
         if (parent == null)
             parent = this._widget;
-        return parent.find('.alert-block');
+        return parent.find('.alert-block:first');
     },
 
     addMsgs: function(msgs, parent)
