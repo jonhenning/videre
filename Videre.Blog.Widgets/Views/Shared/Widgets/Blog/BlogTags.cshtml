@@ -8,6 +8,7 @@
     var blog = Model.GetContent<Models.Blog>();
     if (blog != null)
     {
+        var blogUrl = Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, "");
         var totalTags = blog.Entries.Where(e => e.IsPublished).SelectMany(t => t.Tags).Count();
         var groupedTags = blog.Entries.Where(e => e.IsPublished).SelectMany(e => e.Tags).GroupBy(t => t).Select(t => new { name = t.Key, count = t.Count() });
         
@@ -18,7 +19,7 @@
             @foreach (var tag in groupedTags.OrderBy(t => t.name))
             {
                 <li style="float: left; margin-right: 5px;">
-                    <a href="@Portal.ResolveCurrentUrl("")?tag=@Url.Encode(tag.name)" style="font-size: @GetTagSize(tag.count, totalTags)">
+                    <a href="@blogUrl?tag=@Url.Encode(tag.name)" style="font-size: @GetTagSize(tag.count, totalTags)">
                         @tag.name
                     </a>
                 </li>   

@@ -20,7 +20,7 @@
             @foreach (var g in groupedEntries.OrderByDescending(g => g.Key))
             {
                 <li>
-                    <a href="@Portal.ResolveCurrentUrl("")?date=@g.Key">
+                    <a href="@blogUrl?date=@g.Key">
                         @g.Key - (@g.Count())
                     </a>
                 </li>   
