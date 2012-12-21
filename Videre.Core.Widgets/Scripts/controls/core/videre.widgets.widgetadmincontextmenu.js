@@ -95,6 +95,6 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
         this._widget.css({ top: e.pageY, left: e.pageX });
         this.toggleMenu();
         return false;
-    },
+    }
 
 });

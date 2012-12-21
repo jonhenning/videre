@@ -56,7 +56,7 @@ namespace Videre.Core.Extensions
             var refs = Services.Web.GetWebReferences(); 
             if (refs.Count == 0)    //todo: detect compat mode (query string???)
                 refs = Services.Web.GetDefaultWebReferences();
-            var groupRefs = refs.Where(r => r.Group.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            var groupRefs = refs.Where(r => r.Group.Equals(name, StringComparison.InvariantCultureIgnoreCase)).OrderByDescending(r => r.DependencyGroups.Count);
             foreach (var r in groupRefs.OrderBy(r => r.Sequence))
                 RegisterWebReference(helper, r.Name);
         }
@@ -240,13 +240,17 @@ namespace Videre.Core.Extensions
         {
             if (!string.IsNullOrEmpty(valueMatchControl))
                 valueMatchControl = widget.GetId(valueMatchControl);    //todo: right place for this?
+
+            if (dataType == "datetime") //todo: auto do this?
+                helper.RegisterWebReferenceGroup("timepicker");
+
             return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType, valueMatchControl: valueMatchControl), required, inputCss, inputType, readOnly, disableAutoComplete);
         }
         public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = null, string inputType = null, bool readOnly = false, bool disableAutoComplete = false)
         {
             return GetControlGroup(widget, id, textKey, defaultText, 
                                 string.Format("<input type=\"{3}\" class=\"{2}\" id=\"{0}\" name=\"{0}\" {1} {4} {5} {6}/>",
-                                    widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, inputType, readOnly ? "readonly=\"readonly\"" : "", required ? "required=\"required\"" : "", disableAutoComplete ? "autocomplete=\"off\"" : ""));
+                                widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, string.IsNullOrEmpty(inputType) ? "text" : inputType, readOnly ? "readonly=\"readonly\"" : "", required ? "required=\"required\"" : "", disableAutoComplete ? "autocomplete=\"off\"" : ""));
         }
 
         public static MvcHtmlString InputFileBrowserControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, string inputCss = null, string mimeType = "", bool required = false)
@@ -273,15 +277,15 @@ namespace Videre.Core.Extensions
                                 widget.GetId(id), inputCss, HttpUtility.HtmlEncode(widget.GetText(buttonTextKey, defaultButtonText))));
         }
 
-        public static MvcHtmlString TextAreaControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, string controlType = "", string inputCss = "", int rows = 3, bool required = false)
+        public static MvcHtmlString TextAreaControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, string controlType = "", string inputCss = "", int rows = 3, bool required = false, bool readOnly = false)
         {
-            return TextAreaControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, controlType), required, inputCss, rows);
+            return TextAreaControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, controlType), required, inputCss, rows, readOnly);
         }
-        public static MvcHtmlString TextAreaControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = "", int rows = 3)
+        public static MvcHtmlString TextAreaControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = "", int rows = 3, bool readOnly = false )
         {
             return GetControlGroup(widget, id, textKey, defaultText, 
-                                    string.Format("<textarea type=\"text\" class=\"{2}\" id=\"{0}\" {1} rows=\"{3}\" {4}></textarea>",
-                                widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, rows, required ? "required=\"required\"" : ""));
+                                    string.Format("<textarea type=\"text\" class=\"{2}\" id=\"{0}\" {1} rows=\"{3}\" {4} {5}></textarea>",
+                                widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, rows, required ? "required=\"required\"" : "", readOnly ? "readonly=\"readonly\"" : ""));
         }
 
         public static MvcHtmlString TextEditorControl(this HtmlHelper helper, Models.IClientControl clientControl, string id, string dataColumn, bool required = false, string labelText = null)
@@ -335,7 +339,7 @@ namespace Videre.Core.Extensions
             var list = selectList.ToList(); //todo: minor little hack...
             if (blankItem != null)
                 list.Insert(0, blankItem);
-            return GetControlGroup(widget, id, textKey, defaultText, helper.DropDownList(id, list, new {@class = inputCss, data_column = dataColumn}).ToString());
+            return GetControlGroup(widget, id, textKey, defaultText, helper.DropDownList(widget.GetId(id), list, new {@class = inputCss, data_column = dataColumn}).ToString());
         }
 
         public static List<SelectListItem> ToListItemList(this Enum type)//<T>(this T type) where T : Type//struct //todo: where is the enum constraint?!?!
