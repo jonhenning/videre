@@ -194,6 +194,18 @@ namespace Videre.Core.Services
             return res != null;
         }
 
+        public static void RegisterForAutoUpdate()
+        {
+            CacheTimer.Elapsed += OnAutoUpdate;
+        }
 
+        private static void OnAutoUpdate(object sender, EventArgs args)
+        {
+            Services.Logging.Logger.Debug("Search.OnAutoUpdate");
+            var providers = GetSearchProviders().Where(p => p.AutoRefreshRate.HasValue && (!p.LastGenerated.HasValue || p.LastGenerated.Value.AddMinutes(p.AutoRefreshRate.Value) < DateTime.UtcNow));
+            foreach (var provider in providers)
+                Generate(provider.Id);
+
+        }
     }
 }

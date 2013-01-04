@@ -35,6 +35,7 @@
                                 <th>@Model.GetText("Name.Text", "Name")</th>
                                 <th>@Model.GetText("ProviderType.Text", "Provider Type")</th>
                                 <th>@Model.GetText("LastGenerated.Text", "Last Generated")</th>
+                                <th>@Model.GetText("AutoRefreshRate.Text", "Refresh")</th>
                             </tr>
                         </thead>
                         <tbody id="@Model.GetId("ItemList")"></tbody>
@@ -49,6 +50,7 @@
                             <td>{{:Name}}</td>
                             <td>{{:ProviderType}}</td>
                             <td>{{:~formatDateTime(LastGenerated)}}</td>
+                            <td>{{:AutoRefreshRate}}</td>
                         </tr>
                     </script>
                 </div>
@@ -67,6 +69,7 @@
                 @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
                 @Html.InputControlGroup(Model, "txtProviderType", "ProviderType.Text", "Provider Type", "ProviderType")
                 @Html.InputControlGroup(Model, "txtConnection", "Connection.Text", "Connection", "Connection")
+                @Html.InputControlGroup(Model, "txtAutoRefreshRate", "AutoRefreshRateMin.Text", "Auto Refresh Rate (minutes)", "AutoRefreshRate")
             </div>
         </div>
         <div class="modal-footer">

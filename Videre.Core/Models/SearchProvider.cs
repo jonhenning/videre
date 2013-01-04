@@ -17,6 +17,7 @@ namespace Videre.Core.Models
         public List<string> DocumentTypes { get; set; }
 
         public DateTime? LastGenerated { get; set; }
+        public int? AutoRefreshRate { get; set; }
 
         public Services.ISearchProvider GetService()
         {
