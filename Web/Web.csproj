@@ -154,6 +154,36 @@
     <Content Include="Scripts\bootstrap-2.1.0\img\glyphicons-halflings.png" />
     <Content Include="Scripts\bootstrap-2.1.0\js\bootstrap.js" />
     <Content Include="Scripts\bootstrap-2.1.0\js\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap-2.2.2\css\bootstrap-responsive.css" />
+    <Content Include="Scripts\bootstrap-2.2.2\css\bootstrap-responsive.min.css" />
+    <Content Include="Scripts\bootstrap-2.2.2\css\bootstrap.css" />
+    <Content Include="Scripts\bootstrap-2.2.2\css\bootstrap.min.css" />
+    <Content Include="Scripts\bootstrap-2.2.2\img\glyphicons-halflings-white.png" />
+    <Content Include="Scripts\bootstrap-2.2.2\img\glyphicons-halflings.png" />
+    <Content Include="Scripts\bootstrap-2.2.2\js\bootstrap.js" />
+    <Content Include="Scripts\bootstrap-2.2.2\js\bootstrap.min.js" />
+    <Content Include="Scripts\DataTables-1.9.4\media\css\jquery.dataTables.bootstrap.css" />
+    <Content Include="Scripts\DataTables-1.9.4\media\css\jquery.dataTables.css" />
+    <Content Include="Scripts\DataTables-1.9.4\media\css\jquery.dataTables_themeroller.css" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\back_disabled.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\back_enabled.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\back_enabled_hover.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\forward_disabled.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\forward_enabled.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\forward_enabled_hover.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\sort_asc.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\sort_asc_disabled.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\sort_both.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\sort_desc.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\images\sort_desc_disabled.png" />
+    <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.dataTables.bootstrap.js" />
+    <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.dataTables.js" />
+    <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.dataTables.min.js" />
+    <Content Include="Scripts\DataTables-1.9.4\media\js\TableTools.min.js" />
+    <Content Include="Scripts\DataTables-1.9.4\media\js\ZeroClipboard.js" />
+    <Content Include="Scripts\DataTables-1.9.4\media\swf\copy_csv_xls.swf" />
+    <Content Include="Scripts\DataTables-1.9.4\media\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="Scripts\DataTables-1.9.4\Readme.txt" />
     <Content Include="Scripts\prettify\prettify.css" />
     <Content Include="Scripts\prettify\prettify.js" />
     <Content Include="Scripts\DataTables-1.9.0\media\css\jquery.dataTables.bootstrap.css" />
@@ -250,7 +280,9 @@
     <Content Include="AppSettings.config" />
     <None Include="AppSettings.config.debug" />
     <None Include="AppSettings.config.release" />
-    <Content Include="ConnectionStrings.config" />
+    <Content Include="ConnectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="ConnectionStrings.config.debug" />
     <None Include="ConnectionStrings.config.release" />
     <Content Include="_packages\Videre.CoreSiteTemplate.json" />

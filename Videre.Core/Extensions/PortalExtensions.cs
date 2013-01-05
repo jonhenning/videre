@@ -165,19 +165,20 @@ namespace Videre.Core.Extensions
                 theme = template.Layout.Theme;
             if (template != null && template != null && template.Theme != null)
                 theme = template.Theme;
-            
+
             if (theme != null)
             {
                 foreach (var file in theme.Files)
                 {
                     if (file.Type == Models.ReferenceFileType.Css)
-                        HtmlExtensions.RegisterStylesheet(helper, file.Path, true, new Dictionary<string,string>() {{"type", "theme"}});
+                        HtmlExtensions.RegisterStylesheet(helper, file.Path, true, new Dictionary<string, string>() { { "type", "theme" } });
                     if (file.Type == Models.ReferenceFileType.Script)
                         HtmlExtensions.RegisterScript(helper, file.Path, true, new Dictionary<string, string>() { { "type", "theme" } });
                 }
             }
             else
-                HtmlExtensions.RegisterStylesheet(helper, "~/scripts/bootstrap-2.1.0/css/bootstrap.css", true, new Dictionary<string, string>() { { "type", "theme" } });
+                HtmlExtensions.RegisterWebReference(helper, "bootstrap css");
+                //HtmlExtensions.RegisterStylesheet(helper, "~/scripts/bootstrap-2.1.0/css/bootstrap.css", true, new Dictionary<string, string>() { { "type", "theme" } });
         }
 
         public static MvcHtmlString RenderClientControl(this HtmlHelper helper, Models.IClientControl clientControl, string id, Models.Chart model)

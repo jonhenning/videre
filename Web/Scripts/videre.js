@@ -734,18 +734,24 @@ videre.tree = {
 //todo:  specific code to datatables... should it go here?
 videre.dataTables = {
 
-    clear: function(tbl)
+    clear: function(tbl, options)
     {
-        tbl.dataTable().fnDestroy();
+        tbl.dataTable(options).fnDestroy();
     },
 
-    bind: function(tbl, columns)
+    //todo: phase out passing columns as specific argument and just use in options
+    bind: function(tbl, columns, options)
     {
         var cellCount = tbl.find('th').length;
         if (columns != null && cellCount > 0)
             columns.length = cellCount;
+        if (options == null)
+            options = {};
+
+        //options.sPaginationType = options.sPaginationType != null ? options.sPaginationType : 'bootstrap';
+        options.aoColumns = options.aoColumns != null ? options.aoColumns : columns;
         //http://datatables.net/blog/Twitter_Bootstrap_2
-        tbl.dataTable({ sPaginationType: 'bootstrap', aoColumns: columns });
+        tbl.dataTable(options);
     }
 
 };
