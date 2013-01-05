@@ -76,6 +76,10 @@ videre.widgets.admin.webreference = videre.widgets.base.extend(
     {
         //todo: validation!
         var item = this.persistData(this._selectedItem, true, this._dialog);
+
+        if (item.Sequence == '')
+            item.Sequence = null;
+
         this.ajax('~/core/Portal/SaveWebReference', { webReference: item }, this._delegates.onDataSaveReturn, null, this._dialog);
     },
 
