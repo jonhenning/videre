@@ -450,6 +450,7 @@ videre.widgets.base = videre.Class.extend(
         if (parent == null)
             parent = this._widget;
         var ctls = parent.find('[data-column]');
+        var self = this;
         ctls.each(function(idx, element)
         {
             var ctl = $(element);
@@ -467,27 +468,32 @@ videre.widgets.base = videre.Class.extend(
                 {
                     case 'datetime': case 'time':
                         {
-                            ctl.datetimepicker('setDate', videre.formatDate(val));
+                            ctl.has('.hasDatePicker').length > 0 ? ctl.datetimepicker('setDate', videre.formatDate(val)) : self.setControlValue(ctl, val != null ? new Date(videre.formatDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  hacky date logic
                             break;
                         }
                     case 'date': 
                         {
-                            ctl.datepicker('setDate', videre.formatDate(val));
+                            ctl.has('.hasDatePicker').length > 0 ? ctl.datepicker('setDate', videre.formatDate(val)) : self.setControlValue(ctl, val != null ? new Date(videre.formatDate(val)).format(videre.localization.dateFormats.date) : ''); //todo:  hacky date logic
                             break;
                         }
                     default:
                         {
-                            val = val != null ? val.toString() : '';
-                            var tagName = ctl.prop('tagName').toLowerCase();
-                            if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
-                                ctl.text(val);
-                            else 
-                                ctl.val(val);
+                            self.setControlValue(ctl, val);
                             break;
                         }
                 }
             }
         });
+    },
+
+    setControlValue: function(ctl, val)
+    {
+        val = val != null ? val.toString() : '';
+        var tagName = ctl.prop('tagName').toLowerCase();
+        if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
+            ctl.text(val);
+        else 
+            ctl.val(val);
     },
 
     validControls: function(controlCtr, messageCtr)
