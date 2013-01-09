@@ -58,6 +58,8 @@ namespace Videre.Web
         {
             Services.Logging.Logger.Debug("Application_Start");
             Services.Update.WatchForUpdates();
+            Services.CacheTimer.Register();
+            Services.Search.RegisterForAutoUpdate();
 
             Services.Update.Register();
             AreaRegistration.RegisterAllAreas();    //todo: not really needed anymore!
