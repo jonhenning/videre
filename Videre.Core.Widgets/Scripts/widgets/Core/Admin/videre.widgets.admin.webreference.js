@@ -80,6 +80,9 @@ videre.widgets.admin.webreference = videre.widgets.base.extend(
         if (item.Sequence == '')
             item.Sequence = null;
 
+        item.Type = new Number(item.Type);
+        item.LoadType = new Number(item.LoadType);
+
         this.ajax('~/core/Portal/SaveWebReference', { webReference: item }, this._delegates.onDataSaveReturn, null, this._dialog);
     },
 
