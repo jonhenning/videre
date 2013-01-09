@@ -236,7 +236,7 @@ namespace Videre.Core.Extensions
         //                            widget.GetId(id), GetDataAttributeMarkup(GetDataAttributeDict(dataColumn)), css));
         //}
 
-        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn = null, string inputCss = null, string inputType = null, bool readOnly = false, bool required = false, string dataType = null, string valueMatchControl = null, bool disableAutoComplete = false)
+        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn = null, string inputCss = null, string inputType = null, bool readOnly = false, bool required = false, string dataType = null, string valueMatchControl = null, bool disableAutoComplete = false, int? maxLength = null)
         {
             if (!string.IsNullOrEmpty(valueMatchControl))
                 valueMatchControl = widget.GetId(valueMatchControl);    //todo: right place for this?
@@ -244,13 +244,13 @@ namespace Videre.Core.Extensions
             if (dataType == "datetime") //todo: auto do this?
                 helper.RegisterWebReferenceGroup("timepicker");
 
-            return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType, valueMatchControl: valueMatchControl), required, inputCss, inputType, readOnly, disableAutoComplete);
+            return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType, valueMatchControl: valueMatchControl), required, inputCss, inputType, readOnly, disableAutoComplete, maxLength);
         }
-        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = null, string inputType = null, bool readOnly = false, bool disableAutoComplete = false)
+        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = null, string inputType = null, bool readOnly = false, bool disableAutoComplete = false, int? maxLength = null)
         {
             return GetControlGroup(widget, id, textKey, defaultText, 
-                                string.Format("<input type=\"{3}\" class=\"{2}\" id=\"{0}\" name=\"{0}\" {1} {4} {5} {6}/>",
-                                widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, string.IsNullOrEmpty(inputType) ? "text" : inputType, readOnly ? "readonly=\"readonly\"" : "", required ? "required=\"required\"" : "", disableAutoComplete ? "autocomplete=\"off\"" : ""));
+                                string.Format("<input type=\"{3}\" class=\"{2}\" id=\"{0}\" name=\"{0}\" {1} {4} {5} {6} {7}/>",
+                                widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, string.IsNullOrEmpty(inputType) ? "text" : inputType, readOnly ? "readonly=\"readonly\"" : "", required ? "required=\"required\"" : "", disableAutoComplete ? "autocomplete=\"off\"" : "", maxLength.HasValue ? string.Format("maxlength=\"{0}\"", maxLength) : ""));
         }
 
         public static MvcHtmlString InputFileBrowserControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, string inputCss = null, string mimeType = "", bool required = false)
@@ -263,9 +263,9 @@ namespace Videre.Core.Extensions
             helper.RenderWidget("Core/Admin/FileBrowser", new Dictionary<string, object>() { { "MimeType", mimeType } }, true);
 
             return GetControlGroup(widget, id, textKey, defaultText,  
-                                    string.Format("   <input type=\"text\" class=\"{2}\" id=\"{0}\" {1} {3}/>" +
+                                    string.Format("   <input type=\"text\" class=\"{2}\" id=\"{0}\" {1} {3} />" +
                                     "   <a class=\"btn\" data-action=\"filebrowser\" data-control=\"{0}\" ><i class=\"icon-picture\"></i></a>",
-                                widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, required ? "required=\"required\"" : ""), "input-append");
+                                    widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, required ? "required=\"required\"" : ""), "input-append");
         }
 
         public static MvcHtmlString UploadButtonControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string buttonTextKey, string defaultButtonText, string inputCss = null, string inputType = null)
