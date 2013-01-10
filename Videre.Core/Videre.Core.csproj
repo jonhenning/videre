@@ -104,6 +104,7 @@
     <Compile Include="Binders\JsonNetModelBinder.cs" />
     <Compile Include="Extensions\PortalExtensions.cs" />
     <Compile Include="ContentProviders\IWidgetContentProvider.cs" />
+    <Compile Include="JsonConverters\IsoDateConverter.cs" />
     <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\AttributeDefinition.cs" />
     <Compile Include="Models\Comment.cs" />

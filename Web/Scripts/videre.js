@@ -35,17 +35,33 @@ var videre =
         return JSON.parse(data);
     },
 
-    formatDate: function(value, format) //json2.net - reviver
+    parseDate: function(value, format) //json2.net - reviver
     {
-        if (typeof value === 'string') {
+        var type = videre.typename(value);
+        if (type == 'string')
+        {
             var a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:([\+-])(\d{2})\:(\d{2}))?Z?$/.exec(value);
-            if (a) {
+            if (a)
+            {
                 var utcMilliseconds = Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
                 var d = new Date(utcMilliseconds);
                 if (format)
                     return d.format(format);
                 return d;
             }
+            var a = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+            if (a)
+            {
+                var d = new Date(+a[1], +a[2] - 1, +a[3]);
+                if (format)
+                    return d.format(format);
+                return d;
+            }
+        }
+        else if (type == 'date')  //if already a date just check for formatting
+        {
+            if (format)
+                return value.format(format);
         }
         return value;
     },
@@ -466,14 +482,20 @@ videre.widgets.base = videre.Class.extend(
                 var val = data[ctl.data('column')];
                 switch (ctl.data('datatype'))
                 {
-                    case 'datetime': case 'time':
+                    case 'datetime':
                         {
-                            ctl.has('.hasDatePicker').length > 0 ? ctl.datetimepicker('setDate', videre.formatDate(val)) : self.setControlValue(ctl, val != null ? new Date(videre.formatDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  hacky date logic
+                            ctl.has('.hasDatePicker').length > 0 ? ctl.datetimepicker('setDate', videre.parseDate(val)) : self.setControlValue(ctl, val != null ? new Date(videre.parseDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  hacky date logic
                             break;
                         }
-                    case 'date': 
+                    case 'time':
                         {
-                            ctl.has('.hasDatePicker').length > 0 ? ctl.datepicker('setDate', videre.formatDate(val)) : self.setControlValue(ctl, val != null ? new Date(videre.formatDate(val)).format(videre.localization.dateFormats.date) : ''); //todo:  hacky date logic
+                            ctl.has('.hasDatePicker').length > 0 ? ctl.datetimepicker('setDate', videre.parseDate(val, 'shortTime')) : self.setControlValue(ctl, val != null ? new Date(videre.parseDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  UNTESTED!
+                            break;
+                        }
+                    case 'date':
+                        {
+                            self.setControlValue(ctl, val != null ? videre.parseDate(val).format(videre.localization.dateFormats.date) : '');
+                            //ctl.has('.hasDatePicker').length > 0 ? ctl.datepicker('setDate', videre.parseDate(val, 'isoUtcDateTime')) : self.setControlValue(ctl, val != null ? new Date(videre.parseDate(val)).format(videre.localization.dateFormats.date) : ''); //todo:  hacky date logic
                             break;
                         }
                     default:
@@ -484,16 +506,6 @@ videre.widgets.base = videre.Class.extend(
                 }
             }
         });
-    },
-
-    setControlValue: function(ctl, val)
-    {
-        val = val != null ? val.toString() : '';
-        var tagName = ctl.prop('tagName').toLowerCase();
-        if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
-            ctl.text(val);
-        else 
-            ctl.val(val);
     },
 
     validControls: function(controlCtr, messageCtr)
@@ -536,29 +548,43 @@ videre.widgets.base = videre.Class.extend(
             {
                 var col = ctl.attr('data-column');
                 if (!String.isNullOrEmpty(col))
-                {
-                    var val = ctl.val();
-                    if (ctl.data('controltype') == 'list')
-                        cloneData[col] = val.length > 0 ? val.split('\n') : null;       //todo: ok for template URL?
-                    else if (ctl.data('controltype') == 'multiselect')
-                    {
-                        cloneData[col] = val;
-                    }
-                    else
-                    {
-                        if (ctl.data('datatype') == 'datetime')
-                            val = ctl.datetimepicker('getDate');
-                        if (ctl.data('datatype') == 'date')
-                            val = videre.formatDate(val, 'iso');
-                        if (ctl.data('datatype') == 'time')
-                            val = videre.formatDate(val, 'iso');
-
-                        cloneData[col] = val;
-                    }
-                }
+                    cloneData[col] = this.getControlValue(ctl);
             }
         });
         return cloneData;
+    },
+
+    getControlValue: function(ctl)
+    {
+        var val = ctl.val();
+        if (ctl.data('controltype') == 'list')
+            val = val.length > 0 ? val.split('\n') : null;       //todo: ok for template URL?
+        else if (ctl.data('controltype') == 'multiselect')
+            val = val;  //todo: really?
+        else
+        {
+            if (ctl.data('datatype') == 'datetime')
+                val = ctl.datetimepicker('getDate');
+            if (ctl.data('datatype') == 'date')
+            {
+                val = ctl.datepicker('getDate');    //todo:  assume datepicker hooked into this?
+                if (val != null)
+                    val = val.format('isoDate');
+            }
+            if (ctl.data('datatype') == 'time')
+                val = ctl.datetimepicker('getDate').getTime();    //todo: test
+        }
+        return val;
+    },
+
+    setControlValue: function(ctl, val)
+    {
+        val = val != null ? val.toString() : '';
+        var tagName = ctl.prop('tagName').toLowerCase();
+        if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
+            ctl.text(val);
+        else
+            ctl.val(val);
     },
 
     _onAjaxSuccess: function(result, ctx)
@@ -842,7 +868,7 @@ videre.validation = {
     datatypes:
     {
         number: { type: 'function', func: function(d) { return !isNaN(d); } },
-        date: { type: 'function', func: function(d) { return (new Date(videre.formatDate(d, videre.localization.dateFormats.date))) != 'Invalid Date'; } }, //todo: think we can do better!
+        date: { type: 'function', func: function(d) { return (new Date(videre.parseDate(d, videre.localization.dateFormats.date))) != 'Invalid Date'; } }, //todo: think we can do better!
         email: { type: 'regex', regex: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i }   //http://ask.altervista.org/demo/jquery-validate-e-mail-address-regex/
     }
 };
@@ -850,9 +876,9 @@ videre.validation = {
 //jsrender helpers
 $.views.helpers({
     resolveUrl: function(val) { return val != null ? videre.resolveUrl(val) : ''; },
-    formatDateTime: function(val) { return val != null ? videre.formatDate(val).format(videre.localization.dateFormats.datetime) : ''; },
-    formatDate: function(val) { return val != null ? videre.formatDate(val).format(videre.localization.dateFormats.date) : ''; },
-    formatTime: function(val) { return val != null ? videre.formatDate(val).format(videre.localization.dateFormats.time) : ''; },
+    formatDateTime: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.datetime) : ''; },
+    formatDate: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.date) : ''; },
+    formatTime: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.time) : ''; },
     bindInputs: function(data, attributes, keyName)
     {
         keyName = keyName != null ? keyName : data.Name;
