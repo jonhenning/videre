@@ -541,6 +541,7 @@ videre.widgets.base = videre.Class.extend(
 
         var cloneData = clone ? videre.jsonClone(data) : data;
         var ctls = parent.find('[data-column]');
+        var self = this;
         ctls.each(function(idx, element)
         {
             var ctl = $(element);
@@ -548,7 +549,7 @@ videre.widgets.base = videre.Class.extend(
             {
                 var col = ctl.attr('data-column');
                 if (!String.isNullOrEmpty(col))
-                    cloneData[col] = this.getControlValue(ctl);
+                    cloneData[col] = self.getControlValue(ctl);
             }
         });
         return cloneData;
