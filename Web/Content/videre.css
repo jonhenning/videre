@@ -94,3 +94,8 @@ a
 {
     max-height: 1000px;
 }
+
+.videre-table-nowrap th, .videre-table-nowrap td
+{
+    white-space: nowrap;
+}
