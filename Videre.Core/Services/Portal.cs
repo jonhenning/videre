@@ -575,7 +575,7 @@ namespace Videre.Core.Services
                 export.FileContent = new Dictionary<string, string>();
                 foreach (var file in export.Files)
                 {
-                    export.FileContent[file.Id] = Portal.GetFile(portalId, file.Id).GetFileBase64();
+                    export.FileContent[file.Id] = Portal.GetFile(file.Id).GetFileBase64();
                 }
             }
             return export;
@@ -646,7 +646,7 @@ namespace Videre.Core.Services
                     SetIdMap<Models.File>(file.Id, File.Import(portal.Id, file), idMap);
                     if (export.FileContent.ContainsKey(origId))
                     {
-                        var fileName = Portal.GetFile(file.PortalId, file.Id);
+                        var fileName = Portal.GetFile(file.Id);
                         if (System.IO.File.Exists(fileName))
                             System.IO.File.Delete(fileName);
                         export.FileContent[origId].Base64ToFile(fileName);
@@ -745,53 +745,49 @@ namespace Videre.Core.Services
         {
             if (path.StartsWith("~/"))
                 return HostingEnvironment.MapPath(path);
-            //return HttpContext.Current.Server.MapPath(path);
             return path;
+        }
 
-        }
-        public static string GetFileDir(string portalId)
+        public static string GetFileDir(string portalId = null)
         {
-            var dir = ResolvePath(ConfigurationManager.AppSettings.GetSetting("FileDir", string.Format(@"~/App_Data/FileRepo/Portal-{0}", portalId)));
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-            if (!Directory.Exists(Path.Combine(dir, "temp")))
-                Directory.CreateDirectory(Path.Combine(dir, "temp"));
-            return dir;
-        }
-        public static string GetFile(string portalId, string fileName)
-        {
-            return Path.Combine(GetFileDir(portalId), fileName);
-        }
-        public static string GetTempFileDir(string portalId)
-        {
-            var dir = Path.Combine(GetFileDir(portalId), "temp");
+            portalId = string.IsNullOrEmpty(portalId) ? CurrentPortalId : portalId;
+            var dir = ResolvePath(GetFilePath());
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
             return dir;
         }
-        public static string GetTempFile(string portalId)
+
+        public static string GetFile(string fileName)
         {
-            return GetTempFile(portalId, Guid.NewGuid() + ".tmp");
+            return Path.Combine(GetFileDir(), fileName);
         }
-        public static string GetTempFile(string portalId, string fileName)
+
+        public static string GetTempFilePath()
         {
-            return Path.Combine(GetTempFileDir(portalId), fileName);
+            return GetFilePath().PathCombine("temp", "/");
+        }
+        public static string GetTempFileDir()
+        {
+            var dir = ResolvePath(GetTempFilePath());
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            return dir;
+        }
+
+        public static string GetFilePath()
+        {
+            return ConfigurationManager.AppSettings.GetSetting("FileDir", "~/App_Data/FileRepo");
+        }
+
+        public static string GetTempFile(string fileName = null)
+        {
+            fileName = string.IsNullOrEmpty(fileName) ? Guid.NewGuid() + ".tmp" : fileName;
+            return Path.Combine(GetTempFileDir(), fileName);
         }
 
         public static List<Models.PageTemplate> GetPageTemplatesByContentId(string contentId)
         {
             return Portal.GetPageTemplates().Where(t => t.Widgets.Exists(w => w.ContentIds.Contains(contentId))).ToList();
         }
-
-        //public static string MapPath(string path)
-        //{
-        //    if (System.Web.HttpContext.Current != null)
-        //        return System.Web.HttpContext.Current.Server.MapPath(path);
-        //    else
-        //        return path.Replace(@"~/", HttpRuntime.AppDomainAppPath);
-
-        //    //return HttpContext.Current.Server.MapPath(path);
-        //}
-
     }
 }

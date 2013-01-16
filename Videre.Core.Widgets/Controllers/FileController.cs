@@ -31,10 +31,10 @@ namespace Videre.Core.Widgets.Controllers
                     var fileId = CoreServices.File.Save(file);
                     if (!string.IsNullOrEmpty(uniqueName))
                     {
-                        var newFileName = Portal.GetFile(CoreServices.Portal.CurrentPortalId, fileId);
+                        var newFileName = Portal.GetFile(fileId);
                         if (System.IO.File.Exists(newFileName))
                             System.IO.File.Delete(newFileName);
-                        System.IO.File.Move(Portal.GetTempFile(CoreServices.Portal.CurrentPortalId, uniqueName), newFileName);
+                        System.IO.File.Move(Portal.GetTempFile(fileName: uniqueName), newFileName);
                     }
                     r.Data = !string.IsNullOrEmpty(fileId);
                 }
@@ -49,7 +49,7 @@ namespace Videre.Core.Widgets.Controllers
             var file = CoreServices.File.Get(CoreServices.Portal.CurrentPortalId, Url);
             if (file != null)
             {
-                var fileName = Portal.GetFile(CoreServices.Portal.CurrentPortalId, file.Id);
+                var fileName = Portal.GetFile(file.Id);
                 result = File(fileName, file.MimeType);
                 
                 this.Response.AddFileDependency(fileName);
@@ -78,7 +78,7 @@ namespace Videre.Core.Widgets.Controllers
             {
                 r.ContentType = "text/html";
                 string fileName = null;
-                var tempFileName = Portal.GetTempFile(CoreServices.Portal.CurrentPortalId);
+                var tempFileName = Portal.GetTempFile();
                 System.IO.Stream stream = null;
                 if (string.IsNullOrEmpty(Request["qqfile"]))    //IE
                 {
