@@ -779,6 +779,11 @@ namespace Videre.Core.Services
             return ConfigurationManager.AppSettings.GetSetting("FileDir", "~/App_Data/FileRepo");
         }
 
+        public static string GetContentPath()
+        {
+            return "~/content";
+        }
+
         public static string GetTempFile(string fileName = null)
         {
             fileName = string.IsNullOrEmpty(fileName) ? Guid.NewGuid() + ".tmp" : fileName;
