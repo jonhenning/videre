@@ -145,7 +145,7 @@ var videre =
             contentType: 'application/json; charset=utf-8',
             //dataType: 'json',
             success: function(result) { success(result, ctx); },
-            error: error
+            error: function(request) { error(request, ctx); }
         });
     },
 
@@ -699,9 +699,9 @@ videre.widgets.base = videre.Class.extend(
     //events
     _onWidgetKeyDown: function(e) { },
 
-    _onAjaxFail: function(request, status, error)
+    _onAjaxFail: function(request, ctx)
     {
-        this.unlock();
+        this.unlock(ctx.parent);
 
         if (!String.isNullOrEmpty(request.responseText))
         {
@@ -709,12 +709,12 @@ videre.widgets.base = videre.Class.extend(
             {
                 var msgs = videre.deserialize(request.responseText);
                 if (msgs.Message != null)
-                    this.addMsg('AJAX', msgs.Message + '<br/>' + msgs.StackTrace, true);
+                    this.addMsg('AJAX', msgs.Message + '<br/>' + msgs.StackTrace, true, ctx.parent);
                 else
-                    this.addMsgs(msgs);
+                    this.addMsgs(msgs, ctx.parent);
             }
             else
-                this.addMsg('AJAX', request.status + ' - ' + request.statusText + '<br/>' + request.responseText, true);
+                this.addMsg('AJAX', request.status + ' - ' + request.statusText + '<br/>' + request.responseText, true, ctx.parent);
         }
         else
             alert(request.StatusText);
