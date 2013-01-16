@@ -113,7 +113,7 @@ videre.widgets.admin.theme = videre.widgets.base.extend(
                 }
             });
         }
-        else
+        else if (this._defaultTheme.length > 0)
             head[0].appendChild(this._defaultTheme[0]);
         this.bindThemes();
     },
