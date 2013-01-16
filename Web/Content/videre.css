@@ -99,3 +99,9 @@ a
 {
     white-space: nowrap;
 }
+
+.videre-widget-message
+{
+    max-height: 300px;
+    overflow: auto;
+}

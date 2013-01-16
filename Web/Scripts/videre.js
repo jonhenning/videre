@@ -699,20 +699,25 @@ videre.widgets.base = videre.Class.extend(
     //events
     _onWidgetKeyDown: function(e) { },
 
-    _onAjaxFail: function(error, ctx, method)
+    _onAjaxFail: function(request, status, error)
     {
         this.unlock();
 
-        if (!String.isNullOrEmpty(error.responseText))
+        if (!String.isNullOrEmpty(request.responseText))
         {
-            var msgs = videre.deserialize(error.responseText);
-            if (msgs.Message != null)
-                this.addMsg('AJAX', msgs.Message + '<br/>' + msgs.StackTrace, true);
+            if (request.status == '200')
+            {
+                var msgs = videre.deserialize(request.responseText);
+                if (msgs.Message != null)
+                    this.addMsg('AJAX', msgs.Message + '<br/>' + msgs.StackTrace, true);
+                else
+                    this.addMsgs(msgs);
+            }
             else
-                this.addMsgs(msgs);
+                this.addMsg('AJAX', request.status + ' - ' + request.statusText + '<br/>' + request.responseText, true);
         }
         else
-            alert(error.StatusText);
+            alert(request.StatusText);
     },
 
     _onError: function(src, args)
