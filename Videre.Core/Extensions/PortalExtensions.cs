@@ -112,6 +112,11 @@ namespace Videre.Core.Extensions
             //return "";
         }
 
+        public static void RenderSubWidget(this HtmlHelper helper, Models.Widget widget, string view, Dictionary<string, object> attributes = null)
+        {
+            helper.RenderPartial("Widgets/" + widget.Manifest.Path.PathCombine(view, "/"), new Models.SubWidget(widget) { Attributes = attributes });
+        }
+
         public static void RenderWidgetEditor(this HtmlHelper helper, Models.WidgetManifest manifest)
         {
             //var manifest = Services.Portal.GetWidgetManifest(ManifestFullPath);
