@@ -74,6 +74,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PaniciSoftware.FastTemplate">
+      <HintPath>..\lib\PaniciSoftware.FastTemplate.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\lib\CodeEndeavors.ResourceManager\StructureMap.dll</HintPath>
     </Reference>
@@ -152,6 +155,7 @@
     <Compile Include="Services\Comment.cs" />
     <Compile Include="Services\CacheTimer.cs" />
     <Compile Include="Services\Logging.cs" />
+    <Compile Include="Services\Mail.cs" />
     <Compile Include="Services\Security.cs" />
     <Compile Include="Services\UI.cs" />
     <Compile Include="Services\RouteParser.cs" />
