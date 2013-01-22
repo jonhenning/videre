@@ -312,7 +312,7 @@ namespace Videre.Core.Services
         {
             var subject = Localization.GetPortalText("PortalEmailWelcomeSubject.Text", "Welcome $UserName, your new videre portal ($PortalName) has been created!");
             var body = Localization.GetPortalText("PortalEmailWelcomeBody.Text", "<p>Welcome <b>$UserName</b>, your new videre portal ($PortalName) has been created!</p>");
-            var tokens = new TemplateDictionary()
+            var tokens = new Dictionary<string, object>()
                 {
                     {"UserName", adminUser.Name},
                     {"UserEmail", adminUser.Email},
