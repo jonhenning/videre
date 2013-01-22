@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT (unless using VisualStudio 2012 :)! -->
+    <PropertyGroup>
+        <PreBuildEvent>
+            call "$(ProjectDir)copyifnewer.bat" "$(ProjectDir)AppSettings.config.$(ConfigurationName)" "$(ProjectDir)AppSettings.config"
+            call "$(ProjectDir)copyifnewer.bat" "$(ProjectDir)ConnectionStrings.config.$(ConfigurationName)" "$(ProjectDir)ConnectionStrings.config"
+            call "$(ProjectDir)copyifnewer.bat" "$(ProjectDir)log4net.config.$(ConfigurationName)" "$(ProjectDir)log4net.config"
+            call "$(ProjectDir)copyifnewer.bat" "$(ProjectDir)SMTPSettings.config.$(ConfigurationName)" "$(ProjectDir)SMTPSettings.config"
+        </PreBuildEvent>
+    </PropertyGroup>
+
+    <Target Name="AfterBuild">
+    </Target>
+
+</Project>

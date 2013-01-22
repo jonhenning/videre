@@ -10,6 +10,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using StructureMap;
 using System.Web.Mvc;
 using CoreServices = Videre.Core.Services;
+using PaniciSoftware.FastTemplate.Common;
 
 namespace Videre.Core.Services
 {
@@ -301,8 +302,23 @@ namespace Videre.Core.Services
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();
 
+            SendWelcomeEmail(adminUser, portal);
+
             return portalId;
 
+        }
+
+        public static void SendWelcomeEmail(Core.Models.User adminUser, Core.Models.Portal portal)
+        {
+            var subject = Localization.GetPortalText("PortalEmailWelcomeSubject.Text", "Welcome $UserName, your new videre portal ($PortalName) has been created!");
+            var body = Localization.GetPortalText("PortalEmailWelcomeBody.Text", "<p>Welcome <b>$UserName</b>, your new videre portal ($PortalName) has been created!</p>");
+            var tokens = new TemplateDictionary()
+                {
+                    {"UserName", adminUser.Name},
+                    {"UserEmail", adminUser.Email},
+                    {"PortalName", portal.Name}
+                };
+            Mail.Send(adminUser.Email, adminUser.Email, "WelcomeEmail", subject, body, tokens);
         }
 
         public static void Register()
