@@ -885,6 +885,8 @@ $.views.helpers({
     formatDateTime: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.datetime) : ''; },
     formatDate: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.date) : ''; },
     formatTime: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.time) : ''; },
+    formatString: function() { return String.format.apply(this, arguments); },
+    nullOrEmpty: function(val) { return String.isNullOrEmpty(val); },
     bindInputs: function(data, attributes, keyName)
     {
         keyName = keyName != null ? keyName : data.Name;
