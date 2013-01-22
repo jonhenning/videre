@@ -177,7 +177,7 @@ videre.UI = {
     {
         ddl[0].options.length = 0;
         if (blankText != null)
-            ddl.append($('<option></option>').html(blankText));
+            ddl.append($('<option></option>').val('').html(blankText));
         $.each(data, function(idx, item)
         {
             ddl.append($('<option></option>').val(this[valCol]).html(this[textCol]));
