@@ -75,13 +75,12 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
 
         this.bindData(this._selectedPortal);
         for(var key in this._attributeDefs)
-            this.bindAttributes(this._getSafeGroupName(key), this._attributeDefs[key]);
-
+            this.bindAttributes(key, this._attributeDefs[key]);
     },
 
     bindAttributes: function(groupName, defs)
     {
-        this.getControl('AttributeList-' + groupName).html(this.getControl('AttributeListTemplate').render(defs, { groupName: groupName, roleDataDict: this._roleDataDict, attributes: this._selectedPortal.Attributes }));
+        this.getControl('AttributeList-' + this._getSafeGroupName(groupName)).html(this.getControl('AttributeListTemplate').render(defs, { groupName: groupName, roleDataDict: this._roleDataDict, attributes: this._selectedPortal.Attributes }));
     },
 
     save: function()
