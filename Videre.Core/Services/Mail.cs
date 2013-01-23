@@ -11,7 +11,7 @@ namespace Videre.Core.Services
 {
     public class Mail
     {
-        public static bool Send(string from, string recipients, string subject, string body, bool isBodyHtml = true)
+        public static bool Send(string from, string recipients, string subject, string body, bool isBodyHtml = true, List<LinkedResource> linkedResources = null)
         {
             var client = new SmtpClient();  //read from configuration
 
@@ -30,18 +30,27 @@ namespace Videre.Core.Services
             };
             msg.To.Add(recipients);
 
+            if (linkedResources != null && linkedResources.Count > 0)
+            {
+                msg.Body = null;
+                var view = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+                foreach (var resource in linkedResources)
+                    view.LinkedResources.Add(resource);
+                msg.AlternateViews.Add(view); 
+            }
+
             client.Send(msg);
             return true;
         }
 
-        public static bool Send(string from, string recipients, string templateName, string subjectTemplateText, string bodyTemplateText, Dictionary<string, object> tokens, bool isBodyHtml = true)
+        public static bool Send(string from, string recipients, string templateName, string subjectTemplateText, string bodyTemplateText, Dictionary<string, object> tokens, bool isBodyHtml = true, List<LinkedResource> linkedResources = null)
         {
-            return Send(from, recipients, ParseTemplate(templateName + "_subject", subjectTemplateText, tokens), ParseTemplate(templateName + "_subject", bodyTemplateText, tokens), isBodyHtml);
+            return Send(from, recipients, ParseTemplate(templateName + "_subject", subjectTemplateText, tokens), ParseTemplate(templateName + "_subject", bodyTemplateText, tokens), isBodyHtml, linkedResources);
         }
 
-        public static bool Send(string from, string recipients, string subjectTemplateFileName, string bodyTemplateFileName, Dictionary<string, object> tokens, bool isBodyHtml = true)
+        public static bool Send(string from, string recipients, string subjectTemplateFileName, string bodyTemplateFileName, Dictionary<string, object> tokens, bool isBodyHtml = true, List<LinkedResource> linkedResources = null)
         {
-            return Send(from, recipients, ParseTemplate(subjectTemplateFileName, tokens), ParseTemplate(bodyTemplateFileName, tokens), isBodyHtml);
+            return Send(from, recipients, ParseTemplate(subjectTemplateFileName, tokens), ParseTemplate(bodyTemplateFileName, tokens), isBodyHtml, linkedResources);
         }
 
         //todo:  move out of Mail namespace?  if we had Template namespace may confuse with PageTemplate and LayoutTemplate
