@@ -184,8 +184,49 @@ videre.UI = {
         if (selectedVal != null)
             ddl.val(selectedVal);
         return ddl;
-    }
+    },
 
+    //usage:
+    //videre.UI.prompt('test', 'My Title', null,
+    //    [
+    //        { label: 'Favorite Color?', dataColumn: 'color', css: 'span3', value: 'blue' },
+    //        { label: 'Favorite Cola?', dataColumn: 'beverage', css: 'span2', value: 'Coke' }
+    //    ],
+    //    [
+    //        { text: 'Ok', icon: 'icon-pencil', css: 'btn-primary', handler: function(data) { return confirm(videre.serialize(data)); }, close: true },
+    //        { text: 'Cancel', close: true }
+    //    ]).addClass('videre-compact');
+    prompt: function(id, title, description, inputs, buttons)
+    {
+        description = description || '';
+        inputs = inputs || [];
+        var dlg = $(String.format('<div id="{0}" data-target="{0}" class="modal fade" style="display: none;"><div class="modal-header"><a class="close" data-dismiss="modal">×</a>{1}</div><div class="modal-body">{2}<div class="form-horizontal"></div></div><div class="modal-footer"></div></div>',
+            id, title, description)).appendTo($("body")).modal('show');
+
+        var body = dlg.find('.form-horizontal');
+        var footer = dlg.find('.modal-footer');
+        $.each(inputs, function(idx, input)
+        {
+            $(String.format('<div class="control-group"><label class="control-label">{0}</label><div class="controls"><input type="text" data-column="{1}" class="{2}" /></div></div>',
+                input.label, input.dataColumn, input.css)).appendTo(body).find('[data-column]').val(input.value);
+        });
+        $.each(buttons, function(idx, btn)
+        {
+            $(String.format('<a class="btn {0}">{1}{2}</a>', btn.css, btn.icon != null ? String.format('<i class="{0}"></i> ', btn.icon) : '', btn.text))
+                .click(function(e)
+                {
+                    var data = {};
+                    $.each(body.find('[data-column]'), function(idx, input)
+                    {
+                        var ctl = $(input);
+                        data[ctl.data('column')] = ctl.val();
+                    });
+                    if ((btn.handler == null || btn.handler(data)) && btn.close)
+                        dlg.modal('hide').on('hidden', function() { dlg.remove(); });
+                }).appendTo(footer);
+        });
+        return dlg;
+    }
 };
 
 videre.UI.eventHandlerList = function ()
