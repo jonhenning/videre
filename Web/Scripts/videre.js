@@ -1,5 +1,4 @@
-﻿
-var videre =
+﻿var videre =
 {
     enableLogging: false,
     _timings: {},
@@ -470,16 +469,16 @@ videre.widgets.base = videre.Class.extend(
         ctls.each(function(idx, element)
         {
             var ctl = $(element);
+            var val = Object.deepGet(data, ctl.data('column'));
             if (ctl.data('controltype') == 'list')
-                ctl.val(data[ctl.data('column')].join('\n'));
+                ctl.val(val.join('\n'));
             else if(ctl.data('controltype') == 'multiselect')
             {
-                ctl.val(data[ctl.data('column')]);
+                ctl.val(val);
                 ctl.multiselect('refresh');
             }
             else
             {
-                var val = data[ctl.data('column')];
                 switch (ctl.data('datatype'))
                 {
                     case 'datetime':
@@ -549,7 +548,7 @@ videre.widgets.base = videre.Class.extend(
             {
                 var col = ctl.attr('data-column');
                 if (!String.isNullOrEmpty(col))
-                    cloneData[col] = self.getControlValue(ctl);
+                    Object.deepSet(cloneData, col, self.getControlValue(ctl));
             }
         });
         return cloneData;
@@ -886,7 +885,9 @@ $.views.helpers({
     formatDate: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.date) : ''; },
     formatTime: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.time) : ''; },
     formatString: function() { return String.format.apply(this, arguments); },
-    nullOrEmpty: function(val) { return String.isNullOrEmpty(val); },
+    nullOrEmpty: function (val) { return String.isNullOrEmpty(val); },
+    coalesce: function (val, label) { return val || (label || ''); },
+    deepCoalesce: function (o, s, label) { return Object.deepGet(o, s) || (label || ''); },
     bindInputs: function(data, attributes, keyName)
     {
         keyName = keyName != null ? keyName : data.Name;

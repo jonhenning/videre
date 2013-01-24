@@ -1,15 +1,16 @@
 ﻿//Objects
 Object.deepGet = function (o, s) {
     var a, n;
+    if (!o || !s) return null;
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');
     a = s.split('.');
     while (a.length) {
         n = a.shift();
-        if (n in o) {
+        if (o != null && n in o) {
             o = o[n];
         } else {
-            return undefined;
+            return null;
         }
     }
     return o;
@@ -17,12 +18,13 @@ Object.deepGet = function (o, s) {
 
 Object.deepSet = function (o, s, v) {
     var a, n, self = o;
+    if (!o || !s) return null;
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');
     a = s.split('.');
     while (a.length > 1) {
         n = a.shift();
-        if (n in o) {
+        if (o != null && n in o) {
             o = o[n];
         } else {
             return self;
