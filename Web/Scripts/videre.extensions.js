@@ -1,59 +1,91 @@
-﻿//Strings
+﻿//Objects
+Object.deepGet = function (o, s) {
+    var a, n;
+    s = s.replace(/\[(\w+)\]/g, '.$1');
+    s = s.replace(/^\./, '');
+    a = s.split('.');
+    while (a.length) {
+        n = a.shift();
+        if (n in o) {
+            o = o[n];
+        } else {
+            return undefined;
+        }
+    }
+    return o;
+};
+
+Object.deepSet = function (o, s, v) {
+    var a, n, self = o;
+    s = s.replace(/\[(\w+)\]/g, '.$1');
+    s = s.replace(/^\./, '');
+    a = s.split('.');
+    while (a.length > 1) {
+        n = a.shift();
+        if (n in o) {
+            o = o[n];
+        } else {
+            return self;
+        }
+    }
+    n = a.shift();
+    if (n in o) {
+        o[n] = v;
+    }
+    return self;
+};
+
+//Strings
 String.prototype.ltrim = function() { return this.replace(/^\s*/, ""); }
 String.prototype.rtrim = function() { return this.replace(/\s*$/, ""); }
 String.prototype.trim = function() { return this.ltrim().rtrim(); }
 
-String.format = function()
+String.format = function ()
 {
     var s = arguments[0];
-    for (var i = 0; i < arguments.length - 1; i++)
-    {
+    for (var i = 0; i < arguments.length - 1; i++) {
         var reg = new RegExp("\\{" + i + "\\}", "gm");
         s = s.replace(reg, arguments[i + 1]);
     }
 
     return s;
-}
+};
 
-String.isNullOrEmpty = function()
+String.isNullOrEmpty = function ()
 {
     var s = arguments[0];
     return (s == null || s.length == 0);
-}
+};
 
-String.prototype.endsWith = function(suffix)
+String.prototype.endsWith = function (suffix)
 {
     return (this.substr(this.length - suffix.length) === suffix);
-}
+};
 
-String.prototype.startsWith = function(prefix)
+String.prototype.startsWith = function (prefix)
 {
     return (this.substr(0, prefix.length) === prefix);
-}
+};
 
 //js linq
-Array.prototype.orderBy = function(f)
-{
-    return this.sort(function(a, b)
-    {
+Array.prototype.orderBy = function(f) {
+    return this.sort(function(a, b) {
         var x = f(a);
         var y = f(b);
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
-}
+};
 
-Array.prototype.where = function(f)
-{
+Array.prototype.where = function(f) {
     var item;
     var ret = [];
 
-    for (var i = 0; i < this.length; i++)
-    {
+    for (var i = 0; i < this.length; i++) {
         if (f(this[i], i))
             ret.push(this[i]);
     }
     return ret;
-}
+};
 
 Array.prototype.innerJoin = function(array, f)
 {
