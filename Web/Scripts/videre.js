@@ -73,7 +73,7 @@
     //http://joncom.be/code/realtypeof/
     typename: function(v)
     {
-        if (typeof (v) == 'object')
+        if (typeof(v) == 'object')
         {
             if (v === null) return 'null';
             if (v.constructor == (new Array).constructor) return 'array';
@@ -81,7 +81,7 @@
             if (v.constructor == (new RegExp).constructor) return 'regex';
             return 'object';
         }
-        return typeof (v);
+        return typeof(v);
     },
 
     log: function(msg)
@@ -153,7 +153,6 @@
         clearTimeout(videre._timers[key]);
         videre._timers[key] = setTimeout(function() { func(ctx); }, interval);
     }
-
 };
 
 videre.registerNamespace('videre.UI');
@@ -782,7 +781,6 @@ videre.widgets.base = videre.Class.extend(
 
 //todo:  specific code to dynatree... should it go here?
 videre.tree = {
-
     getTreeData: function(rootName, data, func, delim)
     {
         delim = (delim == null) ? '/' : delim;
@@ -811,7 +809,6 @@ videre.tree = {
 
 //todo:  specific code to datatables... should it go here?
 videre.dataTables = {
-
     clear: function(tbl, options)
     {
         tbl.dataTable(options).fnDestroy();
@@ -831,7 +828,6 @@ videre.dataTables = {
         //http://datatables.net/blog/Twitter_Bootstrap_2
         tbl.dataTable(options);
     }
-
 };
 
 videre.modals =
@@ -841,7 +837,6 @@ videre.modals =
         return modal.css({ width: 'auto', 'margin-left': function() { return -($(this).width() / 2); } }); //https://github.com/twitter/bootstrap/issues/675
     }
 };
-
 
 videre.localization = {
     items: [],
@@ -905,7 +900,7 @@ videre.validation = {
                 return false;
             }
             else
-                alert('Invalid data type: ' + type);    //todo: what to do?
+                alert('Invalid data type: ' + type); //todo: what to do?
         }
         else
             return true;
@@ -914,7 +909,8 @@ videre.validation = {
     datatypes:
     {
         number: { type: 'function', func: function(d) { return !isNaN(d); } },
-        date: { type: 'function', func: function(d) { return (new Date(videre.parseDate(d, videre.localization.dateFormats.date))) != 'Invalid Date'; } }, //todo: think we can do better!
+        date: { type: 'function', func: function(d) { return (new Date(videre.parseDate(d, videre.localization.dateFormats.date))) != 'Invalid Date'; } }, //todo: think we can do better!,
+        datetime: { type: 'function', func: function(d) { return (new Date(videre.parseDate(d, videre.localization.dateFormats.datetime))) != 'Invalid Date'; } },
         email: { type: 'regex', regex: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i }   //http://ask.altervista.org/demo/jquery-validate-e-mail-address-regex/
     }
 };
@@ -926,9 +922,9 @@ $.views.helpers({
     formatDate: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.date) : ''; },
     formatTime: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.time) : ''; },
     formatString: function() { return String.format.apply(this, arguments); },
-    nullOrEmpty: function (val) { return String.isNullOrEmpty(val); },
-    coalesce: function (val, label) { return val || (label || ''); },
-    deepCoalesce: function (o, s, label) { return Object.deepGet(o, s) || (label || ''); },
+    nullOrEmpty: function(val) { return String.isNullOrEmpty(val); },
+    coalesce: function(val, label) { return val || (label || ''); },
+    deepCoalesce: function(o, s, label) { return Object.deepGet(o, s) || (label || ''); },
     bindInputs: function(data, attributes, keyName)
     {
         keyName = keyName != null ? keyName : data.Name;
@@ -947,11 +943,11 @@ $.views.helpers({
         }
         else
         {
-            ctl = $('<input>').attr({ type: 'text', 'data-column': keyName });//.val(dataValue);
+            ctl = $('<input>').attr({ type: 'text', 'data-column': keyName }); //.val(dataValue);
             if (dataValue != null)
-                ctl.attr('value', dataValue);   //need value written into html
+                ctl.attr('value', dataValue); //need value written into html
         }
-        ctl.attr('data-label-text', keyName);   //todo: mini-hack as labels have no for="" specified
+        ctl.attr('data-label-text', keyName); //todo: mini-hack as labels have no for="" specified
         if (data.Required)
             ctl.attr('required', 'required');
         if (data.DataType)
@@ -959,7 +955,7 @@ $.views.helpers({
         if (data.Dependencies != null && data.Dependencies.length > 0)
             ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
         ctl.appendTo(tempParent);
-        return tempParent.html();   //minor hack to get outerHTML
+        return tempParent.html(); //minor hack to get outerHTML
     }
 });
 
