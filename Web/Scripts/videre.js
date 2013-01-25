@@ -971,12 +971,13 @@ $.views.helpers({
     nullOrEmpty: function(val) { return String.isNullOrEmpty(val); },
     coalesce: function(val, label) { return val || (label || ''); },
     deepCoalesce: function(o, s, label) { return Object.deepGet(o, s) || (label || ''); },
-    bindInputs: function(data, attributes, keyName)
+    bindInputs: function(data, attributes, keyName) //todo: not sure this belongs in videre.js...
     {
         keyName = keyName != null ? keyName : data.Name;
         var ctl;
         var tempParent = $('<div></div>');
-        var dataValue = (attributes != null && attributes[keyName] != null) ? attributes[keyName] : data.DefaultValue;
+        var dataValue = Object.deepGet(attributes, keyName);
+        dataValue = dataValue || data.DefaultValue;
         if (data.Values.length > 0)
         {
             ctl = $('<select>').attr('data-column', keyName);
