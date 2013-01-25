@@ -237,14 +237,13 @@ videre.UI = {
         videre.UI._controlTypes[name] = definition;
     },
 
-    bindData: function(data, parent, deep)
+    bindData: function(data, parent)
     {
         var ctls = parent.find('[data-column]');
-        deep = deep != null ? deep : true;
         ctls.each(function(idx, element)
         {
             var ctl = $(element);
-            var val = deep ? Object.deepGet(data, ctl.data('column')) : data[ctl.data('column')];
+            var val = Object.deepGet(data, ctl.data('column'));
             var controlType = videre.UI._controlTypes[ctl.data('controltype')];
             if (controlType != null && controlType.set != null)
                 controlType.set(ctl, val);
@@ -259,12 +258,11 @@ videre.UI = {
         });
     },
 
-    persistData: function(data, clone, parent, includeReadOnly, deep)
+    persistData: function(data, clone, parent, includeReadOnly)
     {
         var cloneData = clone ? videre.jsonClone(data) : data;
         var ctls = parent.find('[data-column]');
-        deep = deep != null ? deep : true;
-
+        
         ctls.each(function(idx, element)
         {
             var ctl = $(element);
@@ -272,12 +270,7 @@ videre.UI = {
             {
                 var col = ctl.attr('data-column');
                 if (!String.isNullOrEmpty(col))
-                {
-                    if (deep)
-                        Object.deepSet(cloneData, col, videre.UI.getControlValue(ctl));
-                    else
-                        cloneData[col] = videre.UI.getControlValue(ctl);
-                }
+                    Object.deepSet(cloneData, col, videre.UI.getControlValue(ctl));
             }
         });
         return cloneData;
@@ -682,23 +675,22 @@ videre.widgets.base = videre.Class.extend(
         videre.ajax(url, params, this._baseDelegates.onAjaxSuccess, onFail, { onSuccess: onSuccess, parent: parent, ctx: ctx });
     },
 
-    bindData: function(data, parent, deep)
+    bindData: function(data, parent)
     {
         if (data == null)
             data = {};
         if (parent == null)
             parent = this._widget;
-
-        videre.UI.bindData(data, parent, deep);
+        videre.UI.bindData(data, parent);
     },
 
-    persistData: function(data, clone, parent, includeReadOnly, deep)
+    persistData: function(data, clone, parent, includeReadOnly)
     {
         if (clone == null)
             clone = true;
         if (parent == null)
             parent = this._widget;
-        return videre.UI.persistData(data, clone, parent, includeReadOnly, deep);
+        return videre.UI.persistData(data, clone, parent, includeReadOnly);
     },
 
     validControls: function(controlCtr, messageCtr)

@@ -2,6 +2,14 @@
 Object.deepGet = function (o, s) {
     var a, n;
     if (!o || !s) return null;
+    if (s.charAt(0) == '$')
+    {
+        if (s.length > 1)
+        {
+            return o[s.substring(1)];
+        }
+        return null;
+    }
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');
     a = s.split('.');
@@ -19,6 +27,14 @@ Object.deepGet = function (o, s) {
 Object.deepSet = function (o, s, v) {
     var a, n, self = o;
     if (!o || !s) return null;
+    if (s.charAt(0) == '$')
+    {
+        if (s.length > 1)
+        {
+            o[s.substring(1)] = v;
+        }
+        return self;
+    }
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');
     a = s.split('.');
