@@ -91,7 +91,7 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         //this._themeWidget.persistData(portal);
         //portal.ThemeName = this._selectedTheme != null ? this._selectedTheme.Name : '';
         for(var key in this._attributeDefs)
-            this.persistData(portal.Attributes, false, this.getControl('tab' + this._getSafeGroupName(key)));
+            this.persistData(portal.Attributes, false, this.getControl('tab' + this._getSafeGroupName(key)), true, false);
         this.ajax('~/core/Portal/SavePortal', { portal: portal }, this._delegates.onSaveReturn);
     },
 

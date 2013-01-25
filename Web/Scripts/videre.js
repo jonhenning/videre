@@ -225,7 +225,191 @@ videre.UI = {
                 }).appendTo(footer);
         });
         return dlg;
+    },
+
+    registerDataType: function(name, definition)
+    {
+        videre.UI._dataTypes[name] = definition;
+    },
+
+    registerControlType: function(name, definition)
+    {
+        videre.UI._controlTypes[name] = definition;
+    },
+
+    bindData: function(data, parent, deep)
+    {
+        var ctls = parent.find('[data-column]');
+        deep = deep != null ? deep : true;
+        ctls.each(function(idx, element)
+        {
+            var ctl = $(element);
+            var val = deep ? Object.deepGet(data, ctl.data('column')) : data[ctl.data('column')];
+            var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+            if (controlType != null && controlType.set != null)
+                controlType.set(ctl, val);
+            else
+            {
+                var dataType = videre.UI._dataTypes[ctl.data('datatype')];
+                if (dataType != null && dataType.set != null)
+                    dataType.set(ctl, val);
+                else
+                    videre.UI.setControlValue(ctl, val);
+            }
+        });
+    },
+
+    persistData: function(data, clone, parent, includeReadOnly, deep)
+    {
+        var cloneData = clone ? videre.jsonClone(data) : data;
+        var ctls = parent.find('[data-column]');
+        deep = deep != null ? deep : true;
+
+        ctls.each(function(idx, element)
+        {
+            var ctl = $(element);
+            if (!ctl.attr('readonly') || includeReadOnly)
+            {
+                var col = ctl.attr('data-column');
+                if (!String.isNullOrEmpty(col))
+                {
+                    if (deep)
+                        Object.deepSet(cloneData, col, videre.UI.getControlValue(ctl));
+                    else
+                        cloneData[col] = videre.UI.getControlValue(ctl);
+                }
+            }
+        });
+        return cloneData;
+    },
+
+    getControlValue: function(ctl)
+    {
+        var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+        if (controlType != null && controlType.get != null)
+            return controlType.get(ctl);
+        else
+        {
+            var dataType = this._dataTypes[ctl.data('datatype')];
+            if (dataType != null && dataType.get != null)
+                return dataType.get(ctl);
+            else
+                return ctl.val();
+        }
+    },
+
+    setControlValue: function(ctl, val)
+    {
+        val = val != null ? val.toString() : '';
+        var tagName = ctl.prop('tagName').toLowerCase();
+        if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
+            ctl.text(val);
+        else
+            ctl.val(val);
+    },
+
+    validateCtl: function(item)
+    {
+        if (item.ctl.data('dependencymatch') == false)  //if dependent control and it is not matched (shown) it is valid!
+            return null;
+        if (item.ctl.attr('required') && item.ctl.val() == '')
+            return { id: item.ctl.attr('id') + 'Required', text: String.format(videre.localization.getText('global', 'RequiredField'), item.labelText), isError: true };
+        if (item.ctl.data('datatype') != null && !videre.UI.validDataType(item.ctl.data('datatype'), item.ctl.val()))
+            return { id: item.ctl.attr('id') + 'DataTypeInvalid', text: String.format(videre.localization.getText('global', 'DataTypeInvalid'), item.labelText, item.ctl.data('datatype')), isError: true };
+        if (item.ctl.data('match') != null && item.ctl.val() != $('#' + item.ctl.data('match')).val())
+            return { id: item.ctl.attr('id') + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
+    },
+
+    validDataType: function(type, val)
+    {
+        if (!String.isNullOrEmpty(val))
+        {
+            var item = this._dataTypes[type];
+            if (item != null)
+                return item.isValid != null ? item.isValid(val) : true; // always valid if not otherwise specified
+            else
+                alert('Invalid data type: ' + type); //todo: what to do?
+        }
+        else
+            return true;
+    },
+
+    _controlTypes: {
+        'list':
+        {
+            get: function(ctl)
+            {
+                var val = ctl.val();
+                return val.length > 0 ? val.split('\n') : null; //todo: ok for template URL?
+            },
+            set: function(ctl, val) { ctl.val(val.join('\n')); },
+        },
+
+        'multiselect':
+        {
+            get: function(ctl) { return ctl.val(); },
+            set: function(ctl, val)
+            {
+                ctl.val(val);
+                ctl.multiselect('refresh');
+            }
+        },
+    },
+
+    _dataTypes: {
+        'number':
+        {
+            isValid: function(val) { return !isNaN(val); }
+        },
+
+        'email':
+        {
+            isValid: function(val)
+            {
+                //http://ask.altervista.org/demo/jquery-validate-e-mail-address-regex/
+                return new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i)
+                    .test(val);
+            }
+        },
+
+        'datetime': {
+            get: function(ctl) { return ctl.datetimepicker('getDate'); },
+            set: function(ctl, val)
+            {
+                ctl.has('.hasDatePicker').length > 0 ?
+                    ctl.datetimepicker('setDate', videre.parseDate(val)) :
+                    videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  hacky date logic
+            },
+            isValid: function(val) { return (new Date(videre.parseDate(val, videre.localization.dateFormats.datetime))) != 'Invalid Date'; }
+        },
+
+        'time': {
+            get: function(ctl) { return ctl.datetimepicker('getDate').getTime(); },
+            set: function(ctl, val)
+            {
+                ctl.has('.hasDatePicker').length > 0 ?
+                    ctl.datetimepicker('setDate', videre.parseDate(val, 'shortTime')) :
+                    videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  UNTESTED!
+            },
+            isValid: function(val)
+            {
+                return val != null; // TODO: not correct
+            }
+        },
+
+        'date': {
+            get: function(ctl)
+            {
+                var val = ctl.datepicker('getDate'); //todo:  assume datepicker hooked into this?
+                if (val != null)
+                    val = val.format('isoDate');
+                return val;
+            },
+            set: function(ctl, val) { videre.UI.setControlValue(ctl, val != null ? videre.parseDate(val).format(videre.localization.dateFormats.date) : ''); },
+            isValid: function(val) { return (new Date(videre.parseDate(val, videre.localization.dateFormats.date))) != 'Invalid Date'; }
+        }
     }
+
 };
 
 videre.UI.eventHandlerList = function ()
@@ -498,101 +682,34 @@ videre.widgets.base = videre.Class.extend(
         videre.ajax(url, params, this._baseDelegates.onAjaxSuccess, onFail, { onSuccess: onSuccess, parent: parent, ctx: ctx });
     },
 
-    registerDataType: function(n, h)
-    {
-        this._dataTypes[n] = h;
-    },
-
-    registerControlType: function(n, h)
-    {
-        this._controlTypes[n] = h;
-    },
-
-    bindData: function(data, parent)
+    bindData: function(data, parent, deep)
     {
         if (data == null)
             data = {};
         if (parent == null)
             parent = this._widget;
-        var ctls = parent.find('[data-column]');
-        var self = this;
-        ctls.each(function(idx, element)
-        {
-            var ctl = $(element);
-            var val = Object.deepGet(data, ctl.data('column'));
-            var controlType = self._controlTypes[ctl.data('controltype')];
-            if (controlType != null && controlType.set != null)
-                controlType.set(self, ctl, val);
-            else
-            {
-                var dataType = self._dataTypes[ctl.data('datatype')];
-                if (dataType != null && dataType.set != null)
-                    dataType.set(self, ctl, val);
-                else
-                    self.setControlValue(ctl, val);
-            }
-        });
+
+        videre.UI.bindData(data, parent, deep);
     },
 
-    persistData: function(data, clone, parent, includeReadOnly)
+    persistData: function(data, clone, parent, includeReadOnly, deep)
     {
         if (clone == null)
             clone = true;
         if (parent == null)
             parent = this._widget;
-
-        var cloneData = clone ? videre.jsonClone(data) : data;
-        var ctls = parent.find('[data-column]');
-        var self = this;
-        ctls.each(function(idx, element)
-        {
-            var ctl = $(element);
-            if (!ctl.attr('readonly') || includeReadOnly)
-            {
-                var col = ctl.attr('data-column');
-                if (!String.isNullOrEmpty(col))
-                    Object.deepSet(cloneData, col, self.getControlValue(ctl));
-            }
-        });
-        return cloneData;
-    },
-
-    getControlValue: function(ctl)
-    {
-        var controlType = this._controlTypes[ctl.data('controltype')];
-        if (controlType != null && controlType.get != null)
-            return controlType.get(this, ctl);
-        else
-        {
-            var dataType = this._dataTypes[ctl.data('datatype')];
-            if (dataType != null && dataType.get != null)
-                return dataType.get(this, ctl);
-            else
-                return ctl.val();
-        }
-    },
-
-    setControlValue: function(ctl, val)
-    {
-        val = val != null ? val.toString() : '';
-        var tagName = ctl.prop('tagName').toLowerCase();
-        if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
-            ctl.text(val);
-        else
-            ctl.val(val);
+        return videre.UI.persistData(data, clone, parent, includeReadOnly, deep);
     },
 
     validControls: function(controlCtr, messageCtr)
     {
-        var self = this;
-
         messageCtr = messageCtr != null ? messageCtr : controlCtr;
         this.clearMsgs();
         var ctls = this._getValidationCtls(controlCtr);
         var errors = [];        
         ctls.forEach(function(item)
         {
-            var error = self._validateCtl(item);
+            var error = videre.UI.validateCtl(item);
             if (error != null)
             {
                 item.group.addClass('error');
@@ -775,138 +892,8 @@ videre.widgets.base = videre.Class.extend(
             }
         });
         return ret;
-    },
-
-    _validateCtl: function(item)
-    {
-        if (item.ctl.data('dependencymatch') == false)  //if dependent control and it is not matched (shown) it is valid!
-            return null;
-        if (item.ctl.attr('required') && item.ctl.val() == '')
-            return { id: item.ctl.attr('id') + 'Required', text: String.format(videre.localization.getText('global', 'RequiredField'), item.labelText), isError: true };
-        if (item.ctl.data('datatype') != null && !this._validDataType(item.ctl.data('datatype'), item.ctl.val()))
-            return { id: item.ctl.attr('id') + 'DataTypeInvalid', text: String.format(videre.localization.getText('global', 'DataTypeInvalid'), item.labelText, item.ctl.data('datatype')), isError: true };
-        if (item.ctl.data('match') != null && item.ctl.val() != $('#' + item.ctl.data('match')).val())
-            return { id: item.ctl.attr('id') + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
-    },
-
-    _validDataType: function(type, val)
-    {
-        if (!String.isNullOrEmpty(val))
-        {
-            var item = this._dataTypes[type];
-            if (item != null)
-            {
-                if (item.isValid != null)
-                    return item.isValid(this, val);
-                else
-                    return true; // always valid if not otherwise specified
-            }
-            else
-                alert('Invalid data type: ' + type); //todo: what to do?
-        }
-        else
-            return true;
-    },
-
-    _controlTypes: {
-        'list':
-        {
-            get: function(self, ctl)
-            {
-                var val = ctl.val();
-                return val.length > 0 ? val.split('\n') : null; //todo: ok for template URL?
-            },
-            set: function(self, ctl, val)
-            {
-                ctl.val(val.join('\n'));
-            },
-        },
-
-        'multiselect':
-        {
-            get: function(self, ctl)
-            {
-                return ctl.val();
-            },
-            set: function(self, ctl, val)
-            {
-                ctl.val(val);
-                ctl.multiselect('refresh');
-            }
-        },
-    },
-
-    _dataTypes: {
-        'number':
-        {
-            isValid: function(self, val)
-            {
-                return !isNaN(val);
-            }
-        },
-
-        'email':
-        {
-            isValid: function(self, val)
-            {
-                //http://ask.altervista.org/demo/jquery-validate-e-mail-address-regex/
-                return new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i)
-                    .test(val);
-            }
-        },
-
-        'datetime': {
-            get: function(self, ctl)
-            {
-                return ctl.datetimepicker('getDate');
-            },
-            set: function(self, ctl, val)
-            {
-                ctl.has('.hasDatePicker').length > 0 ?
-                    ctl.datetimepicker('setDate', videre.parseDate(val)) :
-                    self.setControlValue(ctl, val != null ? new Date(videre.parseDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  hacky date logic
-            },
-            isValid: function(self, val)
-            {
-                return (new Date(videre.parseDate(val, videre.localization.dateFormats.datetime))) != 'Invalid Date';
-            }
-        },
-
-        'time': {
-            get: function(self, ctl)
-            {
-                return ctl.datetimepicker('getDate').getTime(); //todo: test
-            },
-            set: function(self, ctl, val)
-            {
-                ctl.has('.hasDatePicker').length > 0 ?
-                    ctl.datetimepicker('setDate', videre.parseDate(val, 'shortTime')) :
-                    self.setControlValue(ctl, val != null ? new Date(videre.parseDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  UNTESTED!
-            },
-            isValid: function(self, val)
-            {
-                return val != null; // TODO: not correct
-            }
-        },
-
-        'date': {
-            get: function(self, ctl)
-            {
-                var val = ctl.datepicker('getDate'); //todo:  assume datepicker hooked into this?
-                if (val != null)
-                    val = val.format('isoDate');
-                return val;
-            },
-            set: function(self, ctl, val)
-            {
-                self.setControlValue(ctl, val != null ? videre.parseDate(val).format(videre.localization.dateFormats.date) : '');
-            },
-            isValid: function(self, val)
-            {
-                return (new Date(videre.parseDate(val, videre.localization.dateFormats.date))) != 'Invalid Date';
-            }
-        },
     }
+
 });
 
 //todo:  specific code to dynatree... should it go here?
