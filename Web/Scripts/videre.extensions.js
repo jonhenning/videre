@@ -1,11 +1,39 @@
 ﻿//Objects
-Object.deepGet = function (o, s) {
-    var a, n;
-    if (!o || !s) return null;
-    if (s.charAt(0) == '$')
+Object.convertTo = function(o, targetTypeName)
+{
+    targetTypeName = targetTypeName || 'string';
+    targetTypeName = targetTypeName.toLowerCase();
+    switch (targetTypeName)
     {
-        if (s.length > 1)
-        {
+        case 'int':
+            return parseInt(o);
+        case 'float':
+            return parseFloat(o);
+        case 'number':
+            return Number(o);
+        case 'string':
+            return String(o);
+        case 'date':
+            return Date(o);
+        case 'boolean':
+            return Boolean(o);
+        default:
+            return o;
+    }
+};
+
+Object.deepGet = function (o, s) {
+    var a, n, leftBracket, rightBracket, typename = null;
+    if (!o || !s) return null;
+    leftBracket = s.indexOf('<');
+    if (leftBracket > -1) {
+        rightBracket = s.indexOf('>');
+        if (rightBracket > leftBracket)
+            typename = s.substring(leftBracket + 1, rightBracket);
+        s = s.substring(0, leftBracket);
+    }
+    if (s.charAt(0) == '$') {
+        if (s.length > 1) {
             return o[s.substring(1)];
         }
         return null;
@@ -21,16 +49,24 @@ Object.deepGet = function (o, s) {
             return null;
         }
     }
-    return o;
+    if (typename != null)
+        return Object.convertTo(o, typename);
+    else
+        return o;
 };
 
 Object.deepSet = function (o, s, v) {
-    var a, n, self = o;
+    var a, n, self = o, leftBracket, rightBracket, typename = null;
     if (!o || !s) return null;
-    if (s.charAt(0) == '$')
-    {
-        if (s.length > 1)
-        {
+    leftBracket = s.indexOf('<');
+    if (leftBracket > -1) {
+        rightBracket = s.indexOf('>');
+        if (rightBracket > leftBracket)
+            typename = s.substring(leftBracket + 1, rightBracket);
+        s = s.substring(0, leftBracket);
+    }
+    if (s.charAt(0) == '$') {
+        if (s.length > 1) {
             o[s.substring(1)] = v;
         }
         return self;
@@ -48,7 +84,10 @@ Object.deepSet = function (o, s, v) {
     }
     n = a.shift();
     if (n in o) {
-        o[n] = v;
+        if (typename != null)
+            o[n] = Object.convertTo(v, typename);
+        else
+            o[n] = v;
     }
     return self;
 };
