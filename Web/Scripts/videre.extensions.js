@@ -144,6 +144,16 @@ Array.prototype.where = function(f) {
     return ret;
 };
 
+Array.prototype.findIndex = function(f)
+{
+    for (var i = 0; i < this.length; i++)
+    {
+        if (f(this[i], i))
+            return i;
+    }
+    return -1;
+};
+
 Array.prototype.innerJoin = function(array, f)
 {
     var item;
