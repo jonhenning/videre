@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.IO;
-using CodeEndeavors.Extensions;
-using PaniciSoftware.FastTemplate;
-using PaniciSoftware.FastTemplate.Common;
+﻿using System.IO;
 using System.Net.Mail;
 using System.Collections.Generic;
 
@@ -45,39 +40,16 @@ namespace Videre.Core.Services
 
         public static bool Send(string from, string recipients, string templateName, string subjectTemplateText, string bodyTemplateText, Dictionary<string, object> tokens, bool isBodyHtml = true, List<LinkedResource> linkedResources = null)
         {
-            return Send(from, recipients, ParseTemplate(templateName + "_subject", subjectTemplateText, tokens), ParseTemplate(templateName + "_subject", bodyTemplateText, tokens), isBodyHtml, linkedResources);
+            var expandedSubject = DynamicContent.ExpandTemplate("FastTemplate", templateName + "_subject", subjectTemplateText, tokens);
+            var expandedBody = DynamicContent.ExpandTemplate("FastTemplate", templateName + "_body", bodyTemplateText, tokens);
+            return Send(from, recipients, expandedSubject, expandedBody, isBodyHtml, linkedResources);
         }
 
         public static bool Send(string from, string recipients, string subjectTemplateFileName, string bodyTemplateFileName, Dictionary<string, object> tokens, bool isBodyHtml = true, List<LinkedResource> linkedResources = null)
         {
-            return Send(from, recipients, ParseTemplate(subjectTemplateFileName, tokens), ParseTemplate(bodyTemplateFileName, tokens), isBodyHtml, linkedResources);
+            var expandedSubject = DynamicContent.ExpandTemplateFile("FastTemplate", subjectTemplateFileName + "_subject", subjectTemplateFileName, tokens);
+            var expandedBody = DynamicContent.ExpandTemplateFile("FastTemplate", bodyTemplateFileName + "_body", bodyTemplateFileName, tokens);
+            return Send(from, recipients, expandedSubject, expandedBody, isBodyHtml, linkedResources);
         }
-
-        //todo:  move out of Mail namespace?  if we had Template namespace may confuse with PageTemplate and LayoutTemplate
-        public static string ParseTemplate(string name, string templateText, Dictionary<string, object> tokens)
-        {
-
-            var result = Template.CompileAndRun(name, templateText, ToTemplateDictionary(tokens));
-            if (result.Errors.Count > 0)
-                throw new Exception("ParseTemplate error: " + result.Errors.ToJson());
-                return result.Output;
-        }
-
-        public static string ParseTemplate(string templateFileName, Dictionary<string, object> tokens)
-        {
-            var fileName = Portal.ResolvePath(templateFileName);
-            if (!System.IO.File.Exists(fileName))
-                throw new Exception("ParseTemplate - File Not Found: " + fileName);
-            return ParseTemplate(fileName, fileName.GetFileContents(), tokens);
-        }
-
-        private static TemplateDictionary ToTemplateDictionary(Dictionary<string, object> dict)
-        {
-            var templateDict = new TemplateDictionary();
-            foreach (var key in dict.Keys)
-                templateDict[key] = dict[key];
-            return templateDict;
-        }
-
     }
 }

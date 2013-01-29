@@ -105,6 +105,9 @@
     <Compile Include="Binders\DefaultDictionaryBinder.cs" />
     <Compile Include="Binders\DictionaryModelBinder.cs" />
     <Compile Include="Binders\JsonNetModelBinder.cs" />
+    <Compile Include="DynamicContentProviders\DynamicContentProviderFactory.cs" />
+    <Compile Include="DynamicContentProviders\FastTemplateDynamicContentProvider.cs" />
+    <Compile Include="DynamicContentProviders\IDynamicContentProvider.cs" />
     <Compile Include="Extensions\PortalExtensions.cs" />
     <Compile Include="ContentProviders\IWidgetContentProvider.cs" />
     <Compile Include="JsonConverters\IsoDateConverter.cs" />
@@ -154,6 +157,7 @@
     <Compile Include="Services\API.cs" />
     <Compile Include="Services\Comment.cs" />
     <Compile Include="Services\CacheTimer.cs" />
+    <Compile Include="Services\DynamicContent.cs" />
     <Compile Include="Services\Logging.cs" />
     <Compile Include="Services\Mail.cs" />
     <Compile Include="Services\Security.cs" />
