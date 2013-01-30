@@ -290,11 +290,17 @@ videre.UI = {
                 return dataType.get(ctl);
             else
             {
-                var type = ctl.prop('type').toLowerCase();
-                if (type == 'checkbox' || type == 'radio')
-                    return ctl.prop('checked');
+                var tagName = ctl.prop('tagName').toLowerCase();
+                if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
+                    return ctl.text();
                 else
-                    return ctl.val();
+                {
+                    var type = ctl.prop('type').toLowerCase();
+                    if (type == 'checkbox' || type == 'radio')
+                        return ctl.prop('checked');
+                    else
+                        return ctl.val();
+                }
             }
         }
     },
