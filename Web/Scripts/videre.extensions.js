@@ -22,32 +22,34 @@ Object.convertTo = function(o, targetTypeName)
     }
 };
 
-Object.deepGet = function (o, s) {
+Object.deepGet = function(o, s)
+{
     var a, n, leftBracket, rightBracket, typename = null;
     if (!o || !s) return null;
     leftBracket = s.indexOf('<');
-    if (leftBracket > -1) {
+    if (leftBracket > -1)
+    {
         rightBracket = s.indexOf('>');
         if (rightBracket > leftBracket)
             typename = s.substring(leftBracket + 1, rightBracket);
         s = s.substring(0, leftBracket);
     }
-    if (s.charAt(0) == '$') {
-        if (s.length > 1) {
+    if (s.charAt(0) == '$')
+    {
+        if (s.length > 1)
             return o[s.substring(1)];
-        }
         return null;
     }
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');
     a = s.split('.');
-    while (a.length) {
+    while (a.length)
+    {
         n = a.shift();
-        if (o != null && n in o) {
+        if (o != null && n in o)
             o = o[n];
-        } else {
+        else
             return null;
-        }
     }
     if (typename != null)
         return Object.convertTo(o, typename);
@@ -55,47 +57,50 @@ Object.deepGet = function (o, s) {
         return o;
 };
 
-Object.deepSet = function (o, s, v) {
+Object.deepSet = function(o, s, v)
+{
     var a, n, self = o, leftBracket, rightBracket, typename = null;
     if (!o || !s) return null;
     leftBracket = s.indexOf('<');
-    if (leftBracket > -1) {
+    if (leftBracket > -1)
+    {
         rightBracket = s.indexOf('>');
         if (rightBracket > leftBracket)
             typename = s.substring(leftBracket + 1, rightBracket);
         s = s.substring(0, leftBracket);
     }
-    if (s.charAt(0) == '$') {
-        if (s.length > 1) {
+    if (s.charAt(0) == '$')
+    {
+        if (s.length > 1)
             o[s.substring(1)] = v;
-        }
         return self;
     }
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');
     a = s.split('.');
-    while (a.length > 1) {
+    while (a.length > 1)
+    {
         n = a.shift();
-        if (o != null && n in o) {
+        if (o != null && n in o)
             o = o[n];
-        } else {
-            return self;
+        else
+        {
+            o[n] = {};
+            o = o[n];
         }
     }
     n = a.shift();
-    if (n in o) {
-        if (typename != null)
-            o[n] = Object.convertTo(v, typename);
-        else
-            o[n] = v;
-    }
+    if (typename != null)
+        o[n] = Object.convertTo(v, typename);
+    else
+        o[n] = v;
     return self;
 };
 
 //Strings
-String.prototype.ltrim = function() { return this.replace(/^\s*/, ""); }
-String.prototype.rtrim = function() { return this.replace(/\s*$/, ""); }
-String.prototype.trim = function() { return this.ltrim().rtrim(); }
+String.prototype.ltrim = function() { return this.replace(/^\s*/, ""); };
+String.prototype.rtrim = function() { return this.replace(/\s*$/, ""); };
+String.prototype.trim = function() { return this.ltrim().rtrim(); };
 
 String.format = function ()
 {
@@ -134,7 +139,6 @@ Array.prototype.orderBy = function(f) {
 };
 
 Array.prototype.where = function(f) {
-    var item;
     var ret = [];
 
     for (var i = 0; i < this.length; i++) {
@@ -156,7 +160,6 @@ Array.prototype.findIndex = function(f)
 
 Array.prototype.innerJoin = function(array, f)
 {
-    var item;
     var ret = [];
 
     for (var i = 0; i < this.length; i++)
@@ -168,11 +171,10 @@ Array.prototype.innerJoin = function(array, f)
             ret.push($.extend(this[i], matches[j]));
     }
     return ret;
-}
+};
 
 Array.prototype.sum = function(f)
 {
-    var item;
     var ret = 0;
 
     for (var i = 0; i < this.length; i++)
@@ -181,7 +183,7 @@ Array.prototype.sum = function(f)
         ret += !isNaN(v) ? v : 0;
     }
     return ret;
-}
+};
 
 Array.prototype.toDictionary = function(f)
 {
@@ -237,12 +239,18 @@ Array.prototype.forEach = function(f)
 };
 
 Array.prototype.addRange = function(b) { this.push.apply(this, b); return this; };
-Array.prototype.clear = function() { this.length = 0 };
+Array.prototype.clear = function () { this.length = 0; };
 Array.prototype.clone = function() { if (this.length === 1) return [this[0]]; else return Array.apply(null, this); };
 
-Array.addRange = function(a, b) { a.push.apply(a, b) };
-Array.clear = function(a) { a.length = 0 };
-Array.clone = function(a) { if (a.length === 1) return [a[0]]; else return Array.apply(null, a) };
+Array.addRange = function (a, b) { a.push.apply(a, b); };
+Array.clear = function (a) { a.length = 0; };
+Array.clone = function (a)
+{
+    if (a.length === 1)
+        return [a[0]];
+    else
+        return Array.apply(null, a);
+};
 
 // Array Remove - By John Resig (MIT Licensed) - http://ejohn.org/blog/javascript-array-remove/
 Array.prototype.remove = function(from, to)
@@ -259,13 +267,13 @@ Array.prototype.swap = function(x, y)
     this[y] = o;
 };
 
-Array.prototype.contains = function(a) { return Array.indexOf(this, a) >= 0 };
+Array.prototype.contains = function (a) { return Array.indexOf(this, a) >= 0; };
 Array.prototype.indexOf = function(item, start) { Array.indexOf(this, item, start); };
 
-Array.contains = function(a, b) { return Array.indexOf(a, b) >= 0 };
+Array.contains = function (a, b) { return Array.indexOf(a, b) >= 0; };
 Array.indexOf = function _indexOf(array, item, start)
 {
-    if (typeof (item) === "undefined") return -1;
+    if (typeof(item) === "undefined") return -1;
     var length = array.length;
     if (length !== 0)
     {
@@ -302,7 +310,7 @@ Array.indexOf = function _indexOf(array, item, start)
         }
     }
     return -1;
-}
+};
 
 Array.prototype.toListDictionary = function(key, nullKey)
 {

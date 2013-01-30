@@ -295,7 +295,7 @@ videre.UI = {
                     return ctl.text();
                 else
                 {
-                    var type = ctl.prop('type').toLowerCase();
+                    var type = (ctl.prop('type') || '').toLowerCase();
                     if (type == 'checkbox' || type == 'radio')
                         return ctl.prop('checked');
                     else
@@ -313,7 +313,7 @@ videre.UI = {
             ctl.text(val);
         else
         {
-            var type = ctl.prop('type').toLowerCase();
+            var type = (ctl.prop('type') || '').toLowerCase();
             if (type == 'checkbox' || type == 'radio')
                 ctl.prop('checked', !String.isNullOrEmpty(val) && val.toLowerCase() != 'false');
             else
