@@ -687,7 +687,7 @@ videre.widgets.base = videre.Class.extend(
         if (onFail == null)
             onFail = this._baseDelegates.onAjaxFail;
 
-        videre.ajax(url, params, this._baseDelegates.onAjaxSuccess, onFail, { onSuccess: onSuccess, parent: parent, ctx: ctx });
+        return videre.ajax(url, params, this._baseDelegates.onAjaxSuccess, onFail, { onSuccess: onSuccess, parent: parent, ctx: ctx });
     },
 
     bindData: function(data, parent)
