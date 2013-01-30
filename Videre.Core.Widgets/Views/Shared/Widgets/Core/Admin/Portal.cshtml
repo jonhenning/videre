@@ -83,7 +83,7 @@
                         <div class="control-group">
                             <label class="control-label">{{:LabelText}}</label>
                             <div class="controls" data-type="input">
-                                {{:~bindInputs(#data, ~attributes, ~groupName + '.' + #data.Name)}}
+                                {{:~bindInputs(#data, ~attributes, '$' + ~groupName + '.' + #data.Name)}}
                             </div>
                         </div>
                     </script>
