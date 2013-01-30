@@ -59,9 +59,19 @@ namespace Videre.Core.Services
             IsInRole(roles, true);
         }
 
+        public static bool IsInRole(string userId, string role)
+        {
+            return IsInRole(userId, new List<string>() { role });
+        }
+
         public static bool IsInRole(string role, bool throwException = false)
         {
             return IsInRole(new List<string>() { role }, throwException);
+        }
+
+        public static bool IsInRoleNames(string userId, List<string> roles)
+        {
+            return IsInRole(userId, GetRoles().Where(r => roles.Contains(r.Name)).Select(r => r.Id).ToList());
         }
 
         public static bool IsInRoleNames(List<string> roles, bool throwException = false)
@@ -77,6 +87,14 @@ namespace Videre.Core.Services
             if (!inRole && throwException)
                 throw new Exception(Localization.GetLocalization(LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));
             return inRole;
+        }
+
+        public static bool IsInRole(string userId, List<string> roleIds)
+        {
+            var user = GetUserById(userId);
+            if (user != null)
+                return user.Roles.Exists(r => roleIds.Contains(r));
+            return false;
         }
 
         public static string CurrentIdentityName

@@ -44,5 +44,20 @@ namespace Videre.Core.Models
         }
         public Dictionary<string, object> Attributes { get; set; }
 
+        [SerializeIgnore(new string[] { "db" })]
+        public List<Models.SecureActivity> SecureActivities
+        {
+            get
+            {
+                return Services.Security.GetAuthorizedSecureActivities(Id);
+            }
+        }
+
+        public bool IsActivityAuthorized(string area, string name)
+        {
+            return SecureActivities.Exists(a => a.Area.Equals(area, System.StringComparison.InvariantCultureIgnoreCase) && a.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
+        }
+
+
     }
 }

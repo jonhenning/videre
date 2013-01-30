@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeEndeavors.Extensions;
 
 namespace Videre.Core.Services
 {
     public class Security
     {
-        public static List<Models.SecureActivity> GetSecureActivities()
+        public static List<Models.SecureActivity> GetSecureActivities(string area = null, string portalId = null)
         {
-            return Repository.Current.GetResources<Models.SecureActivity>("SecureActivity").Select(m => m.Data).ToList();
+            return Repository.Current.GetResources<Models.SecureActivity>("SecureActivity").Select(m => m.Data).Where(a => 
+                (string.IsNullOrEmpty(portalId) || a.PortalId == portalId) && 
+                (string.IsNullOrEmpty(area) || a.Area.Equals(area, StringComparison.InvariantCultureIgnoreCase)) 
+                ).ToList();
         }
+
         public static Models.SecureActivity GetSecureActivity(string portalId, string area, string name)
         {
             //todo: hack to allow portalid to be empty should be taken out!
@@ -60,6 +65,10 @@ namespace Videre.Core.Services
                 Repository.Current.Delete(res);
             return res != null;
         }
+
+
+        //todo: these functions are almost same, refactoring in order
+        //additionally, the User object now takes care of IsActivityAuthorized... perhaps more refactoring in order here
         public static void VerifyActivityAuthorized(string area, string name, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
@@ -75,6 +84,25 @@ namespace Videre.Core.Services
                 return Services.Account.IsInRole(activity.Roles, false);
             return false;
         }
+
+        public static List<Models.SecureActivity> GetAuthorizedSecureActivities(string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var activities = GetSecureActivities();
+            return activities.Where(a => Services.Account.IsInRole(userId, a.Roles)).ToList();
+        }
+
+        //public static List<Models.SecureActivity> GetAuthorizedSecureActivities()
+        //{
+        //    var activities = GetSecureActivities();
+        //    return activities.Where(a => Services.Account.IsInRole(a.Roles, false)).ToList();
+        //}
+
+        //public static Dictionary<string, List<string>> GetActivityRoleNameDictionary(string area, string portalId = null)
+        //{
+        //    portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+        //    return GetSecureActivities().Where(a => a.PortalId == portalId && a.Area.Equals(area, StringComparison.InvariantCultureIgnoreCase)).ToDictionary(a => a.Name, a => a.Roles.Select(r => Account.GetRoleById(r).Name).ToList());
+        //}
 
         public static List<string> GetNewRoleIds(List<string> roleIds, Dictionary<string, string> map)
         {

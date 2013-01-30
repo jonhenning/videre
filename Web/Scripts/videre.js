@@ -735,6 +735,18 @@ videre.widgets.base = videre.Class.extend(
         return errors.length == 0;
     },
 
+    isActivityAuthorized: function(area, name, user)
+    {
+        return this.getAuthorizedActivities(area, user).where(function(a) { return a.Name == name; }).length > 0;
+    },
+
+    getAuthorizedActivities: function(area, user)
+    {
+        if (user == null)
+            user = this._user;
+        return user.SecureActivities.where(function(a) { return (String.isNullOrEmpty(area) || a.Area == area); });
+    },
+
     _onAjaxSuccess: function(result, ctx)
     {
         this.unlock(ctx.parent);
