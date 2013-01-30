@@ -138,7 +138,7 @@
 
     ajax: function(url, data, success, error, ctx)
     {
-        $.ajax({
+        return $.ajax({
             type: "POST",
             url: videre.resolveUrl(url),
             processData: false,
