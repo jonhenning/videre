@@ -354,7 +354,7 @@ videre.UI = {
                 var val = ctl.val();
                 return val.length > 0 ? val.split('\n') : null; //todo: ok for template URL?
             },
-            set: function(ctl, val) { ctl.val(val.join('\n')); },
+            set: function(ctl, val) { ctl.val(val.join('\n')); }
         },
 
         'multiselect':
@@ -365,7 +365,7 @@ videre.UI = {
                 ctl.val(val);
                 ctl.multiselect('refresh');
             }
-        },
+        }
     },
 
     _dataTypes: {
