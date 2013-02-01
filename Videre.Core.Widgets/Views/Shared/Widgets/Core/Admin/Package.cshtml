@@ -1,0 +1,68 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Videre.Core.Services;
+@model Models.Widget
+
+@{
+    Html.RegisterWebReferenceGroup("datatables");
+    Html.RegisterWebReferenceGroup("fileuploader");
+    var installedPackages = Videre.Core.Services.Package.GetInstalledPackages();
+    var availablePackages = Videre.Core.Services.Package.GetAvailablePackages();
+    
+    Html.RegisterControlPresenter(Model, "videre.widgets.admin.package", new Dictionary<string, object>() {
+        {"installedPackages", installedPackages },
+        {"availablePackages", availablePackages },
+    });
+}
+
+<div id="@Model.GetId("Widget")">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+    
+    <fieldset>
+        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Package Administration")</legend>}
+        
+        <p>@Html.Raw(Model.GetText("Instructions.Text", "Package Administration allows you to view installed packages, along with installing new ones."))</p>
+
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                        <thead>
+                            <tr>
+                                <th style="width: 62px"></th>
+                                <th>@Model.GetText("Name.Text", "Name")</th>
+                                <th>@Model.GetText("Type.Text", "Type")</th>
+                                <th>@Model.GetText("Version.Text", "Version")</th>
+                                <th>@Model.GetText("Description.Text", "Description")</th>
+                                <th>@Model.GetText("Source.Text", "Source")</th>
+                                <th>@Model.GetText("InstallDate.Text", "InstallDate")</th>
+                            </tr>
+                        </thead>
+                        <tbody id="@Model.GetId("ItemList")"></tbody>
+                    </table>
+                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                        <tr>
+                            <td>
+                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete"><i class="icon-trash"></i></a>
+                            </td>
+                            <td>{{:Name}}</td>
+                            <td>{{:Type}}</td>
+                            <td>{{:Version}}</td>
+                            <td>{{:Description}}</td>
+                            <td>{{:Source}}</td>
+                            <td>{{:~formatDateTime(InstallDate)}}</td>
+                        </tr>
+                    </script>
+                </div>
+            </div>
+            <div class="videre actions form-actions">
+                <a class="btn" id="@Model.GetId("btnImport")"><i class="icon-gift"></i> @Model.GetPortalText("ImportPackage.Text", "Import Package")</a>
+                <a class="btn" href="@Url.Content("~/core/Portal/ExportPortal")"><i class="icon-file"></i> @Model.GetPortalText("ExportPortal.Text", "Export Portal")</a>
+            </div>
+
+        </div>
+    </fieldset>
+</div>
+

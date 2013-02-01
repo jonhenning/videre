@@ -20,7 +20,7 @@ namespace Videre.Core.Widgets.Controllers
                 Security.VerifyActivityAuthorized("Portal", "Administration");
                 var portalId = Core.Services.Update.InstallPortal(adminUser, portal);
                 foreach (var package in packages)
-                    Update.InstallPackage(package, portalId);
+                    Package.InstallAvailablePackage(package, portalId);
                 r.Data = new { selectedId = portalId, portals = CoreServices.Portal.GetPortals() };
             });
         }
@@ -153,7 +153,7 @@ namespace Videre.Core.Widgets.Controllers
                     stream = Request.InputStream;
                 }
                 var ext = fileName.Substring(fileName.LastIndexOf(".") + 1);
-                var saveFileName = Update.UpdateDir + fileName;
+                var saveFileName = Portal.TempDir + fileName;
                 if (Web.MimeTypes.ContainsKey(ext))
                 {
                     if (ext.Equals("json", StringComparison.InvariantCultureIgnoreCase))
@@ -177,7 +177,9 @@ namespace Videre.Core.Widgets.Controllers
                             fileSize = fileSize,
                             mimeType = Web.MimeTypes[ext]
                         };
-                        r.AddMessage(Localization.GetPortalText("ImportMessage.Text", "File has been placed in the update folder.  It will be applied shortly"));
+                        Package.InstallFile(saveFileName, removeFile: true);
+                        
+                        r.AddMessage(Localization.GetPortalText("ImportMessage.Text", "File has been installed successfully"));
                     }
                 }
                 else

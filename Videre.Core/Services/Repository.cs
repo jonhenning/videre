@@ -61,7 +61,7 @@ namespace Videre.Core.Services
         {
             if (IsOpen)
             {
-                Services.Logging.Logger.Debug("Disposing Repository...");
+                //Services.Logging.Logger.Debug("Disposing Repository...");
                 if (Current.PendingUpdates > 0) //todo:  auto save here?
                 {
                     Services.Logging.Logger.DebugFormat("Persisting {0} changes to repository", Current.PendingUpdates);
