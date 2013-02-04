@@ -7,7 +7,8 @@
 
 @{
     Html.RegisterWebReferenceGroup("datatables");
-    Html.RegisterScript("~/scripts/fileuploader.js", true);
+    Html.RegisterWebReferenceGroup("fileuploader");
+    //Html.RegisterScript("~/scripts/fileuploader.js", true);
     //var portal = Videre.Core.Services.Portal.CurrentPortal;
     var currentPortalId = Portal.CurrentPortalId;
     var portals = Portal.GetPortals();
@@ -113,7 +114,7 @@
                     <div class="control-group">
                         <label class="control-label" for="optionsCheckboxList">Packages</label>
                         <div class="controls" id="@Model.GetId("Packages")">
-                            @foreach (var package in Videre.Core.Services.Update.GetPackages().Where(p => p.Type == "Data"))
+                            @foreach (var package in Videre.Core.Services.Package.GetAvailablePackages().Where(p => p.Type == "Data"))
                             {
                                 <label class="checkbox" title="@package.Description">
                                     <input type="checkbox" value="@package.Name" checked="checked">

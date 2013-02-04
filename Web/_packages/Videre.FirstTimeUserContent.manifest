@@ -1,8 +1,0 @@
-{
-	Version: 1.0,
-	Name: "First Time User Content",
-	Type: "Data",
-	Source: "Core",
-	Description: "Contains widgets with content instructing a first-time user",
-	FileName: "Videre.FirstTimeUserContent.json"
-}

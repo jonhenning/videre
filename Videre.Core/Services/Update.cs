@@ -6,11 +6,12 @@ using System.IO;
 using System.Web;
 using System.Web.Caching;
 using CodeEndeavors.Extensions;
-using ICSharpCode.SharpZipLib.Zip;
+//using ICSharpCode.SharpZipLib.Zip;
 using StructureMap;
 using System.Web.Mvc;
 using CoreServices = Videre.Core.Services;
 using PaniciSoftware.FastTemplate.Common;
+using Videre.Core.Extensions;
 
 namespace Videre.Core.Services
 {
@@ -29,6 +30,7 @@ namespace Videre.Core.Services
 
                 if (updates > 0)
                     Services.Repository.SaveChanges();
+
                 _adminRoleIdDict[portalId] = Services.Account.GetRole("admin", portalId).Id;
             }
             return _adminRoleIdDict[portalId];
@@ -42,13 +44,13 @@ namespace Videre.Core.Services
             }
         }
 
-        public static string PackageDir
-        {
-            get
-            {
-                return Portal.ResolvePath(ConfigurationManager.AppSettings.GetSetting("PackageDir", "~/_packages/"));
-            }
-        }
+        //public static string PackageDir
+        //{
+        //    get
+        //    {
+        //        return Portal.ResolvePath(ConfigurationManager.AppSettings.GetSetting("PackageDir", "~/_packages/"));
+        //    }
+        //}
 
         public static int Register(Models.Portal portal)
         {
@@ -250,7 +252,7 @@ namespace Videre.Core.Services
 
         private static void OnFolderChanged(string key, object value, CacheItemRemovedReason reason)
         {
-            Logging.Logger.InfoFormat("Detected new file in update folder: {0}", UpdateDir);
+            Logging.Logger.InfoFormat("Detected new file in update folder: {0} - {1} - {2}", UpdateDir, reason, value);
             HttpRuntime.Cache.Add("_updates", "", new CacheDependency(UpdateDir), Cache.NoAbsoluteExpiration, TimeSpan.FromHours(1), CacheItemPriority.NotRemovable, new CacheItemRemovedCallback(OnFolderChanged));
             ApplyUpdates();
             Videre.Core.Services.Repository.Dispose();  //need to SaveChanges as the Global.asax EndRequest not fired (we have no request)
@@ -266,8 +268,8 @@ namespace Videre.Core.Services
             var count = 0;
             var files = dir.GetFiles("*.zip");
             foreach (var file in files)
-                count += InstallFile(file.FullName) ? 1 : 0;
-            
+                count += Package.InstallFile(file.FullName) ? 1 : 0;
+
             //These are specific to a portal!
             //files = dir.GetFiles("*.json");
             //foreach (var file in files)
@@ -381,83 +383,10 @@ namespace Videre.Core.Services
                     updates += registration.RegisterPortal(portal.Id);
                 }
             }
-           if (persist && updates > 0)
+            if (persist && updates > 0)
                 CoreServices.Repository.SaveChanges();
-           return updates;
+            return updates;
         }
-
-        public static List<Models.Package> GetPackages()
-        {
-            var packages = new List<Models.Package>();
-            var widgets = new List<Models.Package>();
-            var data = new List<Models.Package>();
-            var packageDir = Portal.ResolvePath(PackageDir);
-            if (!Directory.Exists(packageDir))
-                Directory.CreateDirectory(packageDir);
-            
-            //todo: hacky as we copy logic for each file type... refactor!
-            foreach (var file in Directory.GetFiles(packageDir, "*.manifest"))
-            {
-                var package = file.GetFileJSONObject<Models.Package>(true);
-                if (package.Type == "Widget")
-                    widgets.Add(package);
-                else
-                    data.Add(package);
-            }
-            packages.AddRange(widgets);
-            packages.AddRange(data);
-            return packages;
-        }
-
-        public static bool InstallPackage(string name, string portalId)
-        {
-            var package = GetPackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-            if (package != null)
-            {
-                InstallFile(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName), portalId, false);
-                //System.IO.File.Copy(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName), Path.Combine(Portal.ResolvePath(UpdateDir), package.FileName), true);
-                return true;
-            }
-            return false;
-        }
-
-        private static bool InstallFile(string fileName, string portalId = null, bool removeFile = true)
-        {
-            var rootDir = Portal.ResolvePath("~/");
-            var file = new FileInfo(fileName);
-            if (file != null)
-            {
-                switch (file.Extension.ToLower())
-                {
-                    case ".zip":
-                        {
-                            Logging.Logger.InfoFormat("Applying update for file: {0}", file.FullName);
-                            var zip = new FastZip();
-                            zip.ExtractZip(file.FullName, rootDir, FastZip.Overwrite.Always, null, null, null, true);
-                            if (removeFile)
-                                System.IO.File.Delete(file.FullName);
-                            return true;
-                        }
-                    case ".json":
-                        {
-                            Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
-                            var portalExport = file.FullName.GetFileJSONObject<Models.PortalExport>(false);
-                            Services.Portal.Import(portalExport, portalId);
-                            if (removeFile)
-                                System.IO.File.Delete(file.FullName);
-                            return true;
-                        }
-                    default:
-                        {
-                            Logging.Logger.Error("Unknown File Extension: " + file.Extension);
-                            break;
-                            //throw new Exception("Unknown File Extension: " + file.Extension);
-                        }
-                }
-            }
-            return false;
-        }
-
 
     }
 }

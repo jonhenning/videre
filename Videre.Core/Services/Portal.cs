@@ -31,6 +31,17 @@ namespace Videre.Core.Services
             }
         }
 
+        public static string TempDir
+        {
+            get
+            {
+                var tempDir = Portal.ResolvePath(ConfigurationManager.AppSettings.GetSetting("TempDir", "~/_temp/"));
+                if (!Directory.Exists(tempDir)) //todo: do this each time???
+                    Directory.CreateDirectory(tempDir);
+                return tempDir;
+            }
+        }
+
         //wrapping these calls to potentially enforce prefixing of keys... 
         public static T GetRequestContextData<T>(string key, T defaultValue)
         {

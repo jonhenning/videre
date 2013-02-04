@@ -110,6 +110,7 @@
     <Compile Include="DynamicContentProviders\IDynamicContentProvider.cs" />
     <Compile Include="Extensions\PortalExtensions.cs" />
     <Compile Include="ContentProviders\IWidgetContentProvider.cs" />
+    <Compile Include="Extensions\ZipExtensions.cs" />
     <Compile Include="JsonConverters\IsoDateConverter.cs" />
     <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\AttributeDefinition.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Services\DynamicContent.cs" />
     <Compile Include="Services\Logging.cs" />
     <Compile Include="Services\Mail.cs" />
+    <Compile Include="Services\Package.cs" />
     <Compile Include="Services\Security.cs" />
     <Compile Include="Services\UI.cs" />
     <Compile Include="Services\RouteParser.cs" />

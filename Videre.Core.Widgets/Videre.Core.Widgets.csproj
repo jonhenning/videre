@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Controllers\PackageController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\PortalController.cs" />
@@ -399,6 +400,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\widgets\core\account\videre.widgets.account.userprofile.js" />
+    <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.package.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.webreference.js" />
     <Content Include="Scripts\controls\core\videre.widgets.widgetadmincontextmenu.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.theme.js" />
@@ -464,6 +466,7 @@
     <Content Include="Videre.Core.Widgets.manifest" />
     <Content Include="Views\Shared\Widgets\Core\Admin\WebReference.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Error.cshtml" />
+    <Content Include="Views\Shared\Widgets\Core\Admin\Package.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">

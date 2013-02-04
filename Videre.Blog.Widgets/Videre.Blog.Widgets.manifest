@@ -3,6 +3,5 @@
 	Name: "Videre Blog Widgets",
 	Type: "Widget",
 	Source: "Core",
-	Description: "Blog Widgets",
-	FileName: "Videre.Blog.Widgets.zip"
+	Description: "Blog Widgets"
 }

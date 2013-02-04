@@ -3,6 +3,5 @@
 	Name: "Videre Carousel Widgets",
 	Type: "Widget",
 	Source: "Core",
-	Description: "Carousel Widgets",
-	FileName: "Videre.Carousel.Widgets.zip"
+	Description: "Carousel Widgets"
 }
