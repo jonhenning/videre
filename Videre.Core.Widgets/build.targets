@@ -27,8 +27,8 @@
                 $(MSBuildProjectDirectory)\**\*.jpg;
                 $(MSBuildProjectDirectory)\**\*.png;
                 $(MSBuildProjectDirectory)\**\*.cshtml;
-                $(TargetDir)\Videre.Core.Widgets.dll;
-                $(TargetDir)\Videre.Core.Widgets.pdb;">
+                $(TargetDir)Videre.Core.Widgets.dll;
+                $(TargetDir)Videre.Core.Widgets.pdb;">
             <Output TaskParameter="Include" ItemName="Widgets" />
         </CreateItem>
         <Zip Files="@(Widgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(Name).zip" />
