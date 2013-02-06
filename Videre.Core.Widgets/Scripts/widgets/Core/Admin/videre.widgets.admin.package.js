@@ -24,7 +24,7 @@ videre.widgets.admin.package = videre.widgets.base.extend(
         this._availablePackages = null;
 
         this._delegates = {
-            onDataReturn: videre.createDelegate(this, this._onDataReturn),
+            onInstalledPackageDataReturn: videre.createDelegate(this, this._onInstalledPackageDataReturn),
             onActionClicked: videre.createDelegate(this, this._onActionClicked)
         }
     },
@@ -47,7 +47,7 @@ videre.widgets.admin.package = videre.widgets.base.extend(
 
     refresh: function()
     {
-        this.ajax('~/core/Package/GetInstalledPackages', {}, this._delegates.onDataReturn);
+        this.ajax('~/core/Package/GetInstalledPackages', {}, this._delegates.onInstalledPackageDataReturn);
     },
 
     bind: function()
@@ -76,11 +76,11 @@ videre.widgets.admin.package = videre.widgets.base.extend(
         }
     },
 
-    _onDataReturn: function(result, ctx)
+    _onInstalledPackageDataReturn: function(result, ctx)
     {
         if (!result.HasError)
         {
-            this.set_data(result.Data);
+            this._installedPackages = result.Data;
             this.bind();
         }
     },
@@ -103,7 +103,7 @@ videre.widgets.admin.package = videre.widgets.base.extend(
         this.unlock();
         if (!result.HasError)
         {
-
+            this.refresh();
         }
         this.addMsgs(result.Messages);
     },

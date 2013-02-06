@@ -77,7 +77,7 @@ namespace Videre.Core.Services
 
         public static Models.Package GetPackageManifest(string zipFileName)
         {
-            var entryName = zipFileName.GetZipFileList(e => e.EndsWith(".manifest", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            var entryName = zipFileName.GetZipFileList(e => e.EndsWith("package.manifest", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
             if (!string.IsNullOrEmpty(entryName))
                 return zipFileName.GetZipEntryContents(entryName).ToObject<Models.Package>();
             else
@@ -128,7 +128,7 @@ namespace Videre.Core.Services
                             var packageFileName = packageManifest != null ? AddPackage(fileName) : fileName;   //if zip has manifest put in package folder and install from there
 
                             Logging.Logger.InfoFormat("Applying update for file: {0}", packageFileName);
-                            packageFileName.ExtractZip(rootDir, @"-\.manifest|-\.json");
+                            packageFileName.ExtractZip(rootDir, @"-package\.manifest|-\.json");
 
                             //todo:  deferred package content apply or right now?  
                             //ideally manifest will have the registration assembly listed and we can register right away then instantly apply

@@ -35,7 +35,7 @@
                                 <th>@Model.GetText("Name.Text", "Name")</th>
                                 <th>@Model.GetText("Type.Text", "Type")</th>
                                 <th>@Model.GetText("Version.Text", "Version")</th>
-                                <th>@Model.GetText("Description.Text", "Description")</th>
+                                <th class="span4">@Model.GetText("Description.Text", "Description")</th>
                                 <th>@Model.GetText("Source.Text", "Source")</th>
                                 <th>@Model.GetText("InstallDate.Text", "InstallDate")</th>
                             </tr>
@@ -45,7 +45,8 @@
                     <script id="@Model.GetId("ItemListTemplate")" type="text/html">
                         <tr>
                             <td>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete"><i class="icon-trash"></i></a>
+                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete" title="@Model.GetText("RemovePackage.Text", "Remove Package")"><i class="icon-trash"></i></a>
+                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="uninstall" title="@Model.GetText("Uninstall.Text", "Uninstall Package")"><i class="icon-remove"></i></a>
                             </td>
                             <td>{{:Name}}</td>
                             <td>{{:Type}}</td>

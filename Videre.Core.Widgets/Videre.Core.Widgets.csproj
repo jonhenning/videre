@@ -463,7 +463,7 @@
     <Content Include="Views\Shared\Controls\Core\WYSIHTML5TextEditor.cshtml" />
     <Content Include="Scripts\controls\core\WYSIHTML5TextEditor\WYSIHTML5_0.2\LICENCE" />
     <Content Include="Scripts\controls\core\WYSIHTML5TextEditor\WYSIHTML5_0.2\VERSION" />
-    <Content Include="Videre.Core.Widgets.manifest" />
+    <Content Include="package.manifest" />
     <Content Include="Views\Shared\Widgets\Core\Admin\WebReference.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Error.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\Package.cshtml" />
