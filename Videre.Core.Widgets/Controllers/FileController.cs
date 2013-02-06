@@ -97,7 +97,7 @@ namespace Videre.Core.Widgets.Controllers
                     r.Data = new
                     {
                         uniqueName = new FileInfo(tempFileName).Name,
-                        fileName = fileName,
+                        fileName = new FileInfo(fileName).Name,
                         fileSize = fileSize,
                         mimeType = Web.MimeTypes[ext]
                     };

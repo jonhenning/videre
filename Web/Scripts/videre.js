@@ -1023,7 +1023,7 @@ $.views.helpers({
         }
         else
         {
-            ctl = $('<input>').attr({ type: 'text', 'data-column': keyName }); //.val(dataValue);
+            ctl = $('<input>').attr({ type: data.InputType || 'text', 'data-column': keyName }); //.val(dataValue);
             if (dataValue != null)
                 ctl.attr('value', dataValue); //need value written into html
         }
