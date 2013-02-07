@@ -20,50 +20,69 @@
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
     
-    <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Package Administration")</legend>}
+    @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Package Administration")</legend>}
         
-        <p>@Html.Raw(Model.GetText("Instructions.Text", "Package Administration allows you to view installed packages, along with installing new ones."))</p>
+    <p>@Html.Raw(Model.GetText("Instructions.Text", "Package Administration allows you to view installed packages, along with installing new ones."))</p>
 
-        <div class="container">
-            <div class="row">
-                <div class="span12">
-                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
-                        <thead>
-                            <tr>
-                                <th style="width: 62px"></th>
-                                <th>@Model.GetText("Name.Text", "Name")</th>
-                                <th>@Model.GetText("Type.Text", "Type")</th>
-                                <th>@Model.GetText("Version.Text", "Version")</th>
-                                <th class="span4">@Model.GetText("Description.Text", "Description")</th>
-                                <th>@Model.GetText("Source.Text", "Source")</th>
-                                <th>@Model.GetText("InstallDate.Text", "InstallDate")</th>
-                            </tr>
-                        </thead>
-                        <tbody id="@Model.GetId("ItemList")"></tbody>
-                    </table>
-                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                    <thead>
                         <tr>
-                            <td>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete" title="@Model.GetText("RemovePackage.Text", "Remove Package")"><i class="icon-trash"></i></a>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="uninstall" title="@Model.GetText("Uninstall.Text", "Uninstall Package")"><i class="icon-remove"></i></a>
-                            </td>
-                            <td>{{:Name}}</td>
-                            <td>{{:Type}}</td>
-                            <td>{{:Version}}</td>
-                            <td>{{:Description}}</td>
-                            <td>{{:Source}}</td>
-                            <td>{{:~formatDateTime(InstallDate)}}</td>
+                            <th style="width: 62px"></th>
+                            <th>@Model.GetText("Name.Text", "Name")</th>
+                            <th>@Model.GetText("Type.Text", "Type")</th>
+                            <th>@Model.GetText("Version.Text", "Version")</th>
+                            <th class="span4">@Model.GetText("Description.Text", "Description")</th>
+                            <th>@Model.GetText("Source.Text", "Source")</th>
+                            <th>@Model.GetText("ReleaseDate.Text", "Release Date")</th>
+                            <th>@Model.GetText("InstallDate.Text", "Install Date")</th>
                         </tr>
-                    </script>
-                </div>
+                    </thead>
+                    <tbody id="@Model.GetId("ItemList")"></tbody>
+                </table>
+                <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                    <tr>
+                        <td>
+                            <a class="btn btn-mini" data-id="{{:Name + '~' + Version}}" data-action="delete" title="@Model.GetText("RemovePackage.Text", "Remove Package")"><i class="icon-trash"></i></a>
+                            <a class="btn btn-mini" data-id="{{:Name + '~' + Version}}" data-action="uninstall" title="@Model.GetText("Uninstall.Text", "Uninstall Package")"><i class="icon-remove"></i></a>
+                        </td>
+                        <td>{{:Name}}</td>
+                        <td>{{:Type}}</td>
+                        <td>{{:Version}}</td>
+                        <td>{{:Description}}</td>
+                        <td>{{:Source}}</td>
+                        <td>{{:~formatDateTime(PackagedDate)}}</td>
+                        <td>{{:#ctx.installed[Name + '~' + Version] != null ? ~formatDateTime(#ctx.installed[Name + '~' + Version].InstallDate) : '<a class="btn" data-action="install" data-id="' + Name + '~' + Version + '"><i class="icon-download-alt"></i> @Model.GetText("Install.Text", "Install")</a>')}}</td>
+                    </tr>
+                </script>
             </div>
-            <div class="videre actions form-actions">
-                <a class="btn" id="@Model.GetId("btnImport")"><i class="icon-gift"></i> @Model.GetPortalText("ImportPackage.Text", "Import Package")</a>
-                <a class="btn" href="@Url.Content("~/core/Portal/ExportPortal")"><i class="icon-file"></i> @Model.GetPortalText("ExportPortal.Text", "Export Portal")</a>
-            </div>
-
         </div>
-    </fieldset>
+        <div class="videre actions form-actions">
+            <a class="btn" id="@Model.GetId("btnImport")"><i class="icon-gift"></i> @Model.GetPortalText("ImportPackage.Text", "Import Package")</a>
+            <a class="btn" href="@Url.Content("~/core/Portal/ExportPortal")"><i class="icon-file"></i> @Model.GetPortalText("ExportPortal.Text", "Export Portal")</a>
+            @*<a class="btn" id="@Model.GetId("btnCreatePackage")"><i class="icon-gift"></i> @Model.GetPortalText("CreatePackage.Text", "Create Package")</a>*@
+        </div>
+
+    </div>
+
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            @Model.GetText("CreatePackage.Text", "Create Package")
+        </div>
+        <div class="modal-body">
+            @{Html.RenderPartial("WidgetHeader", Model);}
+            <div class="form-horizontal">
+                @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="@Model.GetId("btnExport")">@Model.GetPortalText("Export.Text", "Export")</a>
+            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+        </div>
+    </div>
+
 </div>
 

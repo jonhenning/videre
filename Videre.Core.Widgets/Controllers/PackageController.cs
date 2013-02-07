@@ -14,20 +14,33 @@ namespace Videre.Core.Widgets.Controllers
     public class PackageController : Controller
     {
 
-        public JsonResult<List<CoreModels.Package>> GetInstalledPackages()
+        public JsonResult<Dictionary<string, List<Models.Package>>> GetPackages()
         {
-            return API.Execute<List<CoreModels.Package>>(r =>
+            return API.Execute<Dictionary<string, List<Models.Package>>>(r =>
             {
-                r.Data = CoreServices.Package.GetInstalledPackages();
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                r.Data = GetPackageDict();
             });
         }
 
-        public JsonResult<List<CoreModels.Package>> GetAvailablePackages()
+        public JsonResult<Dictionary<string, List<Models.Package>>> InstallPackage(string name, string version)
         {
-            return API.Execute<List<CoreModels.Package>>(r =>
+            return API.Execute<Dictionary<string, List<Models.Package>>>(r =>
             {
-                r.Data = CoreServices.Package.GetAvailablePackages();
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                CoreServices.Package.InstallAvailablePackage(name, version: version);
+                r.Data = GetPackageDict();
             });
+        }
+
+
+        private Dictionary<string, List<Models.Package>> GetPackageDict()
+        {
+            return new Dictionary<string, List<Models.Package>>() 
+                {
+                    {"installedPackages", CoreServices.Package.GetInstalledPackages()},
+                    {"availablePackages", CoreServices.Package.GetAvailablePackages()}
+                };
         }
 
     }

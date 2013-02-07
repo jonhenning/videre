@@ -28,12 +28,12 @@ namespace Videre.Web.Controllers
                     
                     //need to install account providers before we start creating accounts!
                     foreach (var package in packagesToInstall.Where(p => p.Type == "Account Provider"))
-                        Package.InstallAvailablePackage(package.Name, null);
+                        Package.InstallAvailablePackage(package.Name, package.Version, null);
 
                     var portalId = Core.Services.Update.InstallPortal(adminUser, portal);
 
                     foreach (var package in packagesToInstall.Where(p => p.Type != "Account Provider"))
-                        Package.InstallAvailablePackage(package.Name, portalId);
+                        Package.InstallAvailablePackage(package.Name, package.Version, portalId);
 
                 }
                 else 

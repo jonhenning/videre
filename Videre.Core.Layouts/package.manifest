@@ -3,5 +3,6 @@
 	Name: "Videre Core Layouts",
 	Type: "Layout",
 	Source: "Core",
-	Description: "Core Layouts for the Videre CMS"
+	Description: "Core Layouts for the Videre CMS",
+	PackagedDate: ""
 }

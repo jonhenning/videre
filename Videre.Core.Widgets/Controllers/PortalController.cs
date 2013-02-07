@@ -19,8 +19,9 @@ namespace Videre.Core.Widgets.Controllers
             {
                 Security.VerifyActivityAuthorized("Portal", "Administration");
                 var portalId = Core.Services.Update.InstallPortal(adminUser, portal);
+
                 foreach (var package in packages)
-                    Package.InstallAvailablePackage(package, portalId);
+                    Package.InstallAvailablePackage(package, portalId: portalId);
                 r.Data = new { selectedId = portalId, portals = CoreServices.Portal.GetPortals() };
             });
         }

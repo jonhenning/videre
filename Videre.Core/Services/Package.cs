@@ -20,6 +20,12 @@ namespace Videre.Core.Services
             }
         }
 
+        public static List<Models.Package> GetNewestAvailablePackages()
+        {
+            var packages = GetAvailablePackages();
+            return packages.GroupBy(p => p.Name, p => p).Select(p => p.OrderByDescending(p2 => p2.Version).First()).ToList();
+        }
+
         public static List<Models.Package> GetAvailablePackages()
         {
             var packages = new List<Models.Package>();
@@ -63,9 +69,11 @@ namespace Videre.Core.Services
             return destFileName;
         }
 
-        public static bool InstallAvailablePackage(string name, string portalId)
+        public static bool InstallAvailablePackage(string name, string version = null, string portalId = null)
         {
-            var package = GetAvailablePackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+
+            var package = GetAvailablePackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(version) || p.Version.Equals(version, StringComparison.InvariantCultureIgnoreCase))).OrderByDescending(p => p.Version).FirstOrDefault();
             if (package != null)
             {
                 InstallFile(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName), portalId, false);
