@@ -24,11 +24,13 @@ namespace Videre.Core.Extensions
             var ret = new List<string>();
             using (var fs = File.OpenRead(fileName))
             {
-                var zip = new ZipFile(fs);
-                foreach (ZipEntry entry in zip)
+                using (var zip = new ZipFile(fs))
                 {
-                    //if (entry.IsFile)
-                    ret.Add(entry.Name);
+                    foreach (ZipEntry entry in zip)
+                    {
+                        //if (entry.IsFile)
+                        ret.Add(entry.Name);
+                    }
                 }
             }
             if (where != null)
@@ -40,18 +42,21 @@ namespace Videre.Core.Extensions
         {
             using (var fs = File.OpenRead(zipFileName))
             {
-                var zip = new ZipFile(fs);
-                var entryId = zip.FindEntry(entryFileName, true);
-                if (entryId > -1)
+                using (var zip = new ZipFile(fs))
                 {
-                    var stream = zip.GetInputStream(entryId);
-                    using (TextReader tr = new StreamReader(stream))
-                        return tr.ReadToEnd();
-                }
-                else
-                    return null;
+                    var entryId = zip.FindEntry(entryFileName, true);
+                    if (entryId > -1)
+                    {
+                        using (var stream = zip.GetInputStream(entryId))
+                        {
+                            using (TextReader tr = new StreamReader(stream))
+                                return tr.ReadToEnd();
+                        }
+                    }
+                    else
+                        return null;
                     //throw new Exception("Entry not found: " + entryFileName);
-
+                }
             }
         }
 

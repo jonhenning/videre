@@ -7,6 +7,8 @@ using Videre.Core.Extensions;
 using CodeEndeavors.Extensions;
 using System.Configuration;
 using Videre.Core.Models;
+using Videre.Core.ActionResults;
+using System.Web;
 
 namespace Videre.Core.Services
 {
@@ -20,6 +22,25 @@ namespace Videre.Core.Services
             }
         }
 
+        public static string PublishDir
+        {
+            get
+            {
+                return Portal.ResolvePath(ConfigurationManager.AppSettings.GetSetting("PublishDir", "~/_publish/"));
+            }
+        }
+
+        public static string RemotePackageUrl
+        {
+            get 
+            { 
+                var url = Portal.CurrentPortal.GetAttribute("Core", "RemotePackageUrl", "");
+                if (!url.EndsWith("core/package/", StringComparison.InvariantCultureIgnoreCase))
+                    url = url.PathCombine("core/package/", "/");
+                return url;
+            }
+        }
+
         public static List<Models.Package> GetNewestAvailablePackages()
         {
             var packages = GetAvailablePackages();
@@ -28,28 +49,34 @@ namespace Videre.Core.Services
 
         public static List<Models.Package> GetAvailablePackages()
         {
+            return GetPackagesFromDir(PackageDir);
+        }
+
+        public static Models.Package GetPublishedPackage(string name, string version)
+        {
+            return GetPublishedPackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && p.Version.Equals(version, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+        }
+        public static List<Models.Package> GetPublishedPackages()
+        {
+            return GetPackagesFromDir(PublishDir);
+        }
+
+        public static List<Models.Package> GetPackagesFromDir(string dir)
+        {
             var packages = new List<Models.Package>();
-            var widgets = new List<Models.Package>();
-            var data = new List<Models.Package>();
-            var packageDir = Portal.ResolvePath(PackageDir);
+            var packageDir = Portal.ResolvePath(dir);
             if (!Directory.Exists(packageDir))
                 Directory.CreateDirectory(packageDir);
 
             foreach (var file in Directory.GetFiles(packageDir, "*.zip"))
             {
-                //var package = file.GetFileJSONObject<Models.Package>(true);
                 var manifest = GetPackageManifest(file);
                 if (manifest != null)
                 {
                     manifest.FileName = file;
-                    if (manifest.Type == "Widget")
-                        widgets.Add(manifest);
-                    else
-                        data.Add(manifest);
+                    packages.Add(manifest);
                 }
             }
-            packages.AddRange(widgets);
-            packages.AddRange(data);
             return packages;
         }
 
@@ -78,6 +105,17 @@ namespace Videre.Core.Services
             {
                 InstallFile(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName), portalId, false);
                 //System.IO.File.Copy(Path.Combine(Portal.ResolvePath(PackageDir), package.FileName), Path.Combine(Portal.ResolvePath(UpdateDir), package.FileName), true);
+                return true;
+            }
+            return false;
+        }
+
+        public static bool RemoveAvailablePackage(string name, string version)
+        {
+            var package = GetAvailablePackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(version) || p.Version.Equals(version, StringComparison.InvariantCultureIgnoreCase))).OrderByDescending(p => p.Version).FirstOrDefault();
+            if (package != null)
+            {
+                System.IO.File.Delete(package.FileName);
                 return true;
             }
             return false;
@@ -172,6 +210,47 @@ namespace Videre.Core.Services
                             break;
                             //throw new Exception("Unknown File Extension: " + file.Extension);
                         }
+                }
+            }
+            return false;
+        }
+
+        public static List<Models.Package> GetRemotePackages()
+        {
+            var packages = new List<Models.Package>();
+            if (!string.IsNullOrEmpty(RemotePackageUrl))
+            {
+                var client = new System.Net.WebClient();
+                var json = client.DownloadString(RemotePackageUrl.PathCombine("getpublishedpackages", "/"));
+                packages = json.ToObject<List<Models.Package>>();
+            }
+            return packages;
+        }
+
+        public static Models.Package GetRemotePackage(string name, string version)
+        {
+            return GetRemotePackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && p.Version.Equals(version, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+        }
+
+        public static bool DownloadRemotePackage(string name, string version)
+        {
+            if (!string.IsNullOrEmpty(RemotePackageUrl))
+            {
+                var remotePackage = GetRemotePackage(name, version); 
+                if (remotePackage != null)
+                {
+                    var client = new System.Net.WebClient();
+                    var fileName = remotePackage.FileName.Substring(remotePackage.FileName.LastIndexOf(@"\")+1);
+                    var downloadFileName = PackageDir.PathCombine(fileName, @"\");
+                    
+                    client.DownloadFile(RemotePackageUrl.PathCombine("getpublishedpackage", "/") + "?name=" + HttpUtility.UrlEncode(name) + "&version=" + HttpUtility.UrlEncode(version), downloadFileName);   
+                    
+                    if (new FileInfo(downloadFileName).Length == 0) //if no data found... delete it... 
+                    {
+                        System.IO.File.Delete(downloadFileName);
+                        return false;
+                    }
+                    return true;
                 }
             }
             return false;

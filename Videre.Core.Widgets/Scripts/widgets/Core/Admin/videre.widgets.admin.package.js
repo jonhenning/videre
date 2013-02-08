@@ -4,27 +4,13 @@ videre.registerNamespace('videre.widgets.admin');
 
 videre.widgets.admin.package = videre.widgets.base.extend(
 {
-    get_installedPackages: function() { return this._installedPackages; },
-    set_installedPackages: function(v)
-    {
-        this._installedPackages = v;
-        this._installedPackageDict = v.toDictionary(function(d) { return d.Name + '~' + d.Version; });
-    },
-    get_availablePackages: function() { return this._availablePackages; },
-    set_availablePackages: function(v)
-    {
-        this._availablePackages = v;
-        this._availablePackageDict = v.toDictionary(function(d) { return d.Name + '~' + d.Version; });
-    },
-
     //constructor
     init: function()
     {
         this._base();  //call base method
-        this._installedPackages = null;
-        this._installedPackageDict = null;
-        this._availablePackages = null;
-        this._availablePackageDict = null;
+        this._data = null;
+        this._dataDict = null;
+
         this._dialog = null;
 
         this._delegates = {
@@ -37,7 +23,6 @@ videre.widgets.admin.package = videre.widgets.base.extend(
     _onLoad: function(src, args)
     {
         this._base(); //call base
-        this.bind();
 
         var uploader = new qq.FileUploaderBasic({
             button: this.getControl('btnImport')[0],
@@ -52,6 +37,8 @@ videre.widgets.admin.package = videre.widgets.base.extend(
         this._dialog = this.getControl('Dialog').modal('hide');
         this.getControl('btnCreatePackage').click(videre.createDelegate(this, this._onCreatePackageClicked));
 
+        this.refresh();
+
     },
 
     refresh: function()
@@ -61,16 +48,35 @@ videre.widgets.admin.package = videre.widgets.base.extend(
 
     installPackage: function(pkg)
     {
-        this.ajax('~/core/Package/InstallPackage', {name: pkg.Name, version: pkg.Version}, this._delegates.onInstalledPackageDataReturn);
+        this.ajax('~/core/Package/InstallPackage', { name: pkg.name, version: pkg.version }, this._delegates.onInstalledPackageReturn);
+    },
+
+    downloadPackage: function(pkg)
+    {
+        this.ajax('~/core/Package/DownloadPackage', { name: pkg.name, version: pkg.version }, this._delegates.onInstalledPackageReturn);
+    },
+
+    removePackage: function(pkg)
+    {
+        var self = this;
+        //todo: localize?
+        videre.UI.prompt(this.getId('RemovePackage'), 'Remove Package', String.format('Do you wish to remove the package {0}?', pkg.name), null,
+            [{
+                text: 'Ok', css: 'btn-primary', close: true, handler: function()
+                {
+                    self.ajax('~/core/Package/RemovePackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
+                    return true;
+                }
+            }, { text: 'Cancel', close: true }]);       
     },
 
     bind: function()
     {
         videre.dataTables.clear(this.getControl('ItemTable'));
-        this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._availablePackages, { installed: this._installedPackageDict }));
+        this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data));
 
         this.getControl('ItemList').find('[data-action]').click(this._delegates.onActionClicked);
-        videre.dataTables.bind(this.getControl('ItemTable'), [{ bSortable: false, sWidth: '62px' }]);
+        videre.dataTables.bind(this.getControl('ItemTable'));
     },
 
     reset: function()
@@ -87,21 +93,68 @@ videre.widgets.admin.package = videre.widgets.base.extend(
 
     _handleAction: function(action, id)
     {
-        var pkg = this._availablePackageDict[id];
+        var pkg = this._dataDict[id];
 
         if (pkg != null)
         {
             if (action == 'install')
                 this.installPackage(pkg);
+            else if (action == 'download')
+                this.downloadPackage(pkg);
+            else if (action == 'remove')
+                this.removePackage(pkg);
+    }
+    },
+
+    _handleData: function(d)
+    {
+        var data = {};
+
+        d.availablePackages.forEach(function(d)
+        {
+            var id = d.Name + '~' + d.Version;
+            data[id] = { id: id, name: d.Name, version: d.Version, type: d.Type, desc: d.Description, source: d.Source, availPackageDate: d.PackagedDate, installedPackageDate: null, installedDate: null, remoteDate: null };
+        });
+
+        d.installedPackages.forEach(function(d)
+        {
+            var id = d.Name + '~' + d.Version;
+            if (data[id] != null)
+            {
+                data[id].installedDate = d.InstallDate;
+                data[id].installedPackageDate = d.PackagedDate;
+            }
+            else
+                data[id] = { id: id, name: d.Name, version: d.Version, type: d.Type, desc: d.Description, source: d.Source, availPackageDate: null, installedPackageDate: d.PackagedDate, installedDate: d.InstallDate, remoteDate: null };
+        });
+
+        d.remotePackages.forEach(function(d)
+        {
+            var id = d.Name + '~' + d.Version;
+            if (data[id] != null)
+            {
+                data[id].remoteDate = d.PackagedDate;
+            }
+            else
+                data[id] = { id: id, name: d.Name, version: d.Version, type: d.Type, desc: d.Description, source: d.Source, availPackageDate: null, installed: null, remoteDate: d.PackagedDate };
+        });
+        this._dataDict = data;
+        this._data = [];
+        for (var key in data)
+        {
+            if (data.hasOwnProperty(key))   //todo: unsure if this will filter out methods
+                this._data.push(data[key]);
         }
+        this._data = this._data.orderBy(function(d) { return d.name; });
+        //this._data = data.values();
+
     },
 
     _onInstalledPackageDataReturn: function(result, ctx)
     {
         if (!result.HasError)
         {
-            this.set_availablePackages(result.Data.availablePackages);
-            this.set_installedPackages(result.Data.installedPackages);
+            this._handleData(result.Data);
             this.bind();
         }
     },
@@ -110,8 +163,7 @@ videre.widgets.admin.package = videre.widgets.base.extend(
     {
         if (!result.HasError)
         {
-            this.set_availablePackages(result.Data.availablePackages);
-            this.set_installedPackages(result.Data.installedPackages);
+            //this._handleData(result.Data);    //not updated yet...
             this.refresh();
         }
     },

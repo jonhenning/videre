@@ -8,13 +8,13 @@
 @{
     Html.RegisterWebReferenceGroup("datatables");
     Html.RegisterWebReferenceGroup("fileuploader");
-    var installedPackages = Videre.Core.Services.Package.GetInstalledPackages();
-    var availablePackages = Videre.Core.Services.Package.GetAvailablePackages();
+    //var installedPackages = Videre.Core.Services.Package.GetInstalledPackages();
+    //var availablePackages = Videre.Core.Services.Package.GetAvailablePackages();
     
-    Html.RegisterControlPresenter(Model, "videre.widgets.admin.package", new Dictionary<string, object>() {
-        {"installedPackages", installedPackages },
-        {"availablePackages", availablePackages },
-    });
+    Html.RegisterControlPresenter(Model, "videre.widgets.admin.package");//, new Dictionary<string, object>() {
+    //    {"installedPackages", installedPackages },
+    //    {"availablePackages", availablePackages },
+    //});
 }
 
 <div id="@Model.GetId("Widget")">
@@ -30,31 +30,45 @@
                 <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
                     <thead>
                         <tr>
-                            <th style="width: 62px"></th>
-                            <th>@Model.GetText("Name.Text", "Name")</th>
-                            <th>@Model.GetText("Type.Text", "Type")</th>
-                            <th>@Model.GetText("Version.Text", "Version")</th>
-                            <th class="span4">@Model.GetText("Description.Text", "Description")</th>
-                            <th>@Model.GetText("Source.Text", "Source")</th>
-                            <th>@Model.GetText("ReleaseDate.Text", "Release Date")</th>
-                            <th>@Model.GetText("InstallDate.Text", "Install Date")</th>
+                            <th class="span2">@Model.GetText("Name.Text", "Name")</th>
+                            <th class="span1">@Model.GetText("Type.Text", "Type")</th>
+                            <th class="span1">@Model.GetText("Version.Text", "Version")</th>
+                            <th class="span2">@Model.GetText("InstalledPackageDate.Text", "Installed Package Date")</th>
+                            <th class="span2">@Model.GetText("InstallDate.Text", "Install Date")</th>
+                            <th class="span2">@Model.GetText("AvailablePackageDate.Text", "Available Package Date")</th>
+                            <th class="span2">@Model.GetText("RemotePackageDate.Text", "Remote Package Date")</th>
                         </tr>
                     </thead>
                     <tbody id="@Model.GetId("ItemList")"></tbody>
                 </table>
                 <script id="@Model.GetId("ItemListTemplate")" type="text/html">
                     <tr>
-                        <td>
-                            <a class="btn btn-mini" data-id="{{:Name + '~' + Version}}" data-action="delete" title="@Model.GetText("RemovePackage.Text", "Remove Package")"><i class="icon-trash"></i></a>
-                            <a class="btn btn-mini" data-id="{{:Name + '~' + Version}}" data-action="uninstall" title="@Model.GetText("Uninstall.Text", "Uninstall Package")"><i class="icon-remove"></i></a>
+                        <td><span title="{{:source}} - {{:desc}}">{{:name}}</span></td>
+                        <td>{{:type}}</td>
+                        <td>{{:version}}</td>
+                        <td>{{:~formatDateTime(installedPackageDate)}}
                         </td>
-                        <td>{{:Name}}</td>
-                        <td>{{:Type}}</td>
-                        <td>{{:Version}}</td>
-                        <td>{{:Description}}</td>
-                        <td>{{:Source}}</td>
-                        <td>{{:~formatDateTime(PackagedDate)}}</td>
-                        <td>{{:#ctx.installed[Name + '~' + Version] != null ? ~formatDateTime(#ctx.installed[Name + '~' + Version].InstallDate) : '<a class="btn" data-action="install" data-id="' + Name + '~' + Version + '"><i class="icon-download-alt"></i> @Model.GetText("Install.Text", "Install")</a>')}}</td>
+                        <td>
+                            {{if installedDate != null}}
+                                <a class="btn btn-mini" data-id="{{:id}}" data-action="uninstall" title="@Model.GetText("Uninstall.Text", "Uninstall Package")" style="float: right"><i class="icon-remove"></i></a>
+                            {{/if}}
+                            {{:~formatDateTime(installedDate)}}
+                        </td>
+                        <td>
+                            {{if availPackageDate != null}}
+                                {{if installedDate == null}}
+                                    <a class="btn btn-mini" data-id="{{:id}}" data-action="install" title="@Model.GetText("Install.Text", "Install Package")" style="float: right"><i class="icon-download-alt"></i></a>
+                                {{/if}}
+                                 <a class="btn btn-mini" data-id="{{:id}}" data-action="remove" title="@Model.GetText("Remove.Text", "Remove Package")" style="float: right"><i class="icon-remove"></i></a>
+                            {{/if}}
+                            {{:~formatDateTime(availPackageDate)}}
+                        </td>
+                        <td>
+                            {{if remoteDate != null}}
+                                <a class="btn btn-mini" data-id="{{:id}}" data-action="download" title="@Model.GetText("Download.Text", "Download Package")" style="float: right"><i class="icon-download"></i></a>
+                            {{/if}}
+                            {{:~formatDateTime(remoteDate)}}
+                        </td>
                     </tr>
                 </script>
             </div>
