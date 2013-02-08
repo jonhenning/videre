@@ -966,7 +966,8 @@ videre.dataTables = {
             options = {};
 
         //options.sPaginationType = options.sPaginationType != null ? options.sPaginationType : 'bootstrap';
-        options.aoColumns = options.aoColumns != null ? options.aoColumns : columns;
+        if (columns != null)
+            options.aoColumns = options.aoColumns != null ? options.aoColumns : columns;
         //http://datatables.net/blog/Twitter_Bootstrap_2
         tbl.dataTable(options);
     }
