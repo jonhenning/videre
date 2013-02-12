@@ -206,6 +206,7 @@
     <None Include="build.targets">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="package.manifest" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildProjectDirectory)\build.targets" />

@@ -1,0 +1,8 @@
+{
+	Version: 1.0,
+	Name: "Videre Core",
+	Type: "Library",
+	Source: "Core",
+	Description: "Videre Core",
+	PackagedDate: ""
+}
