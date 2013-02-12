@@ -22,7 +22,7 @@
 
     <Target Name="UpdatePackageManifest">
         <!--<Attrib ReadOnly="false" Files="$(MSBuildProjectDirectory)\package.manifest" />-->
-        <Time Format="yyyy-MM-ddTHH\:mm\:ss.fffffffzzz">
+        <Time Format="o" Kind="Utc">
             <Output TaskParameter="FormattedTime" PropertyName="packageDate" />
         </Time>
         <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;$(packageDate)&quot;" />
