@@ -38,7 +38,17 @@ namespace Videre.Core.Widgets.Controllers
             return API.Execute<Dictionary<string, List<Models.Package>>>(r =>
             {
                 Security.VerifyActivityAuthorized("Portal", "Administration");
-                CoreServices.Package.RemoveAvailablePackage(name, version: version);
+                CoreServices.Package.RemoveAvailablePackage(name, version);
+                r.Data = GetPackageDict();
+            });
+        }
+
+        public JsonResult<Dictionary<string, List<Models.Package>>> TogglePublishPackage(string name, string version, bool publish)
+        {
+            return API.Execute<Dictionary<string, List<Models.Package>>>(r =>
+            {
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                CoreServices.Package.TogglePublishPackage(name, version, publish);
                 r.Data = GetPackageDict();
             });
         }
@@ -68,6 +78,7 @@ namespace Videre.Core.Widgets.Controllers
                 {
                     {"installedPackages", CoreServices.Package.GetInstalledPackages()},
                     {"availablePackages", CoreServices.Package.GetAvailablePackages()},
+                    {"publishedPackages", CoreServices.Package.GetPublishedPackages()},
                     {"remotePackages", remotePackages},
                 };
         }

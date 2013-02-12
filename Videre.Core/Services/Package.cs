@@ -121,6 +121,29 @@ namespace Videre.Core.Services
             return false;
         }
 
+        public static bool TogglePublishPackage(string name, string version, bool publish)
+        {
+            if (publish)
+            {
+                var package = GetAvailablePackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(version) || p.Version.Equals(version, StringComparison.InvariantCultureIgnoreCase))).OrderByDescending(p => p.Version).FirstOrDefault();
+                if (package != null)
+                {
+                    System.IO.File.Copy(package.FileName, PublishDir.PathCombine(new FileInfo(package.FileName).Name, @"\"), true);
+                    return true;
+                }
+            }
+            else
+            {
+                var package = GetPublishedPackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(version) || p.Version.Equals(version, StringComparison.InvariantCultureIgnoreCase))).OrderByDescending(p => p.Version).FirstOrDefault();
+                if (package != null)
+                {
+                    System.IO.File.Delete(package.FileName);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static Models.Package GetPackageManifest(string zipFileName)
         {
             var entryName = zipFileName.GetZipFileList(e => e.EndsWith("package.manifest", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();

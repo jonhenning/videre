@@ -56,6 +56,11 @@ videre.widgets.admin.package = videre.widgets.base.extend(
         this.ajax('~/core/Package/DownloadPackage', { name: pkg.name, version: pkg.version }, this._delegates.onInstalledPackageReturn);
     },
 
+    togglePublishPackage: function(pkg, publish)
+    {
+        this.ajax('~/core/Package/TogglePublishPackage', { name: pkg.name, version: pkg.version, publish: !pkg.published }, this._delegates.onInstalledPackageReturn);
+    },
+
     removePackage: function(pkg)
     {
         var self = this;
@@ -103,17 +108,21 @@ videre.widgets.admin.package = videre.widgets.base.extend(
                 this.downloadPackage(pkg);
             else if (action == 'remove')
                 this.removePackage(pkg);
-    }
+            else if (action == 'publish')
+                this.togglePublishPackage(pkg);
+}
     },
 
     _handleData: function(d)
     {
         var data = {};
 
+        var publishedDict = d.publishedPackages.toDictionary(function(d) { return d.Name + '~' + d.Version; });
+
         d.availablePackages.forEach(function(d)
         {
             var id = d.Name + '~' + d.Version;
-            data[id] = { id: id, name: d.Name, version: d.Version, type: d.Type, desc: d.Description, source: d.Source, availPackageDate: d.PackagedDate, installedPackageDate: null, installedDate: null, remoteDate: null };
+            data[id] = { id: id, name: d.Name, version: d.Version, type: d.Type, desc: d.Description, source: d.Source, availPackageDate: d.PackagedDate, installedPackageDate: null, installedDate: null, remoteDate: null, published: publishedDict[id] != null && publishedDict[id].PackagedDate == d.PackagedDate };
         });
 
         d.installedPackages.forEach(function(d)
@@ -125,7 +134,7 @@ videre.widgets.admin.package = videre.widgets.base.extend(
                 data[id].installedPackageDate = d.PackagedDate;
             }
             else
-                data[id] = { id: id, name: d.Name, version: d.Version, type: d.Type, desc: d.Description, source: d.Source, availPackageDate: null, installedPackageDate: d.PackagedDate, installedDate: d.InstallDate, remoteDate: null };
+                data[id] = { id: id, name: d.Name, version: d.Version, type: d.Type, desc: d.Description, source: d.Source, availPackageDate: null, installedPackageDate: d.PackagedDate, installedDate: d.InstallDate, remoteDate: null, published: false };
         });
 
         d.remotePackages.forEach(function(d)
@@ -136,7 +145,7 @@ videre.widgets.admin.package = videre.widgets.base.extend(
                 data[id].remoteDate = d.PackagedDate;
             }
             else
-                data[id] = { id: id, name: d.Name, version: d.Version, type: d.Type, desc: d.Description, source: d.Source, availPackageDate: null, installed: null, remoteDate: d.PackagedDate };
+                data[id] = { id: id, name: d.Name, version: d.Version, type: d.Type, desc: d.Description, source: d.Source, availPackageDate: null, installed: null, remoteDate: d.PackagedDate, published: false };
         });
         this._dataDict = data;
         this._data = [];

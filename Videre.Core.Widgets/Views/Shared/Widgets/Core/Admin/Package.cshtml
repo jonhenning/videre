@@ -56,8 +56,17 @@
                         </td>
                         <td>
                             {{if availPackageDate != null}}
-                                 <a class="btn btn-mini" data-id="{{:id}}" data-action="install" title="@Model.GetText("Install.Text", "Install Package")" style="float: right"><i class="icon-download-alt"></i></a>
-                                 <a class="btn btn-mini" data-id="{{:id}}" data-action="remove" title="@Model.GetText("Remove.Text", "Remove Package")" style="float: right"><i class="icon-remove"></i></a>
+                                <div class="btn-group" style="float: right">
+                                    <button class="btn btn-mini">@Model.GetText("Action.Text", "Action")</button>
+                                    <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a data-id="{{:id}}" data-action="install"><i class="icon-download-alt"></i> @Model.GetText("Install.Text", "Install Package")</a></li>
+                                        <li><a data-id="{{:id}}" data-action="remove"><i class="icon-remove"></i> @Model.GetText("Remove.Text", "Remove Package")</a></li>
+                                        <li><a data-id="{{:id}}" data-action="publish"><i class="icon-globe"></i> {{:published ? '@Model.GetText("UnPublish.Text", "Un-Publish")' : '@Model.GetText("Publish.Text", "Publish")'}}</a></li>
+                                    </ul>
+                                </div>
                             {{/if}}
                             {{:~formatDateTime(availPackageDate)}}
                         </td>
