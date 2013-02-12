@@ -12,7 +12,7 @@ namespace Videre.Core.Services
             return Repository.Current.GetResources<Models.SecureActivity>("SecureActivity").Select(m => m.Data).Where(a => 
                 (string.IsNullOrEmpty(portalId) || a.PortalId == portalId) && 
                 (string.IsNullOrEmpty(area) || a.Area.Equals(area, StringComparison.InvariantCultureIgnoreCase)) 
-                ).ToList();
+                ).OrderBy(a => a.Area).ThenBy(a => a.Name).ToList();
         }
 
         public static Models.SecureActivity GetSecureActivity(string portalId, string area, string name)
