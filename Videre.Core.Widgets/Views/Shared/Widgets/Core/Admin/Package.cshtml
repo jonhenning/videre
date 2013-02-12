@@ -56,9 +56,7 @@
                         </td>
                         <td>
                             {{if availPackageDate != null}}
-                                {{if installedDate == null}}
-                                    <a class="btn btn-mini" data-id="{{:id}}" data-action="install" title="@Model.GetText("Install.Text", "Install Package")" style="float: right"><i class="icon-download-alt"></i></a>
-                                {{/if}}
+                                 <a class="btn btn-mini" data-id="{{:id}}" data-action="install" title="@Model.GetText("Install.Text", "Install Package")" style="float: right"><i class="icon-download-alt"></i></a>
                                  <a class="btn btn-mini" data-id="{{:id}}" data-action="remove" title="@Model.GetText("Remove.Text", "Remove Package")" style="float: right"><i class="icon-remove"></i></a>
                             {{/if}}
                             {{:~formatDateTime(availPackageDate)}}
