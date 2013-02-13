@@ -296,6 +296,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SMTPSettings.config" />
+    <Content Include="package.manifest" />
     <None Include="SMTPSettings.config.debug" />
     <None Include="SMTPSettings.config.release" />
     <None Include="log4net.config.debug" />

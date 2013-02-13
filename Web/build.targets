@@ -2,6 +2,17 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT (unless using VisualStudio 2012 :)! -->
     <PropertyGroup>
+        <Name>Videre Core Web</Name>
+        <Version>1.0</Version>
+        <ZipName>$(Name)-$(Version).zip</ZipName>
+        <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+        <RedistDir>$(RootDir)\redist</RedistDir>
+        <CommonLibDir>$(RootDir)\lib</CommonLibDir>
+        <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
+        
+    </PropertyGroup>
+
+    <PropertyGroup>
         <PreBuildEvent>
             call "$(ProjectDir)copyifnewer.bat" "$(ProjectDir)AppSettings.config.$(ConfigurationName)" "$(ProjectDir)AppSettings.config"
             call "$(ProjectDir)copyifnewer.bat" "$(ProjectDir)ConnectionStrings.config.$(ConfigurationName)" "$(ProjectDir)ConnectionStrings.config"
@@ -10,7 +21,52 @@
         </PreBuildEvent>
     </PropertyGroup>
 
+    <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
+
     <Target Name="AfterBuild">
+        <CallTarget Targets="UpdatePackageManifest" />
+        <CallTarget Targets="CreatePackage" />
+        <CallTarget Targets="Deploy" />
     </Target>
+
+    <Target Name="UpdatePackageManifest">
+        <!--<Attrib ReadOnly="false" Files="$(MSBuildProjectDirectory)\package.manifest" />-->
+        <Time Format="o" Kind="Utc">
+            <Output TaskParameter="FormattedTime" PropertyName="packageDate" />
+        </Time>
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;$(packageDate)&quot;" />
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: $(Version)," />
+    </Target>
+
+
+    <Target Name="CreatePackage">
+        <MakeDir Directories="$(RedistDir)"/>
+
+        <!--FileWrites are absolute paths.  We need to create relative paths to allow Excludes to work correctly.  Perhaps there is a cleaner way...-->
+        <PropertyGroup>
+            <EscapedMSBuildProjectDirectory>$(MSBuildProjectDirectory.Replace("\","\\"))\\</EscapedMSBuildProjectDirectory>
+        </PropertyGroup>
+        <RegexReplace Input="@(FileWrites)" Expression="$(EscapedMSBuildProjectDirectory)" Replacement="" Count="1">
+            <Output ItemName="MyFileWrites" TaskParameter="Output" />
+        </RegexReplace>
+        <!--<Message Text="%0a%MyFileWrites:%0a%0d    @(MyFileWrites,'%0a%0d    ')" />-->
+
+        <CreateItem Include="@(MyFileWrites);@(Content);" Exclude="
+                    *.config;
+                    *.targets;
+                    _packages\**;
+                    bin\*.pdb;
+                    obj\**;
+                    ">
+            <Output TaskParameter="Include" ItemName="DeployFiles"/>
+        </CreateItem>
+        <Zip Files="@(DeployFiles)" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" />
+    </Target>
+
+    <Target Name="Deploy">
+        <!--<MakeDir Directories="$(DeployDir)\_updates"/>
+        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="$(DeployDir)\_updates" />-->
+    </Target>
+
 
 </Project>
