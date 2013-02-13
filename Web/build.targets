@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT (unless using VisualStudio 2012 :)! -->
     <PropertyGroup>
-        <Name>Videre Core Web</Name>
+        <Name>Videre.Core.Web</Name>
         <Version>1.0</Version>
         <ZipName>$(Name)-$(Version).zip</ZipName>
         <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
