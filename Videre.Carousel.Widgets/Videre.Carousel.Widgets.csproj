@@ -131,7 +131,7 @@
     <Content Include="Views\Shared\Widgets\Carousel\Carousel.cshtml" />
     <Content Include="Views\Shared\Widgets\Carousel\CarouselEditor.cshtml" />
     <Content Include="web.config" />
-    <Content Include="Videre.Carousel.Widgets.manifest" />
+    <Content Include="package.manifest" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />

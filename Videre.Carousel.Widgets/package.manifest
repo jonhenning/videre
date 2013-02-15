@@ -3,5 +3,6 @@
 	Name: "Videre Carousel Widgets",
 	Type: "Widget",
 	Source: "Core",
-	Description: "Carousel Widgets"
+	Description: "Carousel Widgets",
+	PackagedDate: ""
 }
