@@ -3,6 +3,8 @@
     <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT IN VERSIONS OF VISUAL STUDIO PRIOR TO 11 -->
     <PropertyGroup>
         <Name>Videre.Carousel.Widgets</Name>
+        <Version>1.0</Version>
+        <ZipName>$(Name)-$(Version).zip</ZipName>
         <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
         <RedistDir>$(RootDir)\redist</RedistDir>
         <CommonLibDir>$(RootDir)\lib</CommonLibDir>
@@ -12,8 +14,18 @@
     <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets')"/>
 
     <Target Name="AfterBuild">
+        <CallTarget Targets="UpdatePackageManifest" />
         <CallTarget Targets="CreatePackage" />
         <CallTarget Targets="Deploy" />
+    </Target>
+
+    <Target Name="UpdatePackageManifest">
+        <!--<Attrib ReadOnly="false" Files="$(MSBuildProjectDirectory)\package.manifest" />-->
+        <Time Format="o" Kind="Utc">
+            <Output TaskParameter="FormattedTime" PropertyName="packageDate" />
+        </Time>
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;$(packageDate)&quot;" />
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: $(Version)," />
     </Target>
 
     <Target Name="CreatePackage">
@@ -30,12 +42,12 @@
                 $(TargetDir)$(Name).pdb">
             <Output TaskParameter="Include" ItemName="Widgets" />
         </CreateItem>
-        <Zip Files="@(Widgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(Name).zip" />
+        <Zip Files="@(Widgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" />
     </Target>
 
-    <Target Name="Deploy" Condition="Exists('$(DeployDir)')">
+    <Target Name="Deploy">
         <MakeDir Directories="$(DeployDir)\_updates"/>
-        <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(DeployDir)\_updates" />
+        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="$(DeployDir)\_updates" />
     </Target>
 
 </Project>
