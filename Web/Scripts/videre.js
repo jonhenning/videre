@@ -969,7 +969,7 @@ videre.dataTables = {
         if (columns != null)
             options.aoColumns = options.aoColumns != null ? options.aoColumns : columns;
         //http://datatables.net/blog/Twitter_Bootstrap_2
-        tbl.dataTable(options);
+        return tbl.dataTable(options);
     }
 };
 
