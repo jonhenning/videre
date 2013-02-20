@@ -136,15 +136,16 @@
         return url;
     },
 
-    ajax: function(url, data, success, error, ctx, headers)
+    ajax: function(url, data, success, error, ctx, options)
     {
+        options = options || {};
         return $.ajax({
-            type: "POST",
+            type: options.type || "POST",
             url: videre.resolveUrl(url),
-            headers: headers,
+            headers: options.headers,
             processData: false,
             data: videre.serialize(data),
-            contentType: 'application/json; charset=utf-8',
+            contentType: options.contentType || 'application/json; charset=utf-8',
             success: function(result) { success(result, ctx); },
             error: function(request) { error(request, ctx); }
         });
@@ -689,12 +690,17 @@ videre.widgets.base = videre.Class.extend(
         return this._childWidgets[id];
     },
 
-    ajax: function(url, params, onSuccess, onFail, parent, ctx)
+    ajax: function(url, params, onSuccess, onFail, parent, ctx, options)
     {
         this.clearMsgs(parent);
         this.lock(parent);
         if (onFail == null)
             onFail = this._baseDelegates.onAjaxFail;
+
+        var defaultOptions = 
+        {
+            headers: { 'X-Videre-WidgetId': this._wid }
+        };
 
         return videre.ajax(
             url,
@@ -706,9 +712,7 @@ videre.widgets.base = videre.Class.extend(
                 parent: parent,
                 ctx: ctx
             },
-            {
-                 'X-Videre-WidgetId': this._wid
-            });
+            $.extend(true, {}, defaultOptions, options));
     },
 
     bindData: function(data, parent)
