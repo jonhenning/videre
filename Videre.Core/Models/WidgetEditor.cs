@@ -1,4 +1,6 @@
-﻿using CodeEndeavors.Extensions.Serialization;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using CodeEndeavors.Extensions.Serialization;
 
 namespace Videre.Core.Models
 {
@@ -7,49 +9,40 @@ namespace Videre.Core.Models
         public WidgetEditor()
         {
         }
-        
+
         public WidgetEditor(string manifestId)
         {
-            this.ManifestId = manifestId;
+            ManifestId = manifestId;
         }
 
         public string ManifestId { get; set; }
 
-        //[ScriptIgnore, JsonIgnore]
-        [SerializeIgnore(new string[] { "db", "client" })]
-        public string ClientId { get; set; }    //must be assigned every time the widget is rendered
+        //must be assigned every time the widget is rendered
 
-        public Models.WidgetManifest Manifest
+        public WidgetManifest Manifest
         {
-            get
-            {
-                return Services.Portal.GetWidgetManifestById(ManifestId);
-            }
+            get { return Services.Portal.GetWidgetManifestById(ManifestId); }
         }
 
-        //[ScriptIgnore, JsonIgnore]
-        [SerializeIgnore(new string[] { "db", "client" })]
+        [SerializeIgnore(new[] {"db", "client"})]
+        public string ClientId { get; set; }
+
+        [SerializeIgnore(new[] {"db", "client"})]
         public string Path
         {
-            get
-            {
-                return string.IsNullOrEmpty(Manifest.EditorPath) ? "Widgets/Core/CommonEditor" : Manifest.EditorPath;
-            }
+            get { return string.IsNullOrEmpty(Manifest.EditorPath) ? "Widgets/Core/CommonEditor" : Manifest.EditorPath; }
         }
 
-        //[ScriptIgnore, JsonIgnore]
-        [SerializeIgnore(new string[] { "db", "client" })]
+        //todo: royal hack.  really bad jon.  need to fix!
+        [SerializeIgnore(new[] {"db", "client"})]
         public string ScriptPath
         {
-            get
-            {
-                return string.Format("~/scripts/Widgets/../{0}/../", Path); //todo: royal hack.  really bad jon.  need to fix!
-            }
+            get { return string.Format("~/scripts/Widgets/../{0}/../", Path); }
         }
 
-        public string GetId(string Id)
+        public string GetId(string id)
         {
-            return string.Format("{0}_{1}", this.ClientId, Id);
+            return string.Format("{0}_{1}", ClientId, id);
         }
 
         public string GetText(string key, string defaultValue)
@@ -57,12 +50,14 @@ namespace Videre.Core.Models
             return Services.Localization.GetLocalization(LocalizationType.WidgetEditor, key, defaultValue, Manifest.EditorPath);
         }
 
-        public string GetPortalText(string key, string defaultValue)
+        public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null)
         {
-            return Services.Localization.GetPortalText(key, defaultValue);
+            return false;
         }
 
-
+        public string GetPortalText(string key, string efaultValue)
+        {
+            return Services.Localization.GetPortalText(key, efaultValue);
+        }
     }
-
 }

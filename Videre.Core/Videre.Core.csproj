@@ -178,6 +178,7 @@
     <Compile Include="Services\Portal.cs" />
     <Compile Include="Services\Validation.cs" />
     <Compile Include="Services\Web.cs" />
+    <Compile Include="Services\Widget.cs" />
     <Compile Include="Web.cs" />
   </ItemGroup>
   <ItemGroup>

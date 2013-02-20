@@ -136,15 +136,15 @@
         return url;
     },
 
-    ajax: function(url, data, success, error, ctx)
+    ajax: function(url, data, success, error, ctx, headers)
     {
         return $.ajax({
             type: "POST",
             url: videre.resolveUrl(url),
+            headers: headers,
             processData: false,
             data: videre.serialize(data),
             contentType: 'application/json; charset=utf-8',
-            //dataType: 'json',
             success: function(result) { success(result, ctx); },
             error: function(request) { error(request, ctx); }
         });
@@ -607,7 +607,7 @@ videre.widgets.base = videre.Class.extend(
     get_id: function() { return this._id; },
     set_id: function(v) { this._id = v; },
     get_ns: function() { return this._ns; },
-    set_ns: function(v) { this._ns = v; },
+    set_ns: function (v) { this._ns = v; },    
     get_events: function() { return this._eventHandlerList; },
     get_childWidgets: function() { return this._childWidgets; },
 
@@ -615,10 +615,13 @@ videre.widgets.base = videre.Class.extend(
     set_messages: function(v) { this._messages = v; },
     set_user: function(v) { this._user = v; },
     get_user: function() { return this._user; },
-
+    get_wid: function () { return this._wid; },
+    set_wid: function (v) { this._wid = v; },
+    
     init: function()
     {
         this._id = null;
+        this._wid = null;
         this._ns = '';
         this._controls = {};
         this._childWidgets = {};
@@ -693,7 +696,19 @@ videre.widgets.base = videre.Class.extend(
         if (onFail == null)
             onFail = this._baseDelegates.onAjaxFail;
 
-        return videre.ajax(url, params, this._baseDelegates.onAjaxSuccess, onFail, { onSuccess: onSuccess, parent: parent, ctx: ctx });
+        return videre.ajax(
+            url,
+            params,
+            this._baseDelegates.onAjaxSuccess,
+            onFail,
+            {
+                onSuccess: onSuccess,
+                parent: parent,
+                ctx: ctx
+            },
+            {
+                 'X-Videre-WidgetId': this._wid
+            });
     },
 
     bindData: function(data, parent)

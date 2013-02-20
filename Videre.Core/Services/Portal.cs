@@ -613,7 +613,7 @@ namespace Videre.Core.Services
 
             //grab all widgets that have a content provider and create dictionary of <WidgetId, ContentJson>
             //TODO:  guard against no widgets with content???!?
-            var allWidgets = new List<Widget>();
+            var allWidgets = new List<Models.Widget>();
             allWidgets.AddRange(export.Templates.SelectMany(w => w.Widgets).Where(w => w.Manifest.GetContentProvider() != null));
             allWidgets.AddRange(export.LayoutTemplates.SelectMany(w => w.Widgets).Where(w => w.Manifest.GetContentProvider() != null));
             allWidgets = allWidgets.Distinct(w => w.Id).ToList();
@@ -835,14 +835,6 @@ namespace Videre.Core.Services
         public static List<PageTemplate> GetPageTemplatesByContentId(string contentId)
         {
             return GetPageTemplates().Where(t => t.Widgets.Exists(w => w.ContentIds.Contains(contentId))).ToList();
-        }
-
-        public static List<Widget> GetWidgetInstancesByName(string name, string portalId = null)
-        {
-            var widgets = new List<Widget>();
-            widgets.AddRange(GetPageTemplates(portalId).SelectMany(t => t.Widgets).Where(w => w.Manifest.Name == name).ToList());
-            widgets.AddRange(GetLayoutTemplates(portalId).SelectMany(t => t.Widgets).Where(w => w.Manifest.Name == name).ToList());
-            return widgets;
         }
     }
 }

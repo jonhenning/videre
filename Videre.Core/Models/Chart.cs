@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using System.Web.Mvc;
+
 namespace Videre.Core.Models
 {
     public class Chart : IClientControl
@@ -57,9 +59,9 @@ namespace Videre.Core.Models
             }
         }
 
-        public string GetId(string Id)
+        public string GetId(string id)
         {
-            return string.Format("{0}_{1}", this.ClientId, Id);
+            return string.Format("{0}_{1}", this.ClientId, id);
         }
 
         public string GetText(string key, string defaultValue)
@@ -67,9 +69,14 @@ namespace Videre.Core.Models
             return Services.Localization.GetLocalization(LocalizationType.ClientControl, key, defaultValue, this.Path);
         }
 
-        public string GetPortalText(string key, string defaultValue)
+        public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null)
         {
-            return Services.Localization.GetPortalText(key, defaultValue);
+            return false;
+        }
+
+        public string GetPortalText(string key, string efaultValue)
+        {
+            return Services.Localization.GetPortalText(key, efaultValue);
         }
 
         public class SeriesData

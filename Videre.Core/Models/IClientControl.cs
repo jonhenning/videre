@@ -1,14 +1,26 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+
 namespace Videre.Core.Models
 {
     public interface IClientControl
     {
         string ClientId { get; }
-        string GetId(string Id);
-        string GetText(string Key, string DefaultValue);
-        string GetPortalText(string Key, string DefaultValue);
+
         string Path { get; }
+
         string ScriptPath { get; }
-        //IManifest Manifest { get; set; }
+
+        string GetId(string id);
+
+        string GetText(string key, string defaultValue);
+
+        bool Register(
+            HtmlHelper helper, 
+            string clientType, 
+            string instanceName, 
+            Dictionary<string, object> properties = null);
+
+        string GetPortalText(string key, string efaultValue);
     }
 }

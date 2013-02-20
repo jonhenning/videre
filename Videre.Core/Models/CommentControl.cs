@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace Videre.Core.Models
 {
     public class CommentControl : IClientControl
     {
-        public CommentControl(Models.Widget widget, string containerType, string containerId, string portalId = null)
+        public CommentControl(Widget widget, string containerType, string containerId, string portalId = null)
         {
             ClientId = Services.Portal.NextClientId();
             Widget = widget;
@@ -16,48 +17,49 @@ namespace Videre.Core.Models
                 Container = Services.Comment.Get(containerType, containerId, portalId);
                 if (Container == null)
                 {
-                    Container = new CommentContainer() { ContainerType = containerType, ContainerId = containerId };
+                    Container = new CommentContainer {ContainerType = containerType, ContainerId = containerId};
                     Services.Comment.Save(Container);
                 }
             }
         }
 
-        public CommentContainer Container {get;set;}
-        public string ClientId { get; set; }    //must be assigned every time the widget is rendered
-        public Models.Widget Widget { get; set; }
+        public CommentContainer Container { get; set; }
+
+        //must be assigned every time the widget is rendered
+        public Widget Widget { get; set; }
+
         public string Provider { get; set; }
+
+        public string ClientId { get; set; }
 
         public string Path
         {
-            get
-            {
-                return "Controls/Core/Comments";
-            }
+            get { return "Controls/Core/Comments"; }
         }
 
         public string ScriptPath
         {
-            get
-            {
-                return "~/scripts/Controls/Core/Comments/";
-            }
+            get { return "~/scripts/Controls/Core/Comments/"; }
         }
 
-        public string GetId(string Id)
+        public string GetId(string id)
         {
-            return string.Format("{0}_{1}", this.ClientId, Id);
+            return string.Format("{0}_{1}", ClientId, id);
         }
 
         public string GetText(string key, string defaultValue)
         {
-            return Services.Localization.GetLocalization(LocalizationType.ClientControl, key, defaultValue, this.Path);
+            return Services.Localization.GetLocalization(LocalizationType.ClientControl, key, defaultValue, Path);
         }
 
-        public string GetPortalText(string key, string defaultValue)
+        public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null)
         {
-            return Services.Localization.GetPortalText(key, defaultValue);
+            return false;
         }
 
+        public string GetPortalText(string key, string efaultValue)
+        {
+            return Services.Localization.GetPortalText(key, efaultValue);
+        }
     }
-
 }
