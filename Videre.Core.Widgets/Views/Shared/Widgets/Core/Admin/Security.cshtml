@@ -1,9 +1,5 @@
-@using System.Collections.Generic;
-@using Videre.Core.Extensions;
-@using Videre.Core.Models;
-@using System.Web.Mvc.Html;
-@using Videre.Core.Services;
-@model Widget
+@using Videre.Core.Extensions
+@model Videre.Core.Models.Widget
 
 @{
 }
@@ -12,7 +8,7 @@
     <div class="container">
         <div class="row">
             <div class="span12">
-                @{Html.RenderPartial("WidgetHeader", Model);}
+                @{ Html.RenderPartial("WidgetHeader", Model); }
     
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#@Model.GetId("RoleTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("Roles.Text", "Roles")</a></li>
@@ -20,10 +16,10 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="@Model.GetId("RoleTab")">
-                        @{Html.RenderWidget("Core/Admin/Role");}
+                        @{ Html.RenderWidget("Core/Admin/Role"); }
                     </div>
                     <div class="tab-pane" id="@Model.GetId("SecureActivityTab")">
-                        @{Html.RenderWidget("Core/Admin/SecureActivity");}
+                        @{ Html.RenderWidget("Core/Admin/SecureActivity"); }
                     </div>
                 </div>
             </div>
