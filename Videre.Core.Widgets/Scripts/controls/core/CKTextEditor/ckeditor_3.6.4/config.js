@@ -28,7 +28,7 @@ CKEDITOR.editorConfig = function(config)
     ];
 
     config.toolbar = 'Videre';
-
+    config.language = 'en'; //force to english for now...  eventually include language files
     config.filebrowserBrowseUrl = videre.resolveUrl('~/Admin/FileBrowser?MimeType=image');
     config.skin = 'BootstrapCK-Skin';
     config.contentsCss = $('link[data-type="theme"]').toArray().toList(function(d) { return d.href; });
