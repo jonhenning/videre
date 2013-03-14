@@ -1044,8 +1044,20 @@ $.views.helpers({
         else
         {
             ctl = $('<input>').attr({ type: data.InputType || 'text', 'data-column': keyName }); //.val(dataValue);
+            if (data.DataType)
+                ctl.attr('data-datatype', data.DataType);
             if (dataValue != null)
+            {
+                //ideally setControlValue would do _dataTypes check, but causes recursive calls...  refactoring in order
+                var dataType = videre.UI._dataTypes[ctl.data('datatype')];
+                if (dataType != null && dataType.set != null)
+                {
+                    dataType.set(ctl, dataValue);
+                    dataValue = ctl.val();
+                }
+
                 ctl.attr('value', dataValue); //need value written into html
+            }
         }
         ctl.attr('data-label-text', keyName); //todo: mini-hack as labels have no for="" specified
         if (data.Required)
