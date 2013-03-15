@@ -1046,7 +1046,7 @@ $.views.helpers({
             ctl = $('<input>').attr({ type: data.InputType || 'text', 'data-column': keyName }); //.val(dataValue);
             if (data.DataType)
                 ctl.attr('data-datatype', data.DataType);
-            if (dataValue != null)
+            if (!String.isNullOrEmpty(dataValue))
             {
                 //ideally setControlValue would do _dataTypes check, but causes recursive calls...  refactoring in order
                 var dataType = videre.UI._dataTypes[ctl.data('datatype')];
