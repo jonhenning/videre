@@ -169,7 +169,7 @@ namespace Videre.Core.Services
             var content = GetPackageContent(zipFileName);
             foreach (var portalExport in content)
             {
-                Services.Portal.Import(portalExport, portalId);
+                Services.ImportExport.Import(portalExport, portalId);
                 count++;
             }
             //var entries = zipFileName.GetZipFileList(e => e.EndsWith(".json", StringComparison.InvariantCultureIgnoreCase)).ToList();
@@ -222,7 +222,7 @@ namespace Videre.Core.Services
                         {
                             Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
                             var portalExport = file.FullName.GetFileJSONObject<Models.PortalExport>(false);
-                            Services.Portal.Import(portalExport, portalId);
+                            Services.ImportExport.Import(portalExport, portalId);
                             if (removeFile)
                                 System.IO.File.Delete(file.FullName);
                             return true;

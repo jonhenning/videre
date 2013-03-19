@@ -160,6 +160,7 @@
     <Compile Include="Services\Comment.cs" />
     <Compile Include="Services\CacheTimer.cs" />
     <Compile Include="Services\DynamicContent.cs" />
+    <Compile Include="Services\ImportExport.cs" />
     <Compile Include="Services\Logging.cs" />
     <Compile Include="Services\Mail.cs" />
     <Compile Include="Services\Package.cs" />

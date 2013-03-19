@@ -68,7 +68,7 @@ namespace Videre.Core.Widgets.Controllers
         public FileContentResult ExportPortal(string id)
         {
             Security.VerifyActivityAuthorized("Portal", "Administration");
-            var export = CoreServices.Portal.ExportPortal(id);
+            var export = CoreServices.ImportExport.ExportPortal(id);
             var json = export.ToJson(pretty: true, ignoreType: "db");   //todo: use db for export, or its own type?
             return File(System.Text.Encoding.UTF8.GetBytes(json), "text/plain", "ExportPortal.json");
         }
@@ -76,7 +76,7 @@ namespace Videre.Core.Widgets.Controllers
         public FileContentResult ExportTemplates(string id)
         {
             Security.VerifyActivityAuthorized("Portal", "Administration");
-            var export = CoreServices.Portal.ExportTemplates(id, true);
+            var export = CoreServices.ImportExport.ExportTemplates(id, true);
             var json = export.ToJson(pretty: true, ignoreType: "db");   //todo: use db for export, or its own type?
             return File(System.Text.Encoding.UTF8.GetBytes(json), "text/plain", "ExportPortalTemplates.json");
         }
@@ -112,7 +112,7 @@ namespace Videre.Core.Widgets.Controllers
                             json = reader.ReadToEnd();
                         }
                         var portalExport = json.ToObject<Models.PortalExport>();
-                        Services.Portal.Import(portalExport, Portal.CurrentPortalId);
+                        Services.ImportExport.Import(portalExport, Portal.CurrentPortalId);
                         r.AddMessage(Localization.GetPortalText("DataImportMessage.Text", "Data has been imported successfully.  You may need to refresh your page to see changes."));
                     }
                     else if (ext.Equals("zip", StringComparison.InvariantCultureIgnoreCase))

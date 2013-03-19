@@ -117,7 +117,7 @@ namespace Videre.Core.Services
             else
                 container.Id = null;
             container.PortalId = portalId;
-            container.ContainerId = Portal.GetIdMap<T>(container.ContainerId, idMap);
+            container.ContainerId = ImportExport.GetIdMap<T>(container.ContainerId, idMap);
             return Save(container, userId);
         }
 

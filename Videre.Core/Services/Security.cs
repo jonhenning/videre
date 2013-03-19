@@ -111,7 +111,7 @@ namespace Videre.Core.Services
             {
                 foreach (var roleId in roleIds)
                 {
-                    var newRoleId = Portal.GetIdMap<Models.Role>(roleId, map);
+                    var newRoleId = ImportExport.GetIdMap<Models.Role>(roleId, map);
                     if (!string.IsNullOrEmpty(newRoleId))
                         newRoleIds.Add(newRoleId);
                 }
