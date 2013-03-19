@@ -123,7 +123,7 @@ namespace Videre.Core.Services
 
         public static PageTemplate GetPageTemplateFromUrl(string url, string portalId = null)
         {
-            var temp = GetWidgetManifests(); //ensure manifests are loaded
+            var temp = Widget.GetWidgetManifests(); //ensure manifests are loaded
 
             portalId = string.IsNullOrEmpty(portalId) ? CurrentPortalId : portalId;
             //todo:  use widgets to determine authentication...
@@ -425,86 +425,6 @@ namespace Videre.Core.Services
             return t != null && t.Id != template.Id;
         }
 
-        public static List<WidgetManifest> GetWidgetManifests()
-        {
-            return Repository.Current.GetResources<WidgetManifest>("WidgetManifest")
-                .Select(m => m.Data)
-                .OrderBy(i => i.Name)
-                .ToList();
-        }
-
-        public static WidgetManifest GetWidgetManifest(string fullName)
-        {
-            return GetWidgetManifests().FirstOrDefault(m => m.FullName == fullName);
-        }
-
-        public static WidgetManifest GetWidgetManifestById(string Id)
-        {
-            return GetWidgetManifests().FirstOrDefault(m => m.Id == Id);
-        }
-
-        public static string Import(WidgetManifest manifest, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var existing = GetWidgetManifest(manifest.FullName);
-            manifest.Id = existing != null ? existing.Id : null;
-            return Save(manifest, userId);
-        }
-
-        public static string Save(WidgetManifest manifest, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            if (!IsDuplicate(manifest))
-            {
-                var res = Repository.Current.StoreResource("WidgetManifest", null, manifest, userId);
-                return res.Id;
-            }
-            throw new Exception( string.Format(
-                Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
-                "{0} already exists.   Duplicates Not Allowed.", "Core"), "Widget Manifest"));
-        }
-
-        public static bool IsDuplicate(WidgetManifest manifest)
-        {
-            var m = GetWidgetManifest(manifest.FullName);
-            if (m != null)
-                return m.Id != manifest.Id;
-            return false;
-        }
-
-        public static bool Exists(WidgetManifest manifest)
-        {
-            var m = GetWidgetManifest(manifest.FullName);
-            return (m != null);
-        }
-
-        public static bool DeleteManifest(string id, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<WidgetManifest>(id);
-            if (res != null)
-            {
-                // remove from all templates first!
-                var pageTemplates = GetPageTemplates().Where(t => t.Widgets.Exists(w => w.ManifestId == id)).ToList();
-                pageTemplates.ForEach(t =>
-                {
-                    t.Widgets.RemoveAll(w => w.ManifestId == id);
-                    Save(t);
-                });
-
-                var layoutTemplates =
-                    GetLayoutTemplates().Where(t => t.Widgets.Exists(w => w.ManifestId == id)).ToList();
-                layoutTemplates.ForEach(t =>
-                {
-                    t.Widgets.RemoveAll(w => w.ManifestId == id);
-                    Save(t);
-                });
-
-                Repository.Current.Delete(res);
-            }
-            return res != null;
-        }
-
         public static List<Models.Portal> GetPortals()
         {
             return Repository.Current.GetResources<Models.Portal>("Portal").Select(m => m.Data).ToList();
@@ -605,7 +525,7 @@ namespace Videre.Core.Services
             if (export.SecureActivities == null)
                 export.SecureActivities = Security.GetSecureActivities(); //we need mapping of roles!
 
-            export.Manifests = GetWidgetManifests();
+            export.Manifests = Widget.GetWidgetManifests();
             export.Files = File.Get(portalId); //todo:  somehow export file?!?!
             export.Templates = GetPageTemplates(portalId);
 
@@ -711,7 +631,7 @@ namespace Videre.Core.Services
             {
                 Logging.Logger.DebugFormat("Importing {0} manifests...", export.Manifests.Count);
                 foreach (var manifest in export.Manifests)
-                    SetIdMap<WidgetManifest>(manifest.Id, Import(manifest), idMap);
+                    SetIdMap<WidgetManifest>(manifest.Id, Widget.Import(manifest), idMap);
             }
             if (export.Localizations != null)
             {

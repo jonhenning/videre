@@ -21,7 +21,7 @@ namespace Videre.Core.Models
 
         public WidgetManifest Manifest
         {
-            get { return Services.Portal.GetWidgetManifestById(ManifestId); }
+            get { return Services.Widget.GetWidgetManifestById(ManifestId); }
         }
 
         [SerializeIgnore(new[] {"db", "client"})]

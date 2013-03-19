@@ -86,7 +86,7 @@ namespace Videre.Core.Extensions
 
         public static void RenderWidget(this HtmlHelper helper, string manifestFullName, Dictionary<string, object> attributes = null, bool defer = false, string css = null, string style = null)
         {
-            var manifest = Portal.GetWidgetManifest(manifestFullName);
+            var manifest = Services.Widget.GetWidgetManifest(manifestFullName);
             var widget = new Widget {ManifestId = manifest.Id, Css = css, Style = style};
             if (attributes != null)
                 widget.Attributes = attributes;

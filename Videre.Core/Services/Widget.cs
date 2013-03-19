@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Videre.Core.Models;
 
 namespace Videre.Core.Services
 {
@@ -37,5 +39,86 @@ namespace Videre.Core.Services
             var instance = Portal.GetPageTemplates(portalId).SelectMany(t => t.Widgets).FirstOrDefault(w => w.Id == id);
             return instance ?? Portal.GetLayoutTemplates(portalId).SelectMany(t => t.Widgets).FirstOrDefault(w => w.Id == id);
         }
+
+        public static List<Models.WidgetManifest> GetWidgetManifests()
+        {
+            return Repository.Current.GetResources<Models.WidgetManifest>("WidgetManifest")
+                .Select(m => m.Data)
+                .OrderBy(i => i.Name)
+                .ToList();
+        }
+
+        public static WidgetManifest GetWidgetManifest(string fullName)
+        {
+            return GetWidgetManifests().FirstOrDefault(m => m.FullName == fullName);
+        }
+
+        public static WidgetManifest GetWidgetManifestById(string Id)
+        {
+            return GetWidgetManifests().FirstOrDefault(m => m.Id == Id);
+        }
+
+        public static string Import(WidgetManifest manifest, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var existing = GetWidgetManifest(manifest.FullName);
+            manifest.Id = existing != null ? existing.Id : null;
+            return Save(manifest, userId);
+        }
+
+        public static string Save(WidgetManifest manifest, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            if (!IsDuplicate(manifest))
+            {
+                var res = Repository.Current.StoreResource("WidgetManifest", null, manifest, userId);
+                return res.Id;
+            }
+            throw new Exception(string.Format(
+                Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
+                "{0} already exists.   Duplicates Not Allowed.", "Core"), "Widget Manifest"));
+        }
+
+        public static bool IsDuplicate(WidgetManifest manifest)
+        {
+            var m = GetWidgetManifest(manifest.FullName);
+            if (m != null)
+                return m.Id != manifest.Id;
+            return false;
+        }
+
+        public static bool Exists(WidgetManifest manifest)
+        {
+            var m = GetWidgetManifest(manifest.FullName);
+            return (m != null);
+        }
+
+        public static bool DeleteManifest(string id, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var res = Repository.Current.GetResourceById<WidgetManifest>(id);
+            if (res != null)
+            {
+                // remove from all templates first!
+                var pageTemplates = Portal.GetPageTemplates().Where(t => t.Widgets.Exists(w => w.ManifestId == id)).ToList();
+                pageTemplates.ForEach(t =>
+                {
+                    t.Widgets.RemoveAll(w => w.ManifestId == id);
+                    Portal.Save(t);
+                });
+
+                var layoutTemplates =
+                    Portal.GetLayoutTemplates().Where(t => t.Widgets.Exists(w => w.ManifestId == id)).ToList();
+                layoutTemplates.ForEach(t =>
+                {
+                    t.Widgets.RemoveAll(w => w.ManifestId == id);
+                    Portal.Save(t);
+                });
+
+                Repository.Current.Delete(res);
+            }
+            return res != null;
+        }
+
     }
 }

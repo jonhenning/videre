@@ -9,7 +9,7 @@
     Html.RegisterWebReferenceGroup("datatables");
     Html.RegisterWebReferenceGroup("dynatree");
 
-    var manifests = Videre.Core.Services.Portal.GetWidgetManifests();
+    var manifests = Videre.Core.Services.Widget.GetWidgetManifests();
     var layouts = Videre.Core.Services.UI.GetLayouts();
     var themes = Videre.Core.Services.UI.GetThemes();
     var isLayout = Model.GetAttribute("IsLayout", false);

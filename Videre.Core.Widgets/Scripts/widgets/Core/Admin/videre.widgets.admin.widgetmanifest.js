@@ -38,7 +38,7 @@ videre.widgets.admin.widgetmanifest = videre.widgets.base.extend(
 
     refresh: function()
     {
-        this.ajax('~/core/Portal/GetManifests', {}, this._delegates.onDataReturn);
+        this.ajax('~/core/Widget/GetManifests', {}, this._delegates.onDataReturn);
     },
 
     bind: function()
@@ -75,13 +75,13 @@ videre.widgets.admin.widgetmanifest = videre.widgets.base.extend(
     {
         //todo: validation!
         var data = this.persistData(this._selectedItem, true, this._dialog);
-        this.ajax('~/core/Portal/SaveManifest', { manifest: data }, this._delegates.onSaveReturn, null, this._dialog);
+        this.ajax('~/core/Widget/SaveManifest', { manifest: data }, this._delegates.onSaveReturn, null, this._dialog);
     },
 
     deleteItem: function(id)
     {
         if (confirm('Are you sure you wish to remove this entry?')) //todo: localize?
-            this.ajax('~/core/Portal/DeleteManifest', { Id: id }, this._delegates.onSaveReturn);
+            this.ajax('~/core/Widget/DeleteManifest', { Id: id }, this._delegates.onSaveReturn);
     },
 
     _handleAction: function(action, id)

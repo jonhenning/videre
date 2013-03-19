@@ -69,21 +69,21 @@ namespace Videre.Core.Services
             var count = 0;
             foreach (var manifest in manifests)
             {
-                if (!Portal.Exists(manifest))
+                if (!Widget.Exists(manifest))
                 {
                     Logging.Logger.InfoFormat("Registering manifest: {0}", manifest.FullName);
-                    Portal.Save(manifest, Account.AuditId);
+                    Widget.Save(manifest, Account.AuditId);
                     count++;
                 }
                 else
                 {
                     //todo: REALLY need to reconsider how to structure this logic...  
-                    var m = Portal.GetWidgetManifest(manifest.FullName);
+                    var m = Widget.GetWidgetManifest(manifest.FullName);
                     manifest.Id = m.Id;
                     if (manifest.ToJson() != m.ToJson())
                     {
                         Logging.Logger.InfoFormat("Registering manifest: {0}", manifest.FullName);
-                        Portal.Save(manifest, Account.AuditId);
+                        Widget.Save(manifest, Account.AuditId);
                         count++;
                     }
 
