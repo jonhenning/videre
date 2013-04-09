@@ -71,7 +71,7 @@ namespace Videre.Core.Services
                 {
                     using (var searcher = new IndexSearcher(dir, true))
                     {
-                        var collector = TopScoreDocCollector.create(max * 2, true); //todo: mini-hack to accomidate the post-filtering of search results - attempt to get twice as many results as we need.  hopefully we won't filter out that many...
+                        var collector = TopScoreDocCollector.create(10000, true); //todo: mini-hack to accomidate the post-filtering of search results - pull a lot of records, then filter out only top (max)
                         searcher.Search(query, collector);
                         var hits = collector.TopDocs().ScoreDocs;
 
@@ -102,19 +102,34 @@ namespace Videre.Core.Services
             return new List<SearchResult>();
         }
 
-        public static List<string> Generate(string id, string userId = null)
+        public static List<string> Generate(string id, string userId = null, bool isRetry = false)
         {
             var ret = new List<string>();
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             var provider = GetSearchProviderById(id);
             if (provider != null)
             {
-                using (var writer = GetWriter())
+                var analyzer = new Lucene.Net.Analysis.Standard.StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT);
+                var dirInfo = new DirectoryInfo(IndexDir);
+                using (var indexFSDir = FSDirectory.Open(dirInfo, new Lucene.Net.Store.SimpleFSLockFactory(dirInfo)))
                 {
-                    var service = provider.GetService();
-                    ret.AddRange(service.Generate(writer));
-                    provider.LastGenerated = DateTime.UtcNow;
-                    Save(provider, userId);
+                    //try 
+                    //{
+                        using (var writer = new Lucene.Net.Index.IndexWriter(indexFSDir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED))
+                        {
+                            var service = provider.GetService();
+                            ret.AddRange(service.Generate(writer));
+                            provider.LastGenerated = DateTime.UtcNow;
+                            Save(provider, userId);
+                        }
+                    //}
+                    //catch (LockObtainFailedException ex)
+                    //{
+                    //    Logging.Logger.InfoFormat("LockObtainFailedException {0} - trying to release lock", ex.Message);
+                    //    IndexWriter.Unlock(indexFSDir);
+                    //    if (!isRetry)
+                    //        Generate(id, userId, true);
+                    //}
                 }
             }
             return ret;
@@ -134,13 +149,6 @@ namespace Videre.Core.Services
                 provider.LastGenerated = null;
                 Save(provider, userId);
             }
-        }
-
-        private static IndexWriter GetWriter()
-        {
-            var analyzer = new Lucene.Net.Analysis.Standard.StandardAnalyzer();
-            var writer = new Lucene.Net.Index.IndexWriter(IndexDir, analyzer);
-            return writer;
         }
 
         public static List<Models.SearchProvider> GetSearchProviders()
