@@ -113,7 +113,6 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\ZipExtensions.cs" />
     <Compile Include="JsonConverters\IsoDateConverter.cs" />
-    <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\AttributeDefinition.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentContainer.cs" />

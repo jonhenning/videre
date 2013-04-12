@@ -1,0 +1,8 @@
+{
+	Version: 1.0,
+	Name: "Videre Core Charting Controls",
+	Type: "Control",
+	Source: "Core",
+	Description: "Core charting controls",
+	PackagedDate: "2013-04-12T18:34:41.8759272Z"
+}

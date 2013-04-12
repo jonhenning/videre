@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Videre.Core.Controls.Charts", "Videre.Core.Controls.Charts\Videre.Core.Controls.Charts.csproj", "{A68181BC-D344-4F02-B119-58E57DF925BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A68181BC-D344-4F02-B119-58E57DF925BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A68181BC-D344-4F02-B119-58E57DF925BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A68181BC-D344-4F02-B119-58E57DF925BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A68181BC-D344-4F02-B119-58E57DF925BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

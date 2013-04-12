@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT (unless using VisualStudio 2012 :)! -->
+    <PropertyGroup>
+        <Name>Videre.Core.Controls.Charts</Name>
+        <Version>1.0</Version>
+        <ZipName>$(Name)-$(Version).zip</ZipName>
+        <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+        <RedistDir>$(RootDir)\redist</RedistDir>
+        <DeployDir>$(RootDir)\Web</DeployDir>
+        <CommonLibDir>$(RootDir)\lib</CommonLibDir>
+        <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
+        
+    </PropertyGroup>
+    <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
+
+    <Target Name="AfterBuild">
+        <CallTarget Targets="UpdatePackageManifest" />
+        <CallTarget Targets="CreatePackage" />
+        <CallTarget Targets="Deploy" />
+    </Target>
+
+    <Target Name="UpdatePackageManifest">
+        <!--<Attrib ReadOnly="false" Files="$(MSBuildProjectDirectory)\package.manifest" />-->
+        <Time Format="o" Kind="Utc">
+            <Output TaskParameter="FormattedTime" PropertyName="packageDate" />
+        </Time>
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;$(packageDate)&quot;" />
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: $(Version)," />
+    </Target>
+
+    <Target Name="CreatePackage">
+        <MakeDir Directories="$(RedistDir)"/>
+        <CreateItem Include="
+                $(MSBuildProjectDirectory)\package.manifest;
+                $(MSBuildProjectDirectory)\**\*.js;
+                $(MSBuildProjectDirectory)\**\*.css;
+                $(MSBuildProjectDirectory)\**\*.gif;
+                $(MSBuildProjectDirectory)\**\*.jpg;
+                $(MSBuildProjectDirectory)\**\*.png;
+                $(MSBuildProjectDirectory)\**\*.cshtml;
+                $(TargetDir)Videre.Core.Controls.Charts.dll;
+                $(TargetDir)Videre.Core.Controls.Charts.pdb;">
+            <Output TaskParameter="Include" ItemName="Widgets" />
+        </CreateItem>
+        <Zip Files="@(Widgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" />
+        <Copy Sourcefiles="$(TargetDir)Videre.Core.Controls.Charts.dll" DestinationFolder="$(CommonLibDir)" />
+    </Target>
+
+    <Target Name="Deploy">
+        <MakeDir Directories="$(DeployDir)\_updates"/>
+        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="$(DeployDir)\_updates" />
+    </Target>
+
+</Project>
