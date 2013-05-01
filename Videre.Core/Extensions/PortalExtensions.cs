@@ -173,13 +173,6 @@ namespace Videre.Core.Extensions
             //HtmlExtensions.RegisterStylesheet(helper, "~/scripts/bootstrap-2.1.0/css/bootstrap.css", true, new Dictionary<string, string>() { { "type", "theme" } });
         }
 
-        public static MvcHtmlString RenderClientControl(this HtmlHelper helper, IClientControl clientControl, string id, Chart model)
-        {
-            model.ClientId = clientControl.GetId(id);
-            helper.RenderPartial("Controls/" + model.Path, model);
-            return null;
-        }
-
         public static MvcHtmlString AuthorizedControlGroup(this HtmlHelper helper, IClientControl widget, string id, string textKey, string defaultText, string dataColumn)
         {
             return helper.DropDownControlGroup(widget, id, textKey, defaultText, dataColumn, new List<SelectListItem>

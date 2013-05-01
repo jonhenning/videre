@@ -42,6 +42,8 @@ videre.controls.chart = videre.widgets.base.extend(
     {
         this._base(); //call base
 
+        this._initializeEvents();
+
         var options = {
             credits: { enabled: false },
             chart: {
@@ -101,8 +103,48 @@ videre.controls.chart = videre.widgets.base.extend(
     refresh: function(data)
     {
         //this._chart.
-    }
+    },
 
+    _initializeEvents: function()
+    {
+        if (this._seriesData != null)
+        {
+            for (var i = 0; i < this._seriesData.length; i++)
+            {
+                var hasEvent = false;
+                hasEvent = this._hookupEvents(this._seriesData[i], 'series') || hasEvent;
+                if (this._seriesData[i].data != null)
+                {
+                    for (x = 0; x < this._seriesData[i].data.length; x++)
+                        hasEvent = this._hookupEvents(this._seriesData[i].data[x], 'data') || hasEvent;
+                }
+                if (hasEvent)
+                    this._seriesData[i].cursor = 'pointer';
+
+            }
+        }
+    },
+
+    _hookupEvents: function(data, level)
+    {
+        var hasEvent = false;
+        if (data.events != null)
+        {
+            var self = this;
+            for (var e in data.events)
+            {
+                if (data.events[e] == null)
+                    data.events[e] = function(event) { self._onEvent(e, level, this); };
+                hasEvent = true;
+            }
+        }
+        return hasEvent;
+    },
+
+    _onEvent: function(eventName, level, chartSrc)
+    {
+        this.raiseCustomEvent('Chart', { name: eventName, level: level, chartSrc: chartSrc });
+    }
 
 });
 

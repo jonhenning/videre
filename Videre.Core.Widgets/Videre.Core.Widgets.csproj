@@ -378,12 +378,6 @@
     <Content Include="Scripts\controls\core\CLTextEditor\CLEditor1_3_0\jquery.cleditor.min.js" />
     <Content Include="Scripts\controls\core\CLTextEditor\videre.controls.texteditor.cl.js" />
     <Content Include="Scripts\controls\core\Comments\videre.controls.comments.js" />
-    <Content Include="Scripts\controls\core\Highcharts\highcharts.js" />
-    <Content Include="Scripts\controls\core\Highcharts\themes\darkblue.js" />
-    <Content Include="Scripts\controls\core\Highcharts\themes\darkgreen.js" />
-    <Content Include="Scripts\controls\core\Highcharts\themes\gray.js" />
-    <Content Include="Scripts\controls\core\Highcharts\themes\grid.js" />
-    <Content Include="Scripts\controls\core\Highcharts\videre.controls.chart.js" />
     <Content Include="Scripts\controls\core\WYSIHTML5TextEditor\videre.controls.texteditor.wysihtml5.js" />
     <Content Include="Scripts\controls\core\WYSIHTML5TextEditor\WYSIHTML5_0.2\dist\bootstrap-wysihtml5-0.0.2.css" />
     <Content Include="Scripts\controls\core\WYSIHTML5TextEditor\WYSIHTML5_0.2\dist\bootstrap-wysihtml5-0.0.2.js" />
@@ -455,7 +449,6 @@
     <Content Include="Views\Shared\Controls\Core\CKTextEditor.cshtml" />
     <Content Include="Views\Shared\Controls\Core\CLTextEditor.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\CommonEditor.cshtml" />
-    <Content Include="Views\Shared\Controls\Core\HighCharts.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\Portal.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\SearchResult.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\Search.cshtml" />

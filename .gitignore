@@ -6,7 +6,9 @@ redist
 app_data
 *.user
 *.pdb
-_packages/**.zip
+_packages
+_outgoingMail
+_publish
 _updates
 Web/Content/layouts/*
 Web/Content/themes/*

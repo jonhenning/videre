@@ -34,7 +34,7 @@
         return JSON.parse(data);
     },
 
-    parseDate: function(value, format) //json2.net - reviver
+    parseDate: function(value, format, dateOnly) //json2.net - reviver
     {
         var a, d;
         
@@ -44,8 +44,17 @@
             a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:([\+-])(\d{2})\:(\d{2}))?Z?$/.exec(value);
             if (a)
             {
-                var utcMilliseconds = Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
+                var utcMilliseconds = dateOnly ? new Date(+a[1], +a[2] - 1, +a[3]) : Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
+
                 d = new Date(utcMilliseconds);
+
+                if (a[7] != null && dateOnly != true)
+                {
+                    offset = (a[8] * 60) + parseInt(a[9], 10);
+                    offset *= ((a[7] == '-') ? -1 : 1);
+                    d.setTime(d.getTime() - offset * 60 * 1000);
+                }
+
                 if (format)
                     return d.format(format);
                 return d;
@@ -400,7 +409,7 @@ videre.UI = {
             {
                 ctl.has('.hasDatePicker').length > 0 ?
                     ctl.datetimepicker('setDate', videre.parseDate(val)) :
-                    videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  hacky date logic
+                    videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val, videre.localization.dateFormats.datetime)) : null); //todo:  hacky date logic
             },
             isValid: function(val) { return (new Date(videre.parseDate(val, videre.localization.dateFormats.datetime))) != 'Invalid Date'; }
         },
@@ -411,7 +420,7 @@ videre.UI = {
             {
                 ctl.has('.hasDatePicker').length > 0 ?
                     ctl.datetimepicker('setDate', videre.parseDate(val, 'shortTime')) :
-                    videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val)).format(videre.localization.dateFormats.datetime) : null); //todo:  UNTESTED!
+                    videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val, videre.localization.dateFormats.datetime)) : null); //todo:  UNTESTED!
             },
             isValid: function(val)
             {
@@ -427,7 +436,7 @@ videre.UI = {
                     val = val.format('isoDate');
                 return val;
             },
-            set: function(ctl, val) { videre.UI.setControlValue(ctl, val != null ? videre.parseDate(val).format(videre.localization.dateFormats.date) : ''); },
+            set: function(ctl, val) { videre.UI.setControlValue(ctl, val != null ? videre.parseDate(val, videre.localization.dateFormats.date, true) : ''); },
             isValid: function(val) { return (new Date(videre.parseDate(val, videre.localization.dateFormats.date))) != 'Invalid Date'; }
         }
     }
@@ -1026,9 +1035,9 @@ videre.localization = {
 //jsrender helpers
 $.views.helpers({
     resolveUrl: function(val) { return val != null ? videre.resolveUrl(val) : ''; },
-    formatDateTime: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.datetime) : ''; },
-    formatDate: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.date) : ''; },
-    formatTime: function(val) { return val != null ? videre.parseDate(val).format(videre.localization.dateFormats.time) : ''; },
+    formatDateTime: function(val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.datetime) : ''; },
+    formatDate: function(val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.date, true) : ''; },
+    formatTime: function(val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.time) : ''; },
     formatString: function() { return String.format.apply(this, arguments); },
     nullOrEmpty: function(val) { return String.isNullOrEmpty(val); },
     coalesce: function(val, label) { return val || (label || ''); },
