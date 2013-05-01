@@ -121,6 +121,19 @@ namespace Videre.Core.Services
             return false;
         }
 
+        public static bool UninstallPackage(string name, string version)
+        {
+            var package = GetInstalledPackages().Where(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(version) || p.Version.Equals(version, StringComparison.InvariantCultureIgnoreCase))).OrderByDescending(p => p.Version).FirstOrDefault();
+            if (package != null)
+            {
+                //todo: get manifest/files from available package zip and do the right thing...
+                DeletePackage(package.Id);
+                RemoveAvailablePackage(name, version);
+                return true;
+            }
+            return false;
+        }
+
         public static bool TogglePublishPackage(string name, string version, bool publish)
         {
             if (publish)
@@ -327,7 +340,7 @@ namespace Videre.Core.Services
             var res = Repository.Current.GetResourceById<Models.Package>(id);
             if (res != null)
             {
-                throw new Exception("NOT IMPLEMENTED YET!");
+                //throw new Exception("NOT IMPLEMENTED YET!");
                 Repository.Current.Delete(res);
             }
             return res != null;

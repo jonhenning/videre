@@ -4,81 +4,102 @@ using System.Linq;
 using System.Text;
 using Videre.Core.Models;
 using CodeEndeavors.Extensions;
+using System.Collections.Concurrent;
+using Videre.Core.ImportExportProviders;
 
 namespace Videre.Core.Services
 {
     public class ImportExport
     {
-        public static PortalExport ExportPortal(string portalId, bool includeFileContent = true)
-        {
-            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+        //private static ConcurrentDictionary<string, Type> _importExportProviderTypes = new ConcurrentDictionary<string, Type>();
+        private static ConcurrentDictionary<string, IImportExportProvider> _importExportProviders = new ConcurrentDictionary<string, IImportExportProvider>();
 
-            var export = GetPortalExport(portalId);
-            ExportAccount(portalId, export);
-            ExportLocalizations(portalId, export);
-            ExportTemplates(portalId, includeFileContent, export);
-            return export;
+        public static void RegisterProvider(IImportExportProvider provider)
+        {
+            _importExportProviders[provider.Name] = provider;
         }
 
-        private static PortalExport GetPortalExport(string portalId)
+        public static IImportExportProvider GetProvider(string name)
         {
-            var export = new PortalExport();
-            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            export.Portal = Portal.GetPortalById(portalId);
-            return export;
+            if (_importExportProviders.ContainsKey(name))
+                return _importExportProviders[name];
+
+            throw new Exception(string.Format("Import Export Provider Type {0} not registered", name));
         }
 
-        public static PortalExport ExportTemplates(string portalId, bool includeFileContent,
-            PortalExport export = null)
+        public static List<string> GetRegisteredProviders()
         {
-            export = export ?? GetPortalExport(portalId);
-            if (export.Roles == null)
-                export.Roles = Account.GetRoles(portalId); //we need mapping of roles!
-            if (export.SecureActivities == null)
-                export.SecureActivities = Security.GetSecureActivities(); //we need mapping of roles!
-
-            export.Manifests = Widget.GetWidgetManifests();
-            export.Files = File.Get(portalId); //todo:  somehow export file?!?!
-            export.Templates = Portal.GetPageTemplates(portalId);
-
-            export.LayoutTemplates = Portal.GetLayoutTemplates(portalId);
-
-            //grab all widgets that have a content provider and create dictionary of <WidgetId, ContentJson>
-            //TODO:  guard against no widgets with content???!?
-            var allWidgets = new List<Models.Widget>();
-            allWidgets.AddRange(export.Templates.SelectMany(w => w.Widgets).Where(w => w.Manifest.GetContentProvider() != null));
-            allWidgets.AddRange(export.LayoutTemplates.SelectMany(w => w.Widgets).Where(w => w.Manifest.GetContentProvider() != null));
-            allWidgets = allWidgets.Distinct(w => w.Id).ToList();
-            //since content can be shared between widgets, we only want to store it once!
-            export.WidgetContent = allWidgets.ToDictionary(w => w.Id, wc => wc.GetContentJson());
-
-            if (includeFileContent)
-            {
-                export.FileContent = new Dictionary<string, string>();
-                foreach (var file in export.Files)
-                {
-                    export.FileContent[file.Id] = Portal.GetFile(file.Id).GetFileBase64();
-                }
-            }
-            return export;
+            return _importExportProviders.Values.Select(p => p.Name).OrderBy(p => p).ToList();
         }
 
-        public static PortalExport ExportAccount(string portalId, PortalExport export = null)
-        {
-            export = export ?? GetPortalExport(portalId);
-            export.Roles = Account.GetRoles(portalId);
-            export.Users = Account.GetUsers(portalId);
-            export.SecureActivities = Security.GetSecureActivities();
-            return export;
-        }
+        //public static PortalExport ExportPortal(string portalId, bool includeFileContent = true)
+        //{
+        //    portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
 
-        public static PortalExport ExportLocalizations(string portalId, PortalExport export = null)
-        {
-            export = export ?? GetPortalExport(portalId);
-            export.Localizations = Localization.Get(portalId).Where(l => l.Type != LocalizationType.WidgetContent).ToList();
-            //don't include widget content
-            return export;
-        }
+        //    var export = GetPortalExport(portalId);
+        //    ExportAccount(portalId, export);
+        //    ExportSecureActivities(portalId, export);
+        //    ExportLocalizations(portalId, export);
+        //    ExportTemplates(portalId, includeFileContent, export);
+        //    return export;
+        //}
+
+        //public static PortalExport ExportTemplates(string portalId, bool includeFileContent, PortalExport export = null)
+        //{
+        //    export = export ?? GetPortalExport(portalId);
+        //    if (export.Roles == null)
+        //        export.Roles = Account.GetRoles(portalId); //we need mapping of roles!
+
+        //    export.Manifests = Widget.GetWidgetManifests();
+        //    export.Files = File.Get(portalId); //todo:  somehow export file?!?!
+        //    export.PageTemplates = Portal.GetPageTemplates(portalId);
+
+        //    export.LayoutTemplates = Portal.GetLayoutTemplates(portalId);
+
+        //    //grab all widgets that have a content provider and create dictionary of <WidgetId, ContentJson>
+        //    //TODO:  guard against no widgets with content???!?
+        //    var allWidgets = new List<Models.Widget>();
+        //    allWidgets.AddRange(export.PageTemplates.SelectMany(w => w.Widgets).Where(w => w.Manifest.GetContentProvider() != null));
+        //    allWidgets.AddRange(export.LayoutTemplates.SelectMany(w => w.Widgets).Where(w => w.Manifest.GetContentProvider() != null));
+        //    allWidgets = allWidgets.Distinct(w => w.Id).ToList();
+        //    //since content can be shared between widgets, we only want to store it once!
+        //    export.WidgetContent = allWidgets.ToDictionary(w => w.Id, wc => wc.GetContentJson());
+
+        //    if (includeFileContent)
+        //    {
+        //        export.FileContent = new Dictionary<string, string>();
+        //        foreach (var file in export.Files)
+        //        {
+        //            export.FileContent[file.Id] = Portal.GetFile(file.Id).GetFileBase64();
+        //        }
+        //    }
+        //    return export;
+        //}
+
+        //public static PortalExport ExportSecureActivities(string portalId, PortalExport export = null)
+        //{
+        //    export = export ?? GetPortalExport(portalId);
+        //    if (export.SecureActivities == null)
+        //        export.SecureActivities = Security.GetSecureActivities(portalId: portalId); //we need mapping of roles!
+        //    return export;
+        //}
+
+        //public static PortalExport ExportAccount(string portalId, PortalExport export = null)
+        //{
+        //    export = export ?? GetPortalExport(portalId);
+        //    export.Roles = Account.GetRoles(portalId);
+        //    export.Users = Account.GetUsers(portalId);
+        //    export.SecureActivities = Security.GetSecureActivities(portalId: portalId);
+        //    return export;
+        //}
+
+        //public static PortalExport ExportLocalizations(string portalId, PortalExport export = null)
+        //{
+        //    export = export ?? GetPortalExport(portalId);
+        //    export.Localizations = Localization.Get(portalId).Where(l => l.Type != LocalizationType.WidgetContent).ToList();
+        //    //don't include widget content
+        //    return export;
+        //}
 
         public static bool Import(PortalExport export, string portalId)
         {
@@ -151,10 +172,10 @@ namespace Videre.Core.Services
                 foreach (var exportLocalization in export.Localizations)
                     SetIdMap<Models.Localization>(exportLocalization.Id, Localization.Import(portal.Id, exportLocalization), idMap);
             }
-            if (export.Templates != null)
+            if (export.PageTemplates != null)
             {
-                Logging.Logger.DebugFormat("Importing {0} page templates...", export.Templates.Count);
-                foreach (var exportTemplate in export.Templates)
+                Logging.Logger.DebugFormat("Importing {0} page templates...", export.PageTemplates.Count);
+                foreach (var exportTemplate in export.PageTemplates)
                     SetIdMap<PageTemplate>(exportTemplate.Id, Import(portal.Id, exportTemplate, export.WidgetContent, idMap), idMap);
             }
             if (export.LayoutTemplates != null)
@@ -228,6 +249,14 @@ namespace Videre.Core.Services
         {
             var key = string.Format("{0}~{1}", typeof(T), id);
             return map.GetSetting<string>(key, null);
+        }
+
+        public static PortalExport GetPortalExport(string portalId)
+        {
+            var export = new PortalExport();
+            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+            export.Portal = Portal.GetPortalById(portalId);
+            return export;
         }
 
     }

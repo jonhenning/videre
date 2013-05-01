@@ -27,7 +27,7 @@ videre.widgets.admin.package = videre.widgets.base.extend(
         var uploader = new qq.FileUploaderBasic({
             button: this.getControl('btnImport')[0],
             params: {},
-            action: videre.resolveUrl('~/core/portal/importportal'),
+            action: videre.resolveUrl('~/core/package/importpackage'),
             onSubmit: videre.createDelegate(this, this._onFileSubmit),
             onComplete: videre.createDelegate(this, this._onFileUploadReturn),
             showMessage: videre.createDelegate(this, this._onFileMessage),
@@ -75,6 +75,20 @@ videre.widgets.admin.package = videre.widgets.base.extend(
             }, { text: 'Cancel', close: true }]);       
     },
 
+    uninstallPackage: function(pkg)
+    {
+        var self = this;
+        //todo: localize?
+        videre.UI.prompt(this.getId('UninstallPackage'), 'Uninstall Package', String.format('Do you wish to uninstall this package {0}?  Note:  Currently this just removes the db entry, not the files/content itself.', pkg.name), null,
+            [{
+                text: 'Ok', css: 'btn-primary', close: true, handler: function()
+                {
+                    self.ajax('~/core/Package/UninstallPackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
+                    return true;
+                }
+            }, { text: 'Cancel', close: true }]);
+    },
+
     bind: function()
     {
         videre.dataTables.clear(this.getControl('ItemTable'));
@@ -108,6 +122,8 @@ videre.widgets.admin.package = videre.widgets.base.extend(
                 this.downloadPackage(pkg);
             else if (action == 'remove')
                 this.removePackage(pkg);
+            else if (action == 'uninstall')
+                this.uninstallPackage(pkg);
             else if (action == 'publish')
                 this.togglePublishPackage(pkg);
 }

@@ -8,6 +8,7 @@ using Videre.Core.ActionResults;
 using Videre.Core.Services;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
+using Videre.Core.Extensions;
 
 namespace Videre.Core.Widgets.Controllers
 {
@@ -43,7 +44,7 @@ namespace Videre.Core.Widgets.Controllers
         {
             return API.Execute<List<CoreModels.SecureActivity>>(r =>
             {
-                r.Data = CoreServices.Security.GetSecureActivities();
+                r.Data = CoreServices.Security.GetSecureActivities(portalId: Portal.CurrentPortalId);
             });
         }
 
@@ -65,75 +66,21 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
-        public FileContentResult ExportPortal(string id)
-        {
-            Security.VerifyActivityAuthorized("Portal", "Administration");
-            var export = CoreServices.ImportExport.ExportPortal(id);
-            var json = export.ToJson(pretty: true, ignoreType: "db");   //todo: use db for export, or its own type?
-            return File(System.Text.Encoding.UTF8.GetBytes(json), "text/plain", "ExportPortal.json");
-        }
+        //public FileContentResult ExportPortal(string id)
+        //{
+        //    Security.VerifyActivityAuthorized("Portal", "Administration");
+        //    var export = CoreServices.ImportExport.ExportPortal(id);
+        //    var json = export.ToJson(pretty: true, ignoreType: "db");   //todo: use db for export, or its own type?
+        //    return File(System.Text.Encoding.UTF8.GetBytes(json), "text/plain", "ExportPortal.json");
+        //}
 
-        public FileContentResult ExportTemplates(string id)
-        {
-            Security.VerifyActivityAuthorized("Portal", "Administration");
-            var export = CoreServices.ImportExport.ExportTemplates(id, true);
-            var json = export.ToJson(pretty: true, ignoreType: "db");   //todo: use db for export, or its own type?
-            return File(System.Text.Encoding.UTF8.GetBytes(json), "text/plain", "ExportPortalTemplates.json");
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult<dynamic> ImportPortal(string qqfile)
-        {
-            return API.Execute<dynamic>(r =>
-            {
-                r.ContentType = "text/html";
-                string fileName = null;
-                //var tempFileName = Portal.GetTempFile(CoreServices.Portal.CurrentPortalId);
-                System.IO.Stream stream = null;
-                if (string.IsNullOrEmpty(Request["qqfile"]))    //IE
-                {
-                    fileName = Request.Files[0].FileName;
-                    stream = Request.Files[0].InputStream;
-                }
-                else
-                {
-                    fileName = qqfile;
-                    stream = Request.InputStream;
-                }
-                var ext = fileName.Substring(fileName.LastIndexOf(".") + 1);
-                var saveFileName = Portal.TempDir + fileName;
-                if (Web.MimeTypes.ContainsKey(ext))
-                {
-                    if (ext.Equals("json", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        string json = null;
-                        using (var reader = new StreamReader(stream))
-                        {
-                            json = reader.ReadToEnd();
-                        }
-                        var portalExport = json.ToObject<Models.PortalExport>();
-                        Services.ImportExport.Import(portalExport, Portal.CurrentPortalId);
-                        r.AddMessage(Localization.GetPortalText("DataImportMessage.Text", "Data has been imported successfully.  You may need to refresh your page to see changes."));
-                    }
-                    else if (ext.Equals("zip", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var fileSize = stream.WriteStream(saveFileName);
-                        r.Data = new
-                        {
-                            uniqueName = new FileInfo(saveFileName).Name,
-                            fileName = fileName,
-                            fileSize = fileSize,
-                            mimeType = Web.MimeTypes[ext]
-                        };
-                        Package.InstallFile(saveFileName, removeFile: true);
-                        
-                        r.AddMessage(Localization.GetPortalText("ImportMessage.Text", "File has been installed successfully"));
-                    }
-                }
-                else
-                    throw new Exception(Localization.GetExceptionText("InvalidMimeType.Error", "{0} is invalid.", ext));
-            });
-        }
+        //public FileContentResult ExportTemplates(string id)
+        //{
+        //    Security.VerifyActivityAuthorized("Portal", "Administration");
+        //    var export = CoreServices.ImportExport.ExportTemplates(id, true);
+        //    var json = export.ToJson(pretty: true, ignoreType: "db");   //todo: use db for export, or its own type?
+        //    return File(System.Text.Encoding.UTF8.GetBytes(json), "text/plain", "ExportPortalTemplates.json");
+        //}
 
         public JsonResult<List<CoreModels.Theme>> GetInstalledThemes()
         {

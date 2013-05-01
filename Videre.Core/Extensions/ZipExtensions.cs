@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using CodeEndeavors.Extensions;
+using ICSharpCode.SharpZipLib.Core;
 
 namespace Videre.Core.Extensions
 {
@@ -42,21 +43,27 @@ namespace Videre.Core.Extensions
         {
             using (var fs = File.OpenRead(zipFileName))
             {
-                using (var zip = new ZipFile(fs))
+                return GetZipEntryContents(fs, entryFileName);
+            }
+        }
+
+        public static string GetZipEntryContents(this Stream fs, string entryFileName)
+        {
+            using (var zip = new ZipFile(fs))
+            {
+                zip.IsStreamOwner = false;
+                var entryId = zip.FindEntry(entryFileName, true);
+                if (entryId > -1)
                 {
-                    var entryId = zip.FindEntry(entryFileName, true);
-                    if (entryId > -1)
+                    using (var stream = zip.GetInputStream(entryId))
                     {
-                        using (var stream = zip.GetInputStream(entryId))
-                        {
-                            using (TextReader tr = new StreamReader(stream))
-                                return tr.ReadToEnd();
-                        }
+                        using (TextReader tr = new StreamReader(stream))
+                            return tr.ReadToEnd();
                     }
-                    else
-                        return null;
-                    //throw new Exception("Entry not found: " + entryFileName);
                 }
+                else
+                    return null;
+                //throw new Exception("Entry not found: " + entryFileName);
             }
         }
 
@@ -64,6 +71,37 @@ namespace Videre.Core.Extensions
         {
             var zip = new FastZip();
             zip.ExtractZip(zipFileName, extractFolder, zipEntryName);
+        }
+
+        public static byte[] ZipToByteArray(this Dictionary<string, string> entries)
+        {
+            using (var outputMemStream = new MemoryStream())
+            {
+                using (var zipStream = new ZipOutputStream(outputMemStream))
+                {
+                    foreach (var zipEntryName in entries.Keys)
+                    {
+                        using (var memStreamIn = new MemoryStream(Encoding.ASCII.GetBytes(entries[zipEntryName])))
+                        {
+                            zipStream.SetLevel(3); //0-9, 9 being the highest level of compression
+
+                            var newEntry = new ZipEntry(zipEntryName);
+                            newEntry.DateTime = DateTime.Now;
+
+                            zipStream.PutNextEntry(newEntry);
+
+                            StreamUtils.Copy(memStreamIn, zipStream, new byte[4096]);
+                            zipStream.CloseEntry();
+
+                        }
+                    }
+                    zipStream.IsStreamOwner = false;    // False stops the Close also Closing the underlying stream.
+                    zipStream.Close();          // Must finish the ZipOutputStream before using outputMemStream.
+                }
+                outputMemStream.Position = 0;
+                return outputMemStream.GetBuffer();
+            }
+
         }
 
     }

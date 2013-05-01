@@ -30,6 +30,15 @@ namespace Videre.Core.Services
             //return Repository.Current.Get<Models.File>("File", f => f.PortalId == PortalId && f.Urls.Contains(Url), null);
         }
 
+        public static Models.File GetById(string id)
+        {
+            var fileResource = Repository.Current.GetResourceById<Models.File>(id);
+            if (fileResource != null)
+                return fileResource.Data; //.ToModel();
+            return null;
+            //return Repository.Current.Get<Models.File>("File", f => f.PortalId == PortalId && f.Urls.Contains(Url), null);
+        }
+
         public static string Import(string portalId, Models.File file, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;

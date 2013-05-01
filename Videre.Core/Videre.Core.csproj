@@ -112,6 +112,7 @@
     <Compile Include="ContentProviders\IWidgetContentProvider.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\ZipExtensions.cs" />
+    <Compile Include="ImportExportProviders\IImportExportProvider.cs" />
     <Compile Include="JsonConverters\IsoDateConverter.cs" />
     <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\AttributeDefinition.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Models\CommentContainer.cs" />
     <Compile Include="Models\CommentControl.cs" />
     <Compile Include="Models\AttributeDependency.cs" />
+    <Compile Include="Models\ImportExportContent.cs" />
     <Compile Include="Models\SubWidget.cs" />
     <Compile Include="Models\DataControl.cs" />
     <Compile Include="Models\CustomDataElement.cs" />

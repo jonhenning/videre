@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
 using System.Web.Routing;
+using Videre.Core.ImportExportProviders;
+using Videre.Core.Widgets.ImportExportProviders;
 
 namespace Videre.Core.Widgets
 {
@@ -82,6 +84,7 @@ namespace Videre.Core.Widgets
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Search", Title = "Search Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "WebReference", Title = "Web Reference Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Package", Title = "Package Admin", Category = "Admin" }, 
+                new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "ExportPackage", Title = "Export Package", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core", Name = "Menu", Title = "Menu", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation" , AttributeDefinitions = new List<AttributeDefinition>()
                 {
                     new AttributeDefinition()
@@ -127,7 +130,6 @@ namespace Videre.Core.Widgets
                 new CoreModels.WidgetManifest() { Path = "Core", Name = "SearchResult", Title = "Search Result", Category = "General" }
 
             });
-
 
             return updates;
         }

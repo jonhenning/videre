@@ -332,6 +332,7 @@ namespace Videre.Core.Services
             //    Services.Update.RegisterWidgets();
             //}
             Services.Update.RegisterWidgets();
+            Services.Update.RegisterImportExportProviders();
         }
 
         public static void RegisterWidgets()
@@ -357,6 +358,20 @@ namespace Videre.Core.Services
             updates += RegisterPortals(false);
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();
+
+        }
+
+        public static void RegisterImportExportProviders()
+        {
+            ObjectFactory.Configure(x =>
+                x.Scan(scan =>
+                {
+                    scan.AssembliesFromApplicationBaseDirectory();
+                    scan.AddAllTypesOf<ImportExportProviders.IImportExportProvider>();
+                }));
+            var providers = ObjectFactory.GetAllInstances<ImportExportProviders.IImportExportProvider>();
+            foreach (var provider in providers)
+                Services.ImportExport.RegisterProvider(provider);
 
         }
 

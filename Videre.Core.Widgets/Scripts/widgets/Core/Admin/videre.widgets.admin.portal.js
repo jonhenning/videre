@@ -53,7 +53,7 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         var uploader = new qq.FileUploaderBasic({
             button: this.getControl('btnImport')[0],
             params: {},
-            action: videre.resolveUrl('~/core/portal/importportal'),
+            action: videre.resolveUrl('~/core/package/importpackage'),
             onSubmit: videre.createDelegate(this, this._onFileSubmit),
             onComplete: videre.createDelegate(this, this._onFileUploadReturn),
             showMessage: videre.createDelegate(this, this._onFileMessage),

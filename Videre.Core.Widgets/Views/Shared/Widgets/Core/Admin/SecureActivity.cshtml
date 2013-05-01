@@ -9,7 +9,7 @@
     Html.RegisterWebReferenceGroup("datatables");
     
     Html.RegisterControlPresenter(Model, "videre.widgets.admin.secureactivity", new Dictionary<string, object>() {
-        {"data", Videre.Core.Services.Security.GetSecureActivities() },
+        {"data", Videre.Core.Services.Security.GetSecureActivities(portalId: Portal.CurrentPortalId) },
         {"roleData", Account.GetRoles() }});
 }
 
@@ -44,7 +44,7 @@
                             <td>{{:Name}}</td>
                             <td>
                                 {{for Roles}}
-                                {{:#ctx.roleDataDict[#data].Name}}
+                                {{:#ctx.roleDataDict[#data] != null ? #ctx.roleDataDict[#data].Name : null}}
                                 {{/for}}
                             </td>
                         </tr>

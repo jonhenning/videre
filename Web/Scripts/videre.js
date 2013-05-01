@@ -24,9 +24,9 @@
         return function() { return method.apply(instance, arguments); };
     },
 
-    serialize: function(s)
+    serialize: function(s, replacer, space)
     {
-        return JSON.stringify(s);
+        return JSON.stringify(s, replacer, space);
     },
 
     deserialize: function(data)
@@ -149,6 +149,15 @@
             success: function(result) { success(result, ctx); },
             error: function(request) { error(request, ctx); }
         });
+    },
+
+    download: function(url, data, method)
+    {
+        var form = $('<form action="' + videre.resolveUrl(url) + '" method="' + (method || 'post') + '"></form>');
+        for (var key in data)
+            form.append($('<input type="hidden" />').attr('name', key).val(videre.serialize(data[key]))); 
+        //send request
+        form.appendTo('body').submit().remove();
     },
 
     timer: function(key, func, interval, ctx)

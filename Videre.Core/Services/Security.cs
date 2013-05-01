@@ -88,7 +88,7 @@ namespace Videre.Core.Services
         public static List<Models.SecureActivity> GetAuthorizedSecureActivities(string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var activities = GetSecureActivities();
+            var activities = GetSecureActivities(portalId: Portal.CurrentPortalId);
             return activities.Where(a => Services.Account.IsInRole(userId, a.Roles)).ToList();
         }
 
