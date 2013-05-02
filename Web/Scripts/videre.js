@@ -48,7 +48,7 @@
 
                 d = new Date(utcMilliseconds);
 
-                if (a[7] != null && dateOnly != true)
+                if (!String.isNullOrEmpty(a[7]) && dateOnly != true)
                 {
                     offset = (a[8] * 60) + parseInt(a[9], 10);
                     offset *= ((a[7] == '-') ? -1 : 1);
