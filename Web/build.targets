@@ -27,6 +27,7 @@
         <CallTarget Targets="UpdatePackageManifest" />
         <CallTarget Targets="CreatePackage" />
         <CallTarget Targets="Deploy" />
+        <CallTarget Targets="ResetPackageManifest" />
     </Target>
 
     <Target Name="UpdatePackageManifest">
@@ -38,6 +39,9 @@
         <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: $(Version)," />
     </Target>
 
+    <Target Name="ResetPackageManifest">
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;&quot;" />
+    </Target>
 
     <Target Name="CreatePackage">
         <MakeDir Directories="$(RedistDir)"/>
