@@ -1,7 +1,7 @@
 ﻿videre.registerNamespace('videre.widgets');
 videre.registerNamespace('videre.widgets.admin');
 
-videre.widgets.admin.exportpackage = videre.widgets.base.extend(
+videre.widgets.admin.packageexport = videre.widgets.base.extend(
 {
     get_newManifest: function() { return this._newManifest; },
     set_newManifest: function(v) { this._newManifest = v; },

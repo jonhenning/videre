@@ -84,7 +84,8 @@ namespace Videre.Core.Widgets
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Search", Title = "Search Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "WebReference", Title = "Web Reference Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Package", Title = "Package Admin", Category = "Admin" }, 
-                new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "ExportPackage", Title = "Export Package", Category = "Admin" }, 
+                new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "PackageAdmin", Title = "Package Admin", Category = "Admin" }, 
+                new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "PackageExport", Title = "Package Export", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core", Name = "Menu", Title = "Menu", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation" , AttributeDefinitions = new List<AttributeDefinition>()
                 {
                     new AttributeDefinition()

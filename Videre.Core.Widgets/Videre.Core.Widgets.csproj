@@ -401,7 +401,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\widgets\core\account\videre.widgets.account.userprofile.js" />
-    <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.package.js" />
+    <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.packageadmin.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.webreference.js" />
     <Content Include="Scripts\controls\core\videre.widgets.widgetadmincontextmenu.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.theme.js" />
@@ -412,7 +412,7 @@
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.user.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.role.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.filebrowser.js" />
-    <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.exportpackage.js" />
+    <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.packageexport.js" />
     <Content Include="Scripts\widgets\core\videre.widgets.search.js" />
     <Content Include="Scripts\widgets\core\videre.widgets.searchresults.js" />
     <Content Include="Scripts\widgets\core\videre.widgets.editor.common.js" />
@@ -468,7 +468,8 @@
     <Content Include="Views\Shared\Widgets\Core\Admin\WebReference.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Error.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\Package.cshtml" />
-    <Content Include="Views\Shared\Widgets\Core\Admin\ExportPackage.cshtml" />
+    <Content Include="Views\Shared\Widgets\Core\Admin\PackageExport.cshtml" />
+    <Content Include="Views\Shared\Widgets\Core\Admin\PackageAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">

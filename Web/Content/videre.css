@@ -106,14 +106,13 @@ a
     overflow: auto;
 }
 
-.videre-fixed-width-font
+.videre-fixed-width-font, .form-horizontal .videre-fixed-width-font
 {
-    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace; 
 }
 
 .videre-sidenav 
 {
-  width: 228px;
   padding: 0;
   background-color: #fff;
   -webkit-border-radius: 6px;
@@ -126,7 +125,6 @@ a
 .videre-sidenav > li > a 
 {
   display: block;
-  width: 190px \9;
   margin: 0 0 -1px;
   padding: 8px 14px;
   border: 1px solid #e5e5e5;

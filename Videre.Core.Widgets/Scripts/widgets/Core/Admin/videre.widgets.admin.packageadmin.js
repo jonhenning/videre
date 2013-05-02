@@ -2,7 +2,7 @@
 videre.registerNamespace('videre.widgets');
 videre.registerNamespace('videre.widgets.admin');
 
-videre.widgets.admin.package = videre.widgets.base.extend(
+videre.widgets.admin.packageadmin = videre.widgets.base.extend(
 {
     //constructor
     init: function()
