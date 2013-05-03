@@ -35,7 +35,8 @@ namespace Videre.Core.Widgets.ImportExportProviders
             if (pageTemplate != null)
             {
                 var allWidgets = pageTemplate.Widgets.ToList();
-                allWidgets.AddRange(pageTemplate.Layout.Widgets);
+                //layouts are linked by name (not id) so we can choose a page template without the layout
+                //allWidgets.AddRange(pageTemplate.Layout.Widgets);
 
                 var allRoleNames = pageTemplate.Roles;
                 allRoleNames.AddRange(pageTemplate.Widgets.SelectMany(w => w.Roles));
@@ -49,11 +50,12 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 export.PageTemplates = export.PageTemplates ?? new List<Models.PageTemplate>();
                 export.PageTemplates.Add(pageTemplate);
 
-                export.LayoutTemplates = export.LayoutTemplates ?? new List<Models.LayoutTemplate>();
-                export.LayoutTemplates.Add(pageTemplate.Layout);
+                //export.LayoutTemplates = export.LayoutTemplates ?? new List<Models.LayoutTemplate>();
+                //export.LayoutTemplates.Add(pageTemplate.Layout);
 
                 export.WidgetContent = export.WidgetContent ?? new Dictionary<string, string>();
-                export.WidgetContent.Merge(allWidgets.Where(w => w.Manifest.GetContentProvider() != null).ToDictionary(w => w.Id, wc => wc.GetContentJson()));
+                //todo: should fix extension method to use dictionary, not create a new one!
+                export.WidgetContent = export.WidgetContent.Merge(allWidgets.Where(w => w.Manifest.GetContentProvider() != null).ToDictionary(w => w.Id, wc => wc.GetContentJson()));
             }
             return export;
         }

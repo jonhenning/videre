@@ -210,7 +210,7 @@ namespace Videre.Core.Services
                             var packageFileName = packageManifest != null ? AddPackage(fileName) : fileName;   //if zip has manifest put in package folder and install from there
 
                             Logging.Logger.InfoFormat("Applying update for file: {0}", packageFileName);
-                            packageFileName.ExtractZip(rootDir, @"-package\.manifest|-\.json");
+                            packageFileName.ExtractZip(rootDir, @"-package\.manifest;-\.json");
 
                             //todo:  deferred package content apply or right now?  
                             //ideally manifest will have the registration assembly listed and we can register right away then instantly apply

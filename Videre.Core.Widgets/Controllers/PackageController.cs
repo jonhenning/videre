@@ -142,10 +142,12 @@ namespace Videre.Core.Widgets.Controllers
             var m = manifest.ToObject<Models.Package>();
             m.PackagedDate = DateTime.Now;
 
+            var content = exportPackage.ToObject<Models.PortalExport>();
+
             return File(new Dictionary<string, string>()
                 {
-                    {"package.manifest", m.ToJson(true) },
-                    {"content.json", exportPackage }
+                    {"package.manifest", m.ToJson(true, "db") },
+                    {"content.json", content.ToJson(true, "db") }
                 }.ZipToByteArray(), "application/zip");
         }
 
