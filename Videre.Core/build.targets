@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT (unless using VisualStudio 2012 :)! -->
+  <!-- Ignore this please -->
     <PropertyGroup>
         <Name>Videre.Core</Name>
         <Version>1.0</Version>
