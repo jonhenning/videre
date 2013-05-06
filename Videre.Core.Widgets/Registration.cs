@@ -21,7 +21,7 @@ namespace Videre.Core.Widgets
                 "Core/f/{*Url}", // URL with parameters
                 new { controller = "file", action = "View" },
                 null,
-                new string[] { "Videre.Core.Widgets" }
+                new string[] { "Videre.Core.Widgets.Controllers" }
             );
 
             RouteTable.Routes.MapRoute(
@@ -29,7 +29,7 @@ namespace Videre.Core.Widgets
                 "Core/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional },
                 null,
-                new string[] { "Videre.Core.Widgets"}
+                new string[] { "Videre.Core.Widgets.Controllers" }
             );
 
 
