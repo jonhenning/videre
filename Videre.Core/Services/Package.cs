@@ -198,6 +198,8 @@ namespace Videre.Core.Services
         {
             var rootDir = Portal.ResolvePath("~/");
             var file = new FileInfo(fileName);
+            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+
             if (file != null)
             {
                 switch (file.Extension.ToLower())

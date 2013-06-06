@@ -84,7 +84,9 @@ namespace Videre.Core.Services
                 return CacheState.PullRequestCache("CurrentPortal", delegate
                 {
                     var portals = GetPortals();
-                    var bestMatch = GetBestMatchedUrl(RequestRootUrl, portals.SelectMany(t => t.Aliases));
+                    string bestMatch = ""; 
+                    if (RequestRootUrl != null) //during an update (app start) url will be null, just pull default in this case
+                        bestMatch = GetBestMatchedUrl(RequestRootUrl, portals.SelectMany(t => t.Aliases));
                     Models.Portal portal = null;
                     if (!string.IsNullOrEmpty(bestMatch))
                         portal = portals.FirstOrDefault(t => t.Aliases.Contains(bestMatch));
