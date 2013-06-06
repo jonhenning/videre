@@ -99,6 +99,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\LocalizationController.cs" />
     <Compile Include="ContentProviders\MenuContentProvider.cs" />
+    <Compile Include="ImportExportProviders\WebReferenceImportExportProvider.cs" />
     <Compile Include="ImportExportProviders\UserImportExportProvider.cs" />
     <Compile Include="ImportExportProviders\SecureActivityImportExportProvider.cs" />
     <Compile Include="ImportExportProviders\FileImportExportProvider.cs" />

@@ -22,9 +22,7 @@
             <p>@Html.Raw(Model.GetText("Instructions.Text", "Export Package allows you to craft your own package, including the content you wish.  You can then tweak the content added by editing the JSON directly."))</p>
 
             <div class="container">
-                <div>
-                </div>
-                <div class="row">
+                <div class="row-fluid">
                     <div class="span2">
                         <ul class="nav nav-list videre-sidenav" id="@Model.GetId("ExportTypeList")">
                             @foreach (var provider in providers)
@@ -36,36 +34,41 @@
                         </ul>
                     </div>
                     <div class="span10">
-                        <div id="@Model.GetId("PackageCtr")" class="well">
-                            <h5>@Model.GetText("Package.Text", "Package") - <span data-column="Name"></span> <span data-column="Version"></span></h5>
-                            <a class="btn" data-action="edit-package"><i class="icon-edit"></i> @Model.GetPortalText("EditPackage.Text", "Edit Package")</a>
-                            <a class="btn" data-action="load-package"><i class="icon-download"></i> @Model.GetPortalText("LoadPackage.Text", "Load Package")</a>
-                            <a class="btn" data-action="new-package"><i class="icon-star"></i> @Model.GetPortalText("NewPackage.Text", "New Package")</a>
-                            <a class="btn" data-action="download-package"><i class="icon-download-alt"></i> @Model.GetPortalText("DownloadPackage.Text", "Download Package")</a>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div id="@Model.GetId("PackageCtr")" class="well">
+                                    <h5>@Model.GetText("Package.Text", "Package") - <span data-column="Name"></span> <span data-column="Version"></span></h5>
+                                    <a class="btn" data-action="edit-package"><i class="icon-edit"></i> @Model.GetPortalText("EditPackage.Text", "Edit Package")</a>
+                                    <a class="btn" data-action="load-package"><i class="icon-download"></i> @Model.GetPortalText("LoadPackage.Text", "Load Package")</a>
+                                    <a class="btn" data-action="new-package"><i class="icon-star"></i> @Model.GetPortalText("NewPackage.Text", "New Package")</a>
+                                    <a class="btn" data-action="download-package"><i class="icon-download-alt"></i> @Model.GetPortalText("DownloadPackage.Text", "Download Package")</a>
+                                </div>
+                            </div>
                         </div>
-                        <div id="@Model.GetId("ItemListCtr")">
-                            <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
-                                <thead>
+                        <div class="row-fluid">
+                            <div id="@Model.GetId("ItemListCtr")" class="span12">
+                                <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 31px"></th>
+                                            <th>@Model.GetText("Name.Text", "Name")</th>
+                                            <th>@Model.GetText("Preview.Text", "Preview")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="@Model.GetId("ItemList")"></tbody>
+                                </table>
+                                <script id="@Model.GetId("ItemListTemplate")" type="text/html">
                                     <tr>
-                                        <th style="width: 31px"></th>
-                                        <th>@Model.GetText("Name.Text", "Name")</th>
-                                        <th>@Model.GetText("Preview.Text", "Preview")</th>
+                                        <td>
+                                            {{:Included == false ? '<a class="btn btn-mini" data-id="' + Id + '" data-action="add"><i class="icon-plus"></i></a>' : ''}}
+                                        </td>
+                                        <td>{{:Name}}</td>
+                                        <td>{{:Preview}}</td>
                                     </tr>
-                                </thead>
-                                <tbody id="@Model.GetId("ItemList")"></tbody>
-                            </table>
-                            <script id="@Model.GetId("ItemListTemplate")" type="text/html">
-                                <tr>
-                                    <td>
-                                        {{:Included == false ? '<a class="btn btn-mini" data-id="' + Id + '" data-action="add"><i class="icon-plus"></i></a>' : ''}}
-                                    </td>
-                                    <td>{{:Name}}</td>
-                                    <td>{{:Preview}}</td>
-                                </tr>
-                            </script>
+                                </script>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </fieldset>

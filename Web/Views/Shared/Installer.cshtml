@@ -12,7 +12,7 @@
 {
     bool IsRequiredPackage(CoreModels.Package package)
     {
-        return package.Name.IndexOf("Videre Core",  StringComparison.InvariantCultureIgnoreCase) > -1;
+        return package.Name.Contains("Videre Core") || package.Name.Contains("Bootstrap");
     }
 
 }

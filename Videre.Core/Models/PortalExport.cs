@@ -35,6 +35,7 @@ namespace Videre.Core.Models
         public List<Models.LayoutTemplate> LayoutTemplates { get; set; }
         public Dictionary<string, string> WidgetContent { get; set; }
         public Dictionary<string, string> FileContent { get; set; }
+        public List<Models.WebReference> WebReferences { get; set; }
         
     }
 }

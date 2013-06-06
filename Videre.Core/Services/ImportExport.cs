@@ -184,6 +184,13 @@ namespace Videre.Core.Services
                 foreach (var exportTemplate in export.LayoutTemplates)
                     SetIdMap<LayoutTemplate>(exportTemplate.Id, Import(portal.Id, exportTemplate, export.WidgetContent, idMap), idMap);
             }
+            if (export.WebReferences != null)
+            {
+                Logging.Logger.DebugFormat("Importing {0} web references...", export.WebReferences.Count);
+                foreach (var exportWebReference in export.WebReferences)
+                    SetIdMap<Models.WebReference>(exportWebReference.Id, Web.Import(portal.Id, exportWebReference, idMap), idMap);
+            }
+
             return true;
         }
 
