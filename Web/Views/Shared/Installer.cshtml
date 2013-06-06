@@ -12,7 +12,7 @@
 {
     bool IsRequiredPackage(CoreModels.Package package)
     {
-        return package.Name.Contains("Videre Core") || package.Name.Contains("Bootstrap");
+        return package.Name.Contains("Videre Core");
     }
 
 }
@@ -21,6 +21,17 @@
 <html>
 <head>
     <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Videre")</title>
+
+    <script src="/scripts/jquery-1.7.1/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="/scripts/jquery-ui-1.8.18/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="/scripts/bootstrap-2.1.0/js/bootstrap.js" type="text/javascript"></script>
+    
+    <script src="/scripts/videre.extensions.js" type="text/javascript"></script>
+    <script src="/scripts/videre.js" type="text/javascript"></script>
+
+    <link href="/Content/videre.css" type="text/css" rel="stylesheet"  />
+    <link href="/scripts/jquery-ui-1.8.18/css/smoothness/jquery-ui-1.8.18.custom.css" type="text/css" rel="stylesheet"  />
+    <link href="/scripts/bootstrap-2.1.0/css/bootstrap.min.css" type="text/css" rel="stylesheet"  />
 
     @{Html.RenderLayoutHeader();}
 </head>
@@ -36,10 +47,22 @@
                 <div class="control-group">
                     <label class="control-label" for="optionsCheckboxList">Packages</label>
                     <div class="controls" id="@Model.GetId("Packages")">
-                        @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages())
+                        @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type != "WebReference").OrderBy(p => p.Name))
                         {
-                            <label class="checkbox" title="@package.Description">
-                                <input type="checkbox" value="@package.Name" checked="checked" @(IsRequiredPackage(package) ? "disabled=\"true\"" : "") >
+                            <label class="checkbox" title="@package.Description - @package.Source">
+                                <input type="checkbox" value="@package.Name" checked="checked" @(IsRequiredPackage(package) ? "disabled=\"true\"" : "") />
+                                @package.Name (v @package.Version)
+                            </label>
+                        }
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="optionsCheckboxList">Web References</label>
+                    <div class="controls" id="@Model.GetId("WebReferencePackages")">
+                        @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type == "WebReference").OrderBy(p => p.Name))
+                        {
+                            <label class="checkbox" title="@package.Description - @package.Source">
+                                <input type="checkbox" value="@package.Name" checked="checked" disabled="true" />
                                 @package.Name (v @package.Version)
                             </label>
                         }

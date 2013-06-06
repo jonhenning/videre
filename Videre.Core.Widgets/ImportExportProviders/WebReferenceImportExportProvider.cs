@@ -19,7 +19,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 new ImportExportContent()
                 {
                     Id = r.Id,
-                    Name = r.Group + "/" + r.Name,
+                    Name = r.Name,
                     Included = (export != null && export.WebReferences != null ? export.WebReferences.Exists(r2 => r2.Id == r.Id) : false),
                     Preview = r.Url
                 }).ToList();

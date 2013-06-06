@@ -22,8 +22,8 @@ namespace Videre.Core.Extensions
         public static void RegisterWebReference(this HtmlHelper helper, string name)
         {
             var refs = Services.Web.GetWebReferences();
-            if (refs.Count == 0)    //todo: detect compat mode (query string???)
-                refs = Services.Web.GetDefaultWebReferences();
+            //if (refs.Count == 0)    //todo: detect compat mode (query string???)
+            //    refs = Services.Web.GetDefaultWebReferences();
             var wr = refs.Where(r => r.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
             if (wr != null)
@@ -54,8 +54,8 @@ namespace Videre.Core.Extensions
         public static void RegisterWebReferenceGroup(this HtmlHelper helper, string name)
         {
             var refs = Services.Web.GetWebReferences(); 
-            if (refs.Count == 0)    //todo: detect compat mode (query string???)
-                refs = Services.Web.GetDefaultWebReferences();
+            //if (refs.Count == 0)    //todo: detect compat mode (query string???)
+            //    refs = Services.Web.GetDefaultWebReferences();
             var groupRefs = refs.Where(r => r.Group.Equals(name, StringComparison.InvariantCultureIgnoreCase)).OrderByDescending(r => r.DependencyGroups.Count);
             foreach (var r in groupRefs.OrderBy(r => r.Sequence))
                 RegisterWebReference(helper, r.Name);

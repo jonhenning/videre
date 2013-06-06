@@ -19,7 +19,7 @@ videre.widgets.installer = videre.widgets.base.extend(
         videre.UI.handleEnter(this._widget, videre.createDelegate(this, this._onInstallClicked));
 
         //this._widget.find('input,select,textarea').jqBootstrapValidation();
-
+        this.getControl('txtUserName').focus();
     },
 
 
@@ -34,6 +34,7 @@ videre.widgets.installer = videre.widgets.base.extend(
             };
             var packages = [];
             this.getControl('Packages').find(':checked').each(function() { packages.push($(this).val()) });
+            this.getControl('WebReferencePackages').find(':checked').each(function() { packages.push($(this).val()) });
 
             this.ajax('~/Installer/Install', { adminUser: user, portal: portal, packages: packages }, this._delegates.onInstallReturn);
         }
