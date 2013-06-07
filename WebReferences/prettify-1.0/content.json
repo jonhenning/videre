@@ -1,0 +1,43 @@
+{
+  "Portal": {
+    "Id": "15c82be9-14b1-4e6f-8851-e44633724e93"
+  },
+   "WebReferences": [
+      {
+         "Id": "772141a4-d3d2-4c77-bee1-ebbe5fece970",
+         "PortalId": "15c82be9-14b1-4e6f-8851-e44633724e93",
+         "Name": "prettify startup",
+         "Url": null,
+         "Text": "prettyPrint();",
+         "Sequence": null,
+         "Type": 1,
+         "LoadType": 1,
+         "Group": "prettify",
+         "DependencyGroups": []
+      },
+      {
+         "Id": "377c44ea-3ff3-48cb-84db-873b1aa8cbcc",
+         "PortalId": "15c82be9-14b1-4e6f-8851-e44633724e93",
+         "Name": "prettify css",
+         "Url": "~/scripts/prettify-1.0/prettify.css",
+         "Text": null,
+         "Sequence": null,
+         "Type": 2,
+         "LoadType": 0,
+         "Group": "prettify",
+         "DependencyGroups": []
+      },
+      {
+         "Id": "84864a19-98ff-4e1c-8756-537943df8907",
+         "PortalId": "15c82be9-14b1-4e6f-8851-e44633724e93",
+         "Name": "prettify",
+         "Url": "~/scripts/prettify-1.0/prettify.js",
+         "Text": null,
+         "Sequence": null,
+         "Type": 0,
+         "LoadType": 0,
+         "Group": "prettify",
+         "DependencyGroups": []
+      }
+   ]
+}

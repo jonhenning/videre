@@ -1,0 +1,12 @@
+{
+  "Id": null,
+  "Name": "jQuery UI Time Picker",
+  "Type": "WebReference",
+  "FileName": null,
+  "Version": "1.0.1",
+  "Description": "jQuery UI Time Picker files",
+  "Source": "https://github.com/trentrichardson/jQuery-Timepicker-Addon",
+  "Thumbnail": null,
+  "PackagedDate": "2013-06-06T15:33:33Z",
+  "InstallDate": null
+}

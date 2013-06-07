@@ -1,0 +1,12 @@
+{
+  "Id": null,
+  "Name": "Bootstrap",
+  "Type": "WebReference",
+  "FileName": null,
+  "Version": "2.3.2",
+  "Description": "Bootstrap files",
+  "Source": "http://twitter.github.io/bootstrap/",
+  "Thumbnail": null,
+  "PackagedDate": "2013-06-06T14:32:22.4792433Z",
+  "InstallDate": null
+}

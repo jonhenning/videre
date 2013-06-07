@@ -21,7 +21,10 @@ Web/Scripts/camera*/*
 logs/*
 *.suo
 *.pubxml
-*.test
-*.production
 # mstest test results
 TestResults
+Web/AppSettings.config
+Web/configuration.targets
+Web/ConnectionStrings.config
+Web/log4net.config
+Web/SMTPSettings.config

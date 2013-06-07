@@ -204,13 +204,11 @@
   <ItemGroup>
     <Content Include="AppSettings.config" />
     <None Include="AppSettings.config.debug" />
-    <None Include="AppSettings.config.release" />
     <Content Include="ConnectionStrings.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="build.targets" />
     <None Include="ConnectionStrings.config.debug" />
-    <None Include="ConnectionStrings.config.release" />
     <Content Include="_packages\Videre.CoreSiteTemplate.zip" />
     <Content Include="_packages\Videre.FirstTimeUserContent.zip" />
     <Content Include="_packages\Bootstrap-2.1.zip" />
@@ -228,10 +226,7 @@
     <Content Include="SMTPSettings.config" />
     <Content Include="package.manifest" />
     <None Include="SMTPSettings.config.debug" />
-    <None Include="SMTPSettings.config.release" />
     <None Include="log4net.config.debug" />
-    <None Include="log4net.config.release" />
-    <None Include="copyifnewer.bat" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -285,4 +280,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent />
+  </PropertyGroup>
 </Project>

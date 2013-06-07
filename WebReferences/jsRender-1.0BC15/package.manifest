@@ -1,0 +1,12 @@
+{
+  "Id": null,
+  "Name": "jsRender",
+  "Type": "WebReference",
+  "FileName": null,
+  "Version": "1.0 Beta Commit 15",
+  "Description": "jsRender files",
+  "Source": "https://github.com/BorisMoore/jsrender",
+  "Thumbnail": null,
+  "PackagedDate": "2013-06-06T14:32:22.4792433Z",
+  "InstallDate": null
+}

@@ -1,0 +1,12 @@
+{
+  "Id": null,
+  "Name": "Valum's File Uploader",
+  "Type": "WebReference",
+  "FileName": null,
+  "Version": "2.0",
+  "Description": "Valum's File Uploader files",
+  "Source": "http://github.com/Valums-File-Uploader/file-uploader",
+  "Thumbnail": null,
+  "PackagedDate": "2013-06-06T15:33:33Z",
+  "InstallDate": null
+}

@@ -1,0 +1,49 @@
+{
+  "Portal": {
+    "Id": "15c82be9-14b1-4e6f-8851-e44633724e93"
+  },
+   "WebReferences": [
+      {
+         "Id": "9ffb12c9-10c3-49d9-ab1d-aa3eb8c0ce6b",
+         "PortalId": "15c82be9-14b1-4e6f-8851-e44633724e93",
+         "Name": "multiselect startup",
+         "Url": null,
+         "Text": "$('select[data-controltype=\"multiselect\"]').multiselect({ selectedList: 3 });",
+         "Sequence": null,
+         "Type": 1,
+         "LoadType": 1,
+         "Group": "multiselect",
+         "DependencyGroups": []
+      },
+      {
+         "Id": "7e12ea50-a751-4cef-9483-a94550a35fd3",
+         "PortalId": "15c82be9-14b1-4e6f-8851-e44633724e93",
+         "Name": "multiselect css",
+         "Url": "~/scripts/jquery-ui-multiselect-1.12/jquery.multiselect.css",
+         "Text": null,
+         "Sequence": null,
+         "Type": 2,
+         "LoadType": 0,
+         "Group": "multiselect",
+         "DependencyGroups": [
+            "jQuery",
+            "jQuery UI"
+         ]
+      },
+      {
+         "Id": "02d9c493-5a31-4f9b-97f2-46b6f4c49758",
+         "PortalId": "15c82be9-14b1-4e6f-8851-e44633724e93",
+         "Name": "multiselect",
+         "Url": "~/scripts/jquery-ui-multiselect-1.12/jquery.multiselect.min.js",
+         "Text": null,
+         "Sequence": null,
+         "Type": 0,
+         "LoadType": 0,
+         "Group": "multiselect",
+         "DependencyGroups": [
+            "jQuery",
+            "jQuery UI"
+         ]
+      }
+   ]
+}
