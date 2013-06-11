@@ -90,5 +90,20 @@ if (menu != null)
       </div>
     </div>
   </div>
+    
+    if (alwaysOnTop)
+    {
+     <script>
+         $(document).ready(function()
+         {
+             $('body').css({
+                 'padding-top': $('#@(Model.GetId("Widget"))').height() + 'px'
+             });
+         });
+
+     </script>   
+    }
+    
+    
 }
 }

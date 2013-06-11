@@ -1,0 +1,98 @@
+@using System.Linq;
+@using System.Collections.Generic;
+@using System.Web.Mvc.Html;
+@using Models = Videre.Core.Models;
+@using Videre.Core.Extensions;
+@using CodeEndeavors.Extensions;
+@using Videre.Core.Services;
+
+@model Models.Widget
+@functions{
+    private string GetUrl(string url)
+    {
+        return !string.IsNullOrEmpty(url) ? Url.Content(url) : "";
+    }
+}
+    
+@{
+    Html.RegisterWebReferenceGroup("font-awesome");
+    Html.RegisterWebReferenceGroup("videre-sidenav");
+
+    var canEdit = Security.IsActivityAuthorized("Content", "Administration");
+
+//var searchUrl = Videre.Core.Services.Portal.CurrentPortal.GetAttribute("Core", "SearchUrl", "~/search");
+//var showSearch = Model.GetAttribute("ShowSearch", "No") == "Yes";
+//var inverseColors = Model.GetAttribute("InverseColors", "No") == "Yes";
+var position = Model.GetAttribute("Position", "");
+//var showLogo = Model.GetAttribute("ShowLogo", "No") == "Yes";
+
+Models.Menu menu = Model.GetContent<Models.Menu>();
+if (menu != null)
+{
+    var urls = menu.Items.Select(i => i.Url).ToList();
+    urls.AddRange(menu.Items.Descendants(i => i.Items).Select(i => i.Url));
+        
+    var bestMatchUrl = !string.IsNullOrEmpty(Portal.CurrentUrl) ? Portal.GetBestMatchedUrl("~/" + Portal.CurrentUrl, urls) : "~/";   //todo: need better url processing, as adding ~/ in front is kind of lame!
+    
+    //if (showSearch)
+    //{
+    //    Html.RegisterControlPresenter(Model, "videre.widgets.search");
+    //}
+    
+    if (canEdit)
+    {
+        Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model);
+    }
+
+    var fixedCss = position.Equals("Fixed Left", StringComparison.InvariantCultureIgnoreCase) ? "fixed fixed-left" : 
+        (position.Equals("Fixed Right", StringComparison.InvariantCultureIgnoreCase) ? "fixed fixed-right" : "");
+
+    var fixedPosition = !string.IsNullOrEmpty(fixedCss);
+    
+  <div id="@Model.GetId("Widget")" class="videre-sidebar @fixedCss @Model.Css" style="@Model.Style">
+
+        <ul class="nav nav-list">
+            @menuTemplate(menu.Items, 0, bestMatchUrl, ".nav")
+        @helper menuTemplate(List<Models.MenuItem> items, int depth, string bestMatchUrl, string parent) 
+        {
+            foreach (var item in items.Where(i => i.IsAuthorized))
+            {
+                var menuId = Guid.NewGuid().ToString();
+                var css = bestMatchUrl.Equals(item.Url, StringComparison.InvariantCultureIgnoreCase) ? "active" : "";
+                if (item.Items.Count == 0)
+                {
+                    <li class="@css"><a href="@GetUrl(item.Url)">@item.Text</a></li>
+                }
+                else
+                {
+                <li class="accordion-group @css">
+                    <a class="accordian-toggle" data-toggle="collapse" data-target="#@menuId" data-parent="@parent">
+                        @item.Text<b class="arrow icon-angle-down"></b>
+                    </a>
+
+                    <ul class="submenu collapse" id="@menuId">
+                        @menuTemplate(item.Items, depth + 1, bestMatchUrl, menuId)
+                    </ul>
+                </li>                    
+                }  
+            }
+            }
+        </ul>
+  </div>
+    
+    if (fixedPosition)
+    {
+     <script>
+         $(document).ready(function()
+         {
+             $('body').css({
+                 'padding-left': $('#@(Model.GetId("Widget")).fixed-left').width() + 'px',
+                 'padding-right': $('#@(Model.GetId("Widget")).fixed-right').width() + 'px'
+             });
+         });
+
+     </script>   
+    }
+    
+}
+}

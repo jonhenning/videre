@@ -99,6 +99,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\LocalizationController.cs" />
     <Compile Include="ContentProviders\MenuContentProvider.cs" />
+    <Compile Include="ImportExportProviders\MenuImportExportProvider.cs" />
     <Compile Include="ImportExportProviders\WebReferenceImportExportProvider.cs" />
     <Compile Include="ImportExportProviders\UserImportExportProvider.cs" />
     <Compile Include="ImportExportProviders\SecureActivityImportExportProvider.cs" />
@@ -471,6 +472,7 @@
     <Content Include="Views\Shared\Widgets\Core\Admin\Package.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\PackageExport.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\PackageAdmin.cshtml" />
+    <Content Include="Views\Shared\Widgets\Core\SideNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">

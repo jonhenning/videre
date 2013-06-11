@@ -38,14 +38,18 @@ namespace Videre.Core.Services
             else
                 menu.Id = null;
             menu.PortalId = portalId;
-            foreach (var item in menu.Items)    //todo: only support 2 levels for now...
-            {
-                foreach (var subItem in item.Items)
-                    subItem.Roles = Security.GetNewRoleIds(subItem.Roles, idMap);
-                item.Roles = Security.GetNewRoleIds(item.Roles, idMap);
-            }
+            ImportSubMenuItems(menu.Items, idMap);
 
             return Save(menu, userId);
+        }
+
+        private static void ImportSubMenuItems(List<Models.MenuItem> items, Dictionary<string, string> idMap)
+        {
+            foreach (var subItem in items)
+            {
+                subItem.Roles = Security.GetNewRoleIds(subItem.Roles, idMap);
+                ImportSubMenuItems(subItem.Items, idMap);
+            }
         }
 
         public static string Save(Models.Menu menu, string userId = null)

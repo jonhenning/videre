@@ -13,7 +13,7 @@
         <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Videre")</title>
         @{Html.RenderLayoutHeader();}
     </head>
-    <body style="padding-top: 40px;">
+    <body>
         <div class="container template-header shaded">
             <h3>@(this.Model != null ? this.Model.Title : "Videre")</h3>
         </div>

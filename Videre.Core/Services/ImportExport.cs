@@ -191,6 +191,13 @@ namespace Videre.Core.Services
                     SetIdMap<Models.WebReference>(exportWebReference.Id, Web.Import(portal.Id, exportWebReference, idMap), idMap);
             }
 
+            if (export.Menus != null)
+            {
+                Logging.Logger.DebugFormat("Importing {0} menus...", export.Menus.Count);
+                foreach (var menu in export.Menus)
+                    SetIdMap<Models.Menu>(menu.Id, Menu.Import(portal.Id, menu, idMap), idMap);
+            }
+
             return true;
         }
 

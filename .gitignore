@@ -6,7 +6,6 @@ redist
 app_data
 *.user
 *.pdb
-_packages
 _outgoingMail
 _publish
 _updates

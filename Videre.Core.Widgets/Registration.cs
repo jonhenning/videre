@@ -124,8 +124,20 @@ namespace Videre.Core.Widgets
                         LabelKey = "ShowSearch.Text",
                         LabelText = "Show Search"
                     }
-                }
-                },
+                }},
+                new CoreModels.WidgetManifest() { Path = "Core", Name = "SideNav", Title = "SideNav", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation" , AttributeDefinitions = new List<AttributeDefinition>()
+                {
+                    new AttributeDefinition()
+                    {
+                        Name = "Position",
+                        Values = new List<string>() { "", "Fixed Left", "Fixed Right" },
+                        DefaultValue = "",
+                        Required = false,
+                        LabelKey = "Position.Text",
+                        LabelText = "Position"
+                    }
+                }},
+
                 new CoreModels.WidgetManifest() { Path = "Core", Name = "TextHtml", Title = "Text Html", EditorPath = "Widgets/Core/TextHtmlEditor", EditorType = "videre.widgets.editor.texthtml", ContentProvider = "Videre.Core.ContentProviders.LocalizationContentProvider, Videre.Core", Category = "General"
                 },
                 new CoreModels.WidgetManifest() { Path = "Core", Name = "SearchResult", Title = "Search Result", Category = "General" }

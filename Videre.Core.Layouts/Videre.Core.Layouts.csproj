@@ -82,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Layouts\GeneralWide\Layout.css" />
     <Content Include="Content\Layouts\SidebarRight\Layout.css" />
     <Content Include="Content\Layouts\General\Layout.css" />
     <Content Include="Content\Layouts\TwoPane\Layout.css" />
@@ -115,6 +116,8 @@
     <Content Include="Views\Layouts\SidebarRight.manifest" />
     <Content Include="Views\Layouts\TwoPane.manifest" />
     <Content Include="package.manifest" />
+    <Content Include="Views\Layouts\GeneralWide.manifest" />
+    <Content Include="Views\Layouts\GeneralWide\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Layouts\Blank\" />

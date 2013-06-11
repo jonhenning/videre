@@ -4,7 +4,7 @@
 @model Videre.Core.Models.PageTemplate
 
 @{
-    Html.RegisterStylesheet(UI.LayoutContentPath.PathCombine("General/layout.css"), true);
+    Html.RegisterStylesheet(UI.LayoutContentPath.PathCombine("GeneralWide/layout.css"), true);
 }
 
 <!DOCTYPE HTML>
@@ -15,10 +15,10 @@
 
     </head>
     <body>
-        <div class="container template-header shaded">
+        <div class="container-fluid template-header shaded">
             <h3>@(this.Model != null ? this.Model.Title : "Videre")</h3>
         </div>
-		<div class="container">			
+		<div class="container-fluid">			
 			<div class="content" style="min-height: 500px;">	
 				@RenderBody()
                 @{Html.RenderWidgets(this.Model, "Main");}
