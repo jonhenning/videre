@@ -59,6 +59,7 @@ if (menu != null)
             {
                 var menuId = Guid.NewGuid().ToString();
                 var css = bestMatchUrl.Equals(item.Url, StringComparison.InvariantCultureIgnoreCase) ? "active" : "";
+                var submenuCss = item.Items.Exists(i => bestMatchUrl.Equals(i.Url, StringComparison.InvariantCultureIgnoreCase)) ? "in" : "";
                 if (item.Items.Count == 0)
                 {
                     <li class="@css"><a href="@GetUrl(item.Url)">@iconTemplate(item)@item.Text</a></li>
@@ -70,7 +71,7 @@ if (menu != null)
                         @iconTemplate(item)@item.Text<b class="arrow icon-angle-down"></b>
                     </a>
 
-                    <ul class="submenu collapse" id="@menuId">
+                    <ul class="submenu @submenuCss collapse" id="@menuId">
                         @menuTemplate(item.Items, depth + 1, bestMatchUrl, menuId)
                     </ul>
                 </li>                    
