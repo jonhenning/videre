@@ -24,8 +24,8 @@
             <div class="row">
                 <div class="span3">
                     <div class="btn-toolbar">
-                        <div class="btn-group">
-                            <a class="btn btn-small" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
+                        <div class="btn-group input-prepend">
+                            <a class="btn" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
                             @Html.DropDownList(Model.GetId("ddlFilterType"), Enum.GetNames(typeof(Models.LocalizationType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.LocalizationType>()).ToString(), Text = t }), new { style = "width: 110px;" })
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                         </tr>
                     </script>
                 </div>
-                <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px;">
+                <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px;" style="display: none;">
                     <div class="modal-header">
                         <a class="close" data-dismiss="modal">×</a>
                         @Model.GetText("EditDialogText.Text", "Localization Edit")
