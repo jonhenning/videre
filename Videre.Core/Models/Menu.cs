@@ -38,6 +38,7 @@ namespace Videre.Core.Models
         }
 
         public string Text { get; set; }    //TODO: LOCALIZE!
+        public string Icon { get; set; }
         public List<MenuItem> Items { get; set; }
         public string TemplateId { get; set; }  //??? - think its for eventual mapping to template, regardless of its url...
         public string Url { get; set; }

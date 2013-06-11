@@ -62,6 +62,15 @@
                         <div class="span5 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none; margin-top: 30px; margin-left:0;">
                             @*@Html.DropDownControlGroup(Model, "ddlParent", "Parent.Text", "Parent", "parentId", "", new List<SelectListItem>())*@
                             @Html.InputControlGroup(Model, "txtItemText", "Text.Text", "Text", "Text", required: true)
+
+                            <div class="control-group">
+                                <label class="control-label" for="@Model.GetId("txtIcon")">Icon</label>
+                                <div class="controls input-append" style="display: block;">
+                                    <input type="text" id="@Model.GetId("txtIcon")" data-column="Icon">
+                                    <span class="add-on"><i id="@Model.GetId("imgIcon")"></i></span>
+                                </div>
+                            </div>
+
                             @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url")
                             @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles")
                             @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")

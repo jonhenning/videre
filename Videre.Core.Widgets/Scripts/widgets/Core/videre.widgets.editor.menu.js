@@ -35,6 +35,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         this.getControl('btnDeleteMenu').click(videre.createDelegate(this, this._onDeleteMenuClicked));
         this.getControl('btnOkNewMenu').click(videre.createDelegate(this, this._onNewMenuOkClicked));
         this.getControl('ddlName').change(videre.createDelegate(this, this._onMenuChanged));
+        this.getControl('txtIcon').change(videre.createDelegate(this, this._onIconChanged));
     },
 
     show: function(widget, manifest)
@@ -110,6 +111,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         this.getControl('EditCtr').show();
         this.getControl('EditCtr').find('[required]').attr('bypassvalidation', null);   //todo:  we need a way to allow for panes to opt out of validation of their controls...  this is ok, but still feels a bit dirty
         this.bindData(this._selectedItem, this.getControl('EditCtr'));  //MenuTab
+        this._refreshIcon();
         this._setDirty(false);
     },
 
@@ -143,6 +145,11 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
             this.bindMenu();
             this.getControl('EditCtr').hide();
         }
+    },
+
+    _refreshIcon: function()
+    {
+        this.getControl('imgIcon').attr('class', '').attr('class', this.getControl('txtIcon').val());
     },
 
     _getParentItems: function(item)
@@ -363,7 +370,13 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
     _onMenuChanged: function(e)
     {
         this._handleMenuChanged();
+    },
+
+    _onIconChanged: function(e)
+    {
+        this._refreshIcon();
     }
+
 
 });
 
