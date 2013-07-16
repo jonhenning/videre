@@ -199,7 +199,7 @@ Array.prototype.select = function(f)
     for (var i = 0; i < this.length; i++)
     {
         var a = f(this[i]);
-        if (a)
+        if (a != null)
             ret.push(a);
     }
     return ret;
@@ -213,8 +213,14 @@ Array.prototype.selectMany = function(f)
     return ret;
 };
 
-
 Array.prototype.singleOrDefault = function()
+{
+    if (this.length > 0)
+        return this[0];
+    return null;
+};
+
+Array.prototype.firstOrDefault = function()
 {
     if (this.length > 0)
         return this[0];
