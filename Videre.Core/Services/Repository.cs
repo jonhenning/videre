@@ -41,7 +41,7 @@ namespace Videre.Core.Services
                 ResourceRepository repo = null;
                 if (!IsOpen)
                 {
-                    repo = new ResourceRepository(ConfigurationManager.AppSettings.GetSetting("RepositoryConnection", ""));
+                    repo = new ResourceRepository(Portal.GetAppSetting("RepositoryConnection", ""));
                     SetContextData("CurrentResourceRepository", repo);
                     //if (HttpContext.Current != null)
                     //    HttpContext.Current.Items["CurrentResourceRepository"] = repo;

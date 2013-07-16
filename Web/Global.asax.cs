@@ -49,7 +49,7 @@ namespace Videre.Web
                 new { controller = "Route", action = "Index" } // Parameter defaults
             );
 
-            if (ConfigurationManager.AppSettings.GetSetting("EnableRouteDebug", false))
+            if (Services.Portal.GetAppSetting("EnableRouteDebug", false))
                 RouteDebug.RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
 
         }

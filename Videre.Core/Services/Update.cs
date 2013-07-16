@@ -40,7 +40,7 @@ namespace Videre.Core.Services
         {
             get
             {
-                return Portal.ResolvePath(ConfigurationManager.AppSettings.GetSetting("UpdateDir", "~/_updates/"));
+                return Portal.ResolvePath(Portal.GetAppSetting("UpdateDir", "~/_updates/"));
             }
         }
 

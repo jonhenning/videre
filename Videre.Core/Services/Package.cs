@@ -18,7 +18,7 @@ namespace Videre.Core.Services
         {
             get
             {
-                return Portal.ResolvePath(ConfigurationManager.AppSettings.GetSetting("PackageDir", "~/_packages/"));
+                return Portal.ResolvePath(Portal.GetAppSetting("PackageDir", "~/_packages/"));
             }
         }
 
@@ -26,7 +26,7 @@ namespace Videre.Core.Services
         {
             get
             {
-                return Portal.ResolvePath(ConfigurationManager.AppSettings.GetSetting("PublishDir", "~/_publish/"));
+                return Portal.ResolvePath(Portal.GetAppSetting("PublishDir", "~/_publish/"));
             }
         }
 

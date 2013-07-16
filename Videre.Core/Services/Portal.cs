@@ -40,7 +40,7 @@ namespace Videre.Core.Services
         {
             get
             {
-                var tempDir = ResolvePath(ConfigurationManager.AppSettings.GetSetting("TempDir", "~/_temp/"));
+                var tempDir = ResolvePath(GetAppSetting("TempDir", "~/_temp/"));
                 if (!Directory.Exists(tempDir)) //todo: do this each time???
                     Directory.CreateDirectory(tempDir);
                 return tempDir;
@@ -517,9 +517,14 @@ namespace Videre.Core.Services
             return dir;
         }
 
+        public static T GetAppSetting<T>(string key, T defaultValue)
+        {
+            return ConfigurationManager.AppSettings.GetSetting<T>(key, defaultValue);
+        }
+
         public static string GetFilePath()
         {
-            return ConfigurationManager.AppSettings.GetSetting("FileDir", "~/App_Data/FileRepo");
+            return GetAppSetting("FileDir", "~/App_Data/FileRepo");
         }
 
         public static string GetContentPath()
