@@ -148,6 +148,22 @@ Array.prototype.where = function(f) {
     return ret;
 };
 
+Array.prototype.distinct = function(f)
+{
+    var ret = [];
+    var temp = {};
+    for (var i = 0; i < this.length; i++)
+    {
+        var key = f(this[i]);
+        if (temp[key] == null)
+        {
+            ret.push(key);
+            temp[key] = 1;
+        }
+    }
+    return ret;
+};
+
 Array.prototype.findIndex = function(f)
 {
     for (var i = 0; i < this.length; i++)
@@ -318,20 +334,15 @@ Array.indexOf = function _indexOf(array, item, start)
     return -1;
 };
 
-Array.prototype.toListDictionary = function(key, nullKey)
+Array.prototype.toListDictionary = function(fKey, fSelect)
 {
     var dict = {};
     for (var i = 0; i < this.length; i++)
     {
-        if (this[i])
-        {
-            var dictKey = this[i][key];
-            if (dictKey == null)
-                dictKey = nullKey;
-            if (dict[dictKey] == null)
-                dict[dictKey] = [];
-            dict[dictKey].push(this[i]);
-        }
+        var key = fKey(this[i]);
+        if (dict[key] == null)
+            dict[key] = [];
+        dict[key].push(fSelect == null ? this[i] : fSelect(this[i]));
     }
     return dict;
 };
