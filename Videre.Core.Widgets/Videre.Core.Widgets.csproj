@@ -52,13 +52,20 @@
   <ItemGroup>
     <Reference Include="CodeEndeavors.Extensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\CodeEndeavors.ResourceManager\CodeEndeavors.Extensions.dll</HintPath>
+      <HintPath>..\packages\CodeEndeavors.Extensions.1.0.0\lib\4.0\CodeEndeavors.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="CodeEndeavors.ResourceManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\CodeEndeavors.ResourceManager\CodeEndeavors.ResourceManager.dll</HintPath>
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.1.0.0\lib\net40\CodeEndeavors.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeEndeavors.ResourceManager.File">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.1.0.0\lib\net40\CodeEndeavors.ResourceManager.File.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap, Version=2.6.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
       <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
     </Reference>
