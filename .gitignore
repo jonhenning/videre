@@ -27,3 +27,4 @@ Web/configuration.targets
 Web/ConnectionStrings.config
 Web/log4net.config
 Web/SMTPSettings.config
+packages/*
