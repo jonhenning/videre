@@ -71,10 +71,8 @@
         <Zip Files="@(DeployFiles)" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" />
     </Target>
 
-    <Target Name="Deploy">
-        <!--<MakeDir Directories="$(DeployDir)\_updates"/>
-        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="$(DeployDir)\_updates" />-->
+    <Target Name="Deploy" Condition="Exists('$(DeployDir)')">
+        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="$(DeployDir)\_updates" />
     </Target>
-
 
 </Project>

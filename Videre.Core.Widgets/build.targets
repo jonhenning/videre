@@ -10,7 +10,6 @@
         <DeployDir>$(RootDir)\Web</DeployDir>
         <CommonLibDir>$(RootDir)\lib</CommonLibDir>
         <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
-        
     </PropertyGroup>
     <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
 
@@ -45,9 +44,22 @@
                 $(MSBuildProjectDirectory)\**\*.cshtml;
                 $(TargetDir)Videre.Core.Widgets.dll;
                 $(TargetDir)Videre.Core.Widgets.pdb;">
-            <Output TaskParameter="Include" ItemName="Widgets" />
+            <Output TaskParameter="Include" ItemName="DebugWidgets" />
         </CreateItem>
-        <Zip Files="@(Widgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" />
+        <CreateItem Include="
+                $(MSBuildProjectDirectory)\package.manifest;
+                $(MSBuildProjectDirectory)\**\*.js;
+                $(MSBuildProjectDirectory)\**\*.css;
+                $(MSBuildProjectDirectory)\**\*.gif;
+                $(MSBuildProjectDirectory)\**\*.jpg;
+                $(MSBuildProjectDirectory)\**\*.png;
+                $(MSBuildProjectDirectory)\**\*.cshtml;
+                $(TargetDir)Videre.Core.Widgets.dll;
+                ">
+            <Output TaskParameter="Include" ItemName="ReleaseWidgets" />
+        </CreateItem>
+        <Zip Files="@(DebugWidgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" Condition=" '$(Configuration)' == 'Debug' "/>
+        <Zip Files="@(ReleaseWidgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" Condition=" '$(Configuration)' == 'Release' " />
     </Target>
 
     <Target Name="Deploy">
