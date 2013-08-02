@@ -1,6 +1,0 @@
-﻿<appSettings>
-    <add key="webpages:Version" value="2.0.0.0"/>
-    <add key="RepositoryConnection" value="{ type:'File', resourceDir:'~/App_Data/FileDb' }"/>
-    <add key="FileDir" value="~/App_Data/FileRepo"/>
-    <add key="EnableRouteDebug" value="false"/>
-</appSettings>
