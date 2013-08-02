@@ -10,6 +10,7 @@
         <CommonLibDir>$(RootDir)\lib</CommonLibDir>
         <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
         <CopyConfigEnvironment>debug</CopyConfigEnvironment>
+        <ConfigDir>$(ProjectDir)</ConfigDir>
     </PropertyGroup>
 
     <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
@@ -27,10 +28,10 @@
     </Target>
 
     <Target Name="CopyConfig">
-        <Copy SourceFiles="$(ProjectDir)AppSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)AppSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" />
-        <Copy SourceFiles="$(ProjectDir)ConnectionStrings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)ConnectionStrings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true"/>
-        <Copy SourceFiles="$(ProjectDir)log4net.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)log4net.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true"/>
-        <Copy SourceFiles="$(ProjectDir)SMTPSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)SMTPSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="$(ConfigDir)AppSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)AppSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" />
+        <Copy SourceFiles="$(ConfigDir)ConnectionStrings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)ConnectionStrings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="$(ConfigDir)log4net.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)log4net.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="$(ConfigDir)SMTPSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)SMTPSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true"/>
     </Target>
     
     <Target Name="UpdatePackageManifest">
