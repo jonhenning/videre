@@ -28,10 +28,10 @@
     </Target>
 
     <Target Name="CopyConfig">
-        <Copy SourceFiles="$(ConfigDir)AppSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)AppSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" />
-        <Copy SourceFiles="$(ConfigDir)ConnectionStrings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)ConnectionStrings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true"/>
-        <Copy SourceFiles="$(ConfigDir)log4net.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)log4net.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true"/>
-        <Copy SourceFiles="$(ConfigDir)SMTPSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)SMTPSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="$(ConfigDir)AppSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)AppSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)AppSettings.config.$(CopyConfigEnvironment)')"/>
+        <Copy SourceFiles="$(ConfigDir)ConnectionStrings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)ConnectionStrings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)ConnectionStrings.config.$(CopyConfigEnvironment)')"/>
+        <Copy SourceFiles="$(ConfigDir)log4net.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)log4net.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)log4net.config.$(CopyConfigEnvironment)')"/>
+        <Copy SourceFiles="$(ConfigDir)SMTPSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)SMTPSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)SMTPSettings.config.$(CopyConfigEnvironment)')"/>
     </Target>
     
     <Target Name="UpdatePackageManifest">
