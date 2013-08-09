@@ -13,6 +13,7 @@ namespace Videre.Core.AccountProviders
         List<Models.User> Get(string portalId);
         List<Models.User> Get(string portalId, Func<Models.User, bool> statement);
         string Save(Models.User user, string userId);
+        void Validate(Models.User user);
         bool Delete(string id, string userId);
         Models.User GetById(string id);
 

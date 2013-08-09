@@ -185,17 +185,8 @@ namespace Videre.Core.Services
                 }
             }
 
-            Validate(user);
+            AccountService.Validate(user);
             return AccountService.Save(user, editUserId);
-        }
-
-        public static void Validate(Models.User user)
-        {
-            Validation.ValidateEmail(user.Email);
-            if (string.IsNullOrEmpty(user.Name) || (string.IsNullOrEmpty(user.Password) && string.IsNullOrEmpty(user.PasswordHash)))
-                throw new Exception(Localization.GetExceptionText("InvalidResource.Error", "{0} is invalid.", "User"));
-            if (Exists(user))
-                throw new Exception(Localization.GetExceptionText("DuplicateResource.Error", "{0} already exists.   Duplicates Not Allowed.", "User"));
         }
 
         public static bool Exists(Models.User user)
