@@ -1,4 +1,5 @@
 ﻿@using Videre.Core.Extensions;
+@using CoreServices = Videre.Core.Services;
 @using CoreModels = Videre.Core.Models;
 @model CoreModels.View
 @{
@@ -22,16 +23,16 @@
 <head>
     <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Videre")</title>
 
-    <script src="/scripts/jquery-1.7.1/jquery-1.7.1.min.js" type="text/javascript"></script>
-    <script src="/scripts/jquery-ui-1.8.18/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
-    <script src="/scripts/bootstrap-2.1.0/js/bootstrap.js" type="text/javascript"></script>
+    <script src="@CoreServices.Portal.ResolveUrl("~/scripts/jquery-1.7.1/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    <script src="@CoreServices.Portal.ResolveUrl("~/scripts/jquery-ui-1.8.18/js/jquery-ui-1.8.18.custom.min.js")" type="text/javascript"></script>
+    <script src="@CoreServices.Portal.ResolveUrl("~/scripts/bootstrap-2.1.0/js/bootstrap.js")" type="text/javascript"></script>
     
-    <script src="/scripts/videre.extensions.js" type="text/javascript"></script>
-    <script src="/scripts/videre.js" type="text/javascript"></script>
+    <script src="@CoreServices.Portal.ResolveUrl("~/scripts/videre.extensions.js")" type="text/javascript"></script>
+    <script src="@CoreServices.Portal.ResolveUrl("~/scripts/videre.js")" type="text/javascript"></script>
 
-    <link href="/Content/videre.css" type="text/css" rel="stylesheet"  />
-    <link href="/scripts/jquery-ui-1.8.18/css/smoothness/jquery-ui-1.8.18.custom.css" type="text/css" rel="stylesheet"  />
-    <link href="/scripts/bootstrap-2.1.0/css/bootstrap.min.css" type="text/css" rel="stylesheet"  />
+    <link href="@CoreServices.Portal.ResolveUrl("~/Content/videre.css")" type="text/css")" rel="stylesheet"  />
+    <link href="@CoreServices.Portal.ResolveUrl("~/scripts/jquery-ui-1.8.18/css/smoothness/jquery-ui-1.8.18.custom.css")" type="text/css" rel="stylesheet"  />
+    <link href="@CoreServices.Portal.ResolveUrl("~/scripts/bootstrap-2.1.0/css/bootstrap.min.css")" type="text/css" rel="stylesheet"  />
 
     @{Html.RenderLayoutHeader();}
 </head>
