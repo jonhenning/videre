@@ -112,6 +112,18 @@ namespace Videre.Core.Services
                 export.Portal.Name = portal.Name;
                 //IMPORTANT:  since we pass in the portalId that we want to import into, we need to ensure that is used, therefore, the name must match as that is how the duplicate lookup is done.  (i.e. {Id: 1, Name=Default} {Id: 2, Name=Foo}.  If we import Id:2 and its name importing is Default)
                 export.Portal.Default = portal.Default;
+
+                //if export does not contain these values, revert back to originals
+                if (export.Portal.ThemeName == null)
+                    export.Portal.ThemeName = portal.ThemeName;
+                if (export.Portal.LogoUrl == null)
+                    export.Portal.LogoUrl = portal.LogoUrl;
+                if (export.Portal.Title == null)
+                    export.Portal.Title = portal.Title;
+                if (export.Portal.Aliases == null)
+                    export.Portal.Aliases = portal.Aliases;
+                if (export.Portal.Attributes == null)
+                    export.Portal.Attributes = portal.Attributes;
             }
             else
                 throw new Exception("Portal Not found: " + portalId);
