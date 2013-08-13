@@ -149,32 +149,7 @@
     <Content Include="Content\themes\img\glyphicons-halflings.png" />
     <Content Include="Content\videre.css" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\bootstrap-2.1.0\css\bootstrap-responsive.css" />
-    <Content Include="Scripts\bootstrap-2.1.0\css\bootstrap-responsive.min.css" />
-    <Content Include="Scripts\bootstrap-2.1.0\css\bootstrap.css" />
-    <Content Include="Scripts\bootstrap-2.1.0\css\bootstrap.min.css" />
-    <Content Include="Scripts\bootstrap-2.1.0\img\glyphicons-halflings-white.png" />
-    <Content Include="Scripts\bootstrap-2.1.0\img\glyphicons-halflings.png" />
-    <Content Include="Scripts\bootstrap-2.1.0\js\bootstrap.js" />
-    <Content Include="Scripts\bootstrap-2.1.0\js\bootstrap.min.js" />
-    <Content Include="Scripts\jQuery-1.7.1\jquery-1.7.1.min.js" />
     <Content Include="Scripts\date.format.js" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-icons_222222_256x240.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-icons_454545_256x240.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-icons_888888_256x240.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Scripts\jquery-ui-1.8.18\css\smoothness\jquery-ui-1.8.18.custom.css" />
-    <Content Include="Scripts\jquery-ui-1.8.18\js\jquery-1.7.1.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.18\js\jquery-ui-1.8.18.custom.min.js" />
     <Content Include="Scripts\videre.extensions.js" />
     <Content Include="Scripts\videre.js" />
     <Content Include="Scripts\widgets\videre.widgets.editor.base.js" />
@@ -190,7 +165,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Route\Index.cshtml" />
-    <Content Include="log4net.config" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -212,12 +186,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AppSettings.config" />
-    <None Include="AppSettings.config.debug" />
-    <Content Include="ConnectionStrings.config">
+    <Content Include="build.targets">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="build.targets" />
+    <Content Include="AppSettings.config.debug" />
     <None Include="ConnectionStrings.config.debug" />
     <Content Include="_packages\Videre.CoreSiteTemplate.zip" />
     <Content Include="_packages\Videre.FirstTimeUserContent.zip" />
@@ -235,7 +207,6 @@
     <Content Include="_packages\videre-sidenav-0.1.zip" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SMTPSettings.config" />
     <Content Include="package.manifest" />
     <Content Include="packages.config" />
     <None Include="SMTPSettings.config.debug" />
