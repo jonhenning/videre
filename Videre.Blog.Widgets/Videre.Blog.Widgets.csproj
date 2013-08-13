@@ -25,6 +25,8 @@
     <IISExpressUseClassicPipelineMode />
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,16 +54,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CodeEndeavors.Extensions">
-      <HintPath>..\lib\CodeEndeavors.ResourceManager\CodeEndeavors.Extensions.dll</HintPath>
+      <HintPath>..\packages\CodeEndeavors.Extensions.1.0.1\lib\4.0\CodeEndeavors.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="CodeEndeavors.ResourceManager">
-      <HintPath>..\lib\CodeEndeavors.ResourceManager\CodeEndeavors.ResourceManager.dll</HintPath>
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.1.0.1\lib\net40\CodeEndeavors.ResourceManager.dll</HintPath>
     </Reference>
-    <Reference Include="Lucene.Net, Version=2.9.4.1, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Lucene.Net.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.File">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.1.0.1\lib\net40\CodeEndeavors.ResourceManager.File.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\packages\Lucene.Net.2.9.4.1\lib\net40\Lucene.Net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.ApplicationServices">
@@ -148,6 +161,7 @@
     <Content Include="_packages\Videre.Blog.Widgets.manifest" />
     <Content Include="Views\Shared\Widgets\Blog\BlogArchive.cshtml" />
     <Content Include="package.manifest" />
+    <Content Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -173,4 +187,5 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
