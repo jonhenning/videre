@@ -117,8 +117,7 @@
     <Content Include="Scripts\camera-1.3.3\scripts\camera.js" />
     <Content Include="Scripts\camera-1.3.3\scripts\camera.min.js" />
     <Content Include="Scripts\camera-1.3.3\images\camera_skins.png" />
-    <Content Include="Scripts\jquery.easing.1.3.js" />
-    <Content Include="Scripts\jquery.mobile.customized.min.js" />
+    <Content Include="Scripts\widgets\carousel\jquery.mobile.customized.min.js" />
     <Content Include="Scripts\widgets\carousel\videre.widgets.editor.carousel.js" />
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
