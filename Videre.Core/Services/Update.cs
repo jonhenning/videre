@@ -253,8 +253,25 @@ namespace Videre.Core.Services
         private static void OnFolderChanged(string key, object value, CacheItemRemovedReason reason)
         {
             Logging.Logger.InfoFormat("Detected new file in update folder: {0} - {1} - {2}", UpdateDir, reason, value);
+            HandleFolderChanged(false);
+        }
+
+        private static void HandleFolderChanged(bool afterErrorTry)
+        {
             HttpRuntime.Cache.Add("_updates", "", new CacheDependency(UpdateDir), Cache.NoAbsoluteExpiration, TimeSpan.FromHours(1), CacheItemPriority.NotRemovable, new CacheItemRemovedCallback(OnFolderChanged));
-            ApplyUpdates();
+            try
+            {
+                ApplyUpdates();
+            }
+            catch (Exception ex)
+            {
+                Logging.Logger.DebugFormat("Error applying update {0}", ex.Message);
+                if (!afterErrorTry)
+                {
+                    System.Threading.Thread.Sleep(500); //try one more time
+                    HandleFolderChanged(true);
+                }
+            }
             Videre.Core.Services.Repository.Dispose();  //need to SaveChanges as the Global.asax EndRequest not fired (we have no request)
         }
 
