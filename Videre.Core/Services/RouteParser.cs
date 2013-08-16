@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,12 +15,12 @@ namespace Videre.Core.Services
             {"string", @"[\w\ \.\/\-\(\)]+"}
         };
 
-        public static Dictionary<string, Regex> _compiledRegexes = new Dictionary<string, Regex>();
+        public static ConcurrentDictionary<string, Regex> _compiledRegexes = new ConcurrentDictionary<string, Regex>();
 
         public static void RegisterParseType(string type, string pattern)
         {
             _parseTypes[type] = pattern;
-            _compiledRegexes = new Dictionary<string, Regex>(); //reset cache - simple to just do all
+            _compiledRegexes = new ConcurrentDictionary<string, Regex>(); //reset cache - simple to just do all
         }
 
         public static Dictionary<string, string> Parse(string pattern, string url)
