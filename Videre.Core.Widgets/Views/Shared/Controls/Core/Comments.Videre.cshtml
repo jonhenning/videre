@@ -67,9 +67,9 @@
         <div class="row well">
             @{Html.RenderPartial("WidgetHeader", Model);}
             <div id="@Model.GetId("CommentContainer")">
-                @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name", "span4", required: true)
-                @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", "Email", "span4")
-                @Html.TextAreaControlGroup(Model, "txtComment", "Comment.Text", "Comment", "Text", inputCss: "span6", required: true)
+                @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name", "input-xlarge", required: true)
+                @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", "Email", "input-xlarge")
+                @Html.TextAreaControlGroup(Model, "txtComment", "Comment.Text", "Comment", "Text", inputCss: "input-xlarge", required: true)
                 <a id="@Model.GetId("btnAddComment")" class="btn"><i class="icon-edit"></i>@Model.GetText("Post.Text", "Post")</a>
             </div>
         </div>

@@ -64,8 +64,8 @@
                             @*@Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }))*@
                             @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url")
                             @Html.UploadButtonControlGroup(Model, "btnUpload", "File.Text", "File", "Upload.Text", "Upload")
-                            @Html.InputControlGroup(Model, "txtFileSize", "FileSize.Text", "File Size", "Size", inputCss: "span3", readOnly: true)
-                            @Html.InputControlGroup(Model, "txtMimeType", "MimeType.Text", "Mime Type", "MimeType", inputCss: "span3", readOnly: true)
+                            @Html.InputControlGroup(Model, "txtFileSize", "FileSize.Text", "File Size", "Size", inputCss: "input-small", readOnly: true)
+                            @Html.InputControlGroup(Model, "txtMimeType", "MimeType.Text", "Mime Type", "MimeType", inputCss: "input-large", readOnly: true)
                         </div>
                     </div>
                     <div class="modal-footer">

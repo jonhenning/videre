@@ -28,8 +28,8 @@
             <div class="row">
                 <div class="span4">
                     <div class="form-horizontal">
-                        @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "", "span2")
-                        @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", "", "span2", "password")
+                        @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "", "input-medium")
+                        @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", "", "input-medium", "password")
                     </div>
                     <div class="videre actions form-actions">
                         <a class="btn btn-primary" id="@Model.GetId("btnLogon")">@Model.GetText("Logon.Text", "Log On")</a>
