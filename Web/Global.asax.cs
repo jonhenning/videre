@@ -29,6 +29,7 @@ namespace Videre.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("scripts/{*pathInfo}");
             routes.IgnoreRoute("content/{*pathInfo}");
+            routes.IgnoreRoute("favicon.ico");  //todo: eventually allow portal to map this... for now ignore!
 
             routes.MapRoute(
                 "ServerJS", // Route name
