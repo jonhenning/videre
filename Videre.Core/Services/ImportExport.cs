@@ -178,6 +178,14 @@ namespace Videre.Core.Services
                 foreach (var manifest in export.Manifests)
                     SetIdMap<WidgetManifest>(manifest.Id, Widget.Import(manifest), idMap);
             }
+
+            if (export.Menus != null)
+            {
+                Logging.Logger.DebugFormat("Importing {0} menus...", export.Menus.Count);
+                foreach (var menu in export.Menus)
+                    SetIdMap<Models.Menu>(menu.Id, Menu.Import(portal.Id, menu, idMap), idMap);
+            }
+
             if (export.Localizations != null)
             {
                 Logging.Logger.DebugFormat("Importing {0} localizations...", export.Localizations.Count);
@@ -201,13 +209,6 @@ namespace Videre.Core.Services
                 Logging.Logger.DebugFormat("Importing {0} web references...", export.WebReferences.Count);
                 foreach (var exportWebReference in export.WebReferences)
                     SetIdMap<Models.WebReference>(exportWebReference.Id, Web.Import(portal.Id, exportWebReference, idMap), idMap);
-            }
-
-            if (export.Menus != null)
-            {
-                Logging.Logger.DebugFormat("Importing {0} menus...", export.Menus.Count);
-                foreach (var menu in export.Menus)
-                    SetIdMap<Models.Menu>(menu.Id, Menu.Import(portal.Id, menu, idMap), idMap);
             }
 
             return true;
