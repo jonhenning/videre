@@ -57,6 +57,8 @@ namespace Videre.Web
 
         protected void Application_Start()
         {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
             Services.Logging.Logger.Debug("Application_Start");
             Services.Update.WatchForUpdates();
             Services.CacheTimer.Register();
@@ -120,5 +122,14 @@ namespace Videre.Web
         {
             Services.Repository.Dispose();
         }
+
+        public Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var assemblyName = new AssemblyName(args.Name);
+            if (assemblyName.Name != args.Name)
+                return Assembly.LoadWithPartialName(assemblyName.Name);
+            return null;
+        }
+
     }
 }
