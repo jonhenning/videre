@@ -107,7 +107,8 @@ namespace Videre.Core.Services
         }
         public static bool Exists(Models.WebReference webReference)
         {
-            return  GetWebReference(webReference.PortalId, webReference.Name) != null;
+            var portalId = string.IsNullOrEmpty(webReference.PortalId) ? Portal.CurrentPortalId : webReference.PortalId;
+            return  GetWebReference(portalId, webReference.Name) != null;
         }
         public static bool DeleteWebReference(string id, string userId = null)
         {
