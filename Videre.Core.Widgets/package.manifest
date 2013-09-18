@@ -1,5 +1,5 @@
 {
-	Version: 1.0,
+	Version: '1.0',
 	Name: "Videre Core Widgets",
 	Type: "Widget",
 	Source: "Core",

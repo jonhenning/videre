@@ -46,6 +46,9 @@
                             <a href="#@Model.GetId("GeneralTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("General.Text", "General")</a>
                         </li>
                         <li>
+                            <a href="#@Model.GetId("ServerEnvironmentTab")" data-toggle="tab"><i class="icon-hdd"></i> @Model.GetText("ServerEnvironment.Text", "Server Environment")</a>
+                        </li>
+                        <li>
                             <a href="#@Model.GetId("ThemeTab")" data-toggle="tab"><i class="icon-picture"></i> @Model.GetText("Themes.Text", "Themes")</a>
                         </li>
 @{
@@ -68,6 +71,10 @@
                                 @Html.DropDownControlGroup(Model, "Default", "Default.Text", "Default", "Default", new List<SelectListItem>() {{new SelectListItem() { Value = "false", Text="No"}}, {new SelectListItem() {Value = "true", Text = "Yes"} } })
                             </div>
                         </div>
+                        <div class="tab-pane" id="@Model.GetId("ServerEnvironmentTab")">
+                            @{ Html.RenderPartial("Widgets/Core/Admin/ServerEnvironment"); }
+                        </div>
+
                         <div class="tab-pane" id="@Model.GetId("ThemeTab")">
                             @{Html.RenderPartial("Widgets/Core/Admin/Theme", Model);}
                         </div>

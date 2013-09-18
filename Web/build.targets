@@ -1,78 +1,81 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT (unless using VisualStudio 2012 :)! -->
+  <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT (unless using VisualStudio 2012 :)! -->
+  <PropertyGroup>
+    <Name>Videre.Core.Web</Name>
+    <Version>1.0</Version>
+    <ZipName>$(Name).zip</ZipName>
+    <Version Condition=" '$(Configuration)' == 'Debug'">$(Version) (Debug)</Version>
+    <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+    <RedistDir>$(RootDir)\redist</RedistDir>
+    <CommonLibDir>$(RootDir)\lib</CommonLibDir>
+    <DeployDir>$(RootDir)\Web</DeployDir>
+    <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
+    <CopyConfigEnvironment>test</CopyConfigEnvironment>
+    <ConfigDir>$(ProjectDir)</ConfigDir>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(MSBuildProjectDirectory)\configuration.targets" Condition="Exists('$(MSBuildProjectDirectory)\configuration.targets')"/>
+
+  <Target Name="BeforeBuild">
+    <CallTarget Targets="CopyConfig" />
+  </Target>
+
+  <Target Name="AfterBuild">
+    <CallTarget Targets="UpdatePackageManifest" />
+    <CallTarget Targets="CreatePackage" />
+    <CallTarget Targets="Deploy" />
+    <CallTarget Targets="ResetPackageManifest" />
+  </Target>
+
+  <Target Name="CopyConfig">
+    <Copy SourceFiles="$(ConfigDir)AppSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)AppSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)AppSettings.config.$(CopyConfigEnvironment)')"/>
+    <Copy SourceFiles="$(ConfigDir)ConnectionStrings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)ConnectionStrings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)ConnectionStrings.config.$(CopyConfigEnvironment)')"/>
+    <Copy SourceFiles="$(ConfigDir)log4net.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)log4net.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)log4net.config.$(CopyConfigEnvironment)')"/>
+    <Copy SourceFiles="$(ConfigDir)SMTPSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)SMTPSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)SMTPSettings.config.$(CopyConfigEnvironment)')"/>
+  </Target>
+
+  <Target Name="UpdatePackageManifest">
+    <!--<Attrib ReadOnly="false" Files="$(MSBuildProjectDirectory)\package.manifest" />-->
+    <Time Format="o" Kind="Utc">
+      <Output TaskParameter="FormattedTime" PropertyName="packageDate" />
+    </Time>
+    <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;$(packageDate)&quot;" />
+    <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: '$(Version)'," />
+  </Target>
+
+  <Target Name="ResetPackageManifest">
+    <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;&quot;" />
+    <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: '1.0'," />
+  </Target>
+
+  <Target Name="CreatePackage">
+    <MakeDir Directories="$(RedistDir)"/>
+
+    <!--FileWrites are absolute paths.  We need to create relative paths to allow Excludes to work correctly.  Perhaps there is a cleaner way...-->
     <PropertyGroup>
-        <Name>Videre.Core.Web</Name>
-        <Version>1.0</Version>
-        <ZipName>$(Name)-$(Version).zip</ZipName>
-        <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
-        <RedistDir>$(RootDir)\redist</RedistDir>
-        <CommonLibDir>$(RootDir)\lib</CommonLibDir>
-        <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
-        <CopyConfigEnvironment>debug</CopyConfigEnvironment>
-        <ConfigDir>$(ProjectDir)</ConfigDir>
+      <EscapedMSBuildProjectDirectory>$(MSBuildProjectDirectory.Replace("\","\\"))\\</EscapedMSBuildProjectDirectory>
     </PropertyGroup>
+    <RegexReplace Input="@(FileWrites)" Expression="$(EscapedMSBuildProjectDirectory)" Replacement="" Count="1">
+      <Output ItemName="MyFileWrites" TaskParameter="Output" />
+    </RegexReplace>
+    <!--<Message Text="%0a%MyFileWrites:%0a%0d    @(MyFileWrites,'%0a%0d    ')" />-->
 
-    <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
-    <Import Project="$(MSBuildProjectDirectory)\configuration.targets" Condition="Exists('$(MSBuildProjectDirectory)\configuration.targets')"/>
-
-    <Target Name="BeforeBuild">
-        <CallTarget Targets="CopyConfig" />
-    </Target>
-    
-    <Target Name="AfterBuild">
-        <CallTarget Targets="UpdatePackageManifest" />
-        <CallTarget Targets="CreatePackage" />
-        <CallTarget Targets="Deploy" />
-        <CallTarget Targets="ResetPackageManifest" />
-    </Target>
-
-    <Target Name="CopyConfig">
-        <Copy SourceFiles="$(ConfigDir)AppSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)AppSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)AppSettings.config.$(CopyConfigEnvironment)')"/>
-        <Copy SourceFiles="$(ConfigDir)ConnectionStrings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)ConnectionStrings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)ConnectionStrings.config.$(CopyConfigEnvironment)')"/>
-        <Copy SourceFiles="$(ConfigDir)log4net.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)log4net.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)log4net.config.$(CopyConfigEnvironment)')"/>
-        <Copy SourceFiles="$(ConfigDir)SMTPSettings.config.$(CopyConfigEnvironment)" DestinationFiles="$(ProjectDir)SMTPSettings.config" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" Condition="Exists('$(ConfigDir)SMTPSettings.config.$(CopyConfigEnvironment)')"/>
-    </Target>
-    
-    <Target Name="UpdatePackageManifest">
-        <!--<Attrib ReadOnly="false" Files="$(MSBuildProjectDirectory)\package.manifest" />-->
-        <Time Format="o" Kind="Utc">
-            <Output TaskParameter="FormattedTime" PropertyName="packageDate" />
-        </Time>
-        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;$(packageDate)&quot;" />
-        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: $(Version)," />
-    </Target>
-
-    <Target Name="ResetPackageManifest">
-        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;&quot;" />
-    </Target>
-
-    <Target Name="CreatePackage">
-        <MakeDir Directories="$(RedistDir)"/>
-
-        <!--FileWrites are absolute paths.  We need to create relative paths to allow Excludes to work correctly.  Perhaps there is a cleaner way...-->
-        <PropertyGroup>
-            <EscapedMSBuildProjectDirectory>$(MSBuildProjectDirectory.Replace("\","\\"))\\</EscapedMSBuildProjectDirectory>
-        </PropertyGroup>
-        <RegexReplace Input="@(FileWrites)" Expression="$(EscapedMSBuildProjectDirectory)" Replacement="" Count="1">
-            <Output ItemName="MyFileWrites" TaskParameter="Output" />
-        </RegexReplace>
-        <!--<Message Text="%0a%MyFileWrites:%0a%0d    @(MyFileWrites,'%0a%0d    ')" />-->
-
-        <CreateItem Include="@(MyFileWrites);@(Content);" Exclude="
+    <CreateItem Include="@(MyFileWrites);@(Content);" Exclude="
                     *.config;
                     *.targets;
                     _packages\**;
                     bin\*.pdb;
                     obj\**;
                     ">
-            <Output TaskParameter="Include" ItemName="DeployFiles"/>
-        </CreateItem>
-        <Zip Files="@(DeployFiles)" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" />
-    </Target>
+      <Output TaskParameter="Include" ItemName="DeployFiles"/>
+    </CreateItem>
+    <Zip Files="@(DeployFiles)" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" />
+  </Target>
 
-    <Target Name="Deploy" Condition="Exists('$(DeployDir)')">
-        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="$(DeployDir)\_updates" />
-    </Target>
+  <Target Name="Deploy" Condition="Exists('$(DeployDir)')">
+    <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="$(DeployDir)\_updates" />
+  </Target>
 
 </Project>
