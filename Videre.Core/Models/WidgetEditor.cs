@@ -50,7 +50,7 @@ namespace Videre.Core.Models
             return Services.Localization.GetLocalization(LocalizationType.WidgetEditor, key, defaultValue, Manifest.EditorPath);
         }
 
-        public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null)
+        public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null, bool preserveObjectReferences = false)
         {
             return false;
         }

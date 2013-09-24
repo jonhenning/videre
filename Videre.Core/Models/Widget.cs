@@ -105,7 +105,7 @@ namespace Videre.Core.Models
             return Services.Localization.GetLocalization(LocalizationType.Widget, key, defaultValue, Manifest.FullName);
         }
 
-        public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null)
+        public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null, bool preserveObjectReferences = false)
         {
             properties = properties ?? new Dictionary<string, object>();
 
@@ -121,7 +121,7 @@ namespace Videre.Core.Models
 
             helper.RegisterDocumentReadyScript(
                 ClientId + "Presenter",
-                string.Format("videre.widgets.register('{0}', {1}, {2});", ClientId, clientType, properties.ToJson(ignoreType: "client")));
+                string.Format("videre.widgets.register('{0}', {1}, {2});", ClientId, clientType, properties.ToJson(ignoreType: "client", preserveObjectReferences: preserveObjectReferences)));
 
             return true;
         }

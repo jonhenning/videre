@@ -24,6 +24,7 @@ namespace Videre.Core.ActionResults
         public bool HasError { get; set; }
         public bool Compressed { get; set; }
         public string IgnoreType { get; set; }
+        public bool PreserveObjectReferences { get; set; }
 
         [SerializeIgnore(new string[] { "db", "client" })]
         public bool PrettyJson 
@@ -78,6 +79,10 @@ namespace Videre.Core.ActionResults
             //base.Formatting = Newtonsoft.Json.Formatting.None;
             base.SerializerSettings.ContractResolver = new CodeEndeavors.Extensions.Serialization.SerializeIgnoreContractResolver(IgnoreType);    //exclude properties marked client ignore
             base.SerializerSettings.Converters.Add(new IsoDateTimeConverter());
+
+            //http://james.newtonking.com/projects/json/help/index.html?topic=html/PreserveObjectReferences.htm
+            if (PreserveObjectReferences)
+                base.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
 
             base.Data = new { HasError = this.HasError, Messages = this.Messages, Data = this.Data };
             base.ExecuteResult(context);            

@@ -110,17 +110,17 @@ namespace Videre.Core.Extensions
             }
         }
 
-        public static void RegisterControlPresenter(this HtmlHelper helper, IClientControl model, string clientType, Dictionary<string, object> properties = null)
+        public static void RegisterControlPresenter(this HtmlHelper helper, IClientControl model, string clientType, Dictionary<string, object> properties = null, bool preserveObjectReferences = false)
         {
-            RegisterControlPresenter(helper, model, clientType, model.ClientId, properties);
+            RegisterControlPresenter(helper, model, clientType, model.ClientId, properties, preserveObjectReferences);
         }
 
-        public static void RegisterControlPresenter(this HtmlHelper helper, IClientControl model, string clientType, string instanceName, Dictionary<string, object> properties = null)
+        public static void RegisterControlPresenter(this HtmlHelper helper, IClientControl model, string clientType, string instanceName, Dictionary<string, object> properties = null, bool preserveObjectReferences = false)
         {
             properties = properties ?? new Dictionary<string, object>();
 
             // we ask the model to register itself. return value of false means it didn't so we perform "default" registration
-            if (model.Register(helper, clientType, instanceName, properties))
+            if (model.Register(helper, clientType, instanceName, properties, preserveObjectReferences))
                 return;
 
             // default registration
@@ -138,7 +138,7 @@ namespace Videre.Core.Extensions
 
             //Properties["user"] = Services.Account.GetClientUser();
             //var ser = new System.Web.Script.Serialization.JavaScriptSerializer();   //no binders for date conversions...
-            helper.RegisterDocumentReadyScript(model.ClientId + "Presenter", string.Format("videre.widgets.register('{0}', {1}, {2});", model.ClientId, clientType, properties.ToJson(ignoreType: "client")));
+            helper.RegisterDocumentReadyScript(model.ClientId + "Presenter", string.Format("videre.widgets.register('{0}', {1}, {2});", model.ClientId, clientType, properties.ToJson(ignoreType: "client", preserveObjectReferences: preserveObjectReferences)));
         }
 
         public static void RegisterCoreScripts(this HtmlHelper helper)

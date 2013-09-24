@@ -42,7 +42,7 @@ namespace Videre.Core.Models
             //throw new NotImplementedException("A View does not have specific text associated to it.  Use GetPortalText instead");
         }
 
-        public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null)
+        public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null, bool preserveObjectReferences = false)
         {
             return false;
         }

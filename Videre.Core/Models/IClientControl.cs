@@ -15,11 +15,7 @@ namespace Videre.Core.Models
 
         string GetText(string key, string defaultValue);
 
-        bool Register(
-            HtmlHelper helper, 
-            string clientType, 
-            string instanceName, 
-            Dictionary<string, object> properties = null);
+        bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null, bool preserveObjectReferences = false);
 
         string GetPortalText(string key, string efaultValue);
     }
