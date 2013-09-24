@@ -138,7 +138,7 @@ namespace Videre.Core.Extensions
 
             //Properties["user"] = Services.Account.GetClientUser();
             //var ser = new System.Web.Script.Serialization.JavaScriptSerializer();   //no binders for date conversions...
-            helper.RegisterDocumentReadyScript(model.ClientId + "Presenter", string.Format("videre.widgets.register('{0}', {1}, {2});", model.ClientId, clientType, properties.ToJson(ignoreType: "client", preserveObjectReferences: preserveObjectReferences)));
+            helper.RegisterDocumentReadyScript(model.ClientId + "Presenter", string.Format("videre.widgets.register('{0}', {1}, {2});", model.ClientId, clientType, properties.ToJson(false, "client", preserveObjectReferences)));
         }
 
         public static void RegisterCoreScripts(this HtmlHelper helper)

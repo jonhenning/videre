@@ -78,7 +78,7 @@ namespace Videre.Core.Models
 
             helper.RegisterDocumentReadyScript(
                 ClientId + "Presenter",
-                string.Format("videre.widgets.register('{0}', {1}, {2});", ClientId, clientType, properties.ToJson(ignoreType: "client", preserveObjectReferences: preserveObjectReferences)));
+                string.Format("videre.widgets.register('{0}', {1}, {2});", ClientId, clientType, properties.ToJson(false, "client", preserveObjectReferences)));
 
             return true;
         }
