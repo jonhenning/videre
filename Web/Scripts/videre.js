@@ -407,7 +407,7 @@ videre.UI = {
             get: function(ctl) { return ctl.datetimepicker('getDate'); },
             set: function(ctl, val)
             {
-                ctl.has('.hasDatePicker').length > 0 ?
+                ctl.hasClass('hasDatepicker') ?
                     ctl.datetimepicker('setDate', videre.parseDate(val)) :
                     videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val, videre.localization.dateFormats.datetime)) : null); //todo:  hacky date logic
             },
@@ -418,7 +418,7 @@ videre.UI = {
             get: function(ctl) { return ctl.datetimepicker('getDate').getTime(); },
             set: function(ctl, val)
             {
-                ctl.has('.hasDatePicker').length > 0 ?
+                ctl.hasClass('hasDatepicker') ?
                     ctl.datetimepicker('setDate', videre.parseDate(val, 'shortTime')) :
                     videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val, videre.localization.dateFormats.datetime)) : null); //todo:  UNTESTED!
             },
