@@ -915,7 +915,7 @@ videre.widgets.base = videre.Class.extend(
                 this.addMsg('AJAX', request.status + ' - ' + request.statusText + '<br/>' + request.responseText, true, ctx.parent);
         }
         else
-            alert(request.StatusText);
+            this.addMsg('AJAX', request.statusText, true, ctx.parent);
     },
 
     _onError: function(src, args)
