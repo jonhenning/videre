@@ -109,12 +109,12 @@ namespace Videre.Core.Services
             var provider = GetSearchProviderById(id);
             if (provider != null)
             {
-                var analyzer = new Lucene.Net.Analysis.Standard.StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT);
+                var analyzer = new Lucene.Net.Analysis.Standard.StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29);
                 var dirInfo = new DirectoryInfo(IndexDir);
                 using (var indexFSDir = FSDirectory.Open(dirInfo, new Lucene.Net.Store.SimpleFSLockFactory(dirInfo)))
                 {
-                    //try 
-                    //{
+                    try 
+                    {
                         using (var writer = new Lucene.Net.Index.IndexWriter(indexFSDir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED))
                         {
                             var service = provider.GetService();
@@ -122,14 +122,14 @@ namespace Videre.Core.Services
                             provider.LastGenerated = DateTime.UtcNow;
                             Save(provider, userId);
                         }
-                    //}
-                    //catch (LockObtainFailedException ex)
-                    //{
-                    //    Logging.Logger.InfoFormat("LockObtainFailedException {0} - trying to release lock", ex.Message);
-                    //    IndexWriter.Unlock(indexFSDir);
-                    //    if (!isRetry)
-                    //        Generate(id, userId, true);
-                    //}
+                    }
+                    catch (LockObtainFailedException ex)
+                    {
+                        Logging.Logger.InfoFormat("LockObtainFailedException {0} - trying to release lock", ex.Message);
+                        IndexWriter.Unlock(indexFSDir);
+                        if (!isRetry)
+                            Generate(id, userId, true);
+                    }
                 }
             }
             return ret;
