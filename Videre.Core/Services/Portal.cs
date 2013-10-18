@@ -86,7 +86,7 @@ namespace Videre.Core.Services
                     var portals = GetPortals();
                     string bestMatch = ""; 
                     if (RequestRootUrl != null) //during an update (app start) url will be null, just pull default in this case
-                        bestMatch = GetBestMatchedUrl(RequestRootUrl, portals.SelectMany(t => t.Aliases));
+                        bestMatch = RouteParser.GetBestMatchedUrl(RequestRootUrl, portals.SelectMany(t => t.Aliases));
                     Models.Portal portal = null;
                     if (!string.IsNullOrEmpty(bestMatch))
                         portal = portals.FirstOrDefault(t => t.Aliases.Contains(bestMatch));
@@ -178,21 +178,9 @@ namespace Videre.Core.Services
             var templates = Repository.Current.GetResources<PageTemplate>("Template", t => t.Data.PortalId == portalId).Select(t => t.Data);
             if (!string.IsNullOrEmpty(url))
             {
-                var bestMatch = GetBestMatchedUrl(url, templates.SelectMany(t => t.Urls));
+                var bestMatch = RouteParser.GetBestMatchedUrl(url, templates.SelectMany(t => t.Urls));
                 if (!string.IsNullOrEmpty(bestMatch))
                 {
-                    //var urls = templates.SelectMany(t => t.Urls);
-                    //var queries = new List<DomainObjects.Query<string>>() {
-                    //    new DomainObjects.Query<string>(u => Services.RouteParser.Parse(u, url).Keys.Count > 0, 1)};
-
-                    //var matchedUrls = queries.GetMatches(urls, false);
-                    //if (matchedUrls.Count > 0)
-                    //{
-                    //    //our most specific match is determined by number of matching groups from regex... - if tie then use length of matchedUrl
-                    //    var bestMatch = (from u in matchedUrls
-                    //                     orderby Services.RouteParser.Parse(u, url).Keys.Count descending, u.Length descending
-                    //                     select u).FirstOrDefault();
-
                     if (IsInRequest)
                         //todo: only need this when in request, otherwise ignore... perhaps should be moved out to controller...
                     {
@@ -206,23 +194,28 @@ namespace Videre.Core.Services
             return templates.FirstOrDefault(t => t.Urls.Count == 0); //grab default template
         }
 
+        [Obsolete("Use RouteParser.GetBestMatchedUrl instead")]
         public static string GetBestMatchedUrl(string url, IEnumerable<string> urls)
         {
-            var queries = new List<Query<string>>
-            {
-                new Query<string>(u => RouteParser.Parse(u, url).Keys.Count > 0, 1)
-            };
-
-            var matchedUrls = queries.GetMatches(urls, false);
-            if (matchedUrls.Count > 0)
-            {
-                //our most specific match is determined by number of matching groups from regex... - if tie then use length of matchedUrl
-                return (from u in matchedUrls
-                    orderby RouteParser.Parse(u, url).Keys.Count descending, u.Length descending
-                    select u).FirstOrDefault();
-            }
-            return null;
+            return RouteParser.GetBestMatchedUrl(url, urls);
         }
+        //public static string GetBestMatchedUrl(string url, IEnumerable<string> urls)
+        //{
+        //    var queries = new List<Query<string>>
+        //    {
+        //        new Query<string>(u => RouteParser.Parse(u, url).Keys.Count > 0, 1)
+        //    };
+
+        //    var matchedUrls = queries.GetMatches(urls, false);
+        //    if (matchedUrls.Count > 0)
+        //    {
+        //        //our most specific match is determined by number of matching groups from regex... - if tie then use length of matchedUrl
+        //        return (from u in matchedUrls
+        //            orderby RouteParser.Parse(u, url).Keys.Count descending, u.Length descending
+        //            select u).FirstOrDefault();
+        //    }
+        //    return null;
+        //}
 
         //grab content ids that are used by more than one widget
         public static List<string> GetSharedContentIds()

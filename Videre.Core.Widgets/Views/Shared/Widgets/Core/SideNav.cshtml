@@ -31,8 +31,8 @@ if (menu != null)
 {
     var urls = menu.Items.Select(i => i.Url).ToList();
     urls.AddRange(menu.Items.Descendants(i => i.Items).Select(i => i.Url));
-        
-    var bestMatchUrl = !string.IsNullOrEmpty(Portal.CurrentUrl) ? Portal.GetBestMatchedUrl("~/" + Portal.CurrentUrl, urls) : "~/";   //todo: need better url processing, as adding ~/ in front is kind of lame!
+
+    var bestMatchUrl = !string.IsNullOrEmpty(Portal.CurrentUrl) ? RouteParser.GetBestMatchedUrl("~/" + Portal.CurrentUrl, urls) : "~/";   //todo: need better url processing, as adding ~/ in front is kind of lame!
     
     //if (showSearch)
     //{
