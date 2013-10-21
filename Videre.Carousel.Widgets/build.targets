@@ -4,7 +4,7 @@
     <PropertyGroup>
         <Name>Videre.Carousel.Widgets</Name>
         <Version>1.0</Version>
-        <ZipName>$(Name)-$(Version).zip</ZipName>
+        <ZipName>$(Name).zip</ZipName>
         <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
         <RedistDir>$(RootDir)\redist</RedistDir>
         <CommonLibDir>$(RootDir)\lib</CommonLibDir>
