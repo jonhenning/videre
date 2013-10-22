@@ -38,6 +38,7 @@ Web/Scripts/**/*
 !Web/Scripts/**/videre*.js
 
 Web/_packages/*
+!Web/_packages/md5-*.zip
 !Web/_packages/Bootstrap-*.zip
 !Web/_packages/DataTables-*.zip
 !Web/_packages/dynatree-*.zip
