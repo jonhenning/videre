@@ -194,7 +194,7 @@ namespace Videre.Core.Services
                     if (Portal.IsInRequest && HttpContext.Current.Request.UserLanguages != null && HttpContext.Current.Request.UserLanguages.Count() > 0)
                         locale = HttpContext.Current.Request.UserLanguages.FirstOrDefault();
                 }
-                catch (Exception ex)    //todo: lame to do exception trapping here!
+                catch (Exception)    //todo: lame to do exception trapping here!
                 {
                     //ignore
                 }

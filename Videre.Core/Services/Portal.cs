@@ -29,7 +29,7 @@ namespace Videre.Core.Services
                 {
                     return HttpContext.Current != null && HttpContext.Current.Request != null;
                 }
-                catch (Exception ex) //todo: why would this occur?
+                catch (Exception) //todo: why would this occur?
                 {
                     return false;
                 }

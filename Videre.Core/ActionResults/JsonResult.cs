@@ -19,7 +19,7 @@ namespace Videre.Core.ActionResults
 
         private List<Models.Message> Messages { get; set; }
         //private string _errorMessage;
-        public T Data { get; set; }
+        public new T Data { get; set; }
         public Dictionary<string, object> Context { get; set; }
         public bool HasError { get; set; }
         public bool Compressed { get; set; }

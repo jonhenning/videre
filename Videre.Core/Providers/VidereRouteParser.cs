@@ -129,7 +129,7 @@ namespace Videre.Core.Providers
                     if (q.Statement(scopeObject))
                         score += q.Score;
                 }
-                catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException ex)
+                catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
                 {
                     //ignore
                 }

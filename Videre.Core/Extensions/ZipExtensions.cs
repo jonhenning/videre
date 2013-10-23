@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
 using CodeEndeavors.Extensions;
 using ICSharpCode.SharpZipLib.Core;
 
