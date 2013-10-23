@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C93426
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Videre.Core.UnitTests", "Videre.Core.UnitTests\Videre.Core.UnitTests.csproj", "{CEB4DBF9-E295-4BD1-871A-8E13116010D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{3966477C-8503-40F9-852E-9908C2890366}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3966477C-8503-40F9-852E-9908C2890366}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3966477C-8503-40F9-852E-9908C2890366}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEB4DBF9-E295-4BD1-871A-8E13116010D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEB4DBF9-E295-4BD1-871A-8E13116010D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEB4DBF9-E295-4BD1-871A-8E13116010D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEB4DBF9-E295-4BD1-871A-8E13116010D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

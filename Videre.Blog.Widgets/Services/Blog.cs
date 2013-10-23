@@ -13,7 +13,10 @@ namespace Videre.Blog.Widgets.Services
         {
             var res = CoreServices.Repository.Current.GetResourceById<Models.Blog>(id);
             if (res != null)
+            {
+                DetokenizeEntries(res.Data);
                 return res.Data;
+            }
             return null;
         }
 
@@ -27,7 +30,9 @@ namespace Videre.Blog.Widgets.Services
         public static Models.Blog GetByName(string name, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? CoreServices.Portal.CurrentPortalId : portalId;
-            return CoreServices.Repository.Current.GetResourceData<Models.Blog>("Blog", m => m.Data.PortalId == portalId && m.Data.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase), null);
+            var blog = CoreServices.Repository.Current.GetResourceData<Models.Blog>("Blog", m => m.Data.PortalId == portalId && m.Data.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase), null);
+            DetokenizeEntries(blog);
+            return blog;
         }
 
         public static string Import(Models.Blog blog, string portalId = null, string userId = null)
@@ -48,6 +53,7 @@ namespace Videre.Blog.Widgets.Services
             userId = string.IsNullOrEmpty(userId) ? CoreServices.Account.CurrentIdentityName : userId;
             blog.PortalId = string.IsNullOrEmpty(blog.PortalId) ? CoreServices.Portal.CurrentPortalId : blog.PortalId;
             Validate(blog);
+            TokenizeEntries(blog);
             var res = CoreServices.Repository.Current.StoreResource("Blog", null, blog, userId);
             return res.Id;
         }
@@ -126,6 +132,28 @@ namespace Videre.Blog.Widgets.Services
             if (url == null)
                 url = "";//BAD!
             return CoreServices.Portal.RequestRootUrl.PathCombine(url.Replace("{entry:string}", entryUrl), "/");
+        }
+
+        public static void TokenizeEntries(Models.Blog blog)
+        {
+            blog.Entries.ForEach(e => TokenizeEntry(e));
+        }
+
+        public static void TokenizeEntry(Models.BlogEntry entry)
+        {
+            entry.Summary = CoreServices.TokenParser.ReplaceContentWithTokens(entry.Summary);
+            entry.Body = CoreServices.TokenParser.ReplaceContentWithTokens(entry.Body);
+        }
+
+        public static void DetokenizeEntries(Models.Blog blog)
+        {
+            blog.Entries.ForEach(e => DetokenizeEntry(e));
+        }
+
+        public static void DetokenizeEntry(Models.BlogEntry entry)
+        {
+            entry.Summary = CoreServices.TokenParser.ReplaceTokensWithContent(entry.Summary);
+            entry.Body = CoreServices.TokenParser.ReplaceTokensWithContent(entry.Body);
         }
 
     }

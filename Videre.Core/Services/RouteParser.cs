@@ -6,7 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Videre.Core.RouteParserProviders;
+using Videre.Core.Providers;
 
 namespace Videre.Core.Services
 {
@@ -19,7 +19,7 @@ namespace Videre.Core.Services
             get
             {
                 if (_routeParser == null)
-                    _routeParser = ConfigurationManager.AppSettings.GetSetting("RouteParserProvider", "Videre.Core.RouteParserProviders.VidereRouteParser, Videre.Core").GetInstance<IRouteParser>();
+                    _routeParser = ConfigurationManager.AppSettings.GetSetting("RouteParserProvider", "Videre.Core.Providers.VidereRouteParser, Videre.Core").GetInstance<IRouteParser>();
                 return _routeParser;
             }
         }

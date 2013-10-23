@@ -50,17 +50,17 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeEndeavors.Extensions, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="CodeEndeavors.Extensions, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\CodeEndeavors.Extensions.1.0.3\lib\4.0\CodeEndeavors.Extensions.dll</HintPath>
+      <HintPath>..\packages\CodeEndeavors.Extensions.1.0.5\lib\4.0\CodeEndeavors.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="CodeEndeavors.ResourceManager, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.1.0.2\lib\net40\CodeEndeavors.ResourceManager.dll</HintPath>
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.1.0.5\lib\net40\CodeEndeavors.ResourceManager.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.File, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="CodeEndeavors.ResourceManager.File, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.1.0.2\lib\net40\CodeEndeavors.ResourceManager.File.dll</HintPath>
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.1.0.5\lib\net40\CodeEndeavors.ResourceManager.File.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

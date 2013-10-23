@@ -9,13 +9,17 @@ namespace Videre.Blog.Widgets.ContentProviders
         T IWidgetContentProvider.Get<T>(List<string> ids)
         {
             var id = ids.Count > 0 ? ids[0] : "";
-            return Services.Blog.GetById(id) as T; //hack:  [0]?   - exception when more than one?
+            var blog = Services.Blog.GetById(id);
+            //detokenizeEntries(blog);  //not necessary as blog is not saved from provider
+            return blog as T; //hack:  [0]?   - exception when more than one?
         }
 
         public string GetJson(List<string> ids)
         {
             var id = ids.Count > 0 ? ids[0] : "";
-            return Services.Blog.GetById(id).ToJson(); //todo:  pass in ignoreType? //hack:  [0]? - exception when more than one?
+            var blog = Services.Blog.GetById(id);
+            //detokenizeEntries(blog); //not necessary as blog is not saved from provider
+            return blog.ToJson(); //todo:  pass in ignoreType? //hack:  [0]? - exception when more than one?
         }
 
         public Dictionary<string, string> Import(string portalId, string ns, string json, Dictionary<string, string> idMap)
@@ -38,6 +42,7 @@ namespace Videre.Blog.Widgets.ContentProviders
             if (value != null)
             {
                 var blog = value.ToObject<Models.Blog>();
+                //tokenizeEntries(blog); //not necessary as blog is not saved from provider
                 ret.Add(Services.Blog.Save(blog));
             }
             return ret;

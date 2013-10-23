@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Videre.Core.DynamicContentProviders;
+using Videre.Core.Providers;
 
 namespace Videre.Core.Services
 {

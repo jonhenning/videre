@@ -21,6 +21,7 @@ namespace Videre.Blog.Widgets.Services
             {
                 foreach (var entry in blog.Entries)
                 {
+                    Blog.TokenizeEntry(entry);
                     var analyzedValues = new Dictionary<string, string>() { { "title", entry.Title } };
                     analyzedValues["url"] = entry.Url;
                     analyzedValues["portalId"] = blog.PortalId;
@@ -42,7 +43,7 @@ namespace Videre.Blog.Widgets.Services
             {
                 Id = doc.Id,
                 Name = doc.Name,
-                Summary = doc.Summary.Replace("\r\n", "<br/>"),
+                Summary = CoreServices.TokenParser.ReplaceTokensWithContent(doc.Summary.Replace("\r\n", "<br/>")),
                 Type = doc.Type,
                 Url = url
             };

@@ -32,7 +32,7 @@
             for (var i = 0; i < carousel.Items.Count; i++)
             {
                 var item = carousel.Items[i];
-                <div data-src="@item.ImageUrl">
+                <div data-src="@Portal.ResolveUrl(item.ImageUrl)">
                     @if (!string.IsNullOrEmpty(item.Text))
                     {
                         <div class="camera_caption fadeFromBottom">
