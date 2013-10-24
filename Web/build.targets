@@ -11,7 +11,7 @@
     <CommonLibDir>$(RootDir)\lib</CommonLibDir>
     <DeployDir>$(RootDir)\Web</DeployDir>
     <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
-    <CopyConfigEnvironment>test</CopyConfigEnvironment>
+    <CopyConfigEnvironment>debug</CopyConfigEnvironment>
     <ConfigDir>$(ProjectDir)</ConfigDir>
   </PropertyGroup>
 
