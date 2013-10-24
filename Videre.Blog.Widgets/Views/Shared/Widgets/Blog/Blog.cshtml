@@ -58,7 +58,7 @@
                     i++;
                     <li style="padding: 10px;" class="@(i % 2 == 0 ? "" : "")">
                         <h4><a href="@blogUrl.PathCombine(item.Url, "/")">@Html.Raw(!string.IsNullOrEmpty(item.TitleImageUrl) ? string.Format("<img src=\"{0}\" />", item.TitleImageUrl) : "")@item.Title</a></h4>
-                        <p>@Html.Raw(item.DisplaySummary) <a href="@Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, item.Url)">@Model.GetText("ReadMore.Text", "Read More")</a></p>
+                        <p>@Html.Raw(TokenParser.ReplaceViewOnlyTokensWithContent(item.DisplaySummary)) <a href="@Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, item.Url)">@Model.GetText("ReadMore.Text", "Read More")</a></p>
                         <hr />
                     </li>   
                 }
@@ -69,7 +69,7 @@
             Html.RegisterPrettifyScriptIfNeeded(entry.Body);
             
             <h3>@Html.Raw(!string.IsNullOrEmpty(entry.TitleImageUrl) ? string.Format("<img src=\"{0}\" />", entry.TitleImageUrl) : "")@entry.Title</h3>
-            <p>@Html.Raw(entry.Body)</p>
+            <p>@Html.Raw(TokenParser.ReplaceViewOnlyTokensWithContent(entry.Body))</p>
             <p>@(entry.PostDate.HasValue ? entry.PostDate.Value.ToLocalTime().ToShortDateString() : "")</p>
     
             <hr />

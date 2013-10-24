@@ -27,7 +27,7 @@ namespace Videre.Core.UnitTests
 
                 var text = "This is an image <img src=\"http://www.codeendeavors.com/pic.jpg\" />";
                 var content = CoreServices.TokenParser.ReplaceContentWithTokens(text);
-                Assert.IsTrue(content == text.Replace(_baseUrl, CoreServices.TokenParser.GetRule("BASEURL").TokenText));
+                Assert.IsTrue(content == text.Replace(_baseUrl, CoreServices.TokenParser.GetTokenText("BASEURL")));
                 Assert.IsTrue(text == CoreServices.TokenParser.ReplaceTokensWithContent(content));
 
             }
