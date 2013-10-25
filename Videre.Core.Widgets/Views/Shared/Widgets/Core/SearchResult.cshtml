@@ -15,54 +15,50 @@
     });
     
 
-<div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
-    <div class="container">
-        <div>
-        </div>
-        <div class="row">
-            <div class="span3">
-                <ul class="nav nav-list" id="@Model.GetId("FilterList")">
-                  <li class="active" data-filter="">
-                    <a>@Model.GetText("Everything.Text", "Everything")</a>
-                  </li>
+<div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
+    <div class="row">
+        <div class="span3">
+            <ul class="nav nav-list" id="@Model.GetId("FilterList")">
+                <li class="active" data-filter="">
+                <a>@Model.GetText("Everything.Text", "Everything")</a>
+                </li>
 @foreach (var filter in filters)
 {
-                  <li data-filter="type:@filter.ToLower()">
-                    <a>@filter</a>
-                  </li>
+                <li data-filter="type:@filter.ToLower()">
+                <a>@filter</a>
+                </li>
 }
-                </ul>
-            </div>
-            <div class="span9">
-                <div class="row">
-                    <div class="span4">
-                        <div class="controls">
-                            <div class="input-append">
-                                <input type="text" id="@Model.GetId("Term")" value="@term" class="span3" autocomplete="off" />
-                                <button class="btn" type="button" id="@Model.GetId("btnSearch")" style="line-height: 10px;"><i class="icon-search"></i></button>    @*TODO: remove hack for button line-height*@
-                            </div>
+            </ul>
+        </div>
+        <div class="span9">
+            <div class="row">
+                <div class="span4">
+                    <div class="controls">
+                        <div class="input-append">
+                            <input type="text" id="@Model.GetId("Term")" value="@term" autocomplete="off" />
+                            <button class="btn" type="button" id="@Model.GetId("btnSearch")"><i class="icon-search"></i></button>
                         </div>
                     </div>
-                    <div class="span5">
-                        @{Html.RenderPartial("WidgetHeader", Model);}
-                    </div>
                 </div>
-                <div class="row">
-                    <div class="span9">
-                        <ul id="@Model.GetId("ItemList")" class="unstyled">
-                        </ul>
-                        <script id="@Model.GetId("ItemListTemplate")" type="text/html">
-                            <li style="padding: 5px" class="{{:(#index % 2 == 0) ? 'alt' : ''}}">
-                                <div><strong><a href="{{:~resolveUrl(Url)}}">{{:Name}}</a></strong></div>
-                                {{:Summary}}
-                            </li>
-                        </script>
-                        <div class="alert alert-warning" id="@Model.GetId("NoResults")" style="display: none;">@Model.GetPortalText("NoResultsFound.Text", "No results found")</div>
-                    </div>
+                <div class="span5">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+                </div>
+            </div>
+            <div class="row">
+                <div class="span9">
+                    <ul id="@Model.GetId("ItemList")" class="unstyled">
+                    </ul>
+                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                        <li style="padding: 5px" class="{{:(#index % 2 == 0) ? 'alt' : ''}}">
+                            <div><strong><a href="{{:~resolveUrl(Url)}}">{{:Name}}</a></strong></div>
+                            {{:Summary}}
+                        </li>
+                    </script>
+                    <div class="alert alert-warning" id="@Model.GetId("NoResults")" style="display: none;">@Model.GetPortalText("NoResultsFound.Text", "No results found")</div>
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 
 </div>
 }
