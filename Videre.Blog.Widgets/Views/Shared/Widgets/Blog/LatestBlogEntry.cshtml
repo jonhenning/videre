@@ -13,7 +13,7 @@
         var blogUrl = Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, "");
 
        
-    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+    <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         @{Html.RenderPartial("WidgetHeader", Model);}
 
         @if (showTitle)
