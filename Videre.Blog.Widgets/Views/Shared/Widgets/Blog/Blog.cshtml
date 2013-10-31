@@ -26,7 +26,7 @@
         });
         }        
         
-    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+    <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         @{Html.RenderPartial("WidgetHeader", Model);}
         @if (canEdit)
         {

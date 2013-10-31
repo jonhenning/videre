@@ -12,7 +12,7 @@
         var totalTags = blog.Entries.Where(e => e.IsPublished).SelectMany(t => t.Tags).Count();
         var groupedTags = blog.Entries.Where(e => e.IsPublished).SelectMany(e => e.Tags).GroupBy(t => t).Select(t => new { name = t.Key, count = t.Count() });
         
-    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+    <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         @{Html.RenderPartial("WidgetHeader", Model);}
         <h4>@Model.GetText("Tags.Text", "Tags")</h4>
         <ul class="unstyled">
