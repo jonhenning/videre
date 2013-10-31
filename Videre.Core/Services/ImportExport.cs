@@ -122,8 +122,11 @@ namespace Videre.Core.Services
                     export.Portal.Title = portal.Title;
                 if (export.Portal.Aliases == null)
                     export.Portal.Aliases = portal.Aliases;
+
                 if (export.Portal.Attributes == null)
-                    export.Portal.Attributes = portal.Attributes;
+                    export.Portal.Attributes = new Dictionary<string, object>();
+
+                export.Portal.Attributes = export.Portal.Attributes.Merge(portal.Attributes);
             }
             else
                 throw new Exception("Portal Not found: " + portalId);
