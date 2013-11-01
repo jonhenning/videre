@@ -19,7 +19,7 @@
     Html.RegisterPrettifyScriptIfNeeded(html);  //todo: do we like this???  or just always load it, or make it configuration in Portal level?
 }
 
-<div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+<div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
 
     @(new HtmlString(html))
 
