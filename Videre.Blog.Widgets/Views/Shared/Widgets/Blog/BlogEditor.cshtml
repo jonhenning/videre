@@ -11,7 +11,7 @@
 }
 
 <div id="@Model.GetId("Widget")">
-    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px;">
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px; display: none;">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
             @Model.GetText("BlogEditor.Text", "Blog Editor")
@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <div id="@Model.GetId("NewBlogDialog")" data-target="#@Model.GetId("NewBlogDialog")" class="modal fade">
+    <div id="@Model.GetId("NewBlogDialog")" data-target="#@Model.GetId("NewBlogDialog")" class="modal fade" style="display:none;">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
             @Model.GetText("NewBlog.Text", "New Blog")
