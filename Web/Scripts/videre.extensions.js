@@ -393,11 +393,13 @@ if (window.jQuery == null)
 //        return Array.addRange(this, newArray);
 //};
 
-//todo: hack!
 Number.prototype.addCommas = function(decimals)
 {
     var s = decimals != null ? this.toFixed(decimals) : this.toString();
-    return s.split(/(?=(?:\d{3})+(?:\.|$))/g).join(",");
+    return s.replace(/(^|[^\w.])(\d{4,})/g, function ($0, $1, $2)
+    {
+        return $1 + $2.replace(/\d(?=(?:\d\d\d)+(?!\d))/g, "$&,");
+    });
 };
 
 /*
