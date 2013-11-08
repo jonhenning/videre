@@ -5,7 +5,7 @@ html, body
 }
 body
 {
-    /*padding-left: 190px;*/ /* assumes we have Menu at top fixed and it is 40px high */
+    /*padding-top: 40px;*/ /* assumes we have Menu at top fixed and it is 40px high */
 }
 /*.container > footer p
 {
@@ -15,9 +15,14 @@ body
 /* The white background content wrapper */
 .content
 {
-    background-color: #fff;
     padding: 20px;
     margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+    -webkit-border-radius: 0 0 6px 6px;
+    -moz-border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6px 6px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    box-shadow: 0 1px 2px rgba(0,0,0,.15);
 }
 
 .template-header
@@ -25,3 +30,18 @@ body
     padding: 10px 20px 10px 20px;
     border-bottom: 1px solid #eeeeee;
 }
+
+.container-full 
+{
+  background-color: #fff;
+  margin: 0 auto;
+  padding: 10px;
+  width: 100%;
+}
+
+    .container-full .container 
+    {
+          margin: 0 auto;
+      width: 100%;
+
+    }

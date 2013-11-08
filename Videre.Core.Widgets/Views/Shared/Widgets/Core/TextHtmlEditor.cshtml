@@ -12,7 +12,7 @@
 <div id="@Model.GetId("Widget")">
     <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="margin-left: -450px; width: 900px; display: none;">
         <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             @Model.GetText("TextHtmlEditor.Text", "Text / Html Editor")
         </div>
         <div class="modal-body" style="min-height: 450px;">
@@ -52,7 +52,7 @@
 
     <div id="@Model.GetId("NewShareDialog")" data-target="#@Model.GetId("NewShareDialog")" class="modal fade" style="display: none;">
         <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             @Model.GetText("NewShare.Text", "New Share")
         </div>
         <div class="modal-body" style="padding: 5px;  ">

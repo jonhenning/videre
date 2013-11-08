@@ -33,7 +33,8 @@ videre.widgets.installer = videre.widgets.base.extend(
                 Default: true
             };
             var packages = [];
-            this.getControl('Packages').find(':checked').each(function() { packages.push($(this).val()) });
+            this.getControl('Packages').find(':checked').each(function () { packages.push($(this).val()) });
+            this.getControl('CorePackages').find(':checked').each(function () { packages.push($(this).val()) });
             this.getControl('WebReferencePackages').find(':checked').each(function() { packages.push($(this).val()) });
 
             this.ajax('~/Installer/Install', { adminUser: user, portal: portal, packages: packages }, this._delegates.onInstallReturn);

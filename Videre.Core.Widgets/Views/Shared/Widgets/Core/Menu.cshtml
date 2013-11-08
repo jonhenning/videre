@@ -13,104 +13,109 @@
     }
     
 }
-    
+
 @{
-var canEdit = Security.IsActivityAuthorized("Content", "Administration");
+    var canEdit = Security.IsActivityAuthorized("Content", "Administration");
 
-var searchUrl = Videre.Core.Services.Portal.CurrentPortal.GetAttribute("Core", "SearchUrl", "~/search");
-var showSearch = Model.GetAttribute("ShowSearch", "No") == "Yes";
-var inverseColors = Model.GetAttribute("InverseColors", "No") == "Yes";
-var alwaysOnTop = Model.GetAttribute("AlwaysOnTop", "Yes") == "Yes";
-var showLogo = Model.GetAttribute("ShowLogo", "No") == "Yes";
+    var searchUrl = Videre.Core.Services.Portal.CurrentPortal.GetAttribute("Core", "SearchUrl", "~/search");
+    var showSearch = Model.GetAttribute("ShowSearch", "No") == "Yes";
+    var inverseColors = Model.GetAttribute("InverseColors", "No") == "Yes";
+    var alwaysOnTop = Model.GetAttribute("AlwaysOnTop", "Yes") == "Yes";
+    var showLogo = Model.GetAttribute("ShowLogo", "No") == "Yes";
 
-Models.Menu menu = Model.GetContent<Models.Menu>();
-if (menu != null)
-{
-    var urls = menu.Items.Select(i => i.Url).ToList();
-    urls.AddRange(menu.Items.Descendants(i => i.Items).Select(i => i.Url));
-        
-    var bestMatchUrl = !string.IsNullOrEmpty(Portal.CurrentUrl) ? RouteParser.GetBestMatchedUrl("~/" + Portal.CurrentUrl, urls) : "~/";   //todo: need better url processing, as adding ~/ in front is kind of lame!
-    
-    if (showSearch)
+    Models.Menu menu = Model.GetContent<Models.Menu>();
+    if (menu != null)
     {
-        Html.RegisterControlPresenter(Model, "videre.widgets.search");
-    }
-    
-    if (canEdit)
-    {
-        Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model);
-    }
-  <div id="@Model.GetId("Widget")" class="navbar @(inverseColors ? "navbar-inverse" : "") @(alwaysOnTop ? "navbar-fixed-top" : "") @Model.Css" style="@Model.Style">
+        var urls = menu.Items.Select(i => i.Url).ToList();
+        urls.AddRange(menu.Items.Descendants(i => i.Items).Select(i => i.Url));
 
-    <div class="navbar-inner">
-      <div class="container" >
-          @if (!string.IsNullOrEmpty(menu.Text) || showLogo)
-          {
-        <a class="brand @menu.TextCss" href="@Url.Content("~/")">
-            @menu.Text
-            @if (showLogo && !string.IsNullOrEmpty(Portal.CurrentPortal.LogoUrl))
-            {
-                <img src="@Portal.CurrentPortal.LogoUrl" />
-            }
-        </a>
-          }
-        <div class="nav-collapse">
-          <ul class="nav">
-              @menuTemplate(menu.Items, 0, bestMatchUrl)
-            @helper menuTemplate(List<Models.MenuItem> items, int depth, string bestMatchUrl) 
-            {
-             foreach (var item in items.Where(i => i.IsAuthorized))
-             {
-                 var css = bestMatchUrl.Equals(item.Url, StringComparison.InvariantCultureIgnoreCase) ? "active" : "";
-                 if (item.Items.Count == 0)
-                 {
-                     <li class="@css"><a href="@GetUrl(item.Url)">@iconTemplate(item)@item.Text</a></li>
-                 }
-                 else
-                 {
-                    <li class="@(depth == 0 ? "dropdown" : "dropdown-submenu") @css">
-                        <a href="@GetUrl(item.Url)" class="dropdown-toggle" data-toggle="dropdown">@iconTemplate(item)@item.Text @Html.Raw(depth == 0 ? "<i class=\"caret\"></i>" : "")</a>
-                        <ul class="dropdown-menu">
-                            @menuTemplate(item.Items, depth + 1, bestMatchUrl)
-                        </ul>
-                    </li>
-                 }  
-              }
-             }
-             @helper iconTemplate(Models.MenuItem item)
-             {
-                if (!string.IsNullOrEmpty(item.Icon))
-                {
-                    <i class="@item.Icon"></i>
-                }
-             }
-          </ul>
-@{          
+        var bestMatchUrl = !string.IsNullOrEmpty(Portal.CurrentUrl) ? RouteParser.GetBestMatchedUrl("~/" + Portal.CurrentUrl, urls) : "~/";   //todo: need better url processing, as adding ~/ in front is kind of lame!
+
         if (showSearch)
         {
-          <form class="navbar-search pull-right" action="@Url.Content(searchUrl)" method="get">
-            <input type="text" name="q" id="@Model.GetId("Term")" class="search-query span2" placeholder="Search" autocomplete="off">
-          </form>
-        }       
-}
+            Html.RegisterControlPresenter(Model, "videre.widgets.search");
+        }
+
+        if (canEdit)
+        {
+            Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model);
+        }
+    <div id="@Model.GetId("Widget")" class="navbar navbar-default @(inverseColors ? "navbar-inverse" : "") @(alwaysOnTop ? "navbar-fixed-top" : "") @Model.Css" style="@Model.Style" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @if (!string.IsNullOrEmpty(menu.Text) || showLogo)
+                {
+                    <a class="navbar-brand @menu.TextCss" href="@Url.Content("~/")">
+                        @menu.Text
+                        @if (showLogo && !string.IsNullOrEmpty(Portal.CurrentPortal.LogoUrl))
+                        {
+                            <img src="@Portal.CurrentPortal.LogoUrl" />
+                        }
+                    </a>
+                }
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    @menuTemplate(menu.Items, 0, bestMatchUrl)
+                    @helper menuTemplate(List<Models.MenuItem> items, int depth, string bestMatchUrl)
+{
+                foreach (var item in items.Where(i => i.IsAuthorized))
+                {
+                    var css = bestMatchUrl.Equals(item.Url, StringComparison.InvariantCultureIgnoreCase) ? "active" : "";
+                    if (item.Items.Count == 0)
+                    {
+                        <li class="@css"><a href="@GetUrl(item.Url)">@iconTemplate(item)@item.Text</a></li>
+                    }
+                    else
+                    {
+                        <li class="@(depth == 0 ? "dropdown" : "dropdown-submenu") @css">
+                            <a href="@GetUrl(item.Url)" class="dropdown-toggle" data-toggle="dropdown">@iconTemplate(item)@item.Text @Html.Raw(depth == 0 ? "<i class=\"caret\"></i>" : "")</a>
+                            <ul class="dropdown-menu">
+                                @menuTemplate(item.Items, depth + 1, bestMatchUrl)
+                            </ul>
+                        </li>
+                    }
+                }
+                    }
+                    @helper iconTemplate(Models.MenuItem item)
+{
+                 if (!string.IsNullOrEmpty(item.Icon))
+                 {
+                        <i class="@item.Icon"></i>
+                 }
+                    }
+                </ul>
+                @{          
+                if (showSearch)
+                {
+                    <form class="navbar-form pull-right" action="@Url.Content(searchUrl)" method="get" role="search">
+                        <input type="text" name="q" id="@Model.GetId("Term")" class="form-control" placeholder="Search" autocomplete="off">
+                    </form>
+                }       
+                }
+            </div>
         </div>
-      </div>
     </div>
-  </div>
     
     if (alwaysOnTop)
     {
-     <script>
-         $(document).ready(function()
-         {
-             $('body').css({
-                 'padding-top': $('#@(Model.GetId("Widget"))').height() + 'px'
+    <script>
+        $(document).ready(function ()
+        {
+            $('body').css({
+                'padding-top': $('#@(Model.GetId("Widget"))').height() + 'px'
              });
          });
 
-     </script>   
+    </script>   
     }
-    
-    
-}
+
+
+    }
 }

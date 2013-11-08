@@ -15,28 +15,28 @@
     {
         props["returnUrl"] = VirtualPathUtility.ToAbsolute("~/");
     }
-    
-    Html.RegisterControlPresenter(Model, "videre.widgets.account.logon", props);
 
+    Html.RegisterControlPresenter(Model, "videre.widgets.account.logon", props);
 }
 
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
-    <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("Login.Text", "Log On")</legend>}
-        <div class="container">
-            <div class="row">
-                <div class="span4">
-                    <div class="form-horizontal">
-                        @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "", "input-medium")
-                        @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", "", "input-medium", "password")
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default videre-has-form-actions">
+                @if (Model.ShowHeader)
+                {<div class="panel-heading">@Model.GetText("Login.Text", "Log On")</div>}
+                <div class="panel-body">
+                    <div class="form-horizontal videre-form">
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtName").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
                     </div>
-                    <div class="videre actions form-actions">
+                    <div class="videre-form-actions">
                         <a class="btn btn-primary" id="@Model.GetId("btnLogon")">@Model.GetText("Logon.Text", "Log On")</a>
                     </div>
                 </div>
             </div>
         </div>
-    </fieldset>
+    </div>
 </div>
 

@@ -220,14 +220,14 @@ videre.UI = {
     {
         description = description || '';
         inputs = inputs || [];
-        var dlg = $(String.format('<div id="{0}" data-target="{0}" class="modal fade" style="display: none;"><div class="modal-header"><a class="close" data-dismiss="modal">×</a>{1}</div><div class="modal-body">{2}<div class="form-horizontal"></div></div><div class="modal-footer"></div></div>',
+        var dlg = $(String.format('<div id="{0}" data-target="{0}" class="modal fade" style="display: none;"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>{1}</div><div class="modal-body">{2}<div class="form-horizontal"></div></div><div class="modal-footer"></div></div>',
             id, title, description)).appendTo($("body")).modal('show');
 
         var body = dlg.find('.form-horizontal');
         var footer = dlg.find('.modal-footer');
         $.each(inputs, function(idx, input)
         {
-            $(String.format('<div class="control-group"><label class="control-label">{0}</label><div class="controls"><input type="text" data-column="{1}" class="{2}" /></div></div>',
+            $(String.format('<div class="form-group"><label class="control-label">{0}</label><div class="controls"><input type="text" data-column="{1}" class="{2}" /></div></div>',
                 input.label, input.dataColumn, input.css)).appendTo(body).find('[data-column]').val(input.value);
         });
         $.each(buttons, function(idx, btn)
@@ -762,11 +762,11 @@ videre.widgets.base = videre.Class.extend(
             var error = videre.UI.validateCtl(item);
             if (error != null)
             {
-                item.group.addClass('error');
+                item.group.addClass('has-error');
                 errors.push(error);
             }
             else
-                item.group.removeClass('error');
+                item.group.removeClass('has-error');
         });
         this.addMsgs(errors, messageCtr);
         return errors.length == 0;
@@ -863,7 +863,7 @@ videre.widgets.base = videre.Class.extend(
             var text = this._messages.toList(function(d) { return d.text; }).join('<br/>');
             if (text.length > 0)
             {
-                msgCtr.removeClass('alert-error').addClass(msg.isError ? 'alert-error' : '');
+                msgCtr.removeClass('alert-danger').removeClass('alert-info').addClass(msg.isError ? 'alert-danger' : 'alert-info');
                 msgCtr.find('.alert-text').html(text);
                 msgCtr.show();
             }
@@ -889,7 +889,7 @@ videre.widgets.base = videre.Class.extend(
     {
         this._messages = [];
         this.refreshMsgs(parent);
-        this._getValidationCtls(parent != null ? parent : this._widget).forEach(function(item) { item.group.removeClass('error'); });
+        this._getValidationCtls(parent != null ? parent : this._widget).forEach(function(item) { item.group.removeClass('has-error'); });
     },
 
     //events
@@ -946,7 +946,7 @@ videre.widgets.base = videre.Class.extend(
             if (item.ctl.attr('bypassvalidation') != 'true')    //todo:  we need a way to allow for panes to opt out of validation of their controls...  this is ok, but still feels a bit dirty
             {
                 item.lbl = ctr.find('[for="' + item.ctl.attr('id') + '"]');
-                item.group = item.ctl.closest('.control-group');
+                item.group = item.ctl.closest('.form-group');
                 item.labelText = item.lbl.html();
                 if (item.labelText == null)
                     item.labelText = item.ctl.data('label-text');
@@ -1033,60 +1033,68 @@ videre.localization = {
 };
 
 //jsrender helpers
-$.views.helpers({
-    resolveUrl: function(val) { return val != null ? videre.resolveUrl(val) : ''; },
-    formatDateTime: function(val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.datetime) : ''; },
-    formatDate: function(val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.date, true) : ''; },
-    formatTime: function(val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.time) : ''; },
-    formatString: function() { return String.format.apply(this, arguments); },
-    nullOrEmpty: function(val) { return String.isNullOrEmpty(val); },
-    coalesce: function(val, label) { return val || (label || ''); },
-    deepCoalesce: function(o, s, label) { return Object.deepGet(o, s) || (label || ''); },
-    bindInputs: function(data, attributes, keyName) //todo: not sure this belongs in videre.js...
-    {
-        keyName = keyName != null ? keyName : data.Name;
-        var ctl;
-        var tempParent = $('<div></div>');
-        var dataValue = Object.deepGet(attributes, keyName);
-        dataValue = dataValue || data.DefaultValue;
-        if (data.Values.length > 0)
+if ($.views != null)
+{
+    $.views.helpers({
+        resolveUrl: function (val) { return val != null ? videre.resolveUrl(val) : ''; },
+        formatDateTime: function (val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.datetime) : ''; },
+        formatDate: function (val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.date, true) : ''; },
+        formatTime: function (val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.time) : ''; },
+        formatString: function () { return String.format.apply(this, arguments); },
+        nullOrEmpty: function (val) { return String.isNullOrEmpty(val); },
+        coalesce: function (val, label) { return val || (label || ''); },
+        deepCoalesce: function (o, s, label) { return Object.deepGet(o, s) || (label || ''); },
+        bindInputs: function (data, attributes, keyName, selectPlugin, inputPlugin) //todo: not sure this belongs in videre.js...  also getting hacky with plugin code...  
         {
-            ctl = $('<select>').attr('data-column', keyName);
-            $.each(data.Values, function(idx, item)
+            keyName = keyName != null ? keyName : data.Name;
+            var ctl;
+            var tempParent = $('<div></div>');
+            var dataValue = Object.deepGet(attributes, keyName);
+            dataValue = dataValue || data.DefaultValue;
+            if (data.Values.length > 0)
             {
-                $('<option>').attr('value', item).html(item).appendTo(ctl);
-            });
-            ctl.val(dataValue);
-            ctl.find(':selected').attr('selected', 'selected'); //need value written into html
-        }
-        else
-        {
-            ctl = $('<input>').attr({ type: data.InputType || 'text', 'data-column': keyName }); //.val(dataValue);
+                ctl = $('<select>').attr('data-column', keyName);
+                if (selectPlugin != null)
+                    ctl.attr('data-plugin', selectPlugin);
+
+                $.each(data.Values, function (idx, item)
+                {
+                    $('<option>').attr('value', item).html(item).appendTo(ctl);
+                });
+                ctl.val(dataValue);
+                ctl.find(':selected').attr('selected', 'selected'); //need value written into html
+            }
+            else
+            {
+                ctl = $('<input>').attr({ type: data.InputType || 'text', 'data-column': keyName }); //.val(dataValue);
+                if (inputPlugin != null)
+                    ctl.attr('data-plugin', inputPlugin);
+
+                if (data.DataType)
+                    ctl.attr('data-datatype', data.DataType);
+                if (!String.isNullOrEmpty(dataValue))
+                {
+                    //ideally setControlValue would do _dataTypes check, but causes recursive calls...  refactoring in order
+                    var dataType = videre.UI._dataTypes[ctl.data('datatype')];
+                    if (dataType != null && dataType.set != null)
+                    {
+                        dataType.set(ctl, dataValue);
+                        dataValue = ctl.val();
+                    }
+
+                    ctl.attr('value', dataValue); //need value written into html
+                }
+            }
+            ctl.attr('data-label-text', keyName); //todo: mini-hack as labels have no for="" specified
+            if (data.Required)
+                ctl.attr('required', 'required');
             if (data.DataType)
                 ctl.attr('data-datatype', data.DataType);
-            if (!String.isNullOrEmpty(dataValue))
-            {
-                //ideally setControlValue would do _dataTypes check, but causes recursive calls...  refactoring in order
-                var dataType = videre.UI._dataTypes[ctl.data('datatype')];
-                if (dataType != null && dataType.set != null)
-                {
-                    dataType.set(ctl, dataValue);
-                    dataValue = ctl.val();
-                }
-
-                ctl.attr('value', dataValue); //need value written into html
-            }
+            if (data.Dependencies != null && data.Dependencies.length > 0)
+                ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
+            ctl.appendTo(tempParent);
+            return tempParent.html(); //minor hack to get outerHTML
         }
-        ctl.attr('data-label-text', keyName); //todo: mini-hack as labels have no for="" specified
-        if (data.Required)
-            ctl.attr('required', 'required');
-        if (data.DataType)
-            ctl.attr('data-datatype', data.DataType);
-        if (data.Dependencies != null && data.Dependencies.length > 0)
-            ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
-        ctl.appendTo(tempParent);
-        return tempParent.html(); //minor hack to get outerHTML
-    }
-});
-
+    });
+}
 $(window).unload(videre.cleanUp);

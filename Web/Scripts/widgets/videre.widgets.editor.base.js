@@ -43,7 +43,10 @@ videre.widgets.editor.base = videre.widgets.base.extend(
         ctr.html(this.getControl('AttributeListTemplate').render(this._manifestData.AttributeDefinitions, { attributes: this._widgetData.Attributes }));
         ctr.toggle(this._manifestData.AttributeDefinitions.length > 0);
         this._handleDependencies(ctr);
+
+        //todo: should have global registry for actions to take after binding
         ctr.find('[data-datatype="date"]').datepicker();
+        ctr.find('[data-plugin="bootstrap-select"]').selectpicker();
 
     },
 

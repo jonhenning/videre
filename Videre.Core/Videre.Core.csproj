@@ -100,6 +100,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\System.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,26 @@
     <Compile Include="Binders\DefaultDictionaryBinder.cs" />
     <Compile Include="Binders\DictionaryModelBinder.cs" />
     <Compile Include="Binders\JsonNetModelBinder.cs" />
+    <Compile Include="Extensions\Bootstrap\Bootstrap.cs" />
+    <Compile Include="Extensions\Bootstrap\BootstrapHtmlExtension.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapPassword.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapInputControl.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapEmail.cs" />
+    <Compile Include="Extensions\Bootstrap\BootstrapUnits.cs" />
+    <Compile Include="Extensions\Bootstrap\BootstrapBaseControl.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapFormGroup.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapTextBox.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapLabel.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapDropDownList.cs" />
+    <Compile Include="Extensions\Bootstrap\IBootstrapInputControlModel.cs" />
+    <Compile Include="Extensions\Bootstrap\IFluentBootstrapInputControl.cs" />
+    <Compile Include="Extensions\Bootstrap\IFluentInterface.cs" />
+    <Compile Include="Extensions\Bootstrap\IBootstrapBaseControl.cs" />
+    <Compile Include="Extensions\Bootstrap\IFluentBootstrapBaseControl.cs" />
+    <Compile Include="Extensions\Bootstrap\IBootstrapBaseControlModel.cs" />
+    <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Providers\DynamicContentProviderFactory.cs" />
     <Compile Include="Providers\FastTemplateDynamicContentProvider.cs" />
     <Compile Include="Providers\IDynamicContentProvider.cs" />

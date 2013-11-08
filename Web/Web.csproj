@@ -30,6 +30,12 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -157,7 +163,9 @@
     <Content Include="Scripts\widgets\videre.widgets.installer.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -194,7 +202,6 @@
     <None Include="ConnectionStrings.config.debug" />
     <Content Include="_packages\Videre.CoreSiteTemplate.zip" />
     <Content Include="_packages\Videre.FirstTimeUserContent.zip" />
-    <Content Include="_packages\Bootstrap-2.1.zip" />
     <Content Include="_packages\jQuery-1.7.1.zip" />
     <Content Include="_packages\jQuery-ui-1.8.18.zip" />
     <Content Include="_packages\DataTables-1.9.4.zip" />

@@ -25,14 +25,14 @@
 
     <script src="@CoreServices.Portal.ResolveUrl("~/scripts/jquery-1.7.1/jquery-1.7.1.min.js")" type="text/javascript"></script>
     <script src="@CoreServices.Portal.ResolveUrl("~/scripts/jquery-ui-1.8.18/js/jquery-ui-1.8.18.custom.min.js")" type="text/javascript"></script>
-    <script src="@CoreServices.Portal.ResolveUrl("~/scripts/bootstrap-2.1.0/js/bootstrap.js")" type="text/javascript"></script>
-    
+    <script src="@CoreServices.Portal.ResolveUrl("~/scripts/bootstrap-3.0.1/js/bootstrap.js")" type="text/javascript"></script>
+
     <script src="@CoreServices.Portal.ResolveUrl("~/scripts/videre.extensions.js")" type="text/javascript"></script>
     <script src="@CoreServices.Portal.ResolveUrl("~/scripts/videre.js")" type="text/javascript"></script>
 
-    <link href="@CoreServices.Portal.ResolveUrl("~/Content/videre.css")" type="text/css")" rel="stylesheet"  />
+    <link href="@CoreServices.Portal.ResolveUrl("~/Content/videre.css")" type="text/css" rel="stylesheet"  />
     <link href="@CoreServices.Portal.ResolveUrl("~/scripts/jquery-ui-1.8.18/css/smoothness/jquery-ui-1.8.18.custom.css")" type="text/css" rel="stylesheet"  />
-    <link href="@CoreServices.Portal.ResolveUrl("~/scripts/bootstrap-2.1.0/css/bootstrap.min.css")" type="text/css" rel="stylesheet"  />
+    <link href="@CoreServices.Portal.ResolveUrl("~/scripts/bootstrap-3.0.1/css/bootstrap.min.css")" type="text/css" rel="stylesheet"  />
 
     @{Html.RenderLayoutHeader();}
 </head>
@@ -42,50 +42,111 @@
         <div class="content" style="min-height: 500px;" id="@Model.GetId("Widget")">
             @{Html.RenderPartial("WidgetHeader", Model);}
 
-            <form class="form-horizontal">
-            <fieldset>
-                <legend>Portal<small> - Choose the packages you wish to install</small></legend>
-                <div class="control-group">
-                    <label class="control-label" for="optionsCheckboxList">Packages</label>
-                    <div class="controls" id="@Model.GetId("Packages")">
-                        @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type != "WebReference").OrderBy(p => p.Name))
-                        {
-                            <label class="checkbox" title="@package.Description - @package.Source">
-                                <input type="checkbox" value="@package.Name" checked="checked" @(IsRequiredPackage(package) ? "disabled=\"true\"" : "") />
-                                @package.Name (v @package.Version)
-                            </label>
-                        }
+            <div class="row">
+            @if (!Videre.Core.Services.Account.ReadOnly)
+            {
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Admin User - Enter the user information for the portal administrator
+                            </div>
+                            <div class="panel-body">
+                                <div id="@Model.GetId("AdminUser")" class="form-horizontal">
+
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtUserName").DataColumn("Name").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Email.Text", "Email").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Email("txtEmail").DataColumn("Email").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").DataColumn("Password").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ConfirmPassword.Text", "Confirm Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword2").MustMatch("txtPassword").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            }
+
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Portal - Choose the packages you wish to install
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel-group" id="@Model.GetId("Accordian")">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"><i class="glyphicon glyphicon-gift"></i> <a data-toggle="collapse" data-parent="#@Model.GetId("Accordian")" href="#@Model.GetId("PackagesPanel")">Packages</a></h4>
+                                    </div>
+                                    <div id="@Model.GetId("PackagesPanel")" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="form-group">
+
+                                                <div class="controls" id="@Model.GetId("Packages")">
+                                                    @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type != "WebReference" && !IsRequiredPackage(p)).OrderBy(p => p.Name))
+                                                    {
+                                                        <label class="checkbox" title="@package.Description - @package.Source">
+                                                            <input type="checkbox" value="@package.Name" checked="checked" @(IsRequiredPackage(package) ? "disabled=\"true\"" : "") />
+                                                            @package.Name (v @package.Version)
+                                                        </label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"><i class="glyphicon glyphicon-gift"></i> <a data-toggle="collapse" data-parent="#@Model.GetId("Accordian")" href="#@Model.GetId("CorePackagesPanel")">Core Packages</a></h4>
+                                    </div>
+                                    <div id="@Model.GetId("CorePackagesPanel")" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="form-group">
+
+                                                <div class="controls" id="@Model.GetId("CorePackages")">
+                                                    @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type != "WebReference" && IsRequiredPackage(p)).OrderBy(p => p.Name))
+                                                    {
+                                                        <label class="checkbox" title="@package.Description - @package.Source">
+                                                            <input type="checkbox" value="@package.Name" checked="checked" @(IsRequiredPackage(package) ? "disabled=\"true\"" : "") />
+                                                            @package.Name (v @package.Version)
+                                                        </label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"><i class="glyphicon glyphicon-book"></i> <a data-toggle="collapse" data-parent="#@Model.GetId("Accordian")" href="#@Model.GetId("WebReferencesPanel")">Web References</a></h4>
+                                    </div>
+                                    <div id="@Model.GetId("WebReferencesPanel")" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                <div class="controls" id="@Model.GetId("WebReferencePackages")">
+                                                    @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type == "WebReference").OrderBy(p => p.Name))
+                                                    {
+                                                        <label class="checkbox" title="@package.Description - @package.Source">
+                                                            <input type="checkbox" value="@package.Name" checked="checked" disabled="disabled" />
+                                                            @package.Name (v @package.Version)
+                                                        </label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="optionsCheckboxList">Web References</label>
-                    <div class="controls" id="@Model.GetId("WebReferencePackages")">
-                        @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type == "WebReference").OrderBy(p => p.Name))
-                        {
-                            <label class="checkbox" title="@package.Description - @package.Source">
-                                <input type="checkbox" value="@package.Name" checked="checked" disabled="true" />
-                                @package.Name (v @package.Version)
-                            </label>
-                        }
-                    </div>
-                </div>
-            </fieldset>
-@if (!Videre.Core.Services.Account.ReadOnly)
-{
-            <fieldset id="@Model.GetId("AdminUser")">
-                <legend>Admin User<small> - Enter the user information for the portal administrator</small></legend>
-                @Html.InputControlGroup(Model, "txtUserName", "UserName.Text", "UserName", "Name", required: true, disableAutoComplete: true)
-                @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", "Email", required: true, inputType: "email", disableAutoComplete: true)
-                @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", "Password", required: true, inputType: "password" , disableAutoComplete: true)
-                @Html.InputControlGroup(Model, "txtPassword2", "ConfirmPassword.Text", "Confirm Password", new Dictionary<string, string>() { { "validation-matches-match", Model.GetId("txtPassword") }, {"validation-matches-message", string.Format(Model.GetPortalText("MustMatch.Text", "Must match {0} entered above"), "password")} }, false, inputType: "password", disableAutoComplete: true)
-            </fieldset>
-}
-            </form>
         </div>
-        <div class="videre actions form-actions">
+        <div class="clearfix"></div>
+        <div class="videre-form-actions">
             <a class="btn btn-primary" id="@Model.GetId("btnInstall")">Install</a>
         </div>
 
     </div>
+    </div>
     @{Html.RenderLayoutDeferred();}
 </body>
+</html>
