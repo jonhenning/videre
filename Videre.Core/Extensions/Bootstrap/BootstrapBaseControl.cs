@@ -60,6 +60,12 @@ namespace Videre.Core.Extensions.Bootstrap
             return id;
         }
 
+        public TControl DataAttribute(string key, string value)
+        {
+            _model.htmlAttributes.Add("data-" + key, value);
+            return _control;
+        }
+
         public TControl Html(params IHtmlString[] html)
         {
             html.ToList().ForEach(x => this._model.html += x.ToHtmlString());

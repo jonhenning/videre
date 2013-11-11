@@ -18,6 +18,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
     {
         IBootstrapLabel Text(string text);
         IBootstrapLabel Text(string token, string defaultText);
+        IBootstrapLabel Text(string token, string defaultText, bool portalText);
     }
 
     public class BootstrapLabel : BootstrapControlBase<IBootstrapLabel, BootstrapLabelModel>, IBootstrapLabel
@@ -40,7 +41,11 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         }
         public IBootstrapLabel Text(string token, string defaultText)
         {
-            this._model.text = GetText(token, defaultText);
+            return Text(token, defaultText, false);
+        }
+        public IBootstrapLabel Text(string token, string defaultText, bool portalText)
+        {
+            this._model.text = portalText ? GetPortalText(token, defaultText) : GetText(token, defaultText);
             return this;
         }
 
@@ -50,7 +55,6 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             AddBaseMarkup(ctl);
             if (!string.IsNullOrEmpty(_model.forId))
                 ctl.Attributes.Add("for", _model.forId);
-            ctl.MergeAttributes(_model.htmlAttributes);
             
             ctl.SetInnerText(_model.text);
             return ctl.ToString(TagRenderMode.Normal);

@@ -3,16 +3,16 @@
 @using Models = Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Plugin = Videre.Core.Extensions.Bootstrap.Controls.BootstrapDropDownListModel.Plugin;
 @model Models.WidgetEditor
 
 @{
-    //var menus = Videre.Core.Services.Menu.Get();
-    Html.RegisterControlPresenter(Model, "videre.widgets.editor.menu");//, new Dictionary<string, object>() { { "menus", menus } });
+    Html.RegisterControlPresenter(Model, "videre.widgets.editor.menu");
 }
 
 <div id="@Model.GetId("Widget")">
     <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="width: 800px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -28,61 +28,49 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="@Model.GetId("WidgetTab")">
                             <div class="row">
-                                <div class="form-horizontal col-md-10">
+                                <div class="form-horizontal col-md-12">
                                     @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
                                 </div>
                             </div>
                         </div>
                         <div class="form-horizontal tab-pane fade in" id="@Model.GetId("GeneralTab")">
-                            @*@Html.DropDownControlGroup(Model, "ddlMenuType", "MenuType.Text", "Menu Type", "MenuType", "", Enum.GetNames(typeof(Models.Menu.MenuType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.Menu.MenuType>()).ToString(), Text = t }))*@
-                            <div class="control-group">
-                                <label class="control-label">@Model.GetText("Name.Text", "Name")</label>
-                                <div class="controls">
-                                    <select id="@Model.GetId("ddlName")" data-column="Id"></select>
-                                    <button class="btn" type="button" id="@Model.GetId("btnNewMenu")"><i class="icon-plus"></i>@Model.GetPortalText("New.Text", "New")</button>
-                                    <button class="btn" type="button" id="@Model.GetId("btnDeleteMenu")"><i class="icon-trash"></i>@Model.GetPortalText("Delete.Text", "Delete")</button>
+                            <div class="form-group">
+                                <label class="control-label col-md-4">@Model.GetText("Name.Text", "Name")</label>
+                                <div class="col-md-8">
+                                    @Html.Bootstrap().DropDownList("ddlName").DataColumn("Id").Plugin(Plugin.BootstrapSelect)
+                                    <button class="btn btn-default" type="button" id="@Model.GetId("btnNewMenu")"><i class="icon-plus"></i>@Model.GetPortalText("New.Text", "New")</button>
+                                    <button class="btn btn-default" type="button" id="@Model.GetId("btnDeleteMenu")"><i class="icon-trash"></i>@Model.GetPortalText("Delete.Text", "Delete")</button>
                                 </div>
                             </div>
-                            @*@Html.DropDownControlGroup(Model, "ddlName", "Name.Text", "Name", "Name", new List<SelectListItem>())*@
-
-                            @Html.InputControlGroup(Model, "txtText", "Text.Text", "Text", "Text")
-                            @Html.InputControlGroup(Model, "txtTextCss", "TextCss.Text", "Text Css", "TextCss")
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Text.Text", "Text").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Text"), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("TextCss.Text", "Text Css").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("TextCss"), BootstrapUnits.GridSize.MediumDevice8)
                         </div>
                         <div class="tab-pane fade" id="@Model.GetId("MenuTab")">
                             <div class="row">
-                                <div class="span3">
-                                    <div class="btn-toolbar" id="@Model.GetId("ActionButtons")" style="margin-top:0; margin-bottom:0;">
+                                <div class="col-md-4">
+                                    <div class="btn-toolbar" id="@Model.GetId("ActionButtons")" role="toolbar">
                                         <div class="btn-group">
-                                            <a class="btn btn-mini" data-action="add"><i class="icon-plus"></i></a>
-                                            <a class="btn btn-mini" data-action="remove"><i class="icon-trash"></i></a>
-                                            <a class="btn btn-mini" data-action="up"><i class="icon-arrow-up"></i></a>
-                                            <a class="btn btn-mini" data-action="down"><i class="icon-arrow-down"></i></a>
-                                            <a class="btn btn-mini" data-action="left"><i class="icon-arrow-left"></i></a>
-                                            <a class="btn btn-mini" data-action="right"><i class="icon-arrow-right"></i></a>
+                                            @Html.Bootstrap().Button().DataAttribute("action", "add").Icon("glyphicon glyphicon-plus").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                            @Html.Bootstrap().Button().DataAttribute("action", "remove").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                            @Html.Bootstrap().Button().DataAttribute("action", "up").Icon("glyphicon glyphicon-arrow-up").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                            @Html.Bootstrap().Button().DataAttribute("action", "down").Icon("glyphicon glyphicon-arrow-down").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                            @Html.Bootstrap().Button().DataAttribute("action", "left").Icon("glyphicon glyphicon-arrow-left").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                            @Html.Bootstrap().Button().DataAttribute("action", "right").Icon("glyphicon glyphicon-arrow-right").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
                                         </div>
                                     </div>
-                                    <div style="height: 270px; overflow: auto; padding: 2px; margin-top: 0; margin-bottom: 0;" class="well">
-                                        <ul id="@Model.GetId("MenuList")" class="nav nav-list"></ul>
+                                    <div style="height: 320px; overflow: auto; padding: 2px; margin-top: 0; margin-bottom: 0;" class="well">
+                                        <ul id="@Model.GetId("MenuList")" class="videre-nav-indent videre-nav-condensed nav nav-pills nav-stacked"></ul>
                                     </div>
                                 </div>
-                                <div class="span5 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none; margin-top: 30px; margin-left:0;">
-                                    @*@Html.DropDownControlGroup(Model, "ddlParent", "Parent.Text", "Parent", "parentId", "", new List<SelectListItem>())*@
-                                    @Html.InputControlGroup(Model, "txtItemText", "Text.Text", "Text", "Text", required: true)
+                                <div class="col-md-8 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none; margin-top: 30px; margin-left:0;">
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Text.Text", "Text").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Text").Required(), BootstrapUnits.GridSize.MediumDevice9)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Icon.Text", "Icon").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox("txtIcon").DataColumn("Icon").Append(Html.Bootstrap().Span("imgIcon")), BootstrapUnits.GridSize.MediumDevice9)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Url.Text", "Url").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Url"), BootstrapUnits.GridSize.MediumDevice9)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Roles.Text", "Roles").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().RoleList().DataColumn("Roles").Multiple().Plugin(Plugin.BootstrapSelect), BootstrapUnits.GridSize.MediumDevice9)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Authentication.Text", "Authentication").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().AuthorizedList().DataColumn("Authenticated").Plugin(Plugin.BootstrapSelect), BootstrapUnits.GridSize.MediumDevice9)
 
-                                    <div class="control-group">
-                                        <label class="control-label" for="@Model.GetId("txtIcon")">Icon</label>
-                                        <div class="controls input-append" style="display: block;">
-                                            <input type="text" id="@Model.GetId("txtIcon")" data-column="Icon">
-                                            <span class="add-on"><i id="@Model.GetId("imgIcon")"></i></span>
-                                        </div>
-                                    </div>
-
-                                    @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url")
-                                    @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles")
-                                    @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")
-
-                                    <div class="form-actions">
-                                        <a class="btn" id="@Model.GetId("btnApply")">@Model.GetPortalText("Apply.Text", "Apply")</a>
+                                    <div class="videre-form-actions">
+                                        @Html.Bootstrap().Button("btnApply").Text("Apply.Text", "Apply")
                                     </div>
                                 </div>
                             </div>
@@ -90,8 +78,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
-                    <a class="btn btn-default" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+                    @Html.Bootstrap().Button("btnOk").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
                 </div>
             </div>
         </div>
@@ -106,11 +94,11 @@
                 </div>
                 <div class="modal-body" style="padding: 5px;">
                     <div class="form-horizontal">
-                        @Html.InputControlGroup(Model, "txtNewMenu", "MenuName.Text", "Menu Name")
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("MenuName.Text", "Menu Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtNewMenu"), BootstrapUnits.GridSize.MediumDevice8)
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-primary" id="@Model.GetId("btnOkNewMenu")">@Model.GetPortalText("Ok.Text", "Ok")</a>
+                    @Html.Bootstrap().Button("btnOkNewMenu").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
                 </div>
             </div>
         </div>

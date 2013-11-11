@@ -46,7 +46,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             if (!string.IsNullOrEmpty(_model.val)) //cannot be in base as textarea is different!
                 ctl.Attributes.Add("val", _model.val);
 
-            return ctl.ToString(TagRenderMode.Normal);
+            return base.Render(ctl);
+            //return ctl.ToString(TagRenderMode.Normal);
         }
 
     }

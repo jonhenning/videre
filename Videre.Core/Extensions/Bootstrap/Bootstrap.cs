@@ -16,6 +16,16 @@ namespace Videre.Core.Extensions.Bootstrap
             this.Html = _html;
         }
 
+        public IBootstrapButton Button(string id = null)
+        {
+            return new BootstrapButton(Html, id);
+        }
+
+        public IBootstrapSpan Span(string id = null)
+        {
+            return new BootstrapSpan(Html, id);
+        }
+
         public IBootstrapLabel Label(string text, string forId, string id)
         {
             return new BootstrapLabel(Html, text, forId, id);
@@ -50,7 +60,7 @@ namespace Videre.Core.Extensions.Bootstrap
             return DropDownList(id).Options(items);
         }
 
-        public IBootstrapDropDownList AuthroizedList(string id = null)
+        public IBootstrapDropDownList AuthorizedList(string id = null)
         {
             var clientControl = Html.ViewData.Model as Videre.Core.Models.IClientControl;
             if (clientControl != null)

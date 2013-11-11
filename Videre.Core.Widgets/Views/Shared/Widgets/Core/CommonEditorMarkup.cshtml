@@ -21,7 +21,7 @@
         Html.Bootstrap().RoleList().Plugin(Plugin.BootstrapSelect).Multiple().DataColumn("Roles"), BootstrapUnits.GridSize.MediumDevice8)
 
     @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Authentication.Text", "Authentication").GridSize(BootstrapUnits.GridSize.MediumDevice4), 
-        Html.Bootstrap().AuthroizedList().Plugin(Plugin.BootstrapSelect).DataColumn("Authenticated"), BootstrapUnits.GridSize.MediumDevice8)
+        Html.Bootstrap().AuthorizedList().Plugin(Plugin.BootstrapSelect).DataColumn("Authenticated"), BootstrapUnits.GridSize.MediumDevice8)
 
     @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("WebReferences.Text", "Web References").GridSize(BootstrapUnits.GridSize.MediumDevice4), 
         Html.Bootstrap().DropDownList().Plugin(Plugin.BootstrapSelect).Options(CoreServices.Web.GetWebReferences().Select(r => new SelectListItem() { Text = r.Name, Value = r.Name } ).ToList()).DataColumn("WebReferences").Multiple(), BootstrapUnits.GridSize.MediumDevice8)

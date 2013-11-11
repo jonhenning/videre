@@ -155,3 +155,13 @@ a
 {
     margin-bottom: 15px;    /*bs3 doesn't have margin here...  */
 }
+
+.videre-nav-indent ul 
+{
+	margin-left: 15px !important;
+}
+
+.videre-nav-condensed a
+{
+    padding: 2px 5px 2px 5px !important;
+}

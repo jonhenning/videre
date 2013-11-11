@@ -11,6 +11,9 @@ namespace Videre.Core.Extensions.Bootstrap
         TControl DataType(string type);
         TControl MustMatch(string controlId);
         TControl Required();
+        TControl InputSize(Bootstrap.BootstrapUnits.InputSize size);
+        TControl Append(Bootstrap.IBootstrapBaseControl ctl);
+        TControl Prepend(Bootstrap.IBootstrapBaseControl ctl);
 
         TControl Required(bool required);
 

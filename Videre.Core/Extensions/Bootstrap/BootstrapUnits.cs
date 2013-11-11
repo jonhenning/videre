@@ -7,6 +7,72 @@ namespace Videre.Core.Extensions.Bootstrap
 {
     public class BootstrapUnits
     {
+        public enum ButtonSize
+        {
+            Large,
+            Small,
+            ExtraSmall
+        }
+
+        public static string GetButtonSizeCss(ButtonSize size)
+        {
+            return ButtonSizeCss[size];
+        }
+
+        private static Dictionary<ButtonSize, string> ButtonSizeCss = new Dictionary<ButtonSize, string>()
+        {
+            {ButtonSize.Large, "btn-lg" },
+            {ButtonSize.Small, "btn-sm" },
+            {ButtonSize.ExtraSmall, "btn-xs" }
+        };
+
+        public enum ButtonStyle
+        {
+            Default,
+            Primary,
+            Success,
+            Info,
+            Warning,
+            Danger,
+            Link
+        }
+
+        public static string GetButtonStyleCss(ButtonStyle style)
+        {
+            return ButtonStyleCss[style];
+        }
+
+        private static Dictionary<ButtonStyle, string> ButtonStyleCss = new Dictionary<ButtonStyle, string>()
+        {
+            {ButtonStyle.Default, "btn-default" },
+            {ButtonStyle.Primary, "btn-primary" },
+            {ButtonStyle.Success, "btn-success" },
+            {ButtonStyle.Info, "btn-info" },
+            {ButtonStyle.Warning, "btn-warning" },
+            {ButtonStyle.Danger, "btn-danger" },
+            {ButtonStyle.Link, "btn-link" }
+        };
+
+        public enum InputSize
+        {
+            Default,
+            Large,
+            Small
+        }
+
+        public static string GetInputSizeCss(InputSize size)
+        {
+            return InputSizeCss[size];
+        }
+
+        private static Dictionary<InputSize, string> InputSizeCss = new Dictionary<InputSize, string>()
+        {
+            {InputSize.Default, "" },
+            {InputSize.Large, "input-lg" },
+            {InputSize.Small, "input-sm" },
+        };
+
+
         public enum GridSize
         {
             LargeDevice1,

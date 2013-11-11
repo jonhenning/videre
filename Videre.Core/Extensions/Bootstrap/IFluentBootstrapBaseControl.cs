@@ -12,6 +12,7 @@ namespace Videre.Core.Extensions.Bootstrap
         TControl GridSize(BootstrapUnits.GridSize size);
         TControl Css(string css);
         TControl DataColumn(string name);
+        TControl DataAttribute(string key, string value);
         
 
     }

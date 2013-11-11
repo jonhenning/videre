@@ -27,7 +27,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         this._base(); //call base
         this.getControl('btnApply').click(videre.createDelegate(this, this._onApplyClicked));
         this._menuList = this.getControl('MenuList').click(videre.createDelegate(this, this._onMenuClicked));
-        this.getControl('ActionButtons').find('a').click(videre.createDelegate(this, this._onActionClicked));
+        this.getControl('ActionButtons').find('[data-action]').click(videre.createDelegate(this, this._onActionClicked));
         this._widget.find('[data-column]').change(videre.createDelegate(this, this._onDataChange));
 
         this._newMenuDialog = this.getControl('NewMenuDialog').modal('hide');
@@ -97,6 +97,9 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         }
         else
             this._handleMenuChanged();  //choose first available menu - ours was deleted
+
+        ddl.selectpicker('refresh'); //refresh
+
     },
 
     bindMenu: function()
@@ -149,7 +152,10 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
     _refreshIcon: function()
     {
-        this.getControl('imgIcon').attr('class', '').attr('class', this.getControl('txtIcon').val());
+        var img = this.getControl('imgIcon').find('span');
+        if (img.length == 0)
+            img = $('<span></span>').appendTo(this.getControl('imgIcon'));
+        img.attr('class', this.getControl('txtIcon').val());
     },
 
     _getParentItems: function(item)
@@ -245,7 +251,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
             if (this._selectedItem != null && item.genId == this._selectedItem.genId)
                 li.addClass('active');
             if (item.Items.length > 0)
-                this._bindItems($('<ul class="nav nav-list"></ul>').appendTo(li), item.Items, item);
+                this._bindItems($('<ul class="nav nav-pills nav-stacked"></ul>').appendTo(li), item.Items, item);
         }
     },
 
@@ -314,9 +320,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
     _onActionClicked: function(e)
     {
-        var a = e.target.tagName == 'A' ? $(e.target) : $(e.target).parent('a');
-        var action = a.data('action');
-
+        var action = $(e.target).closest('[data-action]').data('action');
         if (action == 'add')
             this.addItem();
         if (action == 'remove')
