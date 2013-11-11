@@ -51,14 +51,51 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
 
     deleteShare: function(name)
     {
-        if (this._sharedContentDict[name] != null && confirm('Are you sure you wish to delete this share?'))    //todo: localize
-            this.ajax('~/core/localization/delete', { id: this._sharedContentDict[name].Id }, this._delegates.onShareDeleted, null, null, this._sharedContentDict[name]);
+        //if (this._sharedContentDict[name] != null && confirm('Are you sure you wish to delete this share?'))    //todo: localize
+        var self = this;
+        videre.UI.prompt(this.getId('DeleteShare'), 'Delete Share', 'Are you sure you wish to delete this share?', null,
+            [{
+                text: 'Ok', css: 'btn-primary', close: true, handler: function ()
+                {
+                    self.ajax('~/core/localization/delete', { id: self._sharedContentDict[name].Id }, self._delegates.onShareDeleted, null, null, self._sharedContentDict[name]);
+                    return true;
+                }
+            }, { text: 'Cancel', css: 'btn-default', close: true }]);
     },
 
     showNewShareDialog: function()
     {
-        this._newShareDialog.modal('show');
-        this.getControl('txtNewShare').val('').focus();
+        //this._newShareDialog.modal('show');
+        //this.getControl('txtNewShare').val('').focus();
+        var self = this;
+        videre.UI.prompt(this.getId('NewMenu'), 'New Share', '', [{ label: 'Name', dataColumn: 'NewName' }],
+            [{
+                text: 'Ok', css: 'btn-primary', close: true, handler: function (data)
+                {
+                    if (!String.isNullOrEmpty(data.NewName))
+                    {
+                        var name = data.NewName;
+                        if (self._sharedContentDict[name] == null)
+                        {
+                            var content = self._newContent;
+                            content.Namespace = name;
+                            self._widgetData.Content[0] = content;
+                            self._sharedContent.push(content);
+                            self._sharedContentDict[name] = content;
+                            self.bindLinks();
+                            self.getControl('ddlLink').val(name);
+                            //self.getControl('ddlLink').selectpicker('render');
+
+                            self._handleShareChanged(name);
+                            self._newShareDialog.modal('hide');
+                        }
+                        else
+                            alert('Share name must be unique!');    //todo: localize
+                        return true;
+                    }
+                }
+            }, { text: 'Cancel', css: 'btn-default', close: true }]);
+
     },
 
     bind: function()
@@ -69,6 +106,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
             content.Namespace = '';
 
         this.getControl('ddlLink').val(this._sharedContentDict[content.Namespace] != null ? this._widgetData.Content[0].Namespace : '');
+        //this.getControl('ddlLink').selectpicker('render');
 
         this.getControl('lblLinkCount').html(String.format("({0})", this._linkCountDict[content.Id] != null ? this._linkCountDict[content.Id].length : '0'));
 
@@ -86,6 +124,8 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
         {
             ddl.append($('<option></option>').val(this.Namespace).html(this.Namespace));
         });
+        //ddl.selectpicker('refresh'); //refresh
+
     },
 
     validate: function()
@@ -119,31 +159,32 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
             this._widgetData.Content[0] = this._sharedContentDict[id];
         else
             this._widgetData.Content[0] = this._newContent;
+
         this.bind();
     },
 
-    _handleNewShare: function()
-    {
-        var name = this.getControl('txtNewShare').val();
-        if (!String.isNullOrEmpty(name))    //todo: verify not exist in _menuData as well
-        {
-            if (this._sharedContentDict[name] == null)
-            {
-                var content = this._newContent;
-                content.Namespace = name;
-                this._widgetData.Content[0] = content;
-                this._sharedContent.push(content);
-                this._sharedContentDict[name] = content;
-                this.bindLinks();
-                this.getControl('ddlLink').val(name);
+    //_handleNewShare: function()
+    //{
+    //    var name = this.getControl('txtNewShare').val();
+    //    if (!String.isNullOrEmpty(name))    //todo: verify not exist in _menuData as well
+    //    {
+    //        if (this._sharedContentDict[name] == null)
+    //        {
+    //            var content = this._newContent;
+    //            content.Namespace = name;
+    //            this._widgetData.Content[0] = content;
+    //            this._sharedContent.push(content);
+    //            this._sharedContentDict[name] = content;
+    //            this.bindLinks();
+    //            this.getControl('ddlLink').val(name);
 
-                this._handleShareChanged(name);
-                this._newShareDialog.modal('hide');
-            }
-            else
-                alert('Share name must be unique!');    //todo: localize
-        }
-    },
+    //            this._handleShareChanged(name);
+    //            this._newShareDialog.modal('hide');
+    //        }
+    //        else
+    //            alert('Share name must be unique!');    //todo: localize
+    //    }
+    //},
 
     _handleDeleteShare: function(id)
     {

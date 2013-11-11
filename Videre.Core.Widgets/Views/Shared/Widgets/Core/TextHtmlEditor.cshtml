@@ -3,6 +3,8 @@
 @using Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Plugin = Videre.Core.Extensions.Bootstrap.Controls.BootstrapDropDownListModel.Plugin;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
 @model WidgetEditor
 
 @{
@@ -10,59 +12,54 @@
 }
 
 <div id="@Model.GetId("Widget")">
-    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="margin-left: -450px; width: 900px; display: none;">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            @Model.GetText("TextHtmlEditor.Text", "Text / Html Editor")
-        </div>
-        <div class="modal-body" style="min-height: 450px;">
-            @{Html.RenderPartial("WidgetHeader", Model);}
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>
-                <li><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
-                <li><a href="#@Model.GetId("MarkupTab")" data-toggle="tab">@Model.GetText("Markup.Text", "Markup")</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
-                    @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="display: none;">
+        <div class="modal-dialog" style="width: 800px;">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("TextHtmlEditor.Text", "Text / Html Editor")
                 </div>
-                <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
-                    <div class="control-group">
-                        <label class="control-label">@Model.GetText("ShareName.Text", "Share Name")</label>
-                        <div class="controls">
-                            <select id="@Model.GetId("ddlLink")"></select>
-                            <span class="badge badge-info" id="@Model.GetId("lblLinkCount")"></span>
-                            <button class="btn" type="button" id="@Model.GetId("btnNewShare")"><i class="icon-plus"></i> @Model.GetPortalText("New.Text", "New")</button>
-                            <button class="btn" type="button" id="@Model.GetId("btnDeleteShare")"><i class="icon-trash"></i> @Model.GetPortalText("Delete.Text", "Delete")</button>
+                <div class="modal-body" style="min-height: 450px;">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+
+                    @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+                    { 
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("WidgetTab"), Text = @Model.GetText("Widget.Text", "Widget"), Active = true},
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General")},
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("MarkupTab"), Text = @Model.GetText("Markup.Text", "Markup")}
+                    }))
+
+                    <div class="tab-content">
+                        <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
+                            @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+                        </div>
+                        <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">@Model.GetText("ShareName.Text", "Share Name")</label>
+                                <div class="col-md-5">
+                                    @Html.Bootstrap().DropDownList("ddlLink").Css("form-control")
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge badge-info" id="@Model.GetId("lblLinkCount")"></span>
+                                    @Html.Bootstrap().Button("btnNewShare").Text("New.Text", "New", true).Icon("glyphicon glyphicon-plus")
+                                    @Html.Bootstrap().Button("btnDeleteShare").Text("Delete.Text", "Delete", true).Icon("glyphicon glyphicon-trash")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-horizontal tab-pane" id="@Model.GetId("MarkupTab")">
+                            <div id="@Model.GetId("ContentProperties")">
+                                @Html.TextEditorControl(Model, "txtHtml", "Text")
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-horizontal tab-pane" id="@Model.GetId("MarkupTab")">
-                    <div id="@Model.GetId("ContentProperties")">
-                        @Html.TextEditorControl(Model, "txtHtml", "Text")
-                    </div>
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnOk").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
-            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
-        </div>
     </div>
 
-    <div id="@Model.GetId("NewShareDialog")" data-target="#@Model.GetId("NewShareDialog")" class="modal fade" style="display: none;">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            @Model.GetText("NewShare.Text", "New Share")
-        </div>
-        <div class="modal-body" style="padding: 5px;  ">
-            <div class="form-horizontal">
-                @Html.InputControlGroup(Model, "txtNewShare", "ShareName.Text", "Share Name")
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a class="btn btn-primary" id="@Model.GetId("btnOkNewShare")">@Model.GetPortalText("Ok.Text", "Ok")</a>
-        </div>
-    </div>
 </div>
-

@@ -102,7 +102,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         private string ToHtml(SelectListItem item)
         {
             var tag = new TagBuilder("option");
-            tag.InnerHtml = HttpUtility.HtmlEncode(item.Text);
+            tag.SetInnerText(item.Text);
+            //tag.InnerHtml = HttpUtility.HtmlEncode(item.Text);
 
             if (item.Value != null)
                 tag.Attributes["value"] = item.Value;

@@ -131,6 +131,7 @@
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapDropDownList.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapButton.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapSpan.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapTabs.cs" />
     <Compile Include="Extensions\Bootstrap\IBootstrapInputControlModel.cs" />
     <Compile Include="Extensions\Bootstrap\IFluentBootstrapInputControl.cs" />
     <Compile Include="Extensions\Bootstrap\IFluentInterface.cs" />

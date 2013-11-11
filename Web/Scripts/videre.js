@@ -220,14 +220,14 @@ videre.UI = {
     {
         description = description || '';
         inputs = inputs || [];
-        var dlg = $(String.format('<div id="{0}" data-target="{0}" class="modal fade" style="display: none;"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>{1}</div><div class="modal-body">{2}<div class="form-horizontal"></div></div><div class="modal-footer"></div></div>',
+        var dlg = $(String.format('<div id="{0}" data-target="{0}" class="modal fade" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>{1}</div><div class="modal-body">{2}<div class="form-horizontal"></div></div><div class="modal-footer"></div></div></div></div>',
             id, title, description)).appendTo($("body")).modal('show');
 
         var body = dlg.find('.form-horizontal');
         var footer = dlg.find('.modal-footer');
         $.each(inputs, function(idx, input)
         {
-            $(String.format('<div class="form-group"><label class="control-label">{0}</label><div class="controls"><input type="text" data-column="{1}" class="{2}" /></div></div>',
+            $(String.format('<div class="form-group"><label class="control-label col-md-4">{0}</label><div class="col-md-8"><input type="text" data-column="{1}" class="{2} form-control" /></div></div>',
                 input.label, input.dataColumn, input.css)).appendTo(body).find('[data-column]').val(input.value);
         });
         $.each(buttons, function(idx, btn)

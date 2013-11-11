@@ -4,6 +4,7 @@
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
 @using Plugin = Videre.Core.Extensions.Bootstrap.Controls.BootstrapDropDownListModel.Plugin;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
 @model Models.WidgetEditor
 
 @{
@@ -20,11 +21,13 @@
                 </div>
                 <div class="modal-body">
                     @{Html.RenderPartial("WidgetHeader", Model);}
-                    <ul class="nav nav-tabs videre-tabs">
-                        <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>
-                        <li><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
-                        <li><a href="#@Model.GetId("MenuTab")" data-toggle="tab">@Model.GetText("Menu.Text", "Menu")</a></li>
-                    </ul>
+
+                    @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+                    { 
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("WidgetTab"), Text = @Model.GetText("Widget.Text", "Widget"), Active = true},
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General")},
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("MenuTab"), Text = @Model.GetText("Menu.Text", "Menu")}
+                    }))
                     <div class="tab-content">
                         <div class="tab-pane active" id="@Model.GetId("WidgetTab")">
                             <div class="row">
@@ -35,11 +38,13 @@
                         </div>
                         <div class="form-horizontal tab-pane fade in" id="@Model.GetId("GeneralTab")">
                             <div class="form-group">
-                                <label class="control-label col-md-4">@Model.GetText("Name.Text", "Name")</label>
-                                <div class="col-md-8">
-                                    @Html.Bootstrap().DropDownList("ddlName").DataColumn("Id").Plugin(Plugin.BootstrapSelect)
-                                    <button class="btn btn-default" type="button" id="@Model.GetId("btnNewMenu")"><i class="icon-plus"></i>@Model.GetPortalText("New.Text", "New")</button>
-                                    <button class="btn btn-default" type="button" id="@Model.GetId("btnDeleteMenu")"><i class="icon-trash"></i>@Model.GetPortalText("Delete.Text", "Delete")</button>
+                                <label class="control-label col-md-3">@Model.GetText("Name.Text", "Name")</label>
+                                <div class="col-md-5">
+                                    @Html.Bootstrap().DropDownList("ddlName").DataColumn("Id").Css("form-control")
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.Bootstrap().Button("btnNewMenu").Text("New.Text", "New", true).Icon("glyphicon glyphicon-plus")
+                                    @Html.Bootstrap().Button("btnDeleteMenu").Text("Delete.Text", "Delete", true).Icon("glyphicon glyphicon-trash")
                                 </div>
                             </div>
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Text.Text", "Text").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Text"), BootstrapUnits.GridSize.MediumDevice8)
@@ -80,25 +85,6 @@
                 <div class="modal-footer">
                     @Html.Bootstrap().Button("btnOk").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
                     @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="@Model.GetId("NewMenuDialog")" data-target="#@Model.GetId("NewMenuDialog")" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    @Model.GetText("NewMenu.Text", "New Menu")
-                </div>
-                <div class="modal-body" style="padding: 5px;">
-                    <div class="form-horizontal">
-                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("MenuName.Text", "Menu Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtNewMenu"), BootstrapUnits.GridSize.MediumDevice8)
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    @Html.Bootstrap().Button("btnOkNewMenu").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
                 </div>
             </div>
         </div>

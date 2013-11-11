@@ -8,30 +8,30 @@
 
 <div id="@Model.GetId("CommonProperties")">
 
-    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Css.Text", "Css").GridSize(BootstrapUnits.GridSize.MediumDevice4), 
-        Html.Bootstrap().TextBox().DataColumn("Css"), BootstrapUnits.GridSize.MediumDevice8)
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Css.Text", "Css").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
+        Html.Bootstrap().TextBox().DataColumn("Css"), BootstrapUnits.GridSize.MediumDevice9)
 
-    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Style.Text", "Style").GridSize(BootstrapUnits.GridSize.MediumDevice4), 
-        Html.Bootstrap().TextBox().DataColumn("Style"), BootstrapUnits.GridSize.MediumDevice8)
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Style.Text", "Style").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
+        Html.Bootstrap().TextBox().DataColumn("Style"), BootstrapUnits.GridSize.MediumDevice9)
 
-    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ShowHeader.Text", "Show Header").GridSize(BootstrapUnits.GridSize.MediumDevice4), 
-        Html.Bootstrap().DropDownList().Plugin(Plugin.BootstrapSelect).Options(new List<SelectListItem>() { new SelectListItem() { Text="No", Value="false" }, new SelectListItem() { Text="Yes", Value="true"} }).DataColumn("ShowHeader"), BootstrapUnits.GridSize.MediumDevice8)
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ShowHeader.Text", "Show Header").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
+        Html.Bootstrap().DropDownList().Plugin(Plugin.BootstrapSelect).Options(new List<SelectListItem>() { new SelectListItem() { Text="No", Value="false" }, new SelectListItem() { Text="Yes", Value="true"} }).DataColumn("ShowHeader"), BootstrapUnits.GridSize.MediumDevice9)
 
-    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Roles.Text", "Roles").GridSize(BootstrapUnits.GridSize.MediumDevice4), 
-        Html.Bootstrap().RoleList().Plugin(Plugin.BootstrapSelect).Multiple().DataColumn("Roles"), BootstrapUnits.GridSize.MediumDevice8)
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Roles.Text", "Roles").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
+        Html.Bootstrap().RoleList().Plugin(Plugin.BootstrapSelect).Multiple().DataColumn("Roles"), BootstrapUnits.GridSize.MediumDevice9)
 
-    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Authentication.Text", "Authentication").GridSize(BootstrapUnits.GridSize.MediumDevice4), 
-        Html.Bootstrap().AuthorizedList().Plugin(Plugin.BootstrapSelect).DataColumn("Authenticated"), BootstrapUnits.GridSize.MediumDevice8)
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Authentication.Text", "Authentication").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
+        Html.Bootstrap().AuthorizedList().Plugin(Plugin.BootstrapSelect).DataColumn("Authenticated"), BootstrapUnits.GridSize.MediumDevice9)
 
-    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("WebReferences.Text", "Web References").GridSize(BootstrapUnits.GridSize.MediumDevice4), 
-        Html.Bootstrap().DropDownList().Plugin(Plugin.BootstrapSelect).Options(CoreServices.Web.GetWebReferences().Select(r => new SelectListItem() { Text = r.Name, Value = r.Name } ).ToList()).DataColumn("WebReferences").Multiple(), BootstrapUnits.GridSize.MediumDevice8)
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("WebReferences.Text", "Web References").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
+        Html.Bootstrap().DropDownList().Plugin(Plugin.BootstrapSelect).Options(CoreServices.Web.GetWebReferences().Select(r => new SelectListItem() { Text = r.Name, Value = r.Name } ).ToList()).DataColumn("WebReferences").Multiple(), BootstrapUnits.GridSize.MediumDevice9)
 
     <div id="@Model.GetId("AttributeList")" style="display: none;" class="form-horizontal">
     </div>
     <script id="@Model.GetId("AttributeListTemplate")" type="text/html">
         <div class="form-group">
-            <label class="control-label col-md-4">{{:LabelText}}</label>
-            <div class="col-md-8" data-type="input">
+            <label class="control-label col-md-3">{{:LabelText}}</label>
+            <div class="col-md-9" data-type="input">
                 {{:~bindInputs(#data, ~attributes, null, 'bootstrap-select')}}
             </div>
         </div>

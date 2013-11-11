@@ -33,7 +33,6 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         this._newMenuDialog = this.getControl('NewMenuDialog').modal('hide');
         this.getControl('btnNewMenu').click(videre.createDelegate(this, this._onNewMenuClicked));
         this.getControl('btnDeleteMenu').click(videre.createDelegate(this, this._onDeleteMenuClicked));
-        this.getControl('btnOkNewMenu').click(videre.createDelegate(this, this._onNewMenuOkClicked));
         this.getControl('ddlName').change(videre.createDelegate(this, this._onMenuChanged));
         this.getControl('txtIcon').change(videre.createDelegate(this, this._onIconChanged));
     },
@@ -56,8 +55,23 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
     showNewMenuDialog: function()
     {
-        this.getControl('txtNewMenu').val('');
-        this._newMenuDialog.modal('show');
+        var self = this;
+        videre.UI.prompt(this.getId('NewMenu'), 'New Menu', '', [{ label: 'Name', dataColumn: 'NewName' }],
+            [{
+                text: 'Ok', css: 'btn-primary', close: true, handler: function (data)
+                {
+                    if (!String.isNullOrEmpty(data.NewName))
+                    {
+                        self._newMenuData = self._getNewMenu(data.NewName);
+                        self._widgetData.Content = self._newMenuData;
+                        self.bindMenus();
+                        self._handleMenuChanged();
+                        self._newMenuDialog.modal('hide');
+                        return true;
+                    }
+                }
+            }, { text: 'Cancel', css: 'btn-default', close: true }]);
+
     },
 
     refreshMenus: function()
@@ -98,7 +112,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         else
             this._handleMenuChanged();  //choose first available menu - ours was deleted
 
-        ddl.selectpicker('refresh'); //refresh
+        //ddl.selectpicker('refresh'); //refresh
 
     },
 
@@ -217,22 +231,19 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
     _handleDeleteMenu: function(id)
     {
         if (!String.isNullOrEmpty(id))
-            this.deleteMenu(id);
-        else   
-            this._newMenuData = null;
-    },
-
-    _handleNewMenu: function()
-    {
-        var name = this.getControl('txtNewMenu').val();
-        if (!String.isNullOrEmpty(name))    //todo: verify not exist in _menuData as well
         {
-            this._newMenuData = this._getNewMenu(name);
-            this._widgetData.Content = this._newMenuData;
-            this.bindMenus();
-            this._handleMenuChanged();
-            this._newMenuDialog.modal('hide');
+            var self = this;
+            videre.UI.prompt(this.getId('DeleteMenu'), 'Delete Menu', 'Are you sure you wish to delete this menu?', null,
+                [{
+                    text: 'Ok', css: 'btn-primary', close: true, handler: function ()
+                    {
+                        self.deleteMenu(id);
+                        return true;
+                    }
+                }, { text: 'Cancel', css: 'btn-default', close: true }]);
         }
+        else
+            this._newMenuData = null;
     },
 
     _bindItems: function(parent, items, parentItem)
@@ -344,11 +355,6 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
     _onNewMenuClicked: function(e)
     {
         this.showNewMenuDialog();
-    },
-
-    _onNewMenuOkClicked: function(e)
-    {
-        this._handleNewMenu();
     },
 
     _onDeleteMenuClicked: function(e)

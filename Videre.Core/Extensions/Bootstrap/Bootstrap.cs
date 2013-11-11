@@ -96,6 +96,11 @@ namespace Videre.Core.Extensions.Bootstrap
             return new BootstrapFormGroup(Html, label, controls, size);
         }
 
+        public IBootstrapTabs Tabs(List<Bootstrap.Controls.BootstrapTab> tabs = null)
+        {
+            return new BootstrapTabs(Html).Tabs(tabs);
+        }
+
         //public BootstrapLabel LabelFor<TValue>(Expression<Func<TModel, TValue>> expression)
         //{
         //    return new BootstrapLabel(Html, ExpressionHelper.GetExpressionText(expression), ModelMetadata.FromLambdaExpression(expression, Html.ViewData));
