@@ -958,58 +958,6 @@ videre.widgets.base = videre.Class.extend(
 
 });
 
-//todo:  specific code to dynatree... should it go here?
-videre.tree = {
-    getTreeData: function(rootName, data, func, delim)
-    {
-        delim = (delim == null) ? '/' : delim;
-        var root = { title: rootName, isFolder: true, key: '', children: [] };
-        var lookup = {};
-        lookup[''] = root;
-        for (var row = 0; row < data.length; row++)
-        {
-            var key = func(data[row]); //[column];
-            var path = '';
-            var parts = key.split(delim);
-            for (var i = 0; i < parts.length; i++)
-            {
-                var parent = lookup[path];
-                path += (path.length ? delim : '') + parts[i];
-                if (lookup[path] == null)
-                {
-                    lookup[path] = { title: parts[i], isFolder: i < parts.length - 1, key: path, children: [] };
-                    parent.children.push(lookup[path]);
-                }
-            }
-        }
-        return root;
-    }
-};
-
-//todo:  specific code to datatables... should it go here?
-videre.dataTables = {
-    clear: function(tbl, options)
-    {
-        tbl.dataTable(options).fnDestroy();
-    },
-
-    //todo: phase out passing columns as specific argument and just use in options
-    bind: function(tbl, columns, options)
-    {
-        var cellCount = tbl.find('th').length;
-        if (columns != null && cellCount > 0)
-            columns.length = cellCount;
-        if (options == null)
-            options = {};
-
-        //options.sPaginationType = options.sPaginationType != null ? options.sPaginationType : 'bootstrap';
-        if (columns != null)
-            options.aoColumns = options.aoColumns != null ? options.aoColumns : columns;
-        //http://datatables.net/blog/Twitter_Bootstrap_2
-        return tbl.dataTable(options);
-    }
-};
-
 videre.modals =
 {
     autoWidth: function(modal)

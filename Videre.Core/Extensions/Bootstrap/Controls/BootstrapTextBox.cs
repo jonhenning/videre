@@ -15,11 +15,16 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         }
 
         //public string text {get;set;}
+        public bool multiLine { get; set; }
+        public int? rows { get; set; }
     }
 
     public interface IBootstrapTextBox : IFluentBootstrapInputControl<IBootstrapTextBox, BootstrapTextBoxModel>
     {
-        //IBootstrapTextBox Text(string text);
+        IBootstrapTextBox MultiLine();
+        IBootstrapTextBox MultiLine(bool multiLine);
+        IBootstrapTextBox Rows(int rows);
+
     }
 
     public class BootstrapTextBox : BootstrapInputControl<IBootstrapTextBox, BootstrapTextBoxModel>, IBootstrapTextBox
@@ -30,24 +35,45 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
         }
 
-        //public IBootstrapTextBox Text(string text)
-        //{
-        //    this._model.text = text;
-        //    return this;
-        //}
+        public IBootstrapTextBox MultiLine()
+        {
+            return MultiLine(true);
+        }
+
+        public IBootstrapTextBox MultiLine(bool multiLine)
+        {
+            this._model.multiLine = multiLine;
+            return this;
+        }
+
+        public IBootstrapTextBox Rows(int rows)
+        {
+            this._model.rows = rows;
+            return this;
+        }
 
         public override string ToHtmlString()
         {
-            var ctl = new TagBuilder("input");
+            TagBuilder ctl = null;
+
+            if (!_model.multiLine)
+            {
+                ctl = new TagBuilder("input");
+                ctl.Attributes.Add("type", "text");
+                if (!string.IsNullOrEmpty(_model.val)) //cannot be in base as textarea is different!
+                    ctl.Attributes.Add("val", _model.val);  //encode?
+            }
+            else
+            {
+                ctl = new TagBuilder("textarea");
+                if (!string.IsNullOrEmpty(_model.val)) //cannot be in base as textarea is different!
+                    ctl.SetInnerText(_model.val);
+                if (_model.rows.HasValue)
+                    ctl.Attributes.Add("rows", _model.rows.Value.ToString());
+            }
+
             base.AddBaseMarkup(ctl);
-
-            ctl.Attributes.Add("type", "text");
-            
-            if (!string.IsNullOrEmpty(_model.val)) //cannot be in base as textarea is different!
-                ctl.Attributes.Add("val", _model.val);
-
             return base.Render(ctl);
-            //return ctl.ToString(TagRenderMode.Normal);
         }
 
     }

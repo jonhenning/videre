@@ -14,48 +14,49 @@
 
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
-    
-    <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Localization Administration")</legend>}
-        
-        <p>@Html.Raw(Model.GetText("Instructions.Text", "Localization administration is where you can alter the text displayed throughout the portal. "))</p>
 
-        <div class="container">
-            <div class="row">
-                <div class="span3">
-                    <div class="btn-toolbar">
-                        <div class="btn-group input-prepend">
-                            <a class="btn" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
-                            @Html.DropDownList(Model.GetId("ddlFilterType"), Enum.GetNames(typeof(Models.LocalizationType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.LocalizationType>()).ToString(), Text = t }), new { style = "width: 110px;" })
-                        </div>
-                    </div>
-                    <div id="@Model.GetId("Tree")" style="overflow: auto; height: 500px; padding:0; margin:0;" class="span3"></div>
+    @if (Model.ShowHeader)
+    {<h3>@Model.GetText("WidgetTitle.Text", "Localization Administration")</h3>}
+
+    <p>@Html.Raw(Model.GetText("Instructions.Text", "Localization administration is where you can alter the text displayed throughout the portal. "))</p>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group">
+                    @Html.Bootstrap().DropDownList("ddlFilterType").InputSize(BootstrapUnits.InputSize.Small).Css("form-control").Options(Enum.GetNames(typeof(Models.LocalizationType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.LocalizationType>()).ToString(), Text = t }).ToList()).Append(Html.Bootstrap().Button("btnNew").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewEntry.Text", "New Entry", true).Icon("glyphicon glyphicon-plus"))
                 </div>
-                <div id="@Model.GetId("ItemListCtr")" class="span9">
-                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
-                        <thead>
-                            <tr>
-                                <th style="width: 62px"></th>
-                                <th style="width: 60px">@Model.GetPortalText("Locale.Text", "Locale")</th>
-                                <th>@Model.GetText("Key.Text", "Key")</th>
-                                <th>@Model.GetText("Text.Text", "Text")</th>
-                            </tr>
-                        </thead>
-                        <tbody id="@Model.GetId("ItemList")"></tbody>
-                    </table>
-                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
-                        <tr>
-                            <td>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="edit"><i class="icon-pencil"></i></a>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete"><i class="icon-trash"></i></a>
-                            </td>
-                            <td>{{:Locale}}</td>
-                            <td><span title="{{:treeKey}}">{{:Key}}</span></td>
-                            <td>{{:Text}}</td>
-                        </tr>
-                    </script>
-                </div>
-                <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px;" style="display: none;">
+            </div>
+            <div id="@Model.GetId("Tree")" style="overflow: auto; height: 500px; padding:0; margin:0;" class="col-md-12"></div>
+        </div>
+        <div id="@Model.GetId("ItemListCtr")" class="col-md-9">
+            <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                <thead>
+                    <tr>
+                        <th style="width: 62px"></th>
+                        <th style="width: 60px">@Model.GetPortalText("Locale.Text", "Locale")</th>
+                        <th>@Model.GetText("Key.Text", "Key")</th>
+                        <th>@Model.GetText("Text.Text", "Text")</th>
+                    </tr>
+                </thead>
+                <tbody id="@Model.GetId("ItemList")"></tbody>
+            </table>
+            <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                <tr>
+                    <td>
+                        @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                        @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                    </td>
+                    <td>{{:Locale}}</td>
+                    <td><span title="{{:treeKey}}">{{:Key}}</span></td>
+                    <td>{{:Text}}</td>
+                </tr>
+            </script>
+        </div>
+
+        <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+            <div class="modal-dialog" style="width: 700px; ">
+                <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         @Model.GetText("EditDialogText.Text", "Localization Edit")
@@ -64,21 +65,21 @@
                         @{Html.RenderPartial("WidgetHeader", Model);}
                         <div class="form-horizontal">
                             @*@Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }))*@
-                            @Html.DropDownControlGroup(Model, "ddlType", "Type.Text", "Type", "Type", Enum.GetNames(typeof(Models.LocalizationType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.LocalizationType>()).ToString(), Text = t }))
-                            @Html.InputControlGroup(Model, "txtLocale", "Locale.Text", "Locale", "Locale", "input-small")
-                            @Html.InputControlGroup(Model, "txtNamespace", "Namespace.Text", "Namespace", "Namespace", "input-xlarge")
-                            @Html.InputControlGroup(Model, "txtKey", "Key.Text", "Key", "Key")
-                            @Html.TextAreaControlGroup(Model, "txtText", "Text.Text", "Text", "Text", inputCss: "input-xlarge")
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Type.Text", "Type").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().DataColumn("Type").Options(Enum.GetNames(typeof(Models.LocalizationType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.LocalizationType>()).ToString(), Text = t }).ToList()), BootstrapUnits.GridSize.MediumDevice4)
+                            
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Locale.Text", "Locale").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Locale"), BootstrapUnits.GridSize.MediumDevice4)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Namespace.Text", "Namespace").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Namespace"), BootstrapUnits.GridSize.MediumDevice9)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Key.Text", "Key").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Key"), BootstrapUnits.GridSize.MediumDevice9)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Text.Text", "Text").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().MultiLine().Rows(5).DataColumn("Text"), BootstrapUnits.GridSize.MediumDevice9)
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
-                        <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+                        @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
+                        @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
                     </div>
                 </div>
-
             </div>
         </div>
-    </fieldset>
+    </div>
 </div>
 

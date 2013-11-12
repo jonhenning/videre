@@ -96,7 +96,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
                 ctl.InnerHtml += ToHtml(o);
 
 
-            return ctl.ToString(TagRenderMode.Normal);
+            return base.Render(ctl);
         }
 
         private string ToHtml(SelectListItem item)
