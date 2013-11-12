@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
-    public class BootstrapEmailModel : IBootstrapInputControlModel
+    public class BootstrapEmailModel : BootstrapInputControlModel
     {
         public BootstrapEmailModel() : base()
         {

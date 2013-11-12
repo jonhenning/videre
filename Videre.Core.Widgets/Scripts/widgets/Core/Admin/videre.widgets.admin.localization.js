@@ -116,8 +116,16 @@ videre.widgets.admin.localization = videre.widgets.base.extend(
 
     deleteItem: function(id)
     {
-        if (confirm('Are you sure you wish to remove this entry?'))
-            this.ajax('~/core/Localization/Delete', { id: id }, this._delegates.onSaveReturn);
+        //if (confirm('Are you sure you wish to remove this entry?'))
+        var self = this;
+        videre.UI.prompt(this.getId('DeleteEntry'), 'Delete Entry', 'Are you sure you wish to remove this entry?', null,
+            [{
+                text: 'Ok', css: 'btn-primary', close: true, handler: function ()
+                {
+                    self.ajax('~/core/Localization/Delete', { id: id }, self._delegates.onSaveReturn);
+                    return true;
+                }
+            }, { text: 'Cancel', css: 'btn-default', close: true }]);
     },
 
     handleAction: function(action, id)

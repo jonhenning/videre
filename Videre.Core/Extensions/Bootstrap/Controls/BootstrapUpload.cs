@@ -8,71 +8,75 @@ using System.Web.Mvc;
 
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
-    public class BootstrapButtonModel : BootstrapBaseControlModel
+    public class BootstrapUploadModel : BootstrapBaseControlModel
     {
         public string text { get; set; }
         public Bootstrap.BootstrapUnits.ButtonSize? size { get; set; }
         public Bootstrap.BootstrapUnits.ButtonStyle style { get; set; }
-        public string icon {get; set;}
+        public string icon { get; set; }
     }
 
-    public interface IBootstrapButton : IFluentBootstrapControlBase<IBootstrapButton, BootstrapButtonModel>
+    public interface IBootstrapUpload : IFluentBootstrapControlBase<IBootstrapUpload, BootstrapUploadModel>
     {
-        IBootstrapButton Icon(string icon);
-        IBootstrapButton Text(string text);
-        IBootstrapButton Text(string token, string defaultText);
-        IBootstrapButton Text(string token, string defaultText, bool portalText);
-        IBootstrapButton ButtonSize(Bootstrap.BootstrapUnits.ButtonSize size);
-        IBootstrapButton ButtonStyle(Bootstrap.BootstrapUnits.ButtonStyle style);
+        IBootstrapUpload Icon(string icon);
+        IBootstrapUpload Text(string text);
+        IBootstrapUpload Text(string token, string defaultText);
+        IBootstrapUpload Text(string token, string defaultText, bool portalText);
+        IBootstrapUpload ButtonSize(Bootstrap.BootstrapUnits.ButtonSize size);
+        IBootstrapUpload ButtonStyle(Bootstrap.BootstrapUnits.ButtonStyle style);
     }
 
-    public class BootstrapButton : BootstrapControlBase<IBootstrapButton, BootstrapButtonModel>, IBootstrapButton
+    public class BootstrapUpload : BootstrapControlBase<IBootstrapUpload, BootstrapUploadModel>, IBootstrapUpload
     {
-        public BootstrapButton(HtmlHelper html, string id) : base(html, id)
+        public BootstrapUpload(HtmlHelper html) : base(html) { }
+        public BootstrapUpload(HtmlHelper html, string id) : base(html, id)
         {
         }
 
-        public IBootstrapButton Icon(string icon)
+        public IBootstrapUpload Icon(string icon)
         {
             this._model.icon = icon;
             return this;
         }
 
-        public IBootstrapButton ButtonSize(Bootstrap.BootstrapUnits.ButtonSize size)
+        public IBootstrapUpload ButtonSize(Bootstrap.BootstrapUnits.ButtonSize size)
         {
             this._model.size = size;
             return this;
         }
 
-        public IBootstrapButton ButtonStyle(Bootstrap.BootstrapUnits.ButtonStyle style)
+        public IBootstrapUpload ButtonStyle(Bootstrap.BootstrapUnits.ButtonStyle style)
         {
             this._model.style = style;
             return this;
         }
 
-        public IBootstrapButton Text(string text)
+        public IBootstrapUpload Text(string text)
         {
             this._model.text = text;
             return this;
         }
-        public IBootstrapButton Text(string token, string defaultText)
+        public IBootstrapUpload Text(string token, string defaultText)
         {
             return Text(token, defaultText, false);
         }
-        public IBootstrapButton Text(string token, string defaultText, bool portalText)
+        public IBootstrapUpload Text(string token, string defaultText, bool portalText)
         {
-            this._model.text = portalText ?  GetPortalText(token, defaultText) : GetText(token, defaultText);
+            this._model.text = portalText ? GetPortalText(token, defaultText) : GetText(token, defaultText);
             return this;
         }
 
         public override string ToHtmlString()
         {
-            var ctl = new TagBuilder("button");
-            ctl.Attributes.Add("type", "button");
-            AddBaseMarkup(ctl);
+            _html.RegisterWebReferenceGroup("fileuploader");
+
+            var ctl = new TagBuilder("a");
+            base.AddBaseMarkup(ctl);
+
+            //ctl.Attributes.Add("type", "button");
             ctl.AddCssClass("btn");
             ctl.AddCssClass(Bootstrap.BootstrapUnits.GetButtonStyleCss(_model.style));
-
+            
             if (!string.IsNullOrEmpty(_model.icon))
             {
                 var icon = new TagBuilder("span");
@@ -88,6 +92,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
             return ctl.ToString(TagRenderMode.Normal);
         }
+
     }
 
 }

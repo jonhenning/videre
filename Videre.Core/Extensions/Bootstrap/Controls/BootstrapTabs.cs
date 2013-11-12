@@ -9,7 +9,7 @@ using System.Web.Mvc;
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
 
-    public class BootstrapTabsModel : IBootstrapInputControlModel
+    public class BootstrapTabsModel : BootstrapInputControlModel
     {
         public BootstrapTabsModel() : base()
         {

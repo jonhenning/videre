@@ -9,7 +9,7 @@ using System.Web.Mvc;
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
 
-    public class BootstrapDropDownListModel : IBootstrapInputControlModel
+    public class BootstrapDropDownListModel : BootstrapInputControlModel
     {
         public enum Plugin
         {

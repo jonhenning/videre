@@ -89,7 +89,7 @@ videre.widgets.admin.file = videre.widgets.base.extend(
             videre.dataTables.clear(this.getControl('ItemTable'));
             this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(items));
             this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
-            videre.dataTables.bind(this.getControl('ItemTable'), [{ bSortable: false, sWidth: '62px' }]);
+            videre.dataTables.bind(this.getControl('ItemTable'), { aoColumns: [{ bSortable: false, sWidth: '62px' }] });
         }
         else
             this._itemListCtr.hide();
@@ -105,7 +105,7 @@ videre.widgets.admin.file = videre.widgets.base.extend(
     {
         if (this._selectedItem != null)
         {
-            this.getControl('txtFileName').val('');
+            //this.getControl('txtFileName').val('');
             this.bindData(this._selectedItem);
             this._uniqueName = null;
 
@@ -128,8 +128,17 @@ videre.widgets.admin.file = videre.widgets.base.extend(
 
     deleteItem: function(id)
     {
-        if (confirm('Are you sure you wish to remove this entry?'))
-            this.ajax('~/core/File/Delete', { id: id }, this._delegates.onSaveReturn);
+        //if (confirm('Are you sure you wish to remove this entry?'))
+        var self = this;
+        videre.UI.prompt(this.getId('DeleteEntry'), 'Delete Entry', 'Are you sure you wish to remove this entry?', null,
+            [{
+                text: 'Ok', css: 'btn-primary', close: true, handler: function ()
+                {
+                    self.ajax('~/core/File/Delete', { id: id }, self._delegates.onSaveReturn);
+                    return true;
+                }
+            }, { text: 'Cancel', css: 'btn-default', close: true }]);
+            
     },
 
     handleAction: function(action, id)
@@ -207,10 +216,12 @@ videre.widgets.admin.file = videre.widgets.base.extend(
         this.unlock(this.getControl('Dialog'));
         if (!result.HasError)
         {
-            this._uniqueName = result.Data.uniqueName;
-            this.getControl('txtMimeType').val(result.Data.mimeType);
-            this.getControl('txtFileName').val(result.Data.fileName);
-            this.getControl('txtFileSize').val(result.Data.fileSize);
+            this._uniqueName = result.Data.UniqueName;
+            
+            this.bindData(result.Data, this.getControl('Dialog').find('.file-upload-detail'));
+            //this.getControl('txtMimeType').val(result.Data.mimeType);
+            //this.getControl('txtFileName').val(result.Data.fileName);
+            //this.getControl('txtFileSize').val(result.Data.fileSize);
         }
         this.addMsgs(result.Messages, this.getControl('Dialog'));
     },

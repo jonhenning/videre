@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
-    public class BootstrapSpanModel : IBootstrapBaseControlModel
+    public class BootstrapSpanModel : BootstrapBaseControlModel
     {
         public string text { get; set; }
     }

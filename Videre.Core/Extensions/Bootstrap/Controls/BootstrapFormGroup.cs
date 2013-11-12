@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
-    public class BootstrapFormGroupModel : IBootstrapBaseControlModel
+    public class BootstrapFormGroupModel : BootstrapBaseControlModel
     {
         public BootstrapFormGroupModel() : base()
         {

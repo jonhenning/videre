@@ -13,47 +13,50 @@
 
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
-    
-    <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "File Administration")</legend>}
-        
-        <p>@Html.Raw(Model.GetText("Instructions.Text", "File administration is where you can manage files. "))</p>
 
-        <div class="container">
-            <div class="row">
-                <div class="span3">
-                    <div class="btn-toolbar">
-                        <div class="btn-group">
-                            <a class="btn btn-small" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
-                        </div>
-                    </div>
-                    <div id="@Model.GetId("Tree")" style="overflow: auto; height: 500px; padding:0; margin:0;" class="span3"></div>
+    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "File Administration") }));}
+
+    <p>@Html.Raw(Model.GetText("Instructions.Text", "File administration is where you can manage files. "))</p>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group">
+                    @Html.Bootstrap().Button("btnNew").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewEntry.Text", "New Entry", true).Icon("glyphicon glyphicon-plus")
                 </div>
-                <div id="@Model.GetId("ItemListCtr")" class="span9">
-                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th>@Model.GetText("MimeType.Text", "Mime Type")</th>
-                                <th>@Model.GetText("Size.Text", "Size")</th>
-                            </tr>
-                        </thead>
-                        <tbody id="@Model.GetId("ItemList")"></tbody>
-                    </table>
-                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
-                        <tr>
-                            <td style="white-space: nowrap">
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="edit"><i class="icon-pencil"></i></a>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete"><i class="icon-trash"></i></a>
-                            </td>
-                            <td><img src="{{:imageUrl}}" style="height: 30px;"/></td>
-                            <td>{{:MimeType}}</td>
-                            <td>{{:Size}}</td>
-                        </tr>
-                    </script>
-                </div>
-                <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="display: none;">
+            </div>
+            <div id="@Model.GetId("Tree")" style="overflow: auto; height: 500px; padding:0; margin:0;" class="col-md-12"></div>
+        </div>
+
+        <div id="@Model.GetId("ItemListCtr")" class="col-md-9">
+            <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>@Model.GetText("MimeType.Text", "Mime Type")</th>
+                        <th>@Model.GetText("Size.Text", "Size")</th>
+                    </tr>
+                </thead>
+                <tbody id="@Model.GetId("ItemList")"></tbody>
+            </table>
+            <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                <tr>
+                    <td style="white-space: nowrap">
+                        @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                        @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                    </td>
+                    <td>
+                        <img src="{{:imageUrl}}" style="height: 30px;" /></td>
+                    <td>{{:MimeType}}</td>
+                    <td>{{:Size}}</td>
+                </tr>
+            </script>
+        </div>
+
+        <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+            <div class="modal-dialog" style="width: 700px; ">
+                <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         @Model.GetText("EditDialogText.Text", "File Edit")
@@ -61,21 +64,21 @@
                     <div class="modal-body">
                         @{Html.RenderPartial("WidgetHeader", Model);}
                         <div class="form-horizontal">
-                            @*@Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }))*@
-                            @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url")
-                            @Html.UploadButtonControlGroup(Model, "btnUpload", "File.Text", "File", "Upload.Text", "Upload")
-                            @Html.InputControlGroup(Model, "txtFileSize", "FileSize.Text", "File Size", "Size", inputCss: "input-small", readOnly: true)
-                            @Html.InputControlGroup(Model, "txtMimeType", "MimeType.Text", "Mime Type", "MimeType", inputCss: "input-large", readOnly: true)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Url.Text", "Url").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Url"), BootstrapUnits.GridSize.MediumDevice4)
+                            <div class="file-upload-detail">
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("File.Text", "File").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().Upload("btnUpload").Text("Upload.Text", "Upload").Icon("glyphicon glyphicon-upload"), BootstrapUnits.GridSize.MediumDevice2)
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("FileSize.Text", "File Size").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Size").ReadOnly(), BootstrapUnits.GridSize.MediumDevice3)
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("MimeType.Text", "Mime Type").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("MimeType").ReadOnly(), BootstrapUnits.GridSize.MediumDevice3)
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
-                        <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+                        @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
+                        @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
                     </div>
                 </div>
-
             </div>
         </div>
-    </fieldset>
+    </div>
 </div>
 

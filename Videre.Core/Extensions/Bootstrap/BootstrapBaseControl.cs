@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace Videre.Core.Extensions.Bootstrap
 {
     public abstract class BootstrapControlBase<TControl, TModel> 
-        where TModel : IBootstrapBaseControlModel, new()
+        where TModel : BootstrapBaseControlModel, new()
         where TControl : class, IBootstrapBaseControl
     {
         protected TControl _control = null;
@@ -118,7 +118,7 @@ namespace Videre.Core.Extensions.Bootstrap
 
         public abstract string ToHtmlString();
 
-        protected void AddBaseMarkup(TagBuilder ctl)
+        protected virtual void AddBaseMarkup(TagBuilder ctl)
         {
             if (!string.IsNullOrEmpty(_model.id))
                 ctl.Attributes.Add("id", _model.id);

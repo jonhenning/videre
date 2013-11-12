@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
     public abstract class BootstrapInputControl<TControl, TModel> : BootstrapControlBase<TControl, TModel>, IFluentBootstrapInputControl<TControl, TModel>
-        where TModel : IBootstrapInputControlModel, new()
+        where TModel : BootstrapInputControlModel, new()
         where TControl : class, IFluentBootstrapInputControl<TControl, TModel>
     {
         public BootstrapInputControl(HtmlHelper html) : base(html)
@@ -35,6 +35,17 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         public TControl MustMatch(string controlId)
         {
             _model.mustMatch = GetId(controlId);
+            return _control;
+        }
+
+        public TControl ReadOnly()
+        {
+            return ReadOnly(true);
+        }
+
+        public TControl ReadOnly(bool readOnly)
+        {
+            _model.readOnly = readOnly;
             return _control;
         }
 
@@ -72,7 +83,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             return _control;
         }
 
-        protected void AddBaseMarkup(TagBuilder ctl)
+        protected override void AddBaseMarkup(TagBuilder ctl)
         {
             base.AddBaseMarkup(ctl);
 
@@ -89,6 +100,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
             if (_model.required)
                 ctl.Attributes.Add("required", "required");
+            if (_model.readOnly)
+                ctl.Attributes.Add("readonly", "readonly");
             if (_model.disableAutoComplete)
                 ctl.Attributes.Add("autocomplete", "off");
         }

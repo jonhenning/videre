@@ -15,8 +15,7 @@
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
 
-    @if (Model.ShowHeader)
-    {<h3>@Model.GetText("WidgetTitle.Text", "Localization Administration")</h3>}
+    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "Localization Administration") }));}
 
     <p>@Html.Raw(Model.GetText("Instructions.Text", "Localization administration is where you can alter the text displayed throughout the portal. "))</p>
 

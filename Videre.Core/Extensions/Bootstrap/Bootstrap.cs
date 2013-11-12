@@ -47,6 +47,10 @@ namespace Videre.Core.Extensions.Bootstrap
         {
             return new BootstrapPassword(Html, id);
         }
+        public IBootstrapUpload Upload(string id = null)
+        {
+            return new BootstrapUpload(Html, id);
+        }
 
         public IBootstrapDropDownList DropDownList(string id = null)
         {

@@ -96,10 +96,10 @@ namespace Videre.Core.Widgets.Controllers
                     var fileSize = stream.WriteStream(tempFileName);
                     r.Data = new
                     {
-                        uniqueName = new FileInfo(tempFileName).Name,
-                        fileName = new FileInfo(fileName).Name,
-                        fileSize = fileSize,
-                        mimeType = Web.MimeTypes[ext]
+                        UniqueName = new FileInfo(tempFileName).Name,
+                        FileName = new FileInfo(fileName).Name,
+                        Size = fileSize,
+                        MimeType = Web.MimeTypes[ext]
                     };
                 }
                 else

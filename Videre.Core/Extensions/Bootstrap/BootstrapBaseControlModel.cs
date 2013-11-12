@@ -2,7 +2,7 @@
 
 namespace Videre.Core.Extensions.Bootstrap
 {
-    public class IBootstrapBaseControlModel
+    public class BootstrapBaseControlModel
     {
         public string id {get;set;}
         public string html { get; set; }

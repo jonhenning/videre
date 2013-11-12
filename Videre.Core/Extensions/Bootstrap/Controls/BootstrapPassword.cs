@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
-    public class BootstrapPasswordModel : IBootstrapInputControlModel
+    public class BootstrapPasswordModel : BootstrapInputControlModel
     {
         public BootstrapPasswordModel() : base()
         {
