@@ -253,9 +253,24 @@ videre.UI = {
         videre.UI._dataTypes[name] = definition;
     },
 
+
+    //control types allow developer to register jquery plugins
+    //by registering one, the bind action, the retrieval of the value, 
+    //and the initialization of the code for system (template) generated will run
     registerControlType: function(name, definition)
     {
         videre.UI._controlTypes[name] = definition;
+        if (definition.init != null) //on registration call init for whole doc
+            definition.init($(document));
+    },
+
+    initializeControlTypes: function(ctr)
+    {
+        for (var name in videre.UI._controlTypes)
+        {
+            if (videre.UI._controlTypes[name].init != null)
+                videre.UI._controlTypes[name].init(ctr);
+        }
     },
 
     bindData: function(data, parent)
@@ -373,21 +388,12 @@ videre.UI = {
                 var val = ctl.val();
                 return val.length > 0 ? val.split('\n') : null; //todo: ok for template URL?
             },
-            set: function(ctl, val) { ctl.val(val.join('\n')); }
-        },
-
-        'multiselect':
-        {
-            get: function(ctl) { return ctl.val(); },
-            set: function(ctl, val)
-            {
-                ctl.val(val);
-                ctl.multiselect('refresh');
-            }
+            set: function (ctl, val) { ctl.val(val.join('\n')); }
         }
     },
 
-    _dataTypes: {
+    _dataTypes:
+    {
         'number':
         {
             isValid: function(val) { return !isNaN(val); }
@@ -403,45 +409,56 @@ videre.UI = {
             }
         },
 
-        'datetime': {
-            get: function(ctl) { return ctl.datetimepicker('getDate'); },
-            set: function(ctl, val)
-            {
-                ctl.hasClass('hasDatepicker') ?
-                    ctl.datetimepicker('setDate', videre.parseDate(val)) :
-                    videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val, videre.localization.dateFormats.datetime)) : null); //todo:  hacky date logic
-            },
+        'datetime':
+        {
             isValid: function(val) { return (new Date(videre.parseDate(val, videre.localization.dateFormats.datetime))) != 'Invalid Date'; }
         },
 
-        'time': {
-            get: function(ctl) { return ctl.datetimepicker('getDate').getTime(); },
-            set: function(ctl, val)
-            {
-                ctl.hasClass('hasDatepicker') ?
-                    ctl.datetimepicker('setDate', videre.parseDate(val, 'shortTime')) :
-                    videre.UI.setControlValue(ctl, val != null ? new Date(videre.parseDate(val, videre.localization.dateFormats.datetime)) : null); //todo:  UNTESTED!
-            },
+        'time':
+        {
             isValid: function(val)
             {
                 return val != null; // TODO: not correct
             }
         },
 
-        'date': {
-            get: function(ctl)
-            {
-                var val = ctl.datepicker('getDate'); //todo:  assume datepicker hooked into this?
-                if (val != null)
-                    val = val.format('isoDate');
-                return val;
-            },
-            set: function(ctl, val) { videre.UI.setControlValue(ctl, val != null ? videre.parseDate(val, videre.localization.dateFormats.date, true) : ''); },
+        'date':
+        {
             isValid: function(val) { return (new Date(videre.parseDate(val, videre.localization.dateFormats.date))) != 'Invalid Date'; }
         }
     }
 
 };
+
+videre.UI.registerControlType('list',
+    {
+        get: function (ctl)
+        {
+            var val = ctl.val();
+            return val.length > 0 ? val.split('\n') : null; //todo: ok for template URL?
+        },
+        set: function (ctl, val) { ctl.val(val.join('\n')); },
+        init: function (ctl) { }
+    });
+
+//videre.UI.registerControlType('jqueryui-datetimepicker',
+//    {
+//        get: function (ctl) { return ctl.datetimepicker('getDate'); },
+//        set: function (ctl, val) { ctl.datetimepicker('setDate', videre.parseDate(val)); },
+//        init: function (ctr) { ctr.find('[data-controltype="jqueryui-datepicker"]').datetimepicker(); }
+//    });
+
+//videre.UI.registerControlType('jqueryui-timepicker',
+//    {
+//        get: function (ctl) { return ctl.datetimepicker('getDate').getTime(); },
+//        set: function (ctl, val) { ctl.datetimepicker('setDate', videre.parseDate(val, 'shortTime')); },
+//        init: function (ctr) { ctr.find('[data-controltype="jqueryui-timepicker"]').datetimepicker(); }
+//    });
+//videre.UI.registerControlType('jqueryui-datepicker', { get: function (ctl) { var val = ctl.datepicker('getDate'); if (val != null) val = val.format('isoDate'); return val; }, set: function (ctl, val) { videre.parseDate(val, videre.localization.dateFormats.date, true) }, init: function (ctr) { ctr.find('[data-controltype="jqueryui-datepicker"]').datepicker(); } });
+
+
+
+
 
 videre.UI.eventHandlerList = function()
 {
@@ -992,7 +1009,7 @@ if ($.views != null)
         nullOrEmpty: function (val) { return String.isNullOrEmpty(val); },
         coalesce: function (val, label) { return val || (label || ''); },
         deepCoalesce: function (o, s, label) { return Object.deepGet(o, s) || (label || ''); },
-        bindInputs: function (data, attributes, keyName, selectPlugin, inputPlugin) //todo: not sure this belongs in videre.js...  also getting hacky with plugin code...  
+        bindInputs: function (data, attributes, keyName, selectControlType, inputControlType) //todo: not sure this belongs in videre.js...  
         {
             keyName = keyName != null ? keyName : data.Name;
             var ctl;
@@ -1002,8 +1019,8 @@ if ($.views != null)
             if (data.Values.length > 0)
             {
                 ctl = $('<select>').attr('data-column', keyName);
-                if (selectPlugin != null)
-                    ctl.attr('data-plugin', selectPlugin);
+                if (selectControlType != null)
+                    ctl.attr('data-controltype', selectControlType);
 
                 $.each(data.Values, function (idx, item)
                 {
@@ -1015,8 +1032,8 @@ if ($.views != null)
             else
             {
                 ctl = $('<input>').attr({ type: data.InputType || 'text', 'data-column': keyName }); //.val(dataValue);
-                if (inputPlugin != null)
-                    ctl.attr('data-plugin', inputPlugin);
+                if (inputControlType != null)
+                    ctl.attr('data-controltype', inputControlType);
 
                 if (data.DataType)
                     ctl.attr('data-datatype', data.DataType);

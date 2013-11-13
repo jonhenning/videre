@@ -2,10 +2,11 @@
 
 namespace Videre.Core.Extensions.Bootstrap
 {
-    public class BootstrapInputControlModel : BootstrapBaseControlModel
+    public class BootstrapBaseInputControlModel : BootstrapBaseControlModel
     {
         public string val {get;set;}
         public string dataType { get; set; }
+        public string controlType { get; set; }
         public string mustMatch { get; set; }
         public bool readOnly { get; set; }
         public bool required { get; set; }

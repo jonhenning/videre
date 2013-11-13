@@ -112,8 +112,6 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         else
             this._handleMenuChanged();  //choose first available menu - ours was deleted
 
-        //ddl.selectpicker('refresh'); //refresh
-
     },
 
     bindMenu: function()

@@ -7,14 +7,14 @@ using System.Web.Mvc;
 
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
-    public abstract class BootstrapInputControl<TControl, TModel> : BootstrapControlBase<TControl, TModel>, IFluentBootstrapInputControl<TControl, TModel>
-        where TModel : BootstrapInputControlModel, new()
+    public abstract class BootstrapBaseInputControl<TControl, TModel> : BootstrapControlBase<TControl, TModel>, IFluentBootstrapInputControl<TControl, TModel>
+        where TModel : BootstrapBaseInputControlModel, new()
         where TControl : class, IFluentBootstrapInputControl<TControl, TModel>
     {
-        public BootstrapInputControl(HtmlHelper html) : base(html)
+        public BootstrapBaseInputControl(HtmlHelper html) : base(html)
         {
         }
-        public BootstrapInputControl(HtmlHelper html, string id) : this(html)
+        public BootstrapBaseInputControl(HtmlHelper html, string id) : this(html)
         {
             if (!string.IsNullOrEmpty(id))
                 this._model.id = GetId(id);
@@ -55,6 +55,12 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             return _control;
         }
 
+        public TControl ControlType(string type)
+        {
+            _model.controlType = type;
+            return _control;
+        }
+
         public TControl Required()
         {
             return Required(true);
@@ -92,6 +98,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
             if (!string.IsNullOrEmpty(_model.dataType))
                 ctl.Attributes.Add("data-datatype", _model.dataType);
+            if (!string.IsNullOrEmpty(_model.controlType))
+                ctl.Attributes.Add("data-controltype", _model.controlType);
             if (!string.IsNullOrEmpty(_model.mustMatch))
                 ctl.Attributes.Add("data-match", _model.mustMatch);
 

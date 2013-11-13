@@ -5,15 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Videre.Core.Extensions;
 
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
 
-    public class BootstrapDropDownListModel : BootstrapInputControlModel
+    public class BootstrapDropDownListModel : BootstrapBaseInputControlModel
     {
         public enum Plugin
         {
+            [Description("bootstrap-select")]
             BootstrapSelect,
+            [Description("bootstrap-multiselect")]
             BootstrapMultiSelect
         }
 
@@ -23,7 +26,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         }
 
         public List<SelectListItem> options { get; set; }
-        public Plugin? plugin { get; set; }
+        public string plugin { get; set; }
         public bool multiple { get; set; }
     }
 
@@ -31,11 +34,12 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
     {
         IBootstrapDropDownList Options(List<SelectListItem> options);
         IBootstrapDropDownList Plugin(BootstrapDropDownListModel.Plugin plugin);
+        IBootstrapDropDownList Plugin(string plugin);
         IBootstrapDropDownList Multiple();
         IBootstrapDropDownList Multiple(bool multiple);
     }
 
-    public class BootstrapDropDownList : BootstrapInputControl<IBootstrapDropDownList, BootstrapDropDownListModel>, IBootstrapDropDownList
+    public class BootstrapDropDownList : BootstrapBaseInputControl<IBootstrapDropDownList, BootstrapDropDownListModel>, IBootstrapDropDownList
     {
         public BootstrapDropDownList(HtmlHelper html) : base(html) { }
 
@@ -45,6 +49,10 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         }
 
         public IBootstrapDropDownList Plugin(BootstrapDropDownListModel.Plugin plugin)
+        {
+            return Plugin(plugin.GetDescription());
+        }
+        public IBootstrapDropDownList Plugin(string plugin)
         {
             this._model.plugin = plugin;
             return this;
@@ -78,18 +86,25 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             if (_model.multiple)
                 ctl.Attributes.Add("multiple", "multiple");
 
-            if (_model.plugin.HasValue)
+            if (!string.IsNullOrEmpty(_model.plugin))
             {
-                if (_model.plugin.Value == BootstrapDropDownListModel.Plugin.BootstrapSelect)
-                {
-                    _html.RegisterWebReferenceGroup("bootstrap-select");
-                    ctl.Attributes.Add("data-plugin", "bootstrap-select");
-                }
-                else if (_model.plugin.Value == BootstrapDropDownListModel.Plugin.BootstrapMultiSelect)
-                {
-                    _html.RegisterWebReferenceGroup("bootstrap-multiselect");
-                    ctl.Attributes.Add("data-plugin", "bootstrap-multiselect");
-                }
+                _html.RegisterWebReferenceGroup(_model.plugin); //todo:  use plugin name as web reference group?
+                ctl.Attributes.Add("data-controltype", _model.plugin);
+
+                //if (_model.plugin.Value == BootstrapDropDownListModel.Plugin.BootstrapSelect)
+                //{
+                //    _html.RegisterWebReferenceGroup("bootstrap-select");
+                //    //_html.RegisterDocumentReadyScript("registerControlType bootstrap-select", "videre.UI.registerControlType('bootstrap-select', { get: function(ctl) { return ctl.val(); }, set: function(ctl, val) { ctl.val(val); ctl.selectpicker('refresh'); }, init: function(ctr) { ctr.find('[data-controltype=\"bootstrap-select\"']).selectpicker(); }});");
+                //    ctl.Attributes.Add("data-controltype", "bootstrap-select");
+                //    //ctl.Attributes.Add("data-plugin", "bootstrap-select");
+                //}
+                //else if (_model.plugin.Value == BootstrapDropDownListModel.Plugin.BootstrapMultiSelect)
+                //{
+                //    _html.RegisterWebReferenceGroup("bootstrap-multiselect");
+                //    //_html.RegisterDocumentReadyScript("registerControlType bootstrap-multiselect", "videre.UI.registerControlType('bootstrap-multiselect', { get: function(ctl) { return ctl.val(); }, set: function(ctl, val) { ctl.val(val); ctl.multiselect('refresh'); }, init: function(ctr) { ctr.find(['data-controltype=\"bootstrap-multiselect\"']).multiselect(); }});");
+                //    ctl.Attributes.Add("data-controltype", "bootstrap-multiselect");
+                //    //ctl.Attributes.Add("data-plugin", "bootstrap-multiselect");
+                //}
             }
 
             foreach (var o in this._model.options)

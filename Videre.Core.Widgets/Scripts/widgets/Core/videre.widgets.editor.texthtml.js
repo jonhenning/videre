@@ -84,7 +84,6 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
                             self._sharedContentDict[name] = content;
                             self.bindLinks();
                             self.getControl('ddlLink').val(name);
-                            //self.getControl('ddlLink').selectpicker('render');
 
                             self._handleShareChanged(name);
                             self._newShareDialog.modal('hide');
@@ -106,7 +105,6 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
             content.Namespace = '';
 
         this.getControl('ddlLink').val(this._sharedContentDict[content.Namespace] != null ? this._widgetData.Content[0].Namespace : '');
-        //this.getControl('ddlLink').selectpicker('render');
 
         this.getControl('lblLinkCount').html(String.format("({0})", this._linkCountDict[content.Id] != null ? this._linkCountDict[content.Id].length : '0'));
 
@@ -124,7 +122,6 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
         {
             ddl.append($('<option></option>').val(this.Namespace).html(this.Namespace));
         });
-        //ddl.selectpicker('refresh'); //refresh
 
     },
 

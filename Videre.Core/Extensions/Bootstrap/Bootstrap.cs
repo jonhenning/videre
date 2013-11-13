@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using Videre.Core.Extensions;
 using Videre.Core.Extensions.Bootstrap.Controls;
 
 namespace Videre.Core.Extensions.Bootstrap
@@ -26,22 +27,47 @@ namespace Videre.Core.Extensions.Bootstrap
             return new BootstrapSpan(Html, id);
         }
 
-        public IBootstrapLabel Label(string text, string forId, string id)
+        public IBootstrapLabel Label(string token, string text, string forId)
         {
-            return new BootstrapLabel(Html, text, forId, id);
+            return new BootstrapLabel(Html, token, text, forId);
         }
 
-        public IBootstrapLabel Label(string id, string forId)
+        public IBootstrapLabel Label(string token, string text)
         {
-            return new BootstrapLabel(Html, id, forId);
+            return new BootstrapLabel(Html, token, text);
         }
         public IBootstrapTextBox TextBox(string id = null)
         {
             return new BootstrapTextBox(Html, id);
         }
-        public IBootstrapEmail Email(string id = null)
+        public IBootstrapTextBox Email(string id = null)
         {
-            return new BootstrapEmail(Html, id);
+            return new BootstrapTextBox(Html, id).DataType("email").HtmlAttributes(new { type = "email" });
+        }
+        public IBootstrapTextBox DatePicker(string id = null, string plugin = null)
+        {
+            plugin = plugin ?? BootstrapTextBoxModel.Plugin.JqueryUIDatePicker.GetDescription();
+            return new BootstrapTextBox(Html, id).DataType("date").Plugin(plugin);
+        }
+        public IBootstrapTextBox DateTimePicker(string id = null, string plugin = null)
+        {
+            plugin = plugin ?? BootstrapTextBoxModel.Plugin.JqueryUIDateTimePicker.GetDescription();
+            return new BootstrapTextBox(Html, id).DataType("datetime").Plugin(plugin);
+        }
+        public IBootstrapTextBox TimePicker(string id = null, string plugin = null)
+        {
+            plugin = plugin ?? BootstrapTextBoxModel.Plugin.JqueryUITimePicker.GetDescription();
+            return new BootstrapTextBox(Html, id).DataType("time").Plugin(plugin);
+        }
+
+        public IBootstrapTextBox DateTime(string id = null)
+        {
+            return new BootstrapTextBox(Html, id).DataType("time").Plugin(BootstrapTextBoxModel.Plugin.JqueryUITimePicker);
+        }
+
+        public IBootstrapTextArea TextArea(string id = null)
+        {
+            return new BootstrapTextArea(Html, id);
         }
         public IBootstrapPassword Password(string id = null)
         {

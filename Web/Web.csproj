@@ -206,7 +206,6 @@
     <Content Include="_packages\jsRender-1.0BC15.zip" />
     <Content Include="_packages\prettify-1.0.zip" />
     <Content Include="_packages\dynatree-1.1.1.zip" />
-    <Content Include="_packages\jquery-ui-timepicker-1.0.1.zip" />
     <Content Include="_packages\jquery-ui-multiselect-1.12.zip" />
     <Content Include="_packages\valums-file-uploader-2.0.zip" />
     <Content Include="_packages\font-awesome-3.1.1.zip" />
@@ -214,6 +213,7 @@
     <Content Include="Views\Shared\WidgetHeader.cshtml" />
     <Content Include="Views\Shared\WidgetSectionHeader.cshtml" />
     <Content Include="_packages\DataTables-1.9.4-BS3.zip" />
+    <Content Include="_packages\jquery-ui-timepicker-1.4.1.zip" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.manifest" />

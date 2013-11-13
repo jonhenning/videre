@@ -121,8 +121,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapPassword.cs" />
-    <Compile Include="Extensions\Bootstrap\Controls\BootstrapInputControl.cs" />
-    <Compile Include="Extensions\Bootstrap\Controls\BootstrapEmail.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapBaseInputControl.cs" />
     <Compile Include="Extensions\Bootstrap\BootstrapUnits.cs" />
     <Compile Include="Extensions\Bootstrap\BootstrapBaseControl.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapFormGroup.cs" />
@@ -132,8 +131,9 @@
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapButton.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapSpan.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapTabs.cs" />
-    <Compile Include="Extensions\Bootstrap\BootstrapInputControlModel.cs" />
+    <Compile Include="Extensions\Bootstrap\BootstrapBaseInputControlModel.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapUpload.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapTextArea.cs" />
     <Compile Include="Extensions\Bootstrap\IFluentBootstrapInputControl.cs" />
     <Compile Include="Extensions\Bootstrap\IFluentInterface.cs" />
     <Compile Include="Extensions\Bootstrap\IBootstrapBaseControl.cs" />
