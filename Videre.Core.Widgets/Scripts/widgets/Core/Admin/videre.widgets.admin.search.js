@@ -73,9 +73,11 @@ videre.widgets.admin.search = videre.widgets.base.extend(
 
     save: function()
     {
-        //todo: validation!
-        var provider = this.persistData(this._selectedItem, true, this._dialog);
-        this.ajax('~/core/Search/SaveProvider', { provider: provider }, this._delegates.onSaveReturn, null, this._dialog);
+        if (this.validControls(this._dialog, this._dialog))
+        {
+            var provider = this.persistData(this._selectedItem, true, this._dialog);
+            this.ajax('~/core/Search/SaveProvider', { provider: provider }, this._delegates.onSaveReturn, null, this._dialog);
+        }
     },
 
     deleteItem: function(id)

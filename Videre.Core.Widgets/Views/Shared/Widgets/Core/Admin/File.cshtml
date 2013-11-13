@@ -66,7 +66,7 @@
                     <div class="modal-body">
                         @{Html.RenderPartial("WidgetHeader", Model);}
                         <div class="form-horizontal">
-                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Url.Text", "Url").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Url"), BootstrapUnits.GridSize.MediumDevice4)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Url.Text", "Url").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Url").Required(), BootstrapUnits.GridSize.MediumDevice4)
                             <div class="file-upload-detail">
                                 @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("File.Text", "File").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().Upload("btnUpload").Text("Upload.Text", "Upload").Icon("glyphicon glyphicon-upload"), BootstrapUnits.GridSize.MediumDevice2)
                                 @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("FileSize.Text", "File Size").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Size").ReadOnly(), BootstrapUnits.GridSize.MediumDevice3)

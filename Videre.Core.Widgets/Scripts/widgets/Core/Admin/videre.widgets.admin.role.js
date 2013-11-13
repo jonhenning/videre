@@ -73,9 +73,11 @@ videre.widgets.admin.role = videre.widgets.base.extend(
 
     save: function()
     {
-        //todo: validation!
-        var role = this.persistData(this._selectedItem, true, this._dialog);
-        this.ajax('~/core/Account/SaveRole', { role: role }, this._delegates.onSaveReturn, null, this._dialog);
+        if (this.validControls(this._dialog, this._dialog))
+        {
+            var role = this.persistData(this._selectedItem, true, this._dialog);
+            this.ajax('~/core/Account/SaveRole', { role: role }, this._delegates.onSaveReturn, null, this._dialog);
+        }
     },
 
     deleteItem: function(id)

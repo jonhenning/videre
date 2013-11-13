@@ -73,9 +73,11 @@ videre.widgets.admin.widgetmanifest = videre.widgets.base.extend(
 
     save: function()
     {
-        //todo: validation!
-        var data = this.persistData(this._selectedItem, true, this._dialog);
-        this.ajax('~/core/Widget/SaveManifest', { manifest: data }, this._delegates.onSaveReturn, null, this._dialog);
+        if (this.validControls(this._dialog, this._dialog))
+        {
+            var data = this.persistData(this._selectedItem, true, this._dialog);
+            this.ajax('~/core/Widget/SaveManifest', { manifest: data }, this._delegates.onSaveReturn, null, this._dialog);
+        }
     },
 
     deleteItem: function(id)

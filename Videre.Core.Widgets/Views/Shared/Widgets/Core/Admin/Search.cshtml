@@ -13,68 +13,77 @@
 
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
-    
-    <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Search Administration")</legend>}
-        
-        <p>@Html.Raw(Model.GetText("Instructions.Text", "Search administration allows you maintain your search providers. "))</p>
 
-        <div class="container">
-            <div class="row">
-                <div class="btn-toolbar span12">
-                    <a class="btn btn-small" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
-                    <a class="btn btn-small" id="@Model.GetId("btnClearIndex")"><i class="icon-trash"></i> @Model.GetPortalText("ClearIndex.Text", "Clear Index")</a>
-                </div>
+    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "Search Administration") }));}
+
+    <p>@Html.Raw(Model.GetText("Instructions.Text", "Search administration allows you maintain your search providers. "))</p>
+
+    <div class="container">
+        <div class="row">
+            <div class="btn-toolbar col-md-12">
+                @Html.Bootstrap().Button("btnNew").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewEntry.Text", "New Entry", true).Icon("glyphicon glyphicon-plus")
+                @Html.Bootstrap().Button("btnClearIndex").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("ClearIndex.Text", "Clear Index").Icon("glyphicon glyphicon-trash")
             </div>
-            <div class="row">
-                <div class="span12">
-                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
-                        <thead>
-                            <tr>
-                                <th style="width: 93px"></th>
-                                <th>@Model.GetText("Name.Text", "Name")</th>
-                                <th>@Model.GetText("ProviderType.Text", "Provider Type")</th>
-                                <th>@Model.GetText("LastGenerated.Text", "Last Generated")</th>
-                                <th>@Model.GetText("AutoRefreshRate.Text", "Refresh")</th>
-                            </tr>
-                        </thead>
-                        <tbody id="@Model.GetId("ItemList")"></tbody>
-                    </table>
-                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                    <thead>
                         <tr>
-                            <td>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="edit"><i class="icon-pencil"></i></a>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete"><i class="icon-trash"></i></a>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="generate" title="@Model.GetText("Generate.Text", "Generate")"><i class="icon-refresh"></i></a>
-                            </td>
-                            <td>{{:Name}}</td>
-                            <td>{{:ProviderType}}</td>
-                            <td>{{:~formatDateTime(LastGenerated)}}</td>
-                            <td>{{:AutoRefreshRate}}</td>
+                            <th style="width: 93px"></th>
+                            <th>@Model.GetText("Name.Text", "Name")</th>
+                            <th>@Model.GetText("ProviderType.Text", "Provider Type")</th>
+                            <th>@Model.GetText("LastGenerated.Text", "Last Generated")</th>
+                            <th>@Model.GetText("AutoRefreshRate.Text", "Refresh")</th>
                         </tr>
-                    </script>
+                    </thead>
+                    <tbody id="@Model.GetId("ItemList")"></tbody>
+                </table>
+                <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                    <tr>
+                        <td>
+                            <div class="btn-group">
+                                @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "generate").ToolTip("Generate.Text", "Generate").Icon("glyphicon glyphicon-refresh").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                            </div>
+
+                            <a class="btn btn-mini" data-id="{{:Id}}" data-action="edit"><i class="icon-pencil"></i></a>
+                            <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete"><i class="icon-trash"></i></a>
+                            <a class="btn btn-mini" data-id="{{:Id}}" data-action="generate" title="@Model.GetText("Generate.Text", "Generate")"><i class="icon-refresh"></i></a>
+                        </td>
+                        <td>{{:Name}}</td>
+                        <td>{{:ProviderType}}</td>
+                        <td>{{:~formatDateTime(LastGenerated)}}</td>
+                        <td>{{:AutoRefreshRate}}</td>
+                    </tr>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("EditRole.Text", "Edit Search Provider")
+                </div>
+                <div class="modal-body">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+                    <div class="form-horizontal">
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice9)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ProviderType.Text", "Provider Type").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("ProviderType").Required(), BootstrapUnits.GridSize.MediumDevice9)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Connection.Text", "Connection").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Connection"), BootstrapUnits.GridSize.MediumDevice9)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("AutoRefreshRateMin.Text", "Auto Refresh Rate (minutes)").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("AutoRefreshRate").DataType("number"), BootstrapUnits.GridSize.MediumDevice9)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
                 </div>
             </div>
-        </div>
-    </fieldset>
-    <br />
-    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="display: none;">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            @Model.GetText("EditRole.Text", "Edit Search Provider")
-        </div>
-        <div class="modal-body">
-            @{Html.RenderPartial("WidgetHeader", Model);}
-            <div class="form-horizontal">
-                @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
-                @Html.InputControlGroup(Model, "txtProviderType", "ProviderType.Text", "Provider Type", "ProviderType")
-                @Html.InputControlGroup(Model, "txtConnection", "Connection.Text", "Connection", "Connection")
-                @Html.InputControlGroup(Model, "txtAutoRefreshRate", "AutoRefreshRateMin.Text", "Auto Refresh Rate (minutes)", "AutoRefreshRate")
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
-            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
         </div>
     </div>
 

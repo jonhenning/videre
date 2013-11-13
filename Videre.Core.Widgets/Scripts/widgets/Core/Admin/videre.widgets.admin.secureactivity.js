@@ -79,9 +79,11 @@ videre.widgets.admin.secureactivity = videre.widgets.base.extend(
 
     save: function()
     {
-        //todo: validation!
-        var item = this.persistData(this._selectedItem, true, this._dialog);
-        this.ajax('~/core/Portal/SaveSecureActivity', { activity: item }, this._delegates.onDataSaveReturn, null, this._dialog);
+        if (this.validControls(this._dialog, this._dialog))
+        {
+            var item = this.persistData(this._selectedItem, true, this._dialog);
+            this.ajax('~/core/Portal/SaveSecureActivity', { activity: item }, this._delegates.onDataSaveReturn, null, this._dialog);
+        }
     },
 
     _handleAction: function(action, id)

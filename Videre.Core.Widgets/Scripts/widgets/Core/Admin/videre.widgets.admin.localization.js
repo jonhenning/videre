@@ -109,8 +109,11 @@ videre.widgets.admin.localization = videre.widgets.base.extend(
     {
         if (this._selectedItem != null)
         {
-            var loc = this.persistData(this._selectedItem);
-            this.ajax('~/core/Localization/Save', { Localization: loc }, this._delegates.onSaveReturn, null, this._dialog);
+            if (this.validControls(this._dialog, this._dialog))
+            {
+                var loc = this.persistData(this._selectedItem);
+                this.ajax('~/core/Localization/Save', { Localization: loc }, this._delegates.onSaveReturn, null, this._dialog);
+            }
         }
     },
 

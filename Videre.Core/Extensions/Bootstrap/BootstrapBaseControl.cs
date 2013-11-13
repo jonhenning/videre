@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Videre.Core.Extensions;
 
 namespace Videre.Core.Extensions.Bootstrap
 {
@@ -66,6 +67,12 @@ namespace Videre.Core.Extensions.Bootstrap
             return _control;
         }
 
+        public TControl ToolTip(string token, string text)
+        {
+            _model.title = GetText(token, text);
+            return _control;
+        }
+
         public TControl Html(params IHtmlString[] html)
         {
             html.ToList().ForEach(x => this._model.html += x.ToHtmlString());
@@ -122,6 +129,8 @@ namespace Videre.Core.Extensions.Bootstrap
         {
             if (!string.IsNullOrEmpty(_model.id))
                 ctl.Attributes.AddSafe("id", _model.id);
+            if (!string.IsNullOrEmpty(_model.title))
+                ctl.Attributes.AddSafe("title", _model.title);
             ctl.MergeAttributes(_model.htmlAttributes);
 
             foreach (var css in _model.CssClasses.Distinct())

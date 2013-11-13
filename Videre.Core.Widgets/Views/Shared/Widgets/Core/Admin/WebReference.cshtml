@@ -67,14 +67,14 @@
                     @{Html.RenderPartial("WidgetHeader", Model);}
 
                     <div class="form-horizontal">
-                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name"), BootstrapUnits.GridSize.MediumDevice9)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Group.Text", "Group").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Group"), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("DependencyGroups.Text", "Dependency Groups").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().Options(webReferences.Select(r => r.Group).Distinct().Select(r => new SelectListItem() { Text = r, Value = r }).ToList()).Multiple().Plugin(Plugin.BootstrapSelect).DataColumn("DependencyGroups"), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Url.Text", "Url").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Url"), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Type.Text", "Type").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().Options(default(Models.WebReferenceType).ToListItemList()).DataColumn("Type"), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("LoadType.Text", "Load Type").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().Options(default(Models.WebReferenceLoadType).ToListItemList()).DataColumn("LoadType"), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Text.Text", "Text").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextArea().Rows(5).DataColumn("Text"), BootstrapUnits.GridSize.MediumDevice9)
-                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Sequence.Text", "Sequence").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().Options(default(Models.WebReferenceLoadType).ToListItemList()).DataColumn("Sequence"), BootstrapUnits.GridSize.MediumDevice2)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Sequence.Text", "Sequence").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataType("number").DataColumn("Sequence"), BootstrapUnits.GridSize.MediumDevice2)
                     </div>
                 </div>
                 <div class="modal-footer">

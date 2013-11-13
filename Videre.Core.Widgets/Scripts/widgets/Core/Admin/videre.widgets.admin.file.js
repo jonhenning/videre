@@ -120,9 +120,12 @@ videre.widgets.admin.file = videre.widgets.base.extend(
     {
         if (this._selectedItem != null)
         {
-            var file = this.persistData(this._selectedItem, null, null, true);
-            //file.Urls = this.getControl('txtUrls').val().split('\r\n');
-            this.ajax('~/core/File/Save', { file: file, uniqueName: this._uniqueName }, this._delegates.onSaveReturn, null, this._dialog);
+            if (this.validControls(this._dialog, this._dialog))
+            {
+                var file = this.persistData(this._selectedItem, null, null, true);
+                //file.Urls = this.getControl('txtUrls').val().split('\r\n');
+                this.ajax('~/core/File/Save', { file: file, uniqueName: this._uniqueName }, this._delegates.onSaveReturn, null, this._dialog);
+            }
         }
     },
 

@@ -62,7 +62,7 @@
                 <div class="modal-body">
                     @{Html.RenderPartial("WidgetHeader", Model);}
                     <div class="form-horizontal">
-                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name"), BootstrapUnits.GridSize.MediumDevice9)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Description.Text", "Description").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Description"), BootstrapUnits.GridSize.MediumDevice9)
                     </div>
                 </div>

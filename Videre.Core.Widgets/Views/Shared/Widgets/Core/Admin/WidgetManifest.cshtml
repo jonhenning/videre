@@ -74,8 +74,8 @@
                     
                     <div class="tab-content">
                         <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
-                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name"), BootstrapUnits.GridSize.MediumDevice9)
-                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Title.Text", "Title").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Title"), BootstrapUnits.GridSize.MediumDevice9)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice9)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Title.Text", "Title").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Title").Required(), BootstrapUnits.GridSize.MediumDevice9)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Category.Text", "Category").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Category"), BootstrapUnits.GridSize.MediumDevice9)
                         </div>
                         <div class="form-horizontal tab-pane" id="@Model.GetId("ContentTab")">
