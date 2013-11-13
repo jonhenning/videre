@@ -114,7 +114,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
             videre.dataTables.clear(this.getControl('ItemTable'));
             this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(items));
             this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
-            videre.dataTables.bind(this.getControl('ItemTable'), [{ bSortable: false, sWidth: '62px' }]);
+            videre.dataTables.bind(this.getControl('ItemTable'), { aoColumns: [{ bSortable: false}] });
         }
         else
             this._templateCtr.hide();
@@ -319,9 +319,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
 
     _onActionClicked: function(e)
     {
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
+        var ctl = $(e.target).closest('[data-action]');
         this.handleAction(ctl.data('action'), ctl.data('id'));
     },
 
@@ -355,10 +353,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
 
     _onWidgetActionClicked: function(e)
     {
-        var mnu = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            mnu = mnu.parents('a');
-
+        var mnu = $(e.target).closest('[data-action]');
         //var mnu = e.target.tagName == 'A' ? $(e.target) : $(e.target).parents('a');
         var action = mnu.data('action');
         var widgetCtr = mnu.parents('.widget-container');

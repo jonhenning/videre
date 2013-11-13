@@ -231,14 +231,10 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         if (!String.isNullOrEmpty(id))
         {
             var self = this;
-            videre.UI.prompt(this.getId('DeleteMenu'), 'Delete Menu', 'Are you sure you wish to delete this menu?', null,
-                [{
-                    text: 'Ok', css: 'btn-primary', close: true, handler: function ()
-                    {
-                        self.deleteMenu(id);
-                        return true;
-                    }
-                }, { text: 'Cancel', css: 'btn-default', close: true }]);
+            videre.UI.confirm('Delete Entry', 'Are you sure you wish to remove this entry?', function ()
+            {
+                self.deleteMenu(id);
+            });
         }
         else
             this._newMenuData = null;

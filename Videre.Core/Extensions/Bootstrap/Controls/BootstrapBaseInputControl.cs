@@ -97,21 +97,21 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             //    ctl.Attributes.Add("val", _model.text);
 
             if (!string.IsNullOrEmpty(_model.dataType))
-                ctl.Attributes.Add("data-datatype", _model.dataType);
+                ctl.Attributes.AddSafe("data-datatype", _model.dataType);
             if (!string.IsNullOrEmpty(_model.controlType))
-                ctl.Attributes.Add("data-controltype", _model.controlType);
+                ctl.Attributes.AddSafe("data-controltype", _model.controlType);
             if (!string.IsNullOrEmpty(_model.mustMatch))
-                ctl.Attributes.Add("data-match", _model.mustMatch);
+                ctl.Attributes.AddSafe("data-match", _model.mustMatch);
 
             if (_model.inputSize != BootstrapUnits.InputSize.Default)
                 ctl.AddCssClass(Bootstrap.BootstrapUnits.GetInputSizeCss(_model.inputSize));
 
             if (_model.required)
-                ctl.Attributes.Add("required", "required");
+                ctl.Attributes.AddSafe("required", "required");
             if (_model.readOnly)
-                ctl.Attributes.Add("readonly", "readonly");
+                ctl.Attributes.AddSafe("readonly", "readonly");
             if (_model.disableAutoComplete)
-                ctl.Attributes.Add("autocomplete", "off");
+                ctl.Attributes.AddSafe("autocomplete", "off");
         }
 
         protected string Render(TagBuilder ctl)

@@ -62,7 +62,7 @@ namespace Videre.Core.Extensions.Bootstrap
 
         public TControl DataAttribute(string key, string value)
         {
-            _model.htmlAttributes.Add("data-" + key, value);
+            _model.htmlAttributes.AddSafe("data-" + key, value);
             return _control;
         }
 
@@ -121,7 +121,7 @@ namespace Videre.Core.Extensions.Bootstrap
         protected virtual void AddBaseMarkup(TagBuilder ctl)
         {
             if (!string.IsNullOrEmpty(_model.id))
-                ctl.Attributes.Add("id", _model.id);
+                ctl.Attributes.AddSafe("id", _model.id);
             ctl.MergeAttributes(_model.htmlAttributes);
 
             foreach (var css in _model.CssClasses.Distinct())

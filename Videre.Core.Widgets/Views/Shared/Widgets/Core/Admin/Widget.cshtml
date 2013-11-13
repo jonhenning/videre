@@ -3,6 +3,8 @@
 @using Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Videre.Core.Extensions
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
 @model Videre.Core.Models.Widget
 
 @{
@@ -11,12 +13,16 @@
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
     
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#@Model.GetId("WidgetManifestTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("Manifests.Text", "Manifests")</a></li>
-    </ul>
+    @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+    { 
+        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("WidgetManifestTab"), Text = @Model.GetText("Manifests.Text", "Manifests"), Active = true, Icon = "glyphicon glyphicon-list-alt" }
+    }))
+
     <div class="tab-content">
-        <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetManifestTab")">
+        <div class="tab-pane active" id="@Model.GetId("WidgetManifestTab")">
+            <div class="container">
             @{Html.RenderWidget("Core/Admin/WidgetManifest");}
+            </div>
         </div>
     </div>
 </div>

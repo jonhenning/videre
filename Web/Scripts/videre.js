@@ -180,6 +180,24 @@ videre.registerNamespace('videre.UI');
 
 videre.UI = {
 
+    _nextId: 0,
+    getNextId: function()
+    {
+        videre.UI._nextId++;
+        return '_ui' + videre.UI._nextId;
+    },
+
+    //allows focus to be set on first data-column
+    showModal: function(ctr)
+    {
+        ctr.modal('show').on('shown.bs.modal', function () { $('[data-column]:first', this).focus(); });
+    },
+
+    hideModal: function (ctr)
+    {
+        ctr.modal('hide');
+    },
+
     handleEnter: function(ctl, func)
     {
         ctl.keypress(function(e) 
@@ -204,6 +222,18 @@ videre.UI = {
         if (selectedVal != null)
             ddl.val(selectedVal);
         return ddl;
+    },
+
+    confirm: function(title, text, onConfirm)
+    {
+        videre.UI.prompt(videre.UI.getNextId(), title, text, null,
+            [{
+                text: 'Ok', css: 'btn-primary', close: true, handler: function ()
+                {
+                    onConfirm();
+                    return true;
+                }
+            }, { text: 'Cancel', css: 'btn-default', close: true }]);
     },
 
     //usage:
@@ -962,8 +992,10 @@ videre.widgets.base = videre.Class.extend(
             var item = { ctl: $(element) };
             if (item.ctl.attr('bypassvalidation') != 'true')    //todo:  we need a way to allow for panes to opt out of validation of their controls...  this is ok, but still feels a bit dirty
             {
-                item.lbl = ctr.find('[for="' + item.ctl.attr('id') + '"]');
                 item.group = item.ctl.closest('.form-group');
+                item.lbl = ctr.find('[for="' + item.ctl.attr('id') + '"]');
+                if (item.lbl.length == 0)
+                    item.lbl = item.group.find('label');
                 item.labelText = item.lbl.html();
                 if (item.labelText == null)
                     item.labelText = item.ctl.data('label-text');

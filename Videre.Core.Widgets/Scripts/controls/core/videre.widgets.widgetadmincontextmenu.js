@@ -79,11 +79,7 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
 
     _onAdminClick: function(e)
     {
-        //todo: would really love a cleaner way of handling the grabbing of the a tag...  used all over...
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
-
+        var ctl = $(e.target).closest('[data-action]');
         var action = ctl.data('action');
         if (action == 'edit')
             this.edit();

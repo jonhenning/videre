@@ -21,6 +21,15 @@ namespace Videre.Core.Extensions
             return result;
         }
 
+        public static IDictionary<TKey, TValue> AddSafe<TKey, TValue>(this IDictionary<TKey, TValue> data, TKey key, TValue value, bool replace = false)
+        {
+            if (!data.ContainsKey(key))
+                data.Add(key, value);
+            else if (replace)
+                data[key] = value;
+            return data;
+        }
+
         //http://blog.spontaneouspublicity.com/associating-strings-with-enums-in-c
         //todo: move to CodeEndeavors.Extensions
         //todo: review perf impact of this approach!!!

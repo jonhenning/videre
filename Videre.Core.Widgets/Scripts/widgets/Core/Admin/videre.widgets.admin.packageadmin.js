@@ -65,28 +65,38 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
     {
         var self = this;
         //todo: localize?
-        videre.UI.prompt(this.getId('RemovePackage'), 'Remove Package', String.format('Do you wish to remove the package {0}?', pkg.name), null,
-            [{
-                text: 'Ok', css: 'btn-primary', close: true, handler: function()
-                {
-                    self.ajax('~/core/Package/RemovePackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
-                    return true;
-                }
-            }, { text: 'Cancel', close: true }]);       
+        videre.UI.confirm('Remove Package', String.format('Do you wish to remove the package {0}?', pkg.name), function ()
+        {
+            self.ajax('~/core/Package/RemovePackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
+        });
+
+        //videre.UI.prompt(this.getId('RemovePackage'), 'Remove Package', String.format('Do you wish to remove the package {0}?', pkg.name), null,
+        //    [{
+        //        text: 'Ok', css: 'btn-primary', close: true, handler: function()
+        //        {
+        //            self.ajax('~/core/Package/RemovePackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
+        //            return true;
+        //        }
+        //    }, { text: 'Cancel', close: true }]);       
     },
 
     uninstallPackage: function(pkg)
     {
         var self = this;
         //todo: localize?
-        videre.UI.prompt(this.getId('UninstallPackage'), 'Uninstall Package', String.format('Do you wish to uninstall this package {0}?  Note:  Currently this just removes the db entry, not the files/content itself.', pkg.name), null,
-            [{
-                text: 'Ok', css: 'btn-primary', close: true, handler: function()
-                {
-                    self.ajax('~/core/Package/UninstallPackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
-                    return true;
-                }
-            }, { text: 'Cancel', close: true }]);
+        videre.UI.confirm('Uninstall Package', String.format('Do you wish to uninstall this package {0}?  Note:  Currently this just removes the db entry, not the files/content itself.', pkg.name), function ()
+        {
+            self.ajax('~/core/Localization/Delete', { id: id }, self._delegates.onSaveReturn);
+        });
+
+        //videre.UI.prompt(this.getId('UninstallPackage'), 'Uninstall Package', String.format('Do you wish to uninstall this package {0}?  Note:  Currently this just removes the db entry, not the files/content itself.', pkg.name), null,
+        //    [{
+        //        text: 'Ok', css: 'btn-primary', close: true, handler: function()
+        //        {
+        //            self.ajax('~/core/Package/UninstallPackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
+        //            return true;
+        //        }
+        //    }, { text: 'Cancel', close: true }]);
     },
 
     bind: function()
@@ -106,7 +116,7 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
 
     showCreatePackage: function()
     {
-        this._dialog.modal('show');
+        videre.UI.showModal(this._dialog);
 
     },
 
@@ -195,9 +205,7 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
 
     _onActionClicked: function(e)
     {
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
+        var ctl = $(e.target).closest('[data-action]');
         this._handleAction(ctl.data('action'), ctl.data('id'));
     },
 

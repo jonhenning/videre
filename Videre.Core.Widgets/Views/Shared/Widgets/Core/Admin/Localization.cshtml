@@ -43,8 +43,10 @@
             <script id="@Model.GetId("ItemListTemplate")" type="text/html">
                 <tr>
                     <td>
+                        <div class="btn-group">
                         @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
                         @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                        </div>
                     </td>
                     <td>{{:Locale}}</td>
                     <td><span title="{{:treeKey}}">{{:Key}}</span></td>

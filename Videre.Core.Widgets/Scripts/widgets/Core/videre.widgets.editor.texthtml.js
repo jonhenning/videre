@@ -53,14 +53,10 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
     {
         //if (this._sharedContentDict[name] != null && confirm('Are you sure you wish to delete this share?'))    //todo: localize
         var self = this;
-        videre.UI.prompt(this.getId('DeleteShare'), 'Delete Share', 'Are you sure you wish to delete this share?', null,
-            [{
-                text: 'Ok', css: 'btn-primary', close: true, handler: function ()
-                {
-                    self.ajax('~/core/localization/delete', { id: self._sharedContentDict[name].Id }, self._delegates.onShareDeleted, null, null, self._sharedContentDict[name]);
-                    return true;
-                }
-            }, { text: 'Cancel', css: 'btn-default', close: true }]);
+        videre.UI.confirm('Delete Entry', 'Are you sure you wish to remove this entry?', function ()
+        {
+            self.ajax('~/core/localization/delete', { id: self._sharedContentDict[name].Id }, self._delegates.onShareDeleted, null, null, self._sharedContentDict[name]);
+        });
     },
 
     showNewShareDialog: function()

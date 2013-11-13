@@ -66,7 +66,7 @@ videre.widgets.admin.search = videre.widgets.base.extend(
         if (this._selectedItem != null)
         {
             this.reset();
-            this._dialog.modal('show');
+            videre.UI.showModal(this._dialog);
             this.bindData(this._selectedItem, this._dialog);
         }
     },
@@ -133,9 +133,7 @@ videre.widgets.admin.search = videre.widgets.base.extend(
 
     _onActionClicked: function(e)
     {
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
+        var ctl = $(e.target).closest('[data-action]');
         this._handleAction(ctl.data('action'), ctl.data('id'));
     },
 

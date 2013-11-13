@@ -35,7 +35,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             var ctl = new TagBuilder("input");
             base.AddBaseMarkup(ctl);
 
-            ctl.Attributes.Add("type", "password");
+            ctl.Attributes.AddSafe("type", "password");
             
             if (!string.IsNullOrEmpty(_model.val)) //cannot be in base as textarea is different!
                 ctl.Attributes.Add("val", _model.val);

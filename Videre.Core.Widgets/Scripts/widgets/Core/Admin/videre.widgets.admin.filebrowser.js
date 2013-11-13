@@ -71,7 +71,7 @@ videre.widgets.admin.filebrowser = videre.widgets.base.extend(
     show: function()
     {
         this.bind('');
-        this._dialog.modal('show');
+        videre.UI.showModal(this._dialog);
     },
 
     hide: function()
@@ -138,10 +138,7 @@ videre.widgets.admin.filebrowser = videre.widgets.base.extend(
 
     _onNavClick: function(e)
     {
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
-
+        var ctl = $(e.target).closest('[data-action]');
         var action = ctl.data('action');
         if (action != null)
         {
@@ -161,10 +158,7 @@ videre.widgets.admin.filebrowser = videre.widgets.base.extend(
 
     _onBrowseClick: function(e)
     {
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
-
+        var ctl = $(e.target).closest('[data-action]');
         this._dataControl = $('#' + ctl.data('control'));
         this.show();
     } //,

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Videre.Core.Extensions;
 
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
@@ -28,6 +29,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
     {
         public string Id { get; set; }
         public string Text { get; set; }
+        public string Icon { get; set; }
         public bool Active { get; set; }
     }
 
@@ -61,9 +63,21 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
                 li.AddCssClass("active");
             
             var a = new TagBuilder("a");
-            a.SetInnerText(tab.Text);
-            a.Attributes.Add("data-toggle", "tab");
-            a.Attributes.Add("href", "#" + tab.Id);
+            //a.SetInnerText(tab.Text);
+            if (!string.IsNullOrEmpty(tab.Icon))
+            {
+                var icon = new TagBuilder("span");
+                //icon.AddCssClass("glyphicon");  //todo:  do this automatically?
+                icon.AddCssClass(tab.Icon);
+                a.InnerHtml = icon.ToString(TagRenderMode.Normal) + " " + tab.Text;
+            }
+            else
+                a.SetInnerText(tab.Text);
+
+
+            a.Attributes.AddSafe("data-toggle", "tab");
+            a.Attributes.AddSafe("href", "#" + tab.Id);
+
             li.InnerHtml = a.ToString(TagRenderMode.Normal);
             return li.ToString(TagRenderMode.Normal);
         }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Videre.Core.Extensions;
 
 namespace Videre.Core.Extensions.Bootstrap.Controls
 {
@@ -56,14 +57,15 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             var ctl = new TagBuilder("input"); ;
             base.AddBaseMarkup(ctl);
 
-            ctl.Attributes.Add("type", "text");
-            if (!string.IsNullOrEmpty(_model.val)) 
-                ctl.Attributes.Add("val", _model.val);  //encode?
+            ctl.Attributes.AddSafe("type", "text");
+
+            if (!string.IsNullOrEmpty(_model.val))
+                ctl.Attributes.AddSafe("val", _model.val);  //encode?
 
             if (!string.IsNullOrEmpty(_model.plugin))
             {
                 _html.RegisterWebReferenceGroup(_model.plugin); //todo:  use plugin name as web reference group?
-                ctl.Attributes.Add("data-controltype", _model.plugin);
+                ctl.Attributes.AddSafe("data-controltype", _model.plugin);
             }
 
             return base.Render(ctl);

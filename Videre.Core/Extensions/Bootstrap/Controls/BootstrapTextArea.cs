@@ -46,7 +46,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             if (!string.IsNullOrEmpty(_model.val)) 
                 ctl.SetInnerText(_model.val);
             if (_model.rows.HasValue)
-                ctl.Attributes.Add("rows", _model.rows.Value.ToString());
+                ctl.Attributes.AddSafe("rows", _model.rows.Value.ToString());
 
             return base.Render(ctl);
         }

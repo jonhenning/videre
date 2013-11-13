@@ -1,4 +1,6 @@
 @using Videre.Core.Extensions
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
+
 @model Videre.Core.Models.Widget
 
 @{
@@ -10,16 +12,22 @@
             <div class="span12">
                 @{ Html.RenderPartial("WidgetHeader", Model); }
     
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#@Model.GetId("RoleTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("Roles.Text", "Roles")</a></li>
-                    <li class=""><a href="#@Model.GetId("SecureActivityTab")" data-toggle="tab"><i class="icon-upload"></i> @Model.GetText("SecureActivity.Text", "Secure Activity")</a></li>
-                </ul>
+                    @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+                    { 
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("RoleTab"), Text = @Model.GetText("Roles.Text", "Roles"), Active = true, Icon = "glyphicon glyphicon-list-alt" },
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("SecureActivityTab"), Text = @Model.GetText("SecureActivity.Text", "Secure Activity"), Icon = "glyphicon glyphicon-upload" }
+                    }))
+
                 <div class="tab-content">
                     <div class="tab-pane active" id="@Model.GetId("RoleTab")">
+                        <div class="container">
                         @{ Html.RenderWidget("Core/Admin/Role"); }
+                        </div>
                     </div>
                     <div class="tab-pane" id="@Model.GetId("SecureActivityTab")">
+                        <div class="container">
                         @{ Html.RenderWidget("Core/Admin/SecureActivity"); }
+                        </div>
                     </div>
                 </div>
             </div>

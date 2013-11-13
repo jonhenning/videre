@@ -84,12 +84,12 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             }
 
             if (_model.multiple)
-                ctl.Attributes.Add("multiple", "multiple");
+                ctl.Attributes.AddSafe("multiple", "multiple");
 
             if (!string.IsNullOrEmpty(_model.plugin))
             {
                 _html.RegisterWebReferenceGroup(_model.plugin); //todo:  use plugin name as web reference group?
-                ctl.Attributes.Add("data-controltype", _model.plugin);
+                ctl.Attributes.AddSafe("data-controltype", _model.plugin);
 
                 //if (_model.plugin.Value == BootstrapDropDownListModel.Plugin.BootstrapSelect)
                 //{

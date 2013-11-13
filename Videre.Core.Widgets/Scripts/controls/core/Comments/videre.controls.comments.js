@@ -85,9 +85,7 @@ videre.controls.comments = videre.widgets.base.extend(
 
     _onCommentActionClicked: function(e)
     {
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
+        var ctl = $(e.target).closest('[data-action]');
         this.handleAction(ctl.data('action'), ctl.data('id'));
     }
 

@@ -68,7 +68,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         public override string ToHtmlString()
         {
             var ctl = new TagBuilder("button");
-            ctl.Attributes.Add("type", "button");
+            ctl.Attributes.AddSafe("type", "button");
             AddBaseMarkup(ctl);
             ctl.AddCssClass("btn");
             ctl.AddCssClass(Bootstrap.BootstrapUnits.GetButtonStyleCss(_model.style));

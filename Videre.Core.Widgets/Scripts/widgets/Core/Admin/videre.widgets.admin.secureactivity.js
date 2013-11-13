@@ -57,7 +57,7 @@ videre.widgets.admin.secureactivity = videre.widgets.base.extend(
         this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data, { roleDataDict: this._roleDataDict }));
         this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
 
-        videre.dataTables.bind(this.getControl('ItemTable'), [{ bSortable: false, sWidth: '31px' }]);
+        videre.dataTables.bind(this.getControl('ItemTable'), { aoColumns: [{ bSortable: false, sWidth: '31px' }] });
         this.getControl('ItemTable').width('500px');    //todo:  hack necessary for when its hidden in non-shown tab during bind
     },
 
@@ -72,7 +72,7 @@ videre.widgets.admin.secureactivity = videre.widgets.base.extend(
         if (this._selectedItem != null)
         {
             this.reset();
-            this._dialog.modal('show');
+            videre.UI.showModal(this._dialog);
             this.bindData(this._selectedItem, this._dialog);
         }
     },
@@ -82,12 +82,6 @@ videre.widgets.admin.secureactivity = videre.widgets.base.extend(
         //todo: validation!
         var item = this.persistData(this._selectedItem, true, this._dialog);
         this.ajax('~/core/Portal/SaveSecureActivity', { activity: item }, this._delegates.onDataSaveReturn, null, this._dialog);
-    },
-
-    deleteItem: function(id)
-    {
-        if (confirm('Are you sure you wish to remove this entry?')) //todo: localize?
-            this.ajax('~/core/Portal/DeleteSecureActivity', { id: id }, this._delegates.onDataSaveReturn);
     },
 
     _handleAction: function(action, id)
@@ -120,9 +114,7 @@ videre.widgets.admin.secureactivity = videre.widgets.base.extend(
 
     _onActionClicked: function(e)
     {
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
+        var ctl = $(e.target).closest('[data-action]');
         this._handleAction(ctl.data('action'), ctl.data('id'));
     },
 

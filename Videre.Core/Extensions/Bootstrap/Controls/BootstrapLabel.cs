@@ -54,7 +54,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             var ctl = new TagBuilder("label");
             AddBaseMarkup(ctl);
             if (!string.IsNullOrEmpty(_model.forId))
-                ctl.Attributes.Add("for", _model.forId);
+                ctl.Attributes.AddSafe("for", _model.forId);
             
             ctl.SetInnerText(_model.text);
             return ctl.ToString(TagRenderMode.Normal);

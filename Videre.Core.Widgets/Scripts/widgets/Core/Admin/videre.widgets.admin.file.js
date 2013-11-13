@@ -89,7 +89,7 @@ videre.widgets.admin.file = videre.widgets.base.extend(
             videre.dataTables.clear(this.getControl('ItemTable'));
             this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(items));
             this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
-            videre.dataTables.bind(this.getControl('ItemTable'), { aoColumns: [{ bSortable: false, sWidth: '62px' }] });
+            videre.dataTables.bind(this.getControl('ItemTable'), { aoColumns: [{ bSortable: false }] });
         }
         else
             this._itemListCtr.hide();
@@ -109,7 +109,7 @@ videre.widgets.admin.file = videre.widgets.base.extend(
             this.bindData(this._selectedItem);
             this._uniqueName = null;
 
-            this._dialog.modal('show');
+            videre.UI.showModal(this._dialog);
             this.clearMsgs(this._dialog);
         }
         else
@@ -130,15 +130,10 @@ videre.widgets.admin.file = videre.widgets.base.extend(
     {
         //if (confirm('Are you sure you wish to remove this entry?'))
         var self = this;
-        videre.UI.prompt(this.getId('DeleteEntry'), 'Delete Entry', 'Are you sure you wish to remove this entry?', null,
-            [{
-                text: 'Ok', css: 'btn-primary', close: true, handler: function ()
-                {
-                    self.ajax('~/core/File/Delete', { id: id }, self._delegates.onSaveReturn);
-                    return true;
-                }
-            }, { text: 'Cancel', css: 'btn-default', close: true }]);
-            
+        videre.UI.confirm('Delete Entry', 'Are you sure you wish to remove this entry?', function ()
+        {
+            self.ajax('~/core/File/Delete', { id: id }, self._delegates.onSaveReturn);
+        });            
     },
 
     handleAction: function(action, id)
@@ -185,9 +180,7 @@ videre.widgets.admin.file = videre.widgets.base.extend(
 
     _onActionClicked: function(e)
     {
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
+        var ctl = $(e.target).closest('[data-action]');
         this.handleAction(ctl.data('action'), ctl.data('id'));
     },
 

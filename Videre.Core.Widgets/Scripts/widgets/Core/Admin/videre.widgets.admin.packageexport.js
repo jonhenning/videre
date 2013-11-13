@@ -162,9 +162,7 @@ videre.widgets.admin.packageexport = videre.widgets.base.extend(
 
     _onActionClicked: function(e)
     {
-        var ctl = $(e.target);
-        if (e.target.tagName.toLowerCase() != 'a')  //if clicked in i tag, need a
-            ctl = ctl.parent();
+        var ctl = $(e.target).closest('[data-action]');
         this._handleAction(ctl.data('action'), ctl.data('id'));
     },
 

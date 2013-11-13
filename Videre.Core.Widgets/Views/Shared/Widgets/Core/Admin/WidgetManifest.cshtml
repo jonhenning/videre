@@ -3,6 +3,7 @@
 @using Models = Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
 @model Models.Widget
 
 @{
@@ -14,81 +15,81 @@
 
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
-    
-    <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Widget Manifest Administration")</legend>}
-        
-        <p>@Html.Raw(Model.GetText("Instructions.Text", "The Widget Manifest defines what widgets can be placed in a template.  You can organize your widgets into categories if you like.  Also, if your widget exposes custom content, you need to specify additional information to allow the content to be edited within the designer. "))</p>
 
-        <div class="container">
-            <div class="row">
-                <div class="btn-toolbar span12">
-                    <div class="btn-group">
-                        <a class="btn btn-small" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
+    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "Widget Manifest Administration") }));}
+
+    <p>@Html.Raw(Model.GetText("Instructions.Text", "The Widget Manifest defines what widgets can be placed in a template.  You can organize your widgets into categories if you like.  Also, if your widget exposes custom content, you need to specify additional information to allow the content to be edited within the designer. "))</p>
+
+    <div class="row">
+        <div class="btn-toolbar col-md-12">
+            <div class="btn-group">
+                @Html.Bootstrap().Button("btnNew").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewEntry.Text", "New Entry", true).Icon("glyphicon glyphicon-plus")
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                <thead>
+                    <tr>
+                        <th style="width: 62px"></th>
+                        <th>@Model.GetText("Category.Text", "Category")</th>
+                        <th>@Model.GetText("Name.Text", "Name")</th>
+                        <th>@Model.GetText("Title.Text", "Title")</th>
+                    </tr>
+                </thead>
+                <tbody id="@Model.GetId("ItemList")"></tbody>
+            </table>
+            <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                <tr>
+                    <td>
+                        <div class="btn-group">
+                            @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                            @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                        </div>
+                    </td>
+                    <td>{{:Category}}</td>
+                    <td>{{:Name}}</td>
+                    <td>{{:Title}}</td>
+                </tr>
+            </script>
+        </div>
+    </div>
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("EditDialogText.Text", "Edit Manifest")
+                </div>
+                <div class="modal-body">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+
+                    @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+                    { 
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General"), Active = true},
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ContentTab"), Text = @Model.GetText("Content.Text", "Content")}
+                    }))
+                    
+                    <div class="tab-content">
+                        <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name"), BootstrapUnits.GridSize.MediumDevice9)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Title.Text", "Title").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Title"), BootstrapUnits.GridSize.MediumDevice9)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Category.Text", "Category").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Category"), BootstrapUnits.GridSize.MediumDevice9)
+                        </div>
+                        <div class="form-horizontal tab-pane" id="@Model.GetId("ContentTab")">
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ContentProvider.Text", "Content Provider").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("ContentProvider"), BootstrapUnits.GridSize.MediumDevice9)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("EditorType.Text", "Editor Type").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("EditorType"), BootstrapUnits.GridSize.MediumDevice9)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("EditorPath.Text", "Editor Path").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("EditorPath"), BootstrapUnits.GridSize.MediumDevice9)
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="span12">
-                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
-                        <thead>
-                            <tr>
-                                <th style="width: 62px"></th>
-                                <th>@Model.GetText("Category.Text", "Category")</th>
-                                <th>@Model.GetText("Name.Text", "Name")</th>
-                                <th>@Model.GetText("Title.Text", "Title")</th>
-                            </tr>
-                        </thead>
-                        <tbody id="@Model.GetId("ItemList")"></tbody>
-                    </table>
-                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
-                        <tr>
-                            <td>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="edit"><i class="icon-pencil"></i></a>
-                                <a class="btn btn-mini" data-id="{{:Id}}" data-action="delete"><i class="icon-trash"></i></a>
-                            </td>
-                            <td>{{:Category}}</td>
-                            <td>{{:Name}}</td>
-                            <td>{{:Title}}</td>
-                        </tr>
-                    </script>
-@*                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
-                    </table>
-                    <div id="@Model.GetId("ItemPager")" class="scroll" style="text-align:center;"></div>
-*@
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
                 </div>
             </div>
-        </div>
-    </fieldset>
-    <br />
-    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="display: none;">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            @Model.GetText("EditDialogText.Text", "Edit Manifest")
-        </div>
-        <div class="modal-body">
-            @{Html.RenderPartial("WidgetHeader", Model);}
-
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
-                <li class=""><a href="#@Model.GetId("ContentTab")" data-toggle="tab">@Model.GetText("Content.Text", "Content")</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
-                    @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
-                    @Html.InputControlGroup(Model, "txtTitle", "Title.Text", "Title", "Title")
-                    @Html.InputControlGroup(Model, "txtCategory", "Category.Text", "Category", "Category")
-                </div>
-                <div class="form-horizontal tab-pane" id="@Model.GetId("ContentTab")">
-                    @Html.InputControlGroup(Model, "txtContentProvider", "ContentProvider.Text", "Content Provider", "ContentProvider")
-                    @Html.InputControlGroup(Model, "txtEditorType", "EditorType.Text", "Editor Type", "EditorType")
-                    @Html.InputControlGroup(Model, "txtEditorPath", "EditorPath.Text", "Editor Path", "EditorPath")
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
-            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
         </div>
     </div>
 </div>
