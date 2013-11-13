@@ -7,32 +7,27 @@
 
 @{
     
-    Html.RegisterControlPresenter(Model, "videre.widgets.account.userprofile", new Dictionary<string, object>() {{"data", Account.GetUserProfile() }});
+    Html.RegisterControlPresenter(Model, "videre.widgets.account.userprofile", new Dictionary<string, object>() { { "data", Account.GetUserProfile() } });
 
 }
 
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
-    
-    <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "User Profile")</legend>}
+    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "User Profile") }));}
 
-        <div class="container">
-            <div class="row">
-                <div class="span6">
-                    <div class="form-horizontal">
-                        @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
-                        @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", "Email")
-                        @Html.InputControlGroup(Model, "txtLocale", "Locale.Text", "Locale", "Locale")
-                        @Html.InputControlGroup(Model, "txtPassword1", "ChangePassword.Text", "Change Password", "Password1", "", "password")
-                        @Html.InputControlGroup(Model, "txtPassword2", "ConfirmPassword.Text", "Confirm Password", "Password2", "", "password")
-                    </div>
-                    <div class="videre actions form-actions">
-                        <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetText("Save.Text", "Save")</a>
-                    </div>
-                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-horizontal">
+                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Email.Text", "Email").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Email().DataColumn("Email").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Locale.Text", "Locale").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Locale"), BootstrapUnits.GridSize.MediumDevice3)
+                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").DataColumn("Password").DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ConfirmPassword.Text", "Confirm Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword2").DataColumn("Password").MustMatch("txtPassword").DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+            </div>
+            <div class="videre-form-actions">
+                @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
             </div>
         </div>
-    </fieldset>
+    </div>
 </div>
 

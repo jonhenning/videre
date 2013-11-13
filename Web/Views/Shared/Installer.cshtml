@@ -142,7 +142,7 @@
         </div>
         <div class="clearfix"></div>
         <div class="videre-form-actions">
-            <a class="btn btn-primary" id="@Model.GetId("btnInstall")">Install</a>
+            @Html.Bootstrap().Button("btnInstall").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Install.Text", "Install")
         </div>
 
     </div>
