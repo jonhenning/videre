@@ -140,6 +140,7 @@
     <Compile Include="Extensions\Bootstrap\IFluentBootstrapBaseControl.cs" />
     <Compile Include="Extensions\Bootstrap\BootstrapBaseControlModel.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
+    <Compile Include="Extensions\TagBuilderExtensions.cs" />
     <Compile Include="Providers\DynamicContentProviderFactory.cs" />
     <Compile Include="Providers\FastTemplateDynamicContentProvider.cs" />
     <Compile Include="Providers\IDynamicContentProvider.cs" />
