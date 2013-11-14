@@ -70,14 +70,19 @@ videre.widgets.admin.template = videre.widgets.base.extend(
         this.getControl('btnNew').click(videre.createDelegate(this, this._onNewClicked));
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
         this.getControl('btnCancel').click(videre.createDelegate(this, this._onCancelClicked));
-        this.getControl('LayoutTab').find('.widget-manifest').draggable({
+        this.getControl('LayoutTab').find('[data-manifestid]').draggable({
+            addClasses: false,
             opacity: 0.7,
             appendTo: this._widget,
             connectToSortable: '.pane',
-            helper: 'clone'
+            helper: 'clone',
+            start: function (e, ui)
+            {
+                $(ui.helper).css('width', '200px');
+            }
         });
 
-        this.getControl('ddlLayout').change(videre.createDelegate(this, this._onLayoutChanged));
+        this.getControl('[data-column="LayoutName"]').change(videre.createDelegate(this, this._onLayoutChanged));
         this.refreshTemplates();
     },
 
@@ -132,7 +137,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
                 for (var cell = 0; cell < layout.Panes[row].length; cell++)
                 {
                     var p = layout.Panes[row][cell];
-                    html += String.format('<div data-title="{0}" data-pane="{0}" class="pane {2}" style="{1}"></div>', p.Name, p.DesignerStyle != null ? p.DesignerStyle : 'min-height: 100px;',
+                    html += String.format('<div data-title="{0}" data-pane="{0}" class="pane {2}" style="padding:2px; {1}"></div>', p.Name, p.DesignerStyle != null ? p.DesignerStyle : 'min-height: 100px;',
                         p.DesignerCss != null ? p.DesignerCss : 'span5');
                 }
                 html += '</div>';
@@ -199,7 +204,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
     showEditTemplate: function()
     {
         this.bindData(this._selectedTemplate, this.getControl('GeneralTab'));
-        this.bindPanes(this.getControl('ddlLayout').val());
+        this.bindPanes(this.getControl('[data-column="LayoutName"]').val());
         this.showEdit();
     },
 
@@ -434,17 +439,15 @@ videre.widgets.admin.template = videre.widgets.base.extend(
         var manifest = this._manifestDataDict[manifestId];
         var name = manifest.Title;
         return $(String.format(
-            '<div class="navbar widget-container" id="{0}">' +
-                '<div class="navbar-inner" style="padding: 0;">' +
-                    '<div class="container" style="width: auto;">' +
-                        '<ul class="nav"><li><a style="padding-right:0; padding-left: 4px;" class="hide-overflow" title="{1}"><i class="icon-cog"></i> {1}</a></li></ul>' +
-                        '<ul class="nav pull-right">' +
-                            '<li class="divider-vertical" style="margin:0;"></li>' +
+            '<div class="navbar navbar-default widget-container" id="{0}" style="min-height: 20px;">' +
+                '<div class="navbar-collapse collapse">' +
+                        '<ul class="nav navbar-nav"><li style="min-width: 200px"><a style="padding: 4px 0 4px 0;" class="hide-overflow" title="{1}"><span class="glyphicon glyphicon-cog"></span> {1}</a></li></ul>' +
+                        '<ul class="nav navbar-nav navbar-right">' +
                             '<li class="dropdown">' +
-                                '<a class="dropdown-toggle" data-toggle="dropdown" ><b class="caret"></b></a>' +
+                                '<a class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 4px; padding-bottom: 4px;" ><b class="caret"></b></a>' +
                                 '<ul class="dropdown-menu">' +
-                                    '<li><a data-action="edit"><i class="icon-pencil"></i> Edit</a></li>' +
-                                    '<li><a data-action="remove"><i class="icon-trash"></i> Remove</a></li>' +
+                                    '<li><a data-action="edit"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>' +
+                                    '<li><a data-action="remove"><span class="glyphicon glyphicon-trash"></span> Remove</a></li>' +
                                 '</ul>' +
                             '</li>' +
                         '</ul>' +
@@ -460,7 +463,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
 
     _onLayoutChanged: function()
     {
-        this.bindPanes(this.getControl('ddlLayout').val());
+        this.bindPanes(this.getControl('[data-column="LayoutName"]').val());
     }
 
 });

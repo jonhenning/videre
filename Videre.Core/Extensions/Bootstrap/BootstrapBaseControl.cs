@@ -67,6 +67,12 @@ namespace Videre.Core.Extensions.Bootstrap
             return _control;
         }
 
+        public TControl StyleAttribute(string key, string value)
+        {
+            _model.styleAttributes.AddSafe(key, value);
+            return _control;
+        }
+
         public TControl ToolTip(string token, string text)
         {
             _model.title = GetText(token, text);
@@ -92,7 +98,7 @@ namespace Videre.Core.Extensions.Bootstrap
 
         public void AddHtmlAttributes(object htmlAttributes)
         {
-            this._model.htmlAttributes.Merge(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes)); //htmlAttributes.ToDictionary();
+            this._model.htmlAttributes.Merge(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes)); 
         }
         public TControl HtmlAttributes(object htmlAttributes)
         {
@@ -132,6 +138,9 @@ namespace Videre.Core.Extensions.Bootstrap
             if (!string.IsNullOrEmpty(_model.title))
                 ctl.Attributes.AddSafe("title", _model.title);
             ctl.MergeAttributes(_model.htmlAttributes);
+
+            foreach (var style in _model.styleAttributes)
+                ctl.AddCssStyle(style.Key, style.Value.ToString());
 
             foreach (var css in _model.CssClasses.Distinct())
                 ctl.AddCssClass(css);

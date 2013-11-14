@@ -2,7 +2,7 @@
 	Name: "SidebarRight",
 	Panes: 
 	[
-		[ {Name: "Main", DesignerCss: 'span4', DesignerStyle: 'height: 300px;' }, {Name: "Sidebar", DesignerCss: 'span2', DesignerStyle: 'height: 300px;' } ], 
-		[ {Name: "Footer", DesignerStyle: "min-height: 50px", DesignerCss: 'span6'} ]
+		[ {Name: "Main", DesignerCss: 'col-md-8', DesignerStyle: 'height: 300px;' }, {Name: "Sidebar", DesignerCss: 'col-md-4', DesignerStyle: 'height: 300px;' } ], 
+		[ {Name: "Footer", DesignerStyle: "min-height: 50px", DesignerCss: 'col-md-12'} ]
 	]
 }

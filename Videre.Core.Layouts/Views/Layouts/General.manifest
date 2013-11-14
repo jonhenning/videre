@@ -2,7 +2,7 @@
 	Name: "General",
 	Panes: 
 	[
-		[ {Name: "Main"} ], 
-		[ {Name: "Footer", DesignerStyle: "min-height: 50px"} ]
+		[ {Name: "Main", DesignerCss: 'col-md-12'} ], 
+		[ {Name: "Footer", DesignerCss: 'col-md-12', DesignerStyle: "min-height: 50px"} ]
 	]
 }

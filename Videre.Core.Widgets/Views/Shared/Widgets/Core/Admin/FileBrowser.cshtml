@@ -6,8 +6,6 @@
 @model Models.Widget
 
 @{
-    //Html.RegisterWebReferenceGroup("datatables");
-    //Html.RegisterWebReferenceGroup("dynatree");
     var editorData = new Dictionary<string, object>() { };
     var isModal = true;
     if (!string.IsNullOrEmpty(Request.QueryString["CKEditor"]))
@@ -33,64 +31,64 @@
 
     @{if (isModal)
       { <text>
-    <div id="@Model.GetId("Dialog")" class="modal fade" style="width: 700px; display: none;">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            @Model.GetText("BrowseImages.Text", "Browse Images")
-        </div>
-        <div class="modal-body">
+    <div id="@Model.GetId("Dialog")" class="modal fade" style="display: none;">
+        <div class="modal-dialog" style="width: 700px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("BrowseImages.Text", "Browse Images")
+                </div>
+                <div class="modal-body">
         </text>
      }}
-    
-            <div class="container">
-                <div class="row">
-                    <div class="span12">
-                        <ul class="breadcrumb" id="@Model.GetId("BreadcrumbList")">
-                        </ul>
-                        <script id="@Model.GetId("BreadcrumbListTemplate")" type="text/html">
-                            <li class="{{:active ? 'active' : ''}}">
-                                {{if !active}}
-                                    <a data-path="{{:path}}" data-action="navigate">{{:name}}</a>
-                                    <span class="divider">/</span>
-                                {{/if}}
-                                {{if active}}
-                                    {{:name}} 
-                                {{/if}}
-                            </li>
-                        </script>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="span12">
-                        <ul class="thumbnails" id="@Model.GetId("ImageList")">
-                        </ul>
-                        <script id="@Model.GetId("ImageListTemplate")" type="text/html">
-                            <li class="span3">
-                                    {{if !isFolder}}
-                                        <a class="thumbnail" data-id="{{:Id}}" data-action="select">
-                                            <img src="@Url.Content("~/Core/f/"){{:Url}}" title="{{:Url}}" />
-                                        </a>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul class="breadcrumb" id="@Model.GetId("BreadcrumbList")">
+                            </ul>
+                            <script id="@Model.GetId("BreadcrumbListTemplate")" type="text/html">
+                                <li class="{{:active ? 'active' : ''}}">
+                                    {{if !active}}
+                                        <a data-path="{{:path}}" data-action="navigate">{{:name}}</a>
+                                        <span class="divider">/</span>
                                     {{/if}}
-                                    {{if isFolder}}
-                                        <a class="thumbnail" data-path="{{:path}}" data-action="navigate">
-                                            <img src="@Url.Content("~/Content/Images/folder.png")" />
-                                            <p>
-                                            {{:name}}
-                                            </p>
-                                        </a>
+                                    {{if active}}
+                                        {{:name}} 
                                     {{/if}}
-                            </li>
-                        </script>
+                                </li>
+                            </script>
+                        </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="@Model.GetId("ImageList")">
+                            </div>
+                            <script id="@Model.GetId("ImageListTemplate")" type="text/html">
+                                <div class="col-xs-3">
+                                        {{if !isFolder}}
+                                            <a class="thumbnail" data-id="{{:Id}}" data-action="select">
+                                                <img src="@Url.Content("~/Core/f/"){{:Url}}" title="{{:Url}}" class="img-responsive" />
+                                            </a>
+                                        {{/if}}
+                                        {{if isFolder}}
+                                            <a class="thumbnail" data-path="{{:path}}" data-action="navigate" style="text-align: center">
+                                                <span class="glyphicon glyphicon-folder-open" style="font-size: 25px;"></span>
+                                                <p>
+                                                {{:name}}
+                                                </p>
+                                            </a>
+                                        {{/if}}
+                                </div>
+                            </script>
+                        </div>
                     </div>
-                </div>
-            </div>
 
     @{if (isModal)
       { 
-@:        </div>
-@:        <div class="modal-footer">
-@*@:            <a class="btn btn-primary" id="@Model.GetId("btnOkBrowseImage")">@Model.GetText("Ok.Text", "Ok")</a>*@
-@:            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+@:              </div>
+@:              <div class="modal-footer">
+@*@:                    <a class="btn btn-primary" id="@Model.GetId("btnOkBrowseImage")">@Model.GetText("Ok.Text", "Ok")</a>*@
+@:                  <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+@:              </div>
+@:          </div>
 @:        </div>
 @:    </div>
       }

@@ -13,6 +13,7 @@ namespace Videre.Core.Extensions.Bootstrap
         TControl Css(string css);
         TControl DataColumn(string name);
         TControl DataAttribute(string key, string value);
+        TControl StyleAttribute(string key, string value);
         TControl ToolTip(string token, string defaultText);
 
     }

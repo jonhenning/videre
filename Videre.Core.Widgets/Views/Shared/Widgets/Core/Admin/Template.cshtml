@@ -3,6 +3,9 @@
 @using Models = Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
+@using CoreServices = Videre.Core.Services;
+@using Plugin = Videre.Core.Extensions.Bootstrap.Controls.BootstrapDropDownListModel.Plugin;
 @model Models.Widget
 
 @{
@@ -14,7 +17,7 @@
     var themes = Videre.Core.Services.UI.GetThemes();
     var isLayout = Model.GetAttribute("IsLayout", false);
 
-    Html.RegisterControlPresenter(Model, "videre.widgets.admin.template", new Dictionary<string,object>(){
+    Html.RegisterControlPresenter(Model, "videre.widgets.admin.template", new Dictionary<string, object>(){
         {"manifestData", manifests},
         {"layoutData", layouts},
         {"isLayout", isLayout}
@@ -23,125 +26,124 @@
 
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
-    <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Template Administration")</legend>}
-            
-        <p>@Html.Raw(Model.GetText("Instructions.Text", "Template administration allows you to create new pages to view along with specifying their layout and widgets.  The general tab allows you to choose the layout, roles, title, and one or more urls to associate with your template.  The layout tabl allows you to drag widgets onto your layout's panes.  Additionally, some widgets like Text/Html provide an editor to put content in when you click the menu and then edit."))</p>
-        <br />
-        <div class="container">
-            <div class="row">
-                <div class="span3">
-                    <div class="btn-toolbar">
+    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "Template Administration") }));}
+
+    <p>@Html.Raw(Model.GetText("Instructions.Text", "Template administration allows you to create new pages to view along with specifying their layout and widgets.  The general tab allows you to choose the layout, roles, title, and one or more urls to associate with your template.  The layout tabl allows you to drag widgets onto your layout's panes.  Additionally, some widgets like Text/Html provide an editor to put content in when you click the menu and then edit."))</p>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group">
+                    @Html.Bootstrap().Button("btnNew").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewEntry.Text", "New Entry", true).Icon("glyphicon glyphicon-plus")
+                </div>
+            </div>
+            <div id="@Model.GetId("Tree")" style="overflow: auto; height: 500px; padding:0; margin:0;" class="col-md-12"></div>
+        </div>
+        <div id="@Model.GetId("TemplateCtr")" class="col-md-9" style="display: none;">
+            <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                <thead>
+                    <tr>
+                        <th></th>
+                        @{if (!isLayout)
+                          {                               
+                            <th>@Model.GetText("Title.Text", "Title")</th>
+                          }}
+                        <th>@Model.GetText("Layout.Text", "Layout")</th>
+                    </tr>
+                </thead>
+                <tbody id="@Model.GetId("ItemList")"></tbody>
+            </table>
+            <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                <tr>
+                    <td>
                         <div class="btn-group">
-                            <a class="btn btn-small" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetPortalText("NewEntry.Text", "New Entry")</a>
+                            @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                            @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
                         </div>
-                    </div>
-                    <div id="@Model.GetId("Tree")" style="overflow: auto; height: 500px; padding:0; margin:0;" class="span3"></div>
-                </div>
-                <div id="@Model.GetId("TemplateCtr")" class="span9" style="display: none;">
-                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                @{if (!isLayout)
-                                {                               
-                                <th>@Model.GetText("Title.Text", "Title")</th>
-                                }}
-                                <th>@Model.GetText("Layout.Text", "Layout")</th>
-                            </tr>
-                        </thead>
-                        <tbody id="@Model.GetId("ItemList")"></tbody>
-                    </table>
-                    <script id="@Model.GetId("ItemListTemplate")" type="text/html">
-                        <tr>
-                            <td>
-                                <div class="btn-group">
-                                    @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
-                                    @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
-                                </div>
-                            </td>
-                            @{if (!isLayout)
-                            {                               
-                            <td>{{:Title}}</td>
-                            }}
-                            <td>{{:LayoutName}}</td>
-                        </tr>
-                    </script>
-                </div>
-                <div id="@Model.GetId("TemplateEdit")" class="span9" style="display: none;">
-                    @{Html.RenderPartial("WidgetHeader", Model);}
-                            
-                    <ul id="@Model.GetId("Tabs")" class="nav nav-tabs">
-                        <li class="active"><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
-                        <li><a href="#@Model.GetId("LayoutTab")" data-toggle="tab">@Model.GetText("Layout.Text", "Layout")</a></li>
-                    </ul>
+                    </td>
+                    @{if (!isLayout)
+                      {                               
+                        <td>{{:Title}}</td>
+                      }}
+                    <td>{{:LayoutName}}</td>
+                </tr>
+            </script>
+        </div>
+        <div id="@Model.GetId("TemplateEdit")" class="col-md-9" style="display: none;">
+            @{Html.RenderPartial("WidgetHeader", Model);}
 
-                    <div class="tab-content" style="overflow: auto; height: 420px;">
-                        <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
-                            @*@Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }), "span6")*@
-                            @Html.DropDownControlGroup(Model, "ddlLayout", "Layout.Text", "Layout", "LayoutName", layouts.Select(l => new SelectListItem() { Value = l.Name, Text = l.Name }), "input-xxlarge")
-                            @Html.DropDownControlGroup(Model, "ddlTheme", "Theme.Text", "Theme", "ThemeName", themes.Select(l => new SelectListItem() { Value = l.Name, Text = l.Name }), "input-xxlarge", new SelectListItem() { Text = "", Value = "" })
-                            @Html.RoleControlGroup(Model, "ddlRoles", "Roles.Text", "Roles", "Roles", inputCss: "input-xxlarge")
-                            @Html.AuthorizedControlGroup(Model, "ddlAuthentication", "Authentication.Text", "Authentication", "Authenticated")
-                            @Html.MultiSelectControlGroup(Model, "ddlWebReferences", "WebReferences.Text", "Web References", "WebReferences", false, Videre.Core.Services.Web.GetWebReferences().Select(r => new SelectListItem() { Text = r.Name, Value = r.Name } ).ToList())
+            @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+            { 
+                new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General"), Active = true, Icon = "glyphicon glyphicon-cog" },
+                new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("LayoutTab"), Text = @Model.GetText("Layout.Text", "Layout"), Icon = "glyphicon glyphicon-tasks" }
+            }))
 
-                            @{if (!isLayout)
-                            {                               
-                                @Html.InputControlGroup(Model, "txtTitle", "Title.Text", "Title", "Title", "input-xxlarge")
-                                @Html.TextAreaControlGroup(Model, "txtUrls", "Urls.Text", "Urls", "Urls", "list", "input-xxlarge", 3)
-                            }}
-                        </div>
-                        <div class="form-horizontal tab-pane" id="@Model.GetId("LayoutTab")">
-                            <div class="row">
-                                <div class="accordion span3" id="@Model.GetId("WidgetToolbar")" style="margin-bottom: 0;">
-                                    <div class="accordion-group">
-                                    @{
-                                        var containerId = 0;
-                                        var categories = manifests.Select(m => m.Category).Distinct().OrderBy(m => m).ToList();
-                                        var minHeight = 420 - (categories.Count * 32);
+            <div class="tab-content">
+                <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
+                    @{if (!isLayout)
+                      {                               
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Title.Text", "Title").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Title"), BootstrapUnits.GridSize.MediumDevice9)
+                        //@Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Urls.Text", "Urls").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextArea().Rows(3).ControlType("list").DataColumn("Urls"), BootstrapUnits.GridSize.MediumDevice9)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Urls.Text", "Urls").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TagsInput().DataColumn("Urls"), BootstrapUnits.GridSize.MediumDevice9)
+                      }}
+                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Layout.Text", "Layout").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().Options(layouts.Select(l => new SelectListItem() { Value = l.Name, Text = l.Name })).Plugin(Plugin.BootstrapSelect).DataColumn("LayoutName"), BootstrapUnits.GridSize.MediumDevice9)
+                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Theme.Text", "Theme").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().Options(themes.Select(l => new SelectListItem() { Value = l.Name, Text = l.Name })).Plugin(Plugin.BootstrapSelect).DataColumn("ThemeName"), BootstrapUnits.GridSize.MediumDevice9)
+                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Roles.Text", "Roles").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().RoleList().Plugin(Plugin.BootstrapSelect).Multiple().DataColumn("Roles"), BootstrapUnits.GridSize.MediumDevice9)
+                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Authentication.Text", "Authentication").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().AuthorizedList().DataColumn("Authenticated").Plugin(Plugin.BootstrapSelect), BootstrapUnits.GridSize.MediumDevice9)
+                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("WebReferences.Text", "Web References").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().Plugin(Plugin.BootstrapSelect).Options(CoreServices.Web.GetWebReferences().Select(r => new SelectListItem() { Text = r.Name, Value = r.Name } ).ToList()).DataColumn("WebReferences").Multiple(), BootstrapUnits.GridSize.MediumDevice9)
+
+                </div>
+                <div class="form-horizontal tab-pane" id="@Model.GetId("LayoutTab")">
+                    <div class="row">
+                        <div class="col-md-3" id="@Model.GetId("WidgetToolbar")" style="margin-bottom: 0;">
+                            <div class="panel panel-default">
+                                @{
+                                    var containerId = 0;
+                                    var categories = manifests.Select(m => m.Category).Distinct().OrderBy(m => m).ToList();
+                                    var minHeight = 420 - (categories.Count * 32);
                                     foreach (var c in categories)
                                     {
                                         var category = string.IsNullOrEmpty(c) ? "(none)" : c;
                                         containerId++;
-                                        <div class="accordion-heading ui-state-default">
-                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#@Model.GetId("WidgetToolbar")" href="@("#collapse" + containerId)" style="padding: 5px;">
-                                                <i class="icon-th-list"></i> @category
+                                    <div class="panel-heading" style="padding: 2px;">
+                                        <h6 class="panel-title">
+                                            <span class="glyphicon glyphicon-list-alt"></span>
+                                            <a data-toggle="collapse" data-parent="#@Model.GetId("WidgetToolbar")" href="@("#" + Model.GetId("collapse" + containerId))" style="padding: 5px;">
+                                                @category
                                             </a>
-                                        </div>
-                                        <div id="@("collapse" + containerId)" class="accordion-body collapse @(containerId == 1 ? "in" : "")">
-                                            <div class="accordion-inner videre dark-fill" style="padding: 2px; min-height: @(minHeight)px;">
-                                                    <div>
-                                        @foreach(var m in manifests.Where(m => m.Category == c).OrderBy(m => m.Name))
-                                        {
-                                                        <div class="btn btn-mini widget-manifest" data-manifestid="@m.Id" style="width: 200px; text-align: left; margin-bottom: 1px;"><i class="icon-cog"></i> @m.Title</div>
-                                        }
-                                                    </div>
+                                        </h6>
+                                    </div>
+                                    <div id="@(Model.GetId("collapse" + containerId))" class="panel-collapse collapse @(containerId == 1 ? "in" : "")">
+                                        <div class="panel-body videre dark-fill" style="padding: 2px; min-height: @(minHeight)px;">
+                                            <div>
+                                                @foreach (var m in manifests.Where(m => m.Category == c).OrderBy(m => m.Name))
+                                                {
+                                                    <div class="btn btn-default btn-xs col-md-12" data-manifestid="@m.Id" style="text-align: left;"><span class="glyphicon glyphicon-cog"></span> @m.Title</div>                                                   
+                                                }
                                             </div>
                                         </div>
-                                    }}
                                     </div>
-                                </div>
-                                <div class="span6 control-group designer-panes" id="@Model.GetId("Panes")" style="margin-left: 2px;">
-                                </div>
+                                    }}
                             </div>
                         </div>
-                    </div>
-                    <div class="form-actions">
-                        <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
-                        <a class="btn" id="@Model.GetId("btnCancel")">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+                        <div class="col-md-8 control-group designer-panes" id="@Model.GetId("Panes")" style="margin-left: 2px;">
+                        </div>
                     </div>
                 </div>
-                @{foreach (var manifest in manifests)
-                    {
-                        Html.RenderWidgetEditor(manifest);
-                    }
-                }
             </div>
-            <div class="videre actions form-actions">
-                @*<a class="btn" href="@Url.Content("~/core/Portal/ExportTemplates")"><i class="icon-file"></i> @Model.GetPortalText("ExportTemplates.Text", "Export Templates")</a>*@
+            <div class="videre-form-actions">
+                @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
+                @Html.Bootstrap().Button("btnCancel").Text("Cancel.Text", "Cancel", true)
             </div>
-
         </div>
-    </fieldset>
+        @{foreach (var manifest in manifests)
+          {
+              Html.RenderWidgetEditor(manifest);
+          }
+        }
+    </div>
+@*    <div class="videre actions form-actions">
+        <a class="btn" href="@Url.Content("~/core/Portal/ExportTemplates")"><i class="icon-file"></i> @Model.GetPortalText("ExportTemplates.Text", "Export Templates")</a>
+    </div>*@
+
 </div>
 

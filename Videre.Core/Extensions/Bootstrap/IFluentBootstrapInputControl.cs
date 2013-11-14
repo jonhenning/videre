@@ -9,6 +9,7 @@ namespace Videre.Core.Extensions.Bootstrap
         TControl Val(string text);
 
         TControl DataType(string type);
+        TControl ControlType(string type);
         TControl MustMatch(string controlId);
         TControl Required();
         TControl Required(bool required);

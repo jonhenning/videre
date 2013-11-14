@@ -60,6 +60,12 @@ namespace Videre.Core.Extensions.Bootstrap
             return new BootstrapTextBox(Html, id).DataType("time").Plugin(plugin);
         }
 
+        public IBootstrapDropDownList TagsInput(string id = null, string plugin = null)
+        {
+            plugin = plugin ?? BootstrapDropDownListModel.Plugin.BootstrapTagsInput.GetDescription();
+            return new BootstrapDropDownList(Html, id).Plugin(plugin).Multiple(); //DONT DO THIS.DataAttribute("role", "tagsinput");
+        }
+
         public IBootstrapTextBox DateTime(string id = null)
         {
             return new BootstrapTextBox(Html, id).DataType("time").Plugin(BootstrapTextBoxModel.Plugin.JqueryUITimePicker);

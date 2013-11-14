@@ -1,8 +1,0 @@
-﻿{
-	Name: "General",
-	Panes: 
-	[
-		[ {Name: "Main"} ], 
-		[ {Name: "Footer", DesignerStyle: "min-height: 50px"} ]
-	]
-}

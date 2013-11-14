@@ -17,7 +17,9 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             [Description("bootstrap-select")]
             BootstrapSelect,
             [Description("bootstrap-multiselect")]
-            BootstrapMultiSelect
+            BootstrapMultiSelect,
+            [Description("bootstrap-tagsinput")]
+            BootstrapTagsInput
         }
 
         public BootstrapDropDownListModel() : base()
@@ -32,7 +34,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
     public interface IBootstrapDropDownList : IFluentBootstrapInputControl<IBootstrapDropDownList, BootstrapDropDownListModel>
     {
-        IBootstrapDropDownList Options(List<SelectListItem> options);
+        IBootstrapDropDownList Options(IEnumerable<SelectListItem> options);
         IBootstrapDropDownList Plugin(BootstrapDropDownListModel.Plugin plugin);
         IBootstrapDropDownList Plugin(string plugin);
         IBootstrapDropDownList Multiple();
@@ -58,7 +60,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             return this;
         }
 
-        public IBootstrapDropDownList Options(List<SelectListItem> options)
+        public IBootstrapDropDownList Options(IEnumerable<SelectListItem> options)
         {
             this._model.options.AddRange(options);
             return this;
