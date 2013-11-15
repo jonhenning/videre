@@ -11,7 +11,7 @@ namespace Videre.Core.Services
     {
         public static string ThemeAPIUrl
         {
-            get { return Portal.CurrentPortal.GetAttribute("Core", "ThemeAPIUrl", "http://api.bootswatch.com/"); }
+            get { return Portal.CurrentPortal.GetAttribute("Core", "ThemeAPIUrl", "http://api.bootswatch.com/3"); }
         }
 
         public static string ThemePath

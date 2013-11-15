@@ -12,7 +12,7 @@ namespace Videre.Core.Services
     {
         public static List<Models.File> GetByMimeType(string mimeType, string portalId = null)
         {
-            return Get(portalId).Where(f => f.MimeType.IndexOf(mimeType,  StringComparison.InvariantCultureIgnoreCase) > -1).ToList();
+            return Get(portalId).Where(f => string.IsNullOrEmpty(mimeType) || f.MimeType.IndexOf(mimeType,  StringComparison.InvariantCultureIgnoreCase) > -1).ToList();
         }
 
         public static List<Models.File> Get(string portalId = null)

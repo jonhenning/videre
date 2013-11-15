@@ -471,6 +471,13 @@ videre.UI.registerControlType('list',
         init: function (ctl) { }
     });
 
+videre.UI.registerControlType('checkbox',
+    {
+        get: function (ctl) { return ctl.is(':checked'); },
+        set: function (ctl, val) { ctl.prop('checked', val); },
+        init: function (ctl) { }
+    });
+
 //videre.UI.registerControlType('jqueryui-datetimepicker',
 //    {
 //        get: function (ctl) { return ctl.datetimepicker('getDate'); },
@@ -1042,7 +1049,7 @@ if ($.views != null)
         nullOrEmpty: function (val) { return String.isNullOrEmpty(val); },
         coalesce: function (val, label) { return val || (label || ''); },
         deepCoalesce: function (o, s, label) { return Object.deepGet(o, s) || (label || ''); },
-        bindInputs: function (data, attributes, keyName, selectControlType, inputControlType) //todo: not sure this belongs in videre.js...  
+        bindInputs: function (data, attributes, keyName) //todo: not sure this belongs in videre.js...  
         {
             keyName = keyName != null ? keyName : data.Name;
             var ctl;
@@ -1051,9 +1058,7 @@ if ($.views != null)
             dataValue = dataValue || data.DefaultValue;
             if (data.Values.length > 0)
             {
-                ctl = $('<select>').attr('data-column', keyName);
-                if (selectControlType != null)
-                    ctl.attr('data-controltype', selectControlType);
+                ctl = $('<select>').addClass('form-control').attr('data-column', keyName);
 
                 $.each(data.Values, function (idx, item)
                 {
@@ -1064,9 +1069,7 @@ if ($.views != null)
             }
             else
             {
-                ctl = $('<input>').attr({ type: data.InputType || 'text', 'data-column': keyName }); //.val(dataValue);
-                if (inputControlType != null)
-                    ctl.attr('data-controltype', inputControlType);
+                ctl = $('<input>').addClass('form-control').attr({ type: data.InputType || 'text', 'data-column': keyName }); //.val(dataValue);
 
                 if (data.DataType)
                     ctl.attr('data-datatype', data.DataType);
@@ -1088,6 +1091,8 @@ if ($.views != null)
                 ctl.attr('required', 'required');
             if (data.DataType)
                 ctl.attr('data-datatype', data.DataType);
+            if (data.ControlType)
+                ctl.attr('data-controltype', data.ControlType);
             if (data.Dependencies != null && data.Dependencies.length > 0)
                 ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
             ctl.appendTo(tempParent);

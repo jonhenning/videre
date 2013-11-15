@@ -9,71 +9,58 @@
     Html.RegisterWebReferenceGroup("datatables");
     
 }
-<div id="@Model.GetId("se_ServerEnvironmentCtr")">
-    <div class="row" style="margin-bottom: 6px;">
-        <div class="span10">
-            <b>@Model.GetText("Server.Text", "Server")</b>
-            <a class="btn btn-mini" data-toggle="collapse" data-parent="#@Model.GetId("se_ServerEnvironmentCtr")" data-target="#@Model.GetId("se_Server")" >+</a>
+<div class="panel-group" id="@Model.GetId("Accordian")">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title"><span class="glyphicon glyphicon-hdd"></span>&nbsp;<a data-toggle="collapse" data-parent="#@Model.GetId("Accordian")" href="#@Model.GetId("ServerPanel")">@Model.GetText("Server.Text", "Server")</a></h4>
         </div>
-    </div>
-    <div class="row collapse" id="@Model.GetId("se_Server")">
-        <div class="span10">
-            <table class="table table-striped table-bordered table-condensed" style="font-size: small">
-                <tbody>
-                    <tr>
-                        <td>@Model.GetText("ServerOS.Text", "Server OS")</td>
-                        <td>@System.Environment.OSVersion</td>
-                    </tr>
-                    <tr>
-                        <td>@Model.GetText("IISVersion.Text", "IIS Version")</td>
-                        <td>@Request.ServerVariables["SERVER_SOFTWARE"]</td>
-                    </tr>
-                    <tr>
-                        <td>@Model.GetText("InstallLocation.Text", "Install Location")</td>
-                        <td>@Request.MapPath("~/")</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <hr />
-    <div class="row" style="margin-bottom: 6px;">
-        <div class="span10">
-            <b>@Model.GetText("AssemblyVersions.Text", "Assembly Versions")</b>
-            <a class="btn btn-mini" data-toggle="collapse" data-parent="#@Model.GetId("se_ServerEnvironmentCtr")" data-target="#@Model.GetId("se_AssemblyVersions")" >+</a>
-        </div>
-    </div>
-    <div class="row collapse" id="@Model.GetId("se_AssemblyVersions")">
-        <div class="span10">
-            <table class="table table-striped table-bordered table-condensed" style="font-size: small">
-                <thead>
-                    <tr>
-                        <th>@Model.GetText("AssemblyName.Text", "Assembly Name")</th>
-                        <th>@Model.GetText("Version.Text", "Version")</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                    foreach (var a in AppDomain.CurrentDomain.GetAssemblies().Select(a2 => new {name = a2.GetName().Name, version = a2.GetName().Version }).OrderBy(a2 => a2.name))
-                    {
+        <div id="@Model.GetId("ServerPanel")" class="panel-collapse collapse">
+            <div class="panel-body">
+                <table class="table table-striped table-bordered table-condensed" style="font-size: small">
+                    <tbody>
                         <tr>
-                            <td>@a.name</td>
-                            <td>@a.version</td>
+                            <td>@Model.GetText("ServerOS.Text", "Server OS")</td>
+                            <td>@System.Environment.OSVersion</td>
                         </tr>
-                    }
-                    }
-                </tbody>
-            </table>
+                        <tr>
+                            <td>@Model.GetText("IISVersion.Text", "IIS Version")</td>
+                            <td>@Request.ServerVariables["SERVER_SOFTWARE"]</td>
+                        </tr>
+                        <tr>
+                            <td>@Model.GetText("InstallLocation.Text", "Install Location")</td>
+                            <td>@Request.MapPath("~/")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title"><span class="glyphicon glyphicon-list"></span>&nbsp;<a data-toggle="collapse" data-parent="#@Model.GetId("Accordian")" href="#@Model.GetId("AssembliesPanel")">@Model.GetText("AssemblyVersions.Text", "Assembly Versions")</a></h4>
+        </div>
+        <div id="@Model.GetId("AssembliesPanel")" class="panel-collapse collapse">
+            <div class="panel-body">
+                <table class="table table-striped table-bordered table-condensed" style="font-size: small">
+                    <thead>
+                        <tr>
+                            <th>@Model.GetText("AssemblyName.Text", "Assembly Name")</th>
+                            <th>@Model.GetText("Version.Text", "Version")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var a in AppDomain.CurrentDomain.GetAssemblies().Select(a2 => new { name = a2.GetName().Name, version = a2.GetName().Version }).OrderBy(a2 => a2.name))
+                            {
+                            <tr>
+                                <td>@a.name</td>
+                                <td>@a.version</td>
+                            </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function ()
-    {
-        $('#@Model.GetId("se_ServerEnvironmentCtr")').find('[data-toggle]').click(function(e)
-        {
-            var ctl = $(e.target);
-            ctl.html() == '+' ? ctl.html('-') : ctl.html('+');
-        });
-    });
-</script>

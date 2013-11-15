@@ -152,8 +152,7 @@
     <Content Include="Content\images\folder.png" />
     <Content Include="Content\images\icon-rss.png" />
     <Content Include="Content\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\themes\img\glyphicons-halflings-white.png" />
-    <Content Include="Content\themes\img\glyphicons-halflings.png" />
+    <Content Include="Content\themes\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\videre.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\date.format.js" />
@@ -218,6 +217,9 @@
   <ItemGroup>
     <Content Include="package.manifest" />
     <Content Include="packages.config" />
+    <Content Include="Content\themes\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\themes\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\themes\fonts\glyphicons-halflings-regular.woff" />
     <None Include="SMTPSettings.config.debug" />
     <None Include="log4net.config.debug" />
   </ItemGroup>

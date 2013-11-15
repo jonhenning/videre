@@ -50,15 +50,6 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         this.getControl('btnCreate').click(videre.createDelegate(this, this._onCreateClicked));
         this.getControl('ddlPortals').change(videre.createDelegate(this, this._onPortalChanged));
         this._selectedPortal = this._portalDict[this._selectedPortalId];
-        var uploader = new qq.FileUploaderBasic({
-            button: this.getControl('btnImport')[0],
-            params: {},
-            action: videre.resolveUrl('~/core/package/importpackage'),
-            onSubmit: videre.createDelegate(this, this._onFileSubmit),
-            onComplete: videre.createDelegate(this, this._onFileUploadReturn),
-            showMessage: videre.createDelegate(this, this._onFileMessage),
-            debug: true
-        });
 
         //todo: fix theme for multi-portals!
         this._themeWidget = videre.widgets.register(this._id, videre.widgets.admin.theme, { id: this._id, ns: this._ns, installedThemes: this._installedThemes, themeAPIUrl: this._themeAPIUrl });

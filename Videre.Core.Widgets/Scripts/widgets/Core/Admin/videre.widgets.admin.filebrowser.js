@@ -64,7 +64,7 @@ videre.widgets.admin.filebrowser = videre.widgets.base.extend(
         else
             this.bind('');
 
-        $('a[data-action="filebrowser"]').click(videre.createDelegate(this, this._onBrowseClick));
+        $('[data-action="filebrowser"]').click(videre.createDelegate(this, this._onBrowseClick));
 
     },
 
@@ -159,7 +159,7 @@ videre.widgets.admin.filebrowser = videre.widgets.base.extend(
     _onBrowseClick: function(e)
     {
         var ctl = $(e.target).closest('[data-action]');
-        this._dataControl = $('#' + ctl.data('control'));
+        this._dataControl = ctl.closest('.input-group').find('[data-controltype="filebrowser-input"]'); //$('#' + ctl.data('control'));
         this.show();
     } //,
 

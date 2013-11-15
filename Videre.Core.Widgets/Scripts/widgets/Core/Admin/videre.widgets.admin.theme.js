@@ -66,13 +66,13 @@ videre.widgets.admin.theme = videre.widgets.base.extend(
         this.getControl('ThemeDropdown').find('.text').html(this._selectedTheme == null ? none : this._selectedTheme.Name);
 
         this.getControl('ThemeList').html(this.getControl('ThemeListTemplate').render(this._installedThemes, { currentTheme: this._selectedTheme }));
-        this.getControl('ThemeList').find('a').click(videre.createDelegate(this, this._onThemeAction));
+        this.getControl('ThemeList').find('[data-action]').click(videre.createDelegate(this, this._onThemeAction));
     },
 
     bindDownloadThemes: function()
     {
         this.getControl('DownloadThemeList').html(this.getControl('DownloadThemeListTemplate').render(this._themeData, { installedThemes: this._installedThemeDict }));
-        this.getControl('DownloadThemeList').find('a').click(videre.createDelegate(this, this._onThemeAction));
+        this.getControl('DownloadThemeList').find('[data-action]').click(videre.createDelegate(this, this._onThemeAction));
     },
 
     installTheme: function(name)
@@ -129,7 +129,7 @@ videre.widgets.admin.theme = videre.widgets.base.extend(
             var themeData = {
                 Source: 'bootswatch', Name: theme.name, Description: theme.description, Thumbnail: theme.thumbnail,
                 Files: [
-                    { Type: 'Css', Path: theme['css-min'] }
+                    { Type: 'Css', Path: theme['cssMin'] }
                 ]
             };
             this._themeData.push(themeData);

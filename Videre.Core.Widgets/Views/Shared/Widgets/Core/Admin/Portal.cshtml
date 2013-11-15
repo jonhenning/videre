@@ -3,6 +3,7 @@
 @using Models = Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
 @model Models.Widget
 
 @{
@@ -23,89 +24,79 @@
 
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
-    
-    <fieldset>
-        @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Portal Administration")</legend>}
+    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "Portal Administration") }));}
 
-        <p>@Html.Raw(Model.GetText("Instructions.Text", "Settings specific to the current portal can be configured here."))</p>
 
-        <div class="container">
-            <div class="row">
-                <div class="span4">
-                    <select id="@Model.GetId("ddlPortals")" class="span4"></select>
-                </div>
-                <div class="span4">
-                    <a class="btn" id="@Model.GetId("btnNew")"><i class="icon-plus"></i> @Model.GetText("NewPortal.Text", "New Portal")</a>
+    <p>@Html.Raw(Model.GetText("Instructions.Text", "Settings specific to the current portal can be configured here."))</p>
+
+    <div class="container">
+        <div class="row">
+            <div class="btn-toolbar col-md-4">
+                <div class="btn-group">
+                    @Html.Bootstrap().DropDownList("ddlPortals").InputSize(BootstrapUnits.InputSize.Small).Css("form-control").Append(Html.Bootstrap().Button("btnNew").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewPortal.Text", "New Portal", true).Icon("glyphicon glyphicon-plus"))
                 </div>
             </div>
-            <div class="row">
-                <div class="span12">
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                @{
+                var tabs = new List<Bootstrap.Controls.BootstrapTab>() 
+                { 
+                    new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General"), Active = true, Icon = "glyphicon glyphicon-list-alt" },
+                    new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ServerEnvironmentTab"), Text = @Model.GetText("ServerEnvironment.Text", "Server Environment"), Icon = "glyphicon glyphicon-hdd" },
+                    new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ThemeTab"), Text = @Model.GetText("Themes.Text", "Themes"), Icon = "glyphicon glyphicon-picture" }
+                };
+                foreach (var groupName in Portal.AttributeDefinitions.Keys.OrderBy(s => s))
+                {
+                    var safeGroupName = groupName.Replace(" ", "-").Replace(".", "-");
+                    tabs.Add(new Bootstrap.Controls.BootstrapTab() { Id = Model.GetId("tab" + safeGroupName), Text = groupName, Icon = "glyphicon glyphicon-list-alt"});
+                }
+                }
+                @Html.Bootstrap().Tabs(tabs)
 
-                    <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a href="#@Model.GetId("GeneralTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("General.Text", "General")</a>
-                        </li>
-                        <li>
-                            <a href="#@Model.GetId("ServerEnvironmentTab")" data-toggle="tab"><i class="icon-hdd"></i> @Model.GetText("ServerEnvironment.Text", "Server Environment")</a>
-                        </li>
-                        <li>
-                            <a href="#@Model.GetId("ThemeTab")" data-toggle="tab"><i class="icon-picture"></i> @Model.GetText("Themes.Text", "Themes")</a>
-                        </li>
-@{
-                        foreach (var groupName in Portal.AttributeDefinitions.Keys.OrderBy(s => s))
+                <div class="tab-content" style="min-height: 400px;">
+                    <div class="tab-pane active" id="@Model.GetId("GeneralTab")">
+                        <div class="form-horizontal col-md-6">
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Title.Text", "Title").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Title"), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("LogoUrl.Text", "Logo Url").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().FileBrowser().DataColumn("LogoUrl"), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Aliases.Text", "Aliases").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TagsInput().DataColumn("Aliases"), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Default.Text", "Default").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().CheckBox().DataColumn("Default"), BootstrapUnits.GridSize.MediumDevice2)
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="@Model.GetId("ServerEnvironmentTab")">
+                        @{ Html.RenderPartial("Widgets/Core/Admin/ServerEnvironment"); }
+                    </div>
+
+                    <div class="tab-pane" id="@Model.GetId("ThemeTab")">
+                        @{Html.RenderPartial("Widgets/Core/Admin/Theme", Model);}
+                    </div>
+                    @{
+                        foreach (var groupName in Portal.AttributeDefinitions.Keys)
                         {
                             var safeGroupName = groupName.Replace(" ", "-").Replace(".", "-");
-                            <li>
-                                <a href="#@Model.GetId("tab" + safeGroupName)" data-toggle="tab"><i class="icon-list-alt"></i> @groupName</a>
-                            </li>
-                        }
-}                   </ul>
-
-                    <div class="tab-content" style="min-height:  400px;">
-                        <div class="tab-pane active" id="@Model.GetId("GeneralTab")">
-                            <div class="form-horizontal">
-                                @Html.InputControlGroup(Model, "Name", "Name.Text", "Name", "Name")
-                                @Html.InputControlGroup(Model, "Title", "Title.Text", "Title", "Title")
-                                @Html.InputFileBrowserControlGroup(Model, "LogoUrl", "LogoUrl.Text", "Logo Url", "LogoUrl", "span3")
-                                @Html.TextAreaControlGroup(Model, "Aliases", "Aliases.Text", "Aliases", "Aliases", "list", "span6", 3)
-                                @Html.DropDownControlGroup(Model, "Default", "Default.Text", "Default", "Default", new List<SelectListItem>() {{new SelectListItem() { Value = "false", Text="No"}}, {new SelectListItem() {Value = "true", Text = "Yes"} } })
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="@Model.GetId("ServerEnvironmentTab")">
-                            @{ Html.RenderPartial("Widgets/Core/Admin/ServerEnvironment"); }
-                        </div>
-
-                        <div class="tab-pane" id="@Model.GetId("ThemeTab")">
-                            @{Html.RenderPartial("Widgets/Core/Admin/Theme", Model);}
-                        </div>
-@{
-                foreach (var groupName in Portal.AttributeDefinitions.Keys)
-                    {
-                        var safeGroupName = groupName.Replace(" ", "-").Replace(".", "-");
                         <div class="tab-pane" id="@Model.GetId("tab" + safeGroupName)">
-                            <div class="form-horizontal" id="@Model.GetId("AttributeList-" + safeGroupName)" data-group="@groupName"></div>
+                            <div class="form-horizontal col-md-6" id="@Model.GetId("AttributeList-" + safeGroupName)" data-group="@groupName"></div>
                         </div>
+                        }
                     }
-}
                     <script id="@Model.GetId("AttributeListTemplate")" type="text/html">
-                        <div class="control-group">
-                            <label class="control-label">{{:LabelText}}</label>
-                            <div class="controls" data-type="input">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{{:LabelText}}</label>
+                            <div class="col-md-9" data-type="input">
                                 {{:~bindInputs(#data, ~attributes, '$' + ~groupName + '.' + #data.Name)}}
                             </div>
                         </div>
                     </script>
 
-                    </div>
-                    <div class="videre actions form-actions">
-                        @*<a class="btn" href="@Url.Content("~/core/Portal/ExportPortal")"><i class="icon-file"></i> @Model.GetPortalText("ExportPortal.Text", "Export Portal")</a>*@
-                        <a class="btn" id="@Model.GetId("btnImport")"><i class="icon-gift"></i> @Model.GetPortalText("ImportPackage.Text", "Import Package")</a>
-                        <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
-                    </div>
+                </div>
+                <div class="videre-form-actions">
+                    @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
                 </div>
             </div>
         </div>
-    </fieldset>
+    </div>
 
     <div id="@Model.GetId("CreatePortalDialog")" data-target="#@Model.GetId("CreatePortalDialog")" class="modal fade">
         <div class="modal-header">
@@ -139,7 +130,7 @@
                     @Html.InputControlGroup(Model, "txtUserName", "UserName.Text", "UserName", new Dictionary<string, string>() { { "column", "Name" } }, true)
                     @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", new Dictionary<string, string>() { { "column", "Email" } }, true, inputType: "email")
                     @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", new Dictionary<string, string>() { { "column", "Password" } }, true, inputType: "password")
-                    @Html.InputControlGroup(Model, "txtPassword2", "ConfirmPassword.Text", "Confirm Password", new Dictionary<string, string>() { { "validation-matches-match", Model.GetId("txtPassword") }, {"validation-matches-message", string.Format(Model.GetPortalText("MustMatch.Text", "Must match {0} entered above"), "password")} }, false, inputType: "password")
+                    @Html.InputControlGroup(Model, "txtPassword2", "ConfirmPassword.Text", "Confirm Password", new Dictionary<string, string>() { { "validation-matches-match", Model.GetId("txtPassword") }, { "validation-matches-message", string.Format(Model.GetPortalText("MustMatch.Text", "Must match {0} entered above"), "password") } }, false, inputType: "password")
                 </div>
             </div>
         </div>

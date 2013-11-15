@@ -14,6 +14,7 @@ namespace Videre.Core.Models
         public string LabelText { get; set; }
         public string Name { get; set; }
         public string DataType { get; set; }
+        public string ControlType { get; set; }
         public string InputType { get; set; }
         public bool Required { get; set; } //todo!
 

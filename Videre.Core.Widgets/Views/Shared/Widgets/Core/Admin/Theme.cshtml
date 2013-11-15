@@ -13,75 +13,83 @@
     <div class="control-group">
         <label class="control-label">@Model.GetText("CurrentTheme.Text", "Current Theme")</label>
         <div class="btn-group" id="@Model.GetId("ThemeDropdown")">
-            <button class="btn dropdown-toggle" data-toggle="dropdown">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <span class="text"></span>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
             </ul>
-            <a class="btn" id="@Model.GetId("btnDownloadTheme")"><i class="icon-download-alt" title="@Model.GetPortalText("Download.Text", "Download")"></i></a>
+            @Html.Bootstrap().Button("btnDownloadTheme").Text("Download.Text", "Download")
         </div>
-    </div>                    
+    </div>
 </div>
-                            
-<h4>@Model.GetText("InstalledThemes.Text", "Installed Themes")</h4>
-<ul class="unstyled" id="@Model.GetId("ThemeList")">
-</ul>
+
+<div class="panel panel-default">
+    <div class="panel-heading"><h4>@Model.GetText("InstalledThemes.Text", "Installed Themes")</h4></div>
+    <div class="panel-body">
+        <div id="@Model.GetId("ThemeList")">
+        </div>
+    </div>
+</div>
+
 <script id="@Model.GetId("ThemeListTemplate")" type="text/html">
-    <li data-theme="{{:Name}}">
-        <div class="row {{if #index % 2 == 0}} alt {{/if}}" style="padding: 5px;">
-            <div class="span2">
-                <a class="thumbnail" data-action="apply">
-                    <img src="{{:~resolveUrl(Thumbnail)}}" />
-                </a>
+    <div data-theme="{{:Name}}" class="row {{if #index % 2 == 0}} alt {{/if}}" style="padding: 5px;">
+        <div class="col-md-2">
+            <a class="thumbnail" data-action="apply">
+                <img src="{{:~resolveUrl(Thumbnail)}}" />
+            </a>
+        </div>
+        <div class="caption col-md-7">
+            <h5>{{:Name}}</h5>
+            <p>{{:Description}}</p>
+            <p><b>@Model.GetText("Source.Text", "Source"): </b>{{:Source}}</p>
+        </div>
+        <div class="col-md-2">
+            {{if #ctx.currentTheme == null || #ctx.currentTheme.Name != Name}}
+                @Html.Bootstrap().Button().DataAttribute("action", "apply").Text("Apply.Text", "Apply").Icon("glyphicon glyphicon-ok").StyleAttribute("width", "100px")
+                @Html.Bootstrap().Button().DataAttribute("action", "uninstall").Text("Uninstall.Text", "Uninstall").Icon("glyphicon glyphicon-trash").StyleAttribute("width", "100px")
+            {{/if}}
+        </div>
+    </div>
+</script>
+
+<div id="@Model.GetId("ThemeDialog")" data-target="#@Model.GetId("ThemeDialog")" class="modal fade">
+    <div class="modal-dialog" style="width: 900px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                @Model.GetText("DownloadTheme.Text", "Download Theme")
             </div>
-            <div class="caption span7">
-                <h5>{{:Name}}</h5>
-                <p>{{:Description}}</p>
-                <p><b>@Model.GetText("Source.Text", "Source"): </b>{{:Source}}</p>
-            </div>                     
-            <div class="span2">
-                {{if #ctx.currentTheme == null || #ctx.currentTheme.Name != Name}}
-                    <a class="btn" data-action="apply" style="width: 80px; margin: 2px;"><i class="icon-ok"></i> @Model.GetPortalText("Apply.Text", "Apply")</a>
-                    <a class="btn" data-action="uninstall" style="width: 80px; margin: 2px;"><i class="icon-trash"></i> @Model.GetPortalText("Uninstall.Text", "Uninstall")</a>
-                {{/if}}
+            <div class="modal-body" style="padding: 5px; max-height: 500px; overflow: auto;">
+                @{Html.RenderPartial("WidgetHeader", Model);}
+                <div id="@Model.GetId("DownloadThemeList")" class="col-md-12">
+                </div>
+                <script id="@Model.GetId("DownloadThemeListTemplate")" type="text/html">
+                    <div data-theme="{{:Name}}">
+                        <div class="row {{if #index % 2 == 0}} alt {{/if}}" style="padding: 5px;">
+                            <div class="col-md-2">
+                                <a class="thumbnail" data-action="apply">
+                                    <img src="{{:~resolveUrl(Thumbnail)}}" class="img-responsive" />
+                                </a>
+                            </div>
+                            <div class="caption col-md-5">
+                                <h5>{{:Name}}</h5>
+                                <p>{{:Description}}</p>
+                                <p><b>@Model.GetText("Source.Text", "Source"): </b>{{:Source}}</p>
+                            </div>
+                            <div class="col-md-2">
+                                {{if #ctx.installedThemes[Name] == null}}
+                                @Html.Bootstrap().Button().DataAttribute("action", "install").Text("Install.Text", "Install").Icon("glyphicon glyphicon-download-alt")
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </script>
+            </div>
+            <div class="modal-footer">
+                @Html.Bootstrap().Button().Text("Ok.Text", "Ok", true).DataAttribute("dismiss", "modal")
             </div>
         </div>
-    </li>
-</script>
-<div id="@Model.GetId("ThemeDialog")" data-target="#@Model.GetId("ThemeDialog")" class="modal fade" style="width: 900px">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        @Model.GetText("DownloadTheme.Text", "Download Theme")
-    </div>
-    <div class="modal-body" style="padding: 5px;  ">
-        @{Html.RenderPartial("WidgetHeader", Model);}
-        <ul class="unstyled" id="@Model.GetId("DownloadThemeList")">
-        </ul>
-        <script id="@Model.GetId("DownloadThemeListTemplate")" type="text/html">
-            <li data-theme="{{:Name}}">
-                <div class="row {{if #index % 2 == 0}} alt {{/if}}" style="padding: 5px;">
-                    <div class="span2">
-                        <a class="thumbnail" data-action="apply">
-                            <img src="{{:~resolveUrl(Thumbnail)}}" />
-                        </a>
-                    </div>
-                    <div class="caption span5">
-                        <h5>{{:Name}}</h5>
-                        <p>{{:Description}}</p>
-                        <p><b>@Model.GetText("Source.Text", "Source"): </b>{{:Source}}</p>
-                    </div>                     
-                    <div class="span2">
-                        {{if #ctx.installedThemes[Name] == null}}
-                        <a class="btn" data-action="install"><i class="icon-download-alt"></i> @Model.GetPortalText("Install.Text", "Install")</a>
-                        {{/if}}
-                    </div>
-                </div>
-            </li>
-        </script>
-    </div>
-    <div class="modal-footer">
-        <a class="btn" data-dismiss="modal">@Model.GetPortalText("Ok.Text", "Ok")</a>
     </div>
 </div>
 

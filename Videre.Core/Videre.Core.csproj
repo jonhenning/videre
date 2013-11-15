@@ -134,6 +134,7 @@
     <Compile Include="Extensions\Bootstrap\BootstrapBaseInputControlModel.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapUpload.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapTextArea.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapCheckBox.cs" />
     <Compile Include="Extensions\Bootstrap\IFluentBootstrapInputControl.cs" />
     <Compile Include="Extensions\Bootstrap\IFluentInterface.cs" />
     <Compile Include="Extensions\Bootstrap\IBootstrapBaseControl.cs" />

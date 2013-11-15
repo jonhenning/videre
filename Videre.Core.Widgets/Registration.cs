@@ -47,7 +47,7 @@ namespace Videre.Core.Widgets
             updates += CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition()
             {
                 Name = "ThemeAPIUrl",
-                DefaultValue = "http://api.bootswatch.com/",
+                DefaultValue = "http://api.bootswatch.com/3",
                 Required = true,
                 LabelKey = "ThemeAPIUrl.Text",
                 LabelText = "Theme API Url"
@@ -95,7 +95,8 @@ namespace Videre.Core.Widgets
                         DefaultValue = "Yes",
                         Required = false,
                         LabelKey = "AlwaysOnTop.Text",
-                        LabelText = "Always On Top"
+                        LabelText = "Always On Top",
+                        ControlType = "bootstrap-select"
                     },
                     new AttributeDefinition()
                     {
@@ -104,7 +105,8 @@ namespace Videre.Core.Widgets
                         DefaultValue = "No",
                         Required = false,
                         LabelKey = "InverseColors.Text",
-                        LabelText = "Inverse Colors"
+                        LabelText = "Inverse Colors",
+                        ControlType = "bootstrap-select"
                     },
                     new AttributeDefinition()
                     {
@@ -113,7 +115,8 @@ namespace Videre.Core.Widgets
                         DefaultValue = "No",
                         Required = false,
                         LabelKey = "ShowLogo.Text",
-                        LabelText = "Show Logo"
+                        LabelText = "Show Logo",
+                        ControlType = "bootstrap-select"
                     },
                     new AttributeDefinition()
                     {
@@ -122,8 +125,10 @@ namespace Videre.Core.Widgets
                         DefaultValue = "No",
                         Required = false,
                         LabelKey = "ShowSearch.Text",
-                        LabelText = "Show Search"
+                        LabelText = "Show Search",
+                        ControlType = "bootstrap-select"
                     }
+
                 }},
                 new CoreModels.WidgetManifest() { Path = "Core", Name = "SideNav", Title = "SideNav", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation" , AttributeDefinitions = new List<AttributeDefinition>()
                 {

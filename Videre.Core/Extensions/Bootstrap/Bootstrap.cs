@@ -40,6 +40,10 @@ namespace Videre.Core.Extensions.Bootstrap
         {
             return new BootstrapTextBox(Html, id);
         }
+        public IBootstrapCheckBox CheckBox(string id = null)
+        {
+            return new BootstrapCheckBox(Html, id);
+        }
         public IBootstrapTextBox Email(string id = null)
         {
             return new BootstrapTextBox(Html, id).DataType("email").HtmlAttributes(new { type = "email" });
@@ -64,6 +68,14 @@ namespace Videre.Core.Extensions.Bootstrap
         {
             plugin = plugin ?? BootstrapDropDownListModel.Plugin.BootstrapTagsInput.GetDescription();
             return new BootstrapDropDownList(Html, id).Plugin(plugin).Multiple(); //DONT DO THIS.DataAttribute("role", "tagsinput");
+        }
+
+        public IBootstrapTextBox FileBrowser(string id = null, string mimeType = null)
+        {
+            //ONLY REGISTER ONCE AND AT END?!?!
+            Html.RenderWidget("Core/Admin/FileBrowser", new Dictionary<string, object>() { { "MimeType", mimeType } }, true);
+
+            return new BootstrapTextBox(Html, id).ControlType("filebrowser-input").Append(Button().Icon("glyphicon glyphicon-picture").DataAttribute("action", "filebrowser"));
         }
 
         public IBootstrapTextBox DateTime(string id = null)
