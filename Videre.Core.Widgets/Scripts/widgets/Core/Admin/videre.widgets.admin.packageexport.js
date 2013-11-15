@@ -30,7 +30,7 @@ videre.widgets.admin.packageexport = videre.widgets.base.extend(
         this._base(); //call base
         this._packageDialog = this.getControl('PackageDialog').modal('hide');
 
-        this.getControl('ExportTypeList').find('li').click(videre.createDelegate(this, this._onFilterClicked));
+        this.getControl('ExportTypeList').find('[data-filter]').click(videre.createDelegate(this, this._onFilterClicked));
         this.getControl('PackageCtr').find('[data-action]').click(this._delegates.onActionClicked);
         this.getControl('btnPackageOk').click(videre.createDelegate(this, this._onPackageOkClicked));
         
@@ -61,7 +61,6 @@ videre.widgets.admin.packageexport = videre.widgets.base.extend(
     showPackageDialog: function()
     {
         this._packageDialog.modal('show');
-        videre.modals.autoWidth(this._packageDialog);
         this._bindPackage();
     },
 
@@ -148,16 +147,12 @@ videre.widgets.admin.packageexport = videre.widgets.base.extend(
 
     _onFilterClicked: function(e)
     {
-        var li = e.target.tagName == 'LI' ? $(e.target) : $(e.target).parent('li');
-        if (li.data('filter') != null)
-        {
-            this.getControl('ExportTypeList').find('li').removeClass('active');
-            li.addClass('active');
+        var ctl = $(e.target).closest('[data-filter]'); 
+        this.getControl('ExportTypeList').find('a').removeClass('active');
+        ctl.addClass('active');
 
-            this._selectedType = this.getControl('ExportTypeList').find('li.active').data('filter');
-            this.getContent();
-            //this.search();
-        }
+        this._selectedType = ctl.data('filter');
+        this.getContent();
     },
 
     _onActionClicked: function(e)

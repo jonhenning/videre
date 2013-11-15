@@ -1009,6 +1009,7 @@ videre.widgets.base = videre.Class.extend(
 
 videre.modals =
 {
+    //will be removed soon
     autoWidth: function(modal)
     {
         return modal.css({ width: 'auto', 'margin-left': function() { return -($(this).width() / 2); } }); //https://github.com/twitter/bootstrap/issues/675
