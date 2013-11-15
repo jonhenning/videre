@@ -11,8 +11,6 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
         this._data = null;
         this._dataDict = null;
 
-        this._dialog = null;
-
         this._delegates = {
             onInstalledPackageDataReturn: videre.createDelegate(this, this._onInstalledPackageDataReturn),
             onInstalledPackageReturn: videre.createDelegate(this, this._onInstalledPackageReturn),
@@ -33,9 +31,6 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
             showMessage: videre.createDelegate(this, this._onFileMessage),
             debug: true
         });
-
-        this._dialog = this.getControl('Dialog').modal('hide');
-        this.getControl('btnCreatePackage').click(videre.createDelegate(this, this._onCreatePackageClicked));
 
         this.refresh();
 
@@ -69,34 +64,16 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
         {
             self.ajax('~/core/Package/RemovePackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
         });
-
-        //videre.UI.prompt(this.getId('RemovePackage'), 'Remove Package', String.format('Do you wish to remove the package {0}?', pkg.name), null,
-        //    [{
-        //        text: 'Ok', css: 'btn-primary', close: true, handler: function()
-        //        {
-        //            self.ajax('~/core/Package/RemovePackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
-        //            return true;
-        //        }
-        //    }, { text: 'Cancel', close: true }]);       
     },
 
     uninstallPackage: function(pkg)
     {
         var self = this;
         //todo: localize?
-        videre.UI.confirm('Uninstall Package', String.format('Do you wish to uninstall this package {0}?  Note:  Currently this just removes the db entry, not the files/content itself.', pkg.name), function ()
+        videre.UI.confirm('Uninstall Package', String.format('Do you wish to uninstall this package {0}?  <br/><i>Note:  Currently this just removes the db entry, not the files/content itself.</i>', pkg.name), function ()
         {
             self.ajax('~/core/Localization/Delete', { id: id }, self._delegates.onSaveReturn);
         });
-
-        //videre.UI.prompt(this.getId('UninstallPackage'), 'Uninstall Package', String.format('Do you wish to uninstall this package {0}?  Note:  Currently this just removes the db entry, not the files/content itself.', pkg.name), null,
-        //    [{
-        //        text: 'Ok', css: 'btn-primary', close: true, handler: function()
-        //        {
-        //            self.ajax('~/core/Package/UninstallPackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
-        //            return true;
-        //        }
-        //    }, { text: 'Cancel', close: true }]);
     },
 
     bind: function()
@@ -105,19 +82,12 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
         this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._data));
 
         this.getControl('ItemList').find('[data-action]').click(this._delegates.onActionClicked);
-        videre.dataTables.bind(this.getControl('ItemTable'));
+        videre.dataTables.bind(this.getControl('ItemTable'), { aaSorting: [[1, 'asc']], aoColumns: [{ bSortable: false }, null, null, null, { sType: 'date' }, { sType: 'date' }, { sType: 'date' }, { sType: 'date' }] });
     },
 
     reset: function()
     {
         this.clearMsgs();
-        //this.clearMsgs(this._dialog);
-    },
-
-    showCreatePackage: function()
-    {
-        videre.UI.showModal(this._dialog);
-
     },
 
     _handleAction: function(action, id)
@@ -226,7 +196,7 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
 
     _onFileMessage: function(message)
     {
-        this.addMsg('FileMessage', message, true, this.getControl('Dialog'));   //todo: test!
+        this.addMsg('FileMessage', message, true);   //todo: test!
         this.refresh();
     },
 

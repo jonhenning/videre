@@ -10,7 +10,7 @@
 @{
 }
 
-<div id="@Model.GetId("Widget")">
+<div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
     @{Html.RenderPartial("WidgetHeader", Model);}
     
     @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 

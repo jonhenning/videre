@@ -153,6 +153,7 @@ namespace Videre.Core.Services
             portalId = portalId.CoalesceString(CurrentPortalId);
             return Repository.Current.GetResources<PageTemplate>("Template", t => t.Data.PortalId == portalId)
                 .Select(t => t.Data)
+                .OrderBy(t => t.Urls.FirstOrDefault())
                 .ToList();
         }
 
@@ -294,9 +295,7 @@ namespace Videre.Core.Services
         public static List<LayoutTemplate> GetLayoutTemplates(string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? CurrentPortalId : portalId;
-            return
-                Repository.Current.GetResources<LayoutTemplate>("LayoutTemplate",
-                    t => t.Data.PortalId == portalId, false).Select(t => t.Data).ToList();
+            return Repository.Current.GetResources<LayoutTemplate>("LayoutTemplate", t => t.Data.PortalId == portalId, false).Select(t => t.Data).OrderBy(t => t.LayoutName).ToList();
         }
 
         public static LayoutTemplate GetLayoutTemplateById(string id)

@@ -3,30 +3,27 @@
 @using Models = Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
 @model Models.Widget
 
 @{
 }
 
 <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
-    <div class="container">
-        <div class="row">
-            <div class="span12">
-                @{ Html.RenderPartial("WidgetHeader", Model); }
-    
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#@Model.GetId("AdminTab")" data-toggle="tab"><i class="icon-list-alt"></i> @Model.GetText("Administration.Text", "Administration")</a></li>
-                    <li class=""><a href="#@Model.GetId("ExportTab")" data-toggle="tab"><i class="icon-upload"></i> @Model.GetText("Export.Text", "Export")</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="@Model.GetId("AdminTab")">
-                        @{ Html.RenderWidget("Core/Admin/PackageAdmin"); }
-                    </div>
-                    <div class="tab-pane" id="@Model.GetId("ExportTab")" style="min-height: 900px;">
-                        @{ Html.RenderWidget("Core/Admin/PackageExport"); }
-                    </div>
-                </div>
-            </div>
+    @{ Html.RenderPartial("WidgetHeader", Model); }
+
+    @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+    { 
+        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("AdminTab"), Text = @Model.GetText("Administration.Text", "Administration"), Active = true, Icon = "glyphicon glyphicon-gift" },
+        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ExportTab"), Text = @Model.GetText("Export.Text", "Export"), Icon = "glyphicon glyphicon-export" }
+    }))
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="@Model.GetId("AdminTab")">
+            @{ Html.RenderWidget("Core/Admin/PackageAdmin"); }
+        </div>
+        <div class="tab-pane" id="@Model.GetId("ExportTab")" style="min-height: 900px;">
+            @{ Html.RenderWidget("Core/Admin/PackageExport"); }
         </div>
     </div>
 </div>

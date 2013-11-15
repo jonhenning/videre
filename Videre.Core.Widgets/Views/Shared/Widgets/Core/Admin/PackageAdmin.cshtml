@@ -20,60 +20,61 @@
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
     
-    @if (Model.ShowHeader) {<legend class="videre section-header">@Model.GetText("WidgetTitle.Text", "Package Administration")</legend>}
-        
+    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "Package Administration") }));}
     <p>@Html.Raw(Model.GetText("Instructions.Text", "Package Administration allows you to view installed packages, along with installing new ones."))</p>
 
     <div class="container">
         <div class="row">
-            <div class="span12">
+            <div class="col-md-12">
                 <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
                     <thead>
                         <tr>
-                            <th class="span2">@Model.GetText("Name.Text", "Name")</th>
-                            <th class="span1">@Model.GetText("Type.Text", "Type")</th>
-                            <th class="span1">@Model.GetText("Version.Text", "Version")</th>
-                            <th class="span2">@Model.GetText("InstalledPackageDate.Text", "Installed Package Date")</th>
-                            <th class="span2">@Model.GetText("InstallDate.Text", "Install Date")</th>
-                            <th class="span2">@Model.GetText("AvailablePackageDate.Text", "Available Package Date")</th>
-                            <th class="span2">@Model.GetText("RemotePackageDate.Text", "Remote Package Date")</th>
+                            <th style="width: 90px;"></th>
+                            <th>@Model.GetText("Name.Text", "Name")</th>
+                            <th>@Model.GetText("Type.Text", "Type")</th>
+                            <th>@Model.GetText("Version.Text", "Version")</th>
+                            <th>@Model.GetText("InstalledPackageDate.Text", "Installed Package Date")</th>
+                            <th>@Model.GetText("InstallDate.Text", "Install Date")</th>
+                            <th>@Model.GetText("AvailablePackageDate.Text", "Available Package Date")</th>
+                            <th>@Model.GetText("RemotePackageDate.Text", "Remote Package Date")</th>
                         </tr>
                     </thead>
                     <tbody id="@Model.GetId("ItemList")"></tbody>
                 </table>
                 <script id="@Model.GetId("ItemListTemplate")" type="text/html">
                     <tr>
-                        <td><span title="{{:source}} - {{:desc}}">{{:name}}</span></td>
-                        <td>{{:type}}</td>
-                        <td>{{:version}}</td>
-                        <td>{{:~formatDateTime(installedPackageDate)}}
-                        </td>
-                        <td>
-                            {{if installedDate != null}}
-                                <a class="btn btn-mini" data-id="{{:id}}" data-action="uninstall" title="@Model.GetText("Uninstall.Text", "Uninstall Package")" style="float: right"><i class="icon-remove"></i></a>
+                        <td style="white-space: nowrap;">
+                            {{if installedDate != null || availPackageDate != null}}
+                            <div class="btn-group" style="float: right">
+                                @Html.Bootstrap().Button().Text("Action.Text", "Action").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                @Html.Bootstrap().Button().DataAttribute("toggle", "dropdown").Css("dropdown-toggle").Icon("caret").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                <ul class="dropdown-menu">
+                                    {{if installedDate != null}}
+                                    <li><a data-id="{{:id}}" data-action="uninstall"><i class="glyphicon glyphicon-remove"></i> @Model.GetText("Uninstall.Text", "Uninstall")</a></li>
+                                    {{/if}}
+                                    {{if availPackageDate != null}}
+                                    <li><a data-id="{{:id}}" data-action="install"><i class="glyphicon glyphicon-download-alt"></i> @Model.GetText("Install.Text", "Install Package")</a></li>
+                                    <li><a data-id="{{:id}}" data-action="remove"><i class="glyphicon glyphicon-remove"></i> @Model.GetText("Remove.Text", "Remove Package")</a></li>
+                                    <li><a data-id="{{:id}}" data-action="publish"><i class="glyphicon glyphicon-globe"></i> {{:published ? '@Model.GetText("UnPublish.Text", "Un-Publish")' : '@Model.GetText("Publish.Text", "Publish")'}}</a></li>
+                                    {{/if}}
+                                    {{if remoteDate != null}}
+                                    <li><a data-id="{{:id}}" data-action="download"><i class="glyphicon glyphicon-download"></i> @Model.GetText("Install.Text", "Install Package")</a></li>
+                                    {{/if}}
+                                </ul>
+                            </div>
                             {{/if}}
+                        </td>
+                        <td style="white-space: nowrap;"><span title="{{:source}} - {{:desc}}">{{:name}}</span></td>
+                        <td>{{:type}}</td>
+                        <td style="white-space: nowrap;">{{:version}}</td>
+                        <td style="white-space: nowrap;">{{:~formatDateTime(installedPackageDate)}}</td>
+                        <td style="white-space: nowrap;">
                             {{:~formatDateTime(installedDate)}}
                         </td>
-                        <td>
-                            {{if availPackageDate != null}}
-                                <div class="btn-group" style="float: right">
-                                    <button class="btn btn-mini">@Model.GetText("Action.Text", "Action")</button>
-                                    <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a data-id="{{:id}}" data-action="install"><i class="icon-download-alt"></i> @Model.GetText("Install.Text", "Install Package")</a></li>
-                                        <li><a data-id="{{:id}}" data-action="remove"><i class="icon-remove"></i> @Model.GetText("Remove.Text", "Remove Package")</a></li>
-                                        <li><a data-id="{{:id}}" data-action="publish"><i class="icon-globe"></i> {{:published ? '@Model.GetText("UnPublish.Text", "Un-Publish")' : '@Model.GetText("Publish.Text", "Publish")'}}</a></li>
-                                    </ul>
-                                </div>
-                            {{/if}}
+                        <td style="white-space: nowrap;">
                             {{:~formatDateTime(availPackageDate)}}
                         </td>
-                        <td>
-                            {{if remoteDate != null}}
-                                <a class="btn btn-mini" data-id="{{:id}}" data-action="download" title="@Model.GetText("Download.Text", "Download Package")" style="float: right"><i class="icon-download"></i></a>
-                            {{/if}}
+                        <td style="white-space: nowrap;">
                             {{:~formatDateTime(remoteDate)}}
                         </td>
                     </tr>
@@ -81,28 +82,9 @@
             </div>
         </div>
         <div class="videre actions form-actions">
-            <a class="btn" id="@Model.GetId("btnImport")"><i class="icon-gift"></i> @Model.GetPortalText("ImportPackage.Text", "Import Package")</a>
-            @*<a class="btn" href="@Url.Content("~/core/Portal/ExportPortal")"><i class="icon-file"></i> @Model.GetPortalText("ExportPortal.Text", "Export Portal")</a>*@
-            @*<a class="btn" id="@Model.GetId("btnCreatePackage")"><i class="icon-gift"></i> @Model.GetPortalText("CreatePackage.Text", "Create Package")</a>*@
+            @Html.Bootstrap().Button("btnImport").Text("ImportPackage.Text", "Import Package").Icon("glyphicon glyphicon-gift")
         </div>
 
-    </div>
-
-    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            @Model.GetText("CreatePackage.Text", "Create Package")
-        </div>
-        <div class="modal-body">
-            @{Html.RenderPartial("WidgetHeader", Model);}
-            <div class="form-horizontal">
-                @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a class="btn btn-primary" id="@Model.GetId("btnExport")">@Model.GetPortalText("Export.Text", "Export")</a>
-            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
-        </div>
     </div>
 
 </div>
