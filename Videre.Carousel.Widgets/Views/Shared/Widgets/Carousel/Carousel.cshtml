@@ -21,18 +21,16 @@
             var advanceTime = Model.GetAttribute("AdvanceTime", "7000");
 
             Html.RegisterWebReferenceGroup("Pixadelic Camera");
-            
-
             Html.RegisterDocumentReadyScript("carousel" + Model.Id, string.Format("$('#{0}').camera({{thumbnails: false, imagePath: '{1}', portrait: {2}, time: {3}}});", Model.GetId("Carousel"), Url.Content("~/Scripts/camera-1.3.3/"), (!cropImages).ToString().ToLower(), advanceTime), true);
 
-    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+    <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         <div id="@Model.GetId("Carousel")" class="camera_wrap" style="@carousel.Style">
             <!-- Carousel items -->
             @{
             for (var i = 0; i < carousel.Items.Count; i++)
             {
                 var item = carousel.Items[i];
-                <div data-src="@Portal.ResolveUrl(item.ImageUrl)">
+                <div data-src="@Portal.ResolveUrl(item.ImageUrl ?? "")">
                     @if (!string.IsNullOrEmpty(item.Text))
                     {
                         <div class="camera_caption fadeFromBottom">
@@ -50,26 +48,35 @@
         {
             Html.RegisterDocumentReadyScript("carousel" + Model.Id, ";$('#" + Model.GetId("Carousel") + "').carousel({interval: 5000});", true);
         
-    <div id="@Model.GetId("Widget")" class="ui-widget @Model.Css" style="@Model.Style">
+    <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         <div id="@Model.GetId("Carousel")" class="carousel slide" style="@carousel.Style">
             <!-- Carousel items -->
+            <ol class="carousel-indicators">
+                @{for (var i = 0; i < carousel.Items.Count; i++)
+                  {
+                    <li data-target="#@Model.GetId("Carousel")" data-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
+                  }}
+            </ol>
             <div class="carousel-inner">
-                @{
-            for (var i = 0; i < carousel.Items.Count; i++)
-            {
-                var item = carousel.Items[i];
+                @{for (var i = 0; i < carousel.Items.Count; i++)
+                  {
+                    var item = carousel.Items[i];
                     <div class="item @(i == 0 ? "active" : "")">
                         <img src="@item.ImageUrl" alt="" />
                         <div class="carousel-caption">
                             <p>@Html.Raw(item.Text)</p>
                         </div>
                     </div>
-            }
+                  }
                 }
             </div>
             <!-- Carousel nav -->
-            <a class="carousel-control left" href="#@Model.GetId("Carousel")" data-slide="prev">&lsaquo;</a>
-            <a class="carousel-control right" href="#@Model.GetId("Carousel")" data-slide="next">&rsaquo;</a>
+            <a class="left carousel-control" href="#@Model.GetId("Carousel")" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a class="right carousel-control" href="#@Model.GetId("Carousel")" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
         </div>
     </div>
         

@@ -24,7 +24,7 @@ videre.widgets.editor.carousel = videre.widgets.editor.base.extend(
 
         this.getControl('btnApply').click(videre.createDelegate(this, this._onApplyClicked));
         this._carouselList = this.getControl('CarouselList').click(videre.createDelegate(this, this._onCarouselClick));
-        this.getControl('ActionButtons').find('a').click(videre.createDelegate(this, this._onActionClick));
+        this.getControl('ActionButtons').find('[data-action]').click(videre.createDelegate(this, this._onActionClick));
         this._widget.find('[data-column]').change(videre.createDelegate(this, this._onDataChange));
 
         //        this.getControl('btnBrowseImage').click(videre.createDelegate(this, this._onBrowseImageClick));
@@ -194,8 +194,7 @@ videre.widgets.editor.carousel = videre.widgets.editor.base.extend(
 
     _onActionClick: function(e)
     {
-        var a = e.target.tagName == 'A' ? $(e.target) : $(e.target).parent('a');
-        var action = a.data('action');
+        var action = $(e.target).closest('[data-action]').data('action');
 
         if (action == 'add')
             this.addItem();

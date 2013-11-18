@@ -3,6 +3,7 @@
 @using Models = Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
 @model Models.WidgetEditor
 
 @{
@@ -10,59 +11,63 @@
 }
 
 <div id="@Model.GetId("Widget")">
-    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 900px; margin-left: -450px; display: none;">
-        <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
-            @Model.GetText("CarouselEditor.Text", "Carousel Editor")
-        </div>
-        <div class="modal-body">
-            @{Html.RenderPartial("WidgetHeader", Model);}
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>
-                <li><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
-                <li><a href="#@Model.GetId("CarouselTab")" data-toggle="tab">@Model.GetText("Carousel.Text", "Carousel")</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
-                    @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+        <div class="modal-dialog" style="width: 900px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("CarouselEditor.Text", "Carousel Editor")
                 </div>
-                <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
-                    @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name", required: true)
-                    @Html.InputControlGroup(Model, "txtStyle", "Style.Text", "Style", "Style")
-                </div>
-                <div class="tab-pane" id="@Model.GetId("CarouselTab")">
-                    <div class="row">
-                        <div class="span3">
-                            <div class="btn-toolbar" id="@Model.GetId("ActionButtons")" style="margin-top:0; margin-bottom:0;">
-                                <div class="btn-group">
-                                    <a class="btn btn-mini" data-action="add"><i class="icon-plus"></i></a>
-                                    <a class="btn btn-mini" data-action="remove"><i class="icon-trash"></i></a>
-                                    <a class="btn btn-mini" data-action="up"><i class="icon-arrow-up"></i></a>
-                                    <a class="btn btn-mini" data-action="down"><i class="icon-arrow-down"></i></a>
-                                </div>
-                            </div>
-                            <div style="height: 300px; overflow: auto; padding: 2px; margin-top:0; margin-bottom:0;" class="well">
-                                <ul id="@Model.GetId("CarouselList")" class="nav nav-list"></ul>
-                            </div>
+                <div class="modal-body">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+
+                    @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+                    { 
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("WidgetTab"), Text = @Model.GetText("Widget.Text", "Widget"), Active = true},
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General")},
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("CarouselTab"), Text = @Model.GetText("Carousel.Text", "Carousel")}
+                    }))
+                    <div class="tab-content">
+                        <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
+                            @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
                         </div>
-                        <div class="span7 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none;">
-                            @*@Html.DropDownControlGroup(Model, "ddlParent", "Parent.Text", "Parent", "parentId", "", new List<SelectListItem>())*@
-                            @Html.InputFileBrowserControlGroup(Model, "txtImageUrl", "ImageUrl.Text", "Image Url", "ImageUrl", "span3", required: true)
-                            @Html.TextEditorControl(Model, "txtItemText", "Text", required: true, labelText: Model.GetText("SlideText.Text", "Slide Text"))
-                            <div class="form-actions">
-                                <a class="btn" id="@Model.GetId("btnApply")">@Model.GetPortalText("Apply.Text", "Apply")</a>
+                        <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Name"), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Style.Text", "Style").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Style"), BootstrapUnits.GridSize.MediumDevice8)
+                        </div>
+                        <div class="tab-pane" id="@Model.GetId("CarouselTab")">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="btn-toolbar" id="@Model.GetId("ActionButtons")" style="margin-top:0; margin-bottom:0;">
+                                        <div class="btn-group">
+                                            @Html.Bootstrap().Button().DataAttribute("action", "add").Icon("glyphicon glyphicon-plus").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                            @Html.Bootstrap().Button().DataAttribute("action", "remove").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                            @Html.Bootstrap().Button().DataAttribute("action", "up").Icon("glyphicon glyphicon-arrow-up").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                            @Html.Bootstrap().Button().DataAttribute("action", "down").Icon("glyphicon glyphicon-arrow-down").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                        </div>
+                                    </div>
+                                    <div style="height: 300px; overflow: auto; padding: 2px; margin-top: 0; margin-bottom: 0;" class="well">
+                                        <ul id="@Model.GetId("CarouselList")" class="videre-nav-condensed nav nav-pills nav-stacked"></ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none;">
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ImageUrl.Text", "Image Url").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().FileBrowser().DataColumn("ImageUrl"), BootstrapUnits.GridSize.MediumDevice8)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("SlideText.Text", "Slide Text").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextEditor().DataColumn("Text"), BootstrapUnits.GridSize.MediumDevice8)
+                                    <div class="videre-form-actions">
+                                        @Html.Bootstrap().Button("btnApply").Text("Apply.Text", "Apply")
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnOk").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
+                </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
-            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
-        </div>
     </div>
-
 
 </div>
 

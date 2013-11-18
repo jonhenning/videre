@@ -469,7 +469,9 @@ namespace Videre.Core.Services
 
         public static string ResolveUrl(string url)
         {
-            return VirtualPathUtility.ToAbsolute(url);
+            if (!string.IsNullOrEmpty(url))
+                return VirtualPathUtility.ToAbsolute(url);
+            return "";
         }
 
         public static string ResolveCurrentUrl(string url)
