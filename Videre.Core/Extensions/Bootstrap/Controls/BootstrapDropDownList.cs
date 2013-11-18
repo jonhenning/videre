@@ -30,11 +30,13 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         public List<SelectListItem> options { get; set; }
         public string plugin { get; set; }
         public bool multiple { get; set; }
+        public SelectListItem emptyItem { get; set; }
     }
 
     public interface IBootstrapDropDownList : IFluentBootstrapInputControl<IBootstrapDropDownList, BootstrapDropDownListModel>
     {
         IBootstrapDropDownList Options(IEnumerable<SelectListItem> options);
+        IBootstrapDropDownList EmptyItem(SelectListItem item);
         IBootstrapDropDownList Plugin(BootstrapDropDownListModel.Plugin plugin);
         IBootstrapDropDownList Plugin(string plugin);
         IBootstrapDropDownList Multiple();
@@ -57,6 +59,12 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         public IBootstrapDropDownList Plugin(string plugin)
         {
             this._model.plugin = plugin;
+            return this;
+        }
+
+        public IBootstrapDropDownList EmptyItem(SelectListItem item)
+        {
+            _model.emptyItem = item;
             return this;
         }
 
@@ -108,6 +116,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
                 //    //ctl.Attributes.Add("data-plugin", "bootstrap-multiselect");
                 //}
             }
+            if (_model.emptyItem != null)
+                ctl.InnerHtml += ToHtml(_model.emptyItem);
 
             foreach (var o in this._model.options)
                 ctl.InnerHtml += ToHtml(o);

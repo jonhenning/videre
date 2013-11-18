@@ -70,6 +70,12 @@ namespace Videre.Core.Extensions.Bootstrap
             return new BootstrapDropDownList(Html, id).Plugin(plugin).Multiple(); //DONT DO THIS.DataAttribute("role", "tagsinput");
         }
 
+        public IBootstrapTextEditor TextEditor(string id = null, string plugin = null)
+        {
+            plugin = plugin ?? Services.Portal.CurrentPortal.GetAttribute("Core", "TextEditor", "cktexteditor").ToLower();
+            return new BootstrapTextEditor(Html, id).Plugin(plugin);
+        }
+
         public IBootstrapTextBox FileBrowser(string id = null, string mimeType = null)
         {
             //ONLY REGISTER ONCE AND AT END?!?!

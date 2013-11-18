@@ -147,7 +147,8 @@ namespace Videre.Blog.Widgets.Services
 
         public static void DetokenizeEntries(Models.Blog blog)
         {
-            blog.Entries.ForEach(e => DetokenizeEntry(e));
+            if (blog != null)
+                blog.Entries.ForEach(e => DetokenizeEntry(e));
         }
 
         public static void DetokenizeEntry(Models.BlogEntry entry)

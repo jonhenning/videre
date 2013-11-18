@@ -3,6 +3,7 @@
 @using Models = Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
 @model Models.WidgetEditor
 
 @{
@@ -11,52 +12,65 @@
 }
 
 <div id="@Model.GetId("Widget")">
-    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px;">
-        <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
-            @Model.GetText("BlogEditor.Text", "Blog Editor")
-        </div>
-        <div class="modal-body">
-            @{Html.RenderPartial("WidgetHeader", Model);}
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#@Model.GetId("WidgetTab")" data-toggle="tab">@Model.GetText("Widget.Text", "Widget")</a></li>
-                <li><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
-                    @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+        <div class="modal-dialog" style="width: 700px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("BlogEditor.Text", "Blog Editor")
                 </div>
-                <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
-                    <div class="control-group">
-                        <label class="control-label">@Model.GetText("Name.Text", "Name")</label>
-                        <div class="controls">
-                            <select id="@Model.GetId("ddlName")" data-column="Id" data-required="true"></select>
-                            <button class="btn" type="button" id="@Model.GetId("btnNewBlog")"><i class="icon-plus"></i> @Model.GetPortalText("New.Text", "New")</button>
-                            <button class="btn" type="button" id="@Model.GetId("btnDeleteBlog")"><i class="icon-trash"></i> @Model.GetPortalText("Delete.Text", "Delete")</button>
+                <div class="modal-body">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+                    
+                    @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+                    { 
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("WidgetTab"), Text = @Model.GetText("Widget.Text", "Widget"), Active = true, Icon = "glyphicon glyphicon-cog" },
+                        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General"), Icon = "glyphicon glyphicon-tasks" }
+                    }))
+                   
+                    <div class="tab-content">
+                        <div class="form-horizontal tab-pane active" id="@Model.GetId("WidgetTab")">
+                            @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+                        </div>
+                        <div class="form-horizontal tab-pane" id="@Model.GetId("GeneralTab")">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">@Model.GetText("Name.Text", "Name")</label>
+                                <div class="col-md-5">
+                                    @Html.Bootstrap().DropDownList("ddlName").Css("form-control")
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.Bootstrap().Button("btnNewBlog").Text("New.Text", "New", true).Icon("glyphicon glyphicon-plus")
+                                    @Html.Bootstrap().Button("btnDeleteBlog").Text("Delete.Text", "Delete", true).Icon("glyphicon glyphicon-trash")
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnOk").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
+                </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
-            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
         </div>
     </div>
 
     <div id="@Model.GetId("NewBlogDialog")" data-target="#@Model.GetId("NewBlogDialog")" class="modal fade">
-        <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
-            @Model.GetText("NewBlog.Text", "New Blog")
-        </div>
-        <div class="modal-body" style="padding: 5px;  ">
-            <div class="form-horizontal">
-                @Html.InputControlGroup(Model, "txtNewBlog", "BlogName.Text", "Blog Name")
-                @Html.InputControlGroup(Model, "txtNewBlogDesc", "BlogDescription.Text", "Description")
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("NewBlog.Text", "New Blog")
+                </div>
+                <div class="modal-body" style="padding: 5px;">
+                    <div class="form-horizontal">
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("BlogName.Text", "Blog Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice9)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("BlogDescription.Text", "Description").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Description").Required(), BootstrapUnits.GridSize.MediumDevice9)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnOkNewBlog").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
+                </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <a class="btn btn-primary" id="@Model.GetId("btnOkNewBlog")">@Model.GetPortalText("Ok.Text", "Ok")</a>
         </div>
     </div>
 

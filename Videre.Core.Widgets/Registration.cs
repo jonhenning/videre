@@ -37,8 +37,8 @@ namespace Videre.Core.Widgets
             var updates = CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition()
             {
                 Name = "TextEditor",
-                Values = new List<string>() { "Core/CKTextEditor", "Core/CLTextEditor", "Core/WYSIHTML5TextEditor" },
-                DefaultValue = "Core/CKTextEditor",
+                Values = new List<string>() { "cktexteditor", "cltexteditor", "wysihtml5texteditor" },
+                DefaultValue = "cktexteditor",
                 Required = true,
                 LabelKey = "TextEditor.Text",
                 LabelText = "Text Editor"

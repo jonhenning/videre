@@ -124,7 +124,7 @@ videre.widgets.editor.base = videre.widgets.base.extend(
             o.dependencies = o.ctl.data('dependencies'); 
             for (var i = 0; i < o.dependencies.length; i++)
                 o.dependencies[i].ctl = ctr.find('[data-column="' + o.dependencies[i].DependencyName + '"]').change(this._baseEditorDelegates.onDependencyControlChange);
-            o.controlGroup = o.ctl.closest('.control-group');
+            o.controlGroup = o.ctl.closest('.form-group');
             ret.push(o);
         }
         return ret;

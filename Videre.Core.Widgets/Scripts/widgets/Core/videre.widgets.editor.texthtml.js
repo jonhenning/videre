@@ -7,7 +7,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
     init: function()
     {
         this._base();  //call base method
-        this._editor = null;
+        //this._editor = null;
         this._sharedContent = null;
         this._sharedContentDict = null;
         this._linkCountDict = null;
@@ -23,7 +23,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
     _onLoad: function(src, args)
     {
         this._base(); //call base
-        this._editor = videre.widgets.find(this.getId('txtHtml'));
+        //this._editor = videre.widgets.find(this.getId('txtHtml'));
         this._newShareDialog = this.getControl('NewShareDialog').modal('hide');
         this.getControl('ddlLink').change(videre.createDelegate(this, this._onLinkChanged));
         this.getControl('btnNewShare').click(videre.createDelegate(this, this._onNewShareClicked));
@@ -106,7 +106,8 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
 
         this.bindData(content, this.getControl('GeneralTab'));
         this.bindData(content, this.getControl('ContentProperties'));
-        this._editor.bind(content);
+        this.bindData(content, this.getControl('ContentProperties'));
+        //this._editor.bind(content);
     },
 
     bindLinks: function()
@@ -132,7 +133,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
         //persist before calling base
         this.persistData(this._widgetData.Content[0], false, this.getControl('GeneralTab'));
         this.persistData(this._widgetData.Content[0], false, this.getControl('ContentProperties'));
-        this._editor.persist();
+        //this._editor.persist();
         this._base();
     },
 

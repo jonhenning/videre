@@ -63,8 +63,8 @@ videre.widgets.editor.blog = videre.widgets.editor.base.extend(
 
     showNewBlogDialog: function()
     {
-        this.getControl('txtNewBlog').val('');
-        this.getControl('txtNewBlogDesc').val('');
+        this._widget.find('[data-column="Name"]').val('');
+        this._widget.find('[data-column="Description"]').val('');
         this._newBlogDialog.modal('show');
     },
 
@@ -101,9 +101,9 @@ videre.widgets.editor.blog = videre.widgets.editor.base.extend(
         this._widget.find('.nav-tabs a:first').tab('show');
     },
 
-    _getNewBlog: function(name)
+    _getNewBlog: function(name, desc)
     {
-        return { Id: '-1', Name: name, Entries: [] };
+        return { Id: '-1', Name: name, Description: desc, Entries: [] };
     },
 
     _handleBlogChanged: function()
@@ -127,10 +127,10 @@ videre.widgets.editor.blog = videre.widgets.editor.base.extend(
 
     _handleNewBlog: function()
     {
-        var name = this.getControl('txtNewBlog').val();
+        var name = this._newBlogDialog.find('[data-column="Name"]').val();
         if (!String.isNullOrEmpty(name))    //todo: verify not exist in _blogData as well
         {
-            this._newBlogData = this._getNewBlog(name);
+            this._newBlogData = this._getNewBlog(name, this._newBlogDialog.find('[data-column="Description"]').val());
             this._widgetData.Content = this._newBlogData;
             this.bindBlogs();
             this._handleBlogChanged();

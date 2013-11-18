@@ -3,58 +3,63 @@
 @using Models = Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
 @model Models.Widget
 
 @{
     Html.RegisterWebReferenceGroup("timepicker");   //todo: perhaps this is auto registered when datatype specified
-    
+
     var entry = ViewBag.entry;
 }
 
 <div class="btn-group pull-right">
-    <button class="btn dropdown-toggle" data-toggle="dropdown">
-    <i class="icon-cog"></i>
-    <span class="caret"></span>
-    </button>
+    @Html.Bootstrap().Button().DataAttribute("toggle", "dropdown").Css("dropdown-toggle").Icon("caret").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
     <ul class="dropdown-menu" id="@Model.GetId("AdminMenu")">
-    <li data-action="new"><a><i class="icon-plus"></i> @Model.GetText("New.Text", "New")</a></li>
-    @if (entry != null) 
-    {
-        <li data-action="edit"><a><i class="icon-pencil"></i> @Model.GetText("Edit.Text", "Edit")</a></li>
-        <li data-action="delete"><a><i class="icon-trash"></i> @Model.GetText("Delete.Text", "Delete")</a></li>
-    }
+        <li data-action="new"><a><i class="icon-plus"></i>@Model.GetText("New.Text", "New")</a></li>
+        @if (entry != null)
+        {
+            <li data-action="edit"><a><i class="icon-pencil"></i>@Model.GetText("Edit.Text", "Edit")</a></li>
+            <li data-action="delete"><a><i class="icon-trash"></i>@Model.GetText("Delete.Text", "Delete")</a></li>
+        }
     </ul>
 </div>
 
-<div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade" style="width: 700px; max-height: 600px;">
-    <div class="modal-header">
-        <a class="close" data-dismiss="modal">×</a>
-        @Model.GetText("BlogEditor.Text", "Blog Editor")
-    </div>
-    <div class="modal-body">
-        @{Html.RenderPartial("WidgetHeader", Model);}
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#@Model.GetId("GeneralTab")" data-toggle="tab">@Model.GetText("General.Text", "General")</a></li>
-            <li><a href="#@Model.GetId("MarkupTab")" data-toggle="tab">@Model.GetText("Markup.Text", "Markup")</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
-                @Html.InputControlGroup(Model, "txtTitle", "Title.Text", "Title", "Title", "input-xlarge")
-                @Html.InputControlGroup(Model, "txtUrl", "Url.Text", "Url", "Url", "input-xlarge")
-                @Html.InputFileBrowserControlGroup(Model, "TitleImageUrl", "TitleImageUrl.Text", "Title Image Url", "TitleImageUrl")
-                @Html.TextAreaControlGroup(Model, "txtSummary", "Summary.Text", "Summary", "Summary", inputCss: "input-xlarge", rows: 3)
-                @Html.TextAreaControlGroup(Model, "txtTags", "Tags.Text", "Tags", "Tags", "list", "input-xlarge", 3)
-                @Html.InputControlGroup(Model, "txtPostDate", "PostDate.Text", "Post Date", "PostDate", "input-medium", dataType: "datetime")
+<div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                @Model.GetText("BlogEditor.Text", "Blog Editor")
             </div>
-            <div class="form-horizontal tab-pane" id="@Model.GetId("MarkupTab")">
-                <div id="@Model.GetId("ContentProperties")">
-                    @Html.TextEditorControl(Model, "txtBody", "Body")
+            <div class="modal-body">
+                @{Html.RenderPartial("WidgetHeader", Model);}
+
+                @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+                { 
+                    new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General"), Active = true, Icon = "glyphicon glyphicon-cog" },
+                    new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("MarkupTab"), Text = @Model.GetText("Markup.Text", "Markup"), Icon = "glyphicon glyphicon-pencil" }
+                }))
+
+                <div class="tab-content">
+                    <div class="form-horizontal tab-pane active" id="@Model.GetId("GeneralTab")">
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Title.Text", "Title").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Title").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Url.Text", "Url").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Url").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("TitleImageUrl.Text", "Title Image Url").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().FileBrowser().DataColumn("TitleImageUrl"), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Summary.Text", "Summary").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextArea().DataColumn("Summary"), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Tags.Text", "Tags").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TagsInput().DataColumn("Tags"), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("PostDate.Text", "Post Date").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().DateTimePicker().DataColumn("PostDate").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                    </div>
+                    <div class="form-horizontal tab-pane" id="@Model.GetId("MarkupTab")">
+                        <div id="@Model.GetId("ContentProperties")">
+                            @Html.Bootstrap().TextEditor().DataColumn("Body")
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save")
+                @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
+            </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <a class="btn btn-primary" id="@Model.GetId("btnSave")">@Model.GetPortalText("Save.Text", "Save")</a>
-        <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
     </div>
 </div>

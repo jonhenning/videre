@@ -41,17 +41,17 @@
         <div class="row">
             <div class="col-md-12">
                 @{
-                var tabs = new List<Bootstrap.Controls.BootstrapTab>() 
+                    var tabs = new List<Bootstrap.Controls.BootstrapTab>() 
                 { 
                     new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General"), Active = true, Icon = "glyphicon glyphicon-list-alt" },
                     new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ServerEnvironmentTab"), Text = @Model.GetText("ServerEnvironment.Text", "Server Environment"), Icon = "glyphicon glyphicon-hdd" },
                     new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ThemeTab"), Text = @Model.GetText("Themes.Text", "Themes"), Icon = "glyphicon glyphicon-picture" }
                 };
-                foreach (var groupName in Portal.AttributeDefinitions.Keys.OrderBy(s => s))
-                {
-                    var safeGroupName = groupName.Replace(" ", "-").Replace(".", "-");
-                    tabs.Add(new Bootstrap.Controls.BootstrapTab() { Id = Model.GetId("tab" + safeGroupName), Text = groupName, Icon = "glyphicon glyphicon-list-alt"});
-                }
+                    foreach (var groupName in Portal.AttributeDefinitions.Keys.OrderBy(s => s))
+                    {
+                        var safeGroupName = groupName.Replace(" ", "-").Replace(".", "-");
+                        tabs.Add(new Bootstrap.Controls.BootstrapTab() { Id = Model.GetId("tab" + safeGroupName), Text = groupName, Icon = "glyphicon glyphicon-list-alt" });
+                    }
                 }
                 @Html.Bootstrap().Tabs(tabs)
 
@@ -99,45 +99,61 @@
     </div>
 
     <div id="@Model.GetId("CreatePortalDialog")" data-target="#@Model.GetId("CreatePortalDialog")" class="modal fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            @Model.GetText("NewPortal.Text", "New Portal")
-        </div>
-        <div class="modal-body">
-            @{Html.RenderPartial("WidgetHeader", Model);}
-            <div class="form-horizontal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("NewPortal.Text", "New Portal")
+                </div>
+                <div class="modal-body">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+                    <div class="form-horizontal">
+                        <div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5>@Model.GetText("Portal.Text", "Portal")</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-horizontal videre-form">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4" for="optionsCheckboxList">Packages</label>
+                                            <div class="controls col-md-8" id="@Model.GetId("Packages")">
+                                                @foreach (var package in Videre.Core.Services.Package.GetAvailablePackages().Where(p => p.Type == "Data"))
+                                                {
+                                                    <label class="checkbox" title="@package.Description - @package.Source">
+                                                        <input type="checkbox" value="@package.Name" checked="checked" />
+                                                        @package.Name (v @package.Version)
+                                                    </label>
+                                                }
+                                            </div>
+                                        </div>
+                                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtUserName").DataColumn("PortalName").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default" id="@Model.GetId("AdminUser")">
+                                <div class="panel-heading">
+                                    <h5>@Model.GetText("AdminUser.Text", "Admin User")</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-horizontal videre-form">                              
+                                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtUserName").DataColumn("Name").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+                                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Email.Text", "Email").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Email("txtEmail").DataColumn("Email").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
 
-                <div>
-                    <h5>@Model.GetText("Portal.Text", "Portal")</h5>
-                    <div class="control-group">
-                        <label class="control-label" for="optionsCheckboxList">Packages</label>
-                        <div class="controls" id="@Model.GetId("Packages")">
-                            @foreach (var package in Videre.Core.Services.Package.GetAvailablePackages().Where(p => p.Type == "Data"))
-                            {
-                                <label class="checkbox" title="@package.Description">
-                                    <input type="checkbox" value="@package.Name" checked="checked">
-                                    @package.Name
-                                </label>
-                            }
+                                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").DataColumn("Password").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+
+                                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ConfirmPassword.Text", "Confirm Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword2").MustMatch("txtPassword").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    @Html.InputControlGroup(Model, "txtName", "Name.Text", "Name", "Name")
-                </div>
-                <div id="@Model.GetId("AdminUser")">
-                    <h5>@Model.GetText("AdminUser.Text", "Admin User")</h5>
-
-                    @Html.InputControlGroup(Model, "txtUserName", "UserName.Text", "UserName", new Dictionary<string, string>() { { "column", "Name" } }, true)
-                    @Html.InputControlGroup(Model, "txtEmail", "Email.Text", "Email", new Dictionary<string, string>() { { "column", "Email" } }, true, inputType: "email")
-                    @Html.InputControlGroup(Model, "txtPassword", "Password.Text", "Password", new Dictionary<string, string>() { { "column", "Password" } }, true, inputType: "password")
-                    @Html.InputControlGroup(Model, "txtPassword2", "ConfirmPassword.Text", "Confirm Password", new Dictionary<string, string>() { { "validation-matches-match", Model.GetId("txtPassword") }, { "validation-matches-message", string.Format(Model.GetPortalText("MustMatch.Text", "Must match {0} entered above"), "password") } }, false, inputType: "password")
+                    <div class="modal-footer">
+                        @Html.Bootstrap().Button("btnCreate").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Create.Text", "Create")
+                        @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <a class="btn btn-primary" id="@Model.GetId("btnCreate")">@Model.GetPortalText("Create.Text", "Create")</a>
-            <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
-        </div>
-    </div>
 
-</div>
+    </div>

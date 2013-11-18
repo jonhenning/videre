@@ -98,7 +98,7 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         {
             var user = this.persistData({}, true, this.getControl('AdminUser'));
             var portal = {
-                Name: this.getControl('txtName').val()
+                Name: this._createPortalDialog.find('[data-column="PortalName"]').val()
             };
             var packages = [];
             this.getControl('Packages').find(':checked').each(function() { packages.push($(this).val()) });

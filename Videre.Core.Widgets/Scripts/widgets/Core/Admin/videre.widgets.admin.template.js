@@ -137,8 +137,8 @@ videre.widgets.admin.template = videre.widgets.base.extend(
                 for (var cell = 0; cell < layout.Panes[row].length; cell++)
                 {
                     var p = layout.Panes[row][cell];
-                    html += String.format('<div data-title="{0}" data-pane="{0}" class="pane {2}" style="padding:2px; {1}"></div>', p.Name, p.DesignerStyle != null ? p.DesignerStyle : 'min-height: 100px;',
-                        p.DesignerCss != null ? p.DesignerCss : 'span5');
+                    html += String.format('<div data-title="{0}" data-pane="{0}" class="pane {2}" style="border: solid 1px; {1}"></div>', p.Name, p.DesignerStyle != null ? p.DesignerStyle : 'min-height: 100px;',
+                        p.DesignerCss != null ? p.DesignerCss : 'col-md-12');
                 }
                 html += '</div>';
             }
@@ -441,7 +441,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
         return $(String.format(
             '<div class="navbar navbar-default widget-container" id="{0}" style="min-height: 20px;">' +
                 '<div class="navbar-collapse collapse">' +
-                        '<ul class="nav navbar-nav"><li style="min-width: 200px"><a style="padding: 4px 0 4px 0;" class="hide-overflow" title="{1}"><span class="glyphicon glyphicon-cog"></span> {1}</a></li></ul>' +
+                        '<ul class="nav navbar-nav" style="margin-left: -5px; margin-right: -5px;"><li><a style="padding: 4px 0 4px 0;" title="{1}"><span class="glyphicon glyphicon-cog"></span> {1}</a></li></ul>' +
                         '<ul class="nav navbar-nav navbar-right">' +
                             '<li class="dropdown">' +
                                 '<a class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 4px; padding-bottom: 4px;" ><b class="caret"></b></a>' +
