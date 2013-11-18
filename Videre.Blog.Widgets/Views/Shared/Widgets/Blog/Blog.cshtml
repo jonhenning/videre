@@ -34,7 +34,7 @@
             Html.RenderPartial("Widgets/Blog/BlogAdminMarkup", Model);
         }
         <h4>
-            <a class="pull-right" href="@Portal.ResolveUrl("~/blogapi/feed/rss/" + blog.Name)"><img src="@Portal.ResolveUrl("~/content/images/icon-rss.png")" /></a>
+            <a class="pull-right" style="margin-right: 5px;" href="@Portal.ResolveUrl("~/blogapi/feed/rss/" + blog.Name)"><img src="@Portal.ResolveUrl("~/content/images/icon-rss.png")" /></a>
             @if (showTitle)
             {
                 <a href="@blogUrl">@blog.Name</a>
