@@ -18,12 +18,14 @@
                     @Model.GetText("CommonEditor.Text", "Common Editor")
                 </div>
                 <div class="modal-body">
-                    @{Html.RenderPartial("WidgetHeader", Model);}
-                    @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+                    <div class="form-horizontal">
+                        @{Html.RenderPartial("WidgetHeader", Model);}
+                        @{Html.RenderPartial("Widgets/Core/CommonEditorMarkup", Model);}
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-primary" id="@Model.GetId("btnOk")">@Model.GetPortalText("Ok.Text", "Ok")</a>
-                    <a class="btn" data-dismiss="modal">@Model.GetPortalText("Cancel.Text", "Cancel")</a>
+                    @Html.Bootstrap().Button("btnOk").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
                 </div>
             </div>
         </div>
