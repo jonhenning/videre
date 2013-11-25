@@ -14,6 +14,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     {
         this._base();  //call base method
         this._data = null;
+        this._hasCustomAttributes = false;
 
         this._delegates = {
             onDataReturn: videre.createDelegate(this, this._onDataReturn),
@@ -25,6 +26,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     {
         this._base(); //call base
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
+        this._hasCustomAttributes = this.getControl('CustomElementsCtr').length > 0;
         this.bind();
 
     },
@@ -36,14 +38,22 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
 
     bind: function()
     {
-        this.bindData(this._data);
+        this.bindData(this._data, this.getControl('StandardElementsCtr'));
+        if (this._hasCustomAttributes)
+            this.bindData(this._data.Attributes, this.getControl('CustomElementsCtr'));
     },
 
     save: function()
     {
         if (this.validControls())
         {
-            var user = this.persistData(this._data);    //todo: clone?
+            var user = this.persistData(this._data, true, this.getControl('StandardElementsCtr'));
+            if (this._hasCustomAttributes)
+            {
+                if (user.Attributes == null)
+                    user.Attributes = {};
+                this.persistData(user.Attributes, false, this.getControl('CustomElementsCtr'));
+            }
             this.ajax('~/core/Account/SaveUserProfile', { user: user }, this._delegates.onSaveReturn);
         }
     },

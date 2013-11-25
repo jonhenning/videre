@@ -10,6 +10,7 @@ namespace Videre.Core.Models
     {
         public string Name { get; set; }
         public bool Required { get; set; }
+        public bool UserCanEdit { get; set; }
         public Type DataType { get; set; }
         public List<SelectListItem> Values { get; set; }
 

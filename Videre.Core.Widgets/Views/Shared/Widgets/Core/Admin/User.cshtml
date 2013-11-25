@@ -70,8 +70,8 @@
                     @{
                     var tabs = new List<Bootstrap.Controls.BootstrapTab>() {  new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General"), Active = true} };
                     if (Account.CustomUserElements.Count > 0) { tabs.Add(new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("CustomTab"), Text = @Model.GetText("Custom.Text", "Custom") }); }
-                    Html.Bootstrap().Tabs(tabs);
                     }
+                    @Html.Bootstrap().Tabs(tabs)
                     <div class="tab-content">
                         <div class="tab-pane active form-horizontal" id="@Model.GetId("GeneralTab")">
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice8)

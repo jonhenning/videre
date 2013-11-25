@@ -807,6 +807,7 @@ videre.widgets.base = videre.Class.extend(
 
     validControls: function(controlCtr, messageCtr)
     {
+        controlCtr = controlCtr != null ? controlCtr : this._widget;
         messageCtr = messageCtr != null ? messageCtr : controlCtr;
         this.clearMsgs();
         var ctls = this._getValidationCtls(controlCtr);

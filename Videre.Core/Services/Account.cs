@@ -304,8 +304,28 @@ namespace Videre.Core.Services
             id = string.IsNullOrEmpty(id) ? Account.CurrentIdentityName : id;
             var user = GetUserById(id);
             if (user != null)
-                return new Models.UserProfile(user);
+            {
+                var profile = new Models.UserProfile() 
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                    Locale = user.Locale,
+                };
+                foreach (var element in GetEditableProfileElements())
+                {
+                    if (user.Attributes.ContainsKey(element.Name))
+                        profile.Attributes[element.Name] = user.Attributes[element.Name];
+                }
+                return profile;
+
+            }
             return null;
+        }
+
+        private static List<CustomDataElement> GetEditableProfileElements()
+        {
+            return Account.CustomUserElements.Where(e => e.UserCanEdit).ToList();
         }
 
         public static bool SaveUserProfile(Models.UserProfile userProfile)
@@ -320,6 +340,17 @@ namespace Videre.Core.Services
             user.Email = userProfile.Email;
             user.Locale = userProfile.Locale;
             user.Password = userProfile.Password1;
+
+            //ONLY update attributes user is able to edit
+            if (userProfile.Attributes != null)
+            {
+                foreach (var element in GetEditableProfileElements())
+                {
+                    if (userProfile.Attributes.ContainsKey(element.Name))
+                        user.Attributes[element.Name] = userProfile.Attributes[element.Name];
+                }
+            }
+
             return !string.IsNullOrEmpty(SaveUser(user, userProfile.Id));   //at the point of calling the Account service we should have already validated user has permission to change this user id
         }
 
