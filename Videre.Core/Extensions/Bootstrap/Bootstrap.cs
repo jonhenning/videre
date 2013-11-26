@@ -48,20 +48,20 @@ namespace Videre.Core.Extensions.Bootstrap
         {
             return new BootstrapTextBox(Html, id).DataType("email").HtmlAttributes(new { type = "email" });
         }
-        public IBootstrapTextBox DatePicker(string id = null, string plugin = null)
+        public IBootstrapDateTimePicker DatePicker(string id = null, string plugin = null)
         {
-            plugin = plugin ?? BootstrapTextBoxModel.Plugin.JqueryUIDatePicker.GetDescription();
-            return new BootstrapTextBox(Html, id).DataType("date").Plugin(plugin);
+            plugin = plugin ?? BootstrapDateTimePickerModel.Plugin.BootstrapDateTimePicker.GetDescription();
+            return new BootstrapDateTimePicker(Html, id).DataType("date").PickDate(true).PickTime(false).Plugin(plugin);
         }
-        public IBootstrapTextBox DateTimePicker(string id = null, string plugin = null)
+        public IBootstrapDateTimePicker DateTimePicker(string id = null, string plugin = null)
         {
-            plugin = plugin ?? BootstrapTextBoxModel.Plugin.JqueryUIDateTimePicker.GetDescription();
-            return new BootstrapTextBox(Html, id).DataType("datetime").Plugin(plugin);
+            plugin = plugin ?? BootstrapDateTimePickerModel.Plugin.BootstrapDateTimePicker.GetDescription();
+            return new BootstrapDateTimePicker(Html, id).DataType("datetime").PickDate(true).PickTime(true).Plugin(plugin);
         }
-        public IBootstrapTextBox TimePicker(string id = null, string plugin = null)
+        public IBootstrapDateTimePicker TimePicker(string id = null, string plugin = null)
         {
-            plugin = plugin ?? BootstrapTextBoxModel.Plugin.JqueryUITimePicker.GetDescription();
-            return new BootstrapTextBox(Html, id).DataType("time").Plugin(plugin);
+            plugin = plugin ?? BootstrapDateTimePickerModel.Plugin.BootstrapDateTimePicker.GetDescription();
+            return new BootstrapDateTimePicker(Html, id).DataType("time").PickDate(false).PickTime(true).Plugin(plugin);
         }
 
         public IBootstrapDropDownList TagsInput(string id = null, string plugin = null)
@@ -82,11 +82,6 @@ namespace Videre.Core.Extensions.Bootstrap
             Html.RenderWidget("Core/Admin/FileBrowser", new Dictionary<string, object>() { { "MimeType", mimeType } }, true);
 
             return new BootstrapTextBox(Html, id).ControlType("filebrowser-input").Append(Button().Icon("glyphicon glyphicon-picture").DataAttribute("action", "filebrowser"));
-        }
-
-        public IBootstrapTextBox DateTime(string id = null)
-        {
-            return new BootstrapTextBox(Html, id).DataType("time").Plugin(BootstrapTextBoxModel.Plugin.JqueryUITimePicker);
         }
 
         public IBootstrapTextArea TextArea(string id = null)

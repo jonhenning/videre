@@ -11,16 +11,6 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 {
     public class BootstrapTextBoxModel : BootstrapBaseInputControlModel
     {
-        public enum Plugin
-        {
-            [Description("jqueryui-datepicker")]
-            JqueryUIDatePicker,
-            [Description("jqueryui-datetimepicker")]
-            JqueryUIDateTimePicker,
-            [Description("jqueryui-timepicker")]
-            JqueryUITimePicker
-        }
-
         public BootstrapTextBoxModel() : base()
         {
         }
@@ -30,8 +20,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
     public interface IBootstrapTextBox : IFluentBootstrapInputControl<IBootstrapTextBox, BootstrapTextBoxModel>
     {
-        IBootstrapTextBox Plugin(BootstrapTextBoxModel.Plugin plugin);
-        IBootstrapTextBox Plugin(string plugin);
+        //IBootstrapTextBox Plugin(BootstrapTextBoxModel.Plugin plugin);
+        //IBootstrapTextBox Plugin(string plugin);
     }
 
     public class BootstrapTextBox : BootstrapBaseInputControl<IBootstrapTextBox, BootstrapTextBoxModel>, IBootstrapTextBox
@@ -42,15 +32,15 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
         }
 
-        public IBootstrapTextBox Plugin(BootstrapTextBoxModel.Plugin plugin)
-        {
-            return Plugin(plugin.GetDescription());
-        }
-        public IBootstrapTextBox Plugin(string plugin)
-        {
-            this._model.plugin = plugin;
-            return this;
-        }
+        //public IBootstrapTextBox Plugin(BootstrapTextBoxModel.Plugin plugin)
+        //{
+        //    return Plugin(plugin.GetDescription());
+        //}
+        //public IBootstrapTextBox Plugin(string plugin)
+        //{
+        //    this._model.plugin = plugin;
+        //    return this;
+        //}
         
         public override string ToHtmlString()
         {
@@ -62,11 +52,11 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             if (!string.IsNullOrEmpty(_model.val))
                 ctl.Attributes.AddSafe("val", _model.val);  //encode?
 
-            if (!string.IsNullOrEmpty(_model.plugin))
-            {
-                _html.RegisterWebReferenceGroup(_model.plugin); //todo:  use plugin name as web reference group?
-                ctl.Attributes.AddSafe("data-controltype", _model.plugin);
-            }
+            //if (!string.IsNullOrEmpty(_model.plugin))
+            //{
+            //    _html.RegisterWebReferenceGroup(_model.plugin); //todo:  use plugin name as web reference group?
+            //    ctl.Attributes.AddSafe("data-controltype", _model.plugin);
+            //}
 
             return base.Render(ctl);
         }

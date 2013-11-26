@@ -328,6 +328,25 @@ namespace Videre.Core.Services
             return Account.CustomUserElements.Where(e => e.UserCanEdit).ToList();
         }
 
+        //todo: realize this in user profile as more than attribute???
+        public static TimeZoneInfo GetUserTimeZone()
+        {
+            var user = Account.CurrentUser;
+            if (user != null)
+            {
+                var userTimezone = user.Attributes.GetSetting("TimeZone", "Central Standard Time");
+                return TimeZoneInfo.FindSystemTimeZoneById(userTimezone);
+            }
+            return null;
+        }
+
+        public static string GetUserTimeZoneString()
+        {
+            var zone = GetUserTimeZone();
+            return zone.BaseUtcOffset.Hours.ToString("00") + zone.BaseUtcOffset.Minutes.ToString("00");
+            //return zone.BaseUtcOffset.TotalMinutes.ToString();
+        }
+
         public static bool SaveUserProfile(Models.UserProfile userProfile)
         {
             Validate(userProfile);
