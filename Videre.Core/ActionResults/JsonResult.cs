@@ -78,7 +78,7 @@ namespace Videre.Core.ActionResults
             //ignore.  So when we send to client we can ignore properties marked "client" and when we persist to database we can ignore properties marked "db"
             //base.Formatting = Newtonsoft.Json.Formatting.None;
             base.SerializerSettings.ContractResolver = new CodeEndeavors.Extensions.Serialization.SerializeIgnoreContractResolver(IgnoreType);    //exclude properties marked client ignore
-            base.SerializerSettings.Converters.Add(new IsoDateTimeConverter());
+            base.SerializerSettings.Converters.Add(new IsoDateTimeConverter() { DateTimeStyles = System.Globalization.DateTimeStyles.AdjustToUniversal });
 
             //http://james.newtonking.com/projects/json/help/index.html?topic=html/PreserveObjectReferences.htm
             if (PreserveObjectReferences)
