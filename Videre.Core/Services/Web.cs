@@ -12,7 +12,7 @@ namespace Videre.Core.Services
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
             return new List<WebReference>()
             {
-                new WebReference() { Name = "videre extensions", Group = "videre", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/videre.extensions.js", DependencyGroups = new List<string>() {"jQuery", "jQuery UI", "bootstrap", "jsRender"} , Sequence = 0 },
+                new WebReference() { Name = "videre extensions", Group = "videre", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/videre.extensions.js", DependencyGroups = new List<string>() {"jQuery", "jQuery UI", "bootstrap", "jsRender", "moment"} , Sequence = 0 },
                 new WebReference() { Name = "videre", Group = "videre", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/videre.js", Sequence = 1 },
                 new WebReference() { Name = "videre css", Group = "videre", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.StyleSheetReference, PortalId = portalId, Url = "~/Content/videre.css" }
             };

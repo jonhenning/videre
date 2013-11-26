@@ -343,7 +343,7 @@ namespace Videre.Core.Services
         public static string GetUserTimeZoneString()
         {
             var zone = GetUserTimeZone();
-            return zone.BaseUtcOffset.Hours.ToString("00") + zone.BaseUtcOffset.Minutes.ToString("00");
+            return string.Format("{0}:{1}", zone.BaseUtcOffset.Hours.ToString("00"), zone.BaseUtcOffset.Minutes.ToString("00"));
             //return zone.BaseUtcOffset.TotalMinutes.ToString();
         }
 

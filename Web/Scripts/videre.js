@@ -34,46 +34,54 @@
         return JSON.parse(data);
     },
 
-    parseDate: function(value, format, dateOnly) //json2.net - reviver
+    parseDate: function(value, format, zone)
     {
-        var a, d;
+        var d = moment(value);
+        if (zone)
+            d = d.zone(zone);
+        if (format)
+            return d.format(format);
+        return d;
+
+        //json2.net - reviver
+        //var a, d;
         
-        var type = videre.typename(value);
-        if (type == 'string')
-        {
-            a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:([\+-])(\d{2})\:(\d{2}))?Z?$/.exec(value);
-            if (a)
-            {
-                var utcMilliseconds = dateOnly ? new Date(+a[1], +a[2] - 1, +a[3]) : Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
+        //var type = videre.typename(value);
+        //if (type == 'string')
+        //{
+        //    a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:([\+-])(\d{2})\:(\d{2}))?Z?$/.exec(value);
+        //    if (a)
+        //    {
+        //        var utcMilliseconds = dateOnly ? new Date(+a[1], +a[2] - 1, +a[3]) : Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
 
-                d = new Date(utcMilliseconds);
+        //        d = new Date(utcMilliseconds);
 
-                if (!String.isNullOrEmpty(a[7]) && dateOnly != true)
-                {
-                    offset = (a[8] * 60) + parseInt(a[9], 10);
-                    offset *= ((a[7] == '-') ? -1 : 1);
-                    d.setTime(d.getTime() - offset * 60 * 1000);
-                }
+        //        if (!String.isNullOrEmpty(a[7]) && dateOnly != true)
+        //        {
+        //            offset = (a[8] * 60) + parseInt(a[9], 10);
+        //            offset *= ((a[7] == '-') ? -1 : 1);
+        //            d.setTime(d.getTime() - offset * 60 * 1000);
+        //        }
 
-                if (format)
-                    return d.format(format);
-                return d;
-            }
-            a = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-            if (a)
-            {
-                d = new Date(+a[1], +a[2] - 1, +a[3]);
-                if (format)
-                    return d.format(format);
-                return d;
-            }
-        }
-        else if (type == 'date')  //if already a date just check for formatting
-        {
-            if (format)
-                return value.format(format);
-        }
-        return value;
+        //        if (format)
+        //            return d.format(format);
+        //        return d;
+        //    }
+        //    a = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+        //    if (a)
+        //    {
+        //        d = new Date(+a[1], +a[2] - 1, +a[3]);
+        //        if (format)
+        //            return d.format(format);
+        //        return d;
+        //    }
+        //}
+        //else if (type == 'date')  //if already a date just check for formatting
+        //{
+        //    if (format)
+        //        return value.format(format);
+        //}
+        //return value;
     },
 
     jsonClone: function(data)
@@ -441,20 +449,17 @@ videre.UI = {
 
         'datetime':
         {
-            isValid: function(val) { return (new Date(videre.parseDate(val, videre.localization.dateFormats.datetime))) != 'Invalid Date'; }
+            isValid: function (val) { return moment(val, videre.localization.dateFormats.datetime).isValid(); }
         },
 
         'time':
         {
-            isValid: function(val)
-            {
-                return val != null; // TODO: not correct
-            }
+            isValid: function (val) { return moment(val, videre.localization.dateFormats.time).isValid(); }
         },
 
         'date':
         {
-            isValid: function(val) { return (new Date(videre.parseDate(val, videre.localization.dateFormats.date))) != 'Invalid Date'; }
+            isValid: function (val) { return moment(val, videre.localization.dateFormats.date).isValid(); }
         }
     }
 
@@ -477,24 +482,6 @@ videre.UI.registerControlType('checkbox',
         set: function (ctl, val) { ctl.prop('checked', val); },
         init: function (ctl) { }
     });
-
-//videre.UI.registerControlType('jqueryui-datetimepicker',
-//    {
-//        get: function (ctl) { return ctl.datetimepicker('getDate'); },
-//        set: function (ctl, val) { ctl.datetimepicker('setDate', videre.parseDate(val)); },
-//        init: function (ctr) { ctr.find('[data-controltype="jqueryui-datepicker"]').datetimepicker(); }
-//    });
-
-//videre.UI.registerControlType('jqueryui-timepicker',
-//    {
-//        get: function (ctl) { return ctl.datetimepicker('getDate').getTime(); },
-//        set: function (ctl, val) { ctl.datetimepicker('setDate', videre.parseDate(val, 'shortTime')); },
-//        init: function (ctr) { ctr.find('[data-controltype="jqueryui-timepicker"]').datetimepicker(); }
-//    });
-//videre.UI.registerControlType('jqueryui-datepicker', { get: function (ctl) { var val = ctl.datepicker('getDate'); if (val != null) val = val.format('isoDate'); return val; }, set: function (ctl, val) { videre.parseDate(val, videre.localization.dateFormats.date, true) }, init: function (ctr) { ctr.find('[data-controltype="jqueryui-datepicker"]').datepicker(); } });
-
-
-
 
 
 videre.UI.eventHandlerList = function()
@@ -1026,7 +1013,7 @@ videre.modals =
 
 videre.localization = {
     items: [],
-    dateFormats: { datetime: 'm/d/yy h:MM TT', date: 'm/d/yy', time: 'h:MM TT' },
+    dateFormats: { datetime: 'M/D/YY h:mm A', date: 'M/D/YY', time: 'h:mm A' }, //switching to moment - { datetime: 'm/d/yy h:MM TT', date: 'm/d/yy', time: 'h:MM TT' },
     getText: function(ns, key, defaultValue)
     {
         if (defaultValue == null)
@@ -1043,9 +1030,9 @@ if ($.views != null)
 {
     $.views.helpers({
         resolveUrl: function (val) { return val != null ? videre.resolveUrl(val) : ''; },
-        formatDateTime: function (val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.datetime) : ''; },
-        formatDate: function (val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.date, true) : ''; },
-        formatTime: function (val) { return val != null ? videre.parseDate(val, videre.localization.dateFormats.time) : ''; },
+        formatDateTime: function (val, format, zone) { return val != null ? videre.parseDate(val, format != null ? format : videre.localization.dateFormats.datetime, zone) : ''; },
+        formatDate: function (val, format, zone) { return val != null ? videre.parseDate(val, format != null ? format : videre.localization.dateFormats.date, zone) : ''; },
+        formatTime: function (val, format, zone) { return val != null ? videre.parseDate(val, format != null ? format : videre.localization.dateFormats.time, zone) : ''; },
         formatString: function () { return String.format.apply(this, arguments); },
         nullOrEmpty: function (val) { return String.isNullOrEmpty(val); },
         coalesce: function (val, label) { return val || (label || ''); },

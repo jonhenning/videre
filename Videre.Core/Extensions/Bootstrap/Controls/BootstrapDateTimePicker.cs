@@ -90,12 +90,12 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
                 ctl.Attributes.AddSafe("val", _model.val);  //encode?
 
             if (_model.pickDate)
-                ctl.Attributes.AddSafe("pick-date", "true");
+                ctl.Attributes.AddSafe("data-pick-date", "true");
             if (_model.pickTime)
-                ctl.Attributes.AddSafe("pick-time", "true");
+                ctl.Attributes.AddSafe("data-pick-time", "true");
 
             if (!string.IsNullOrEmpty(_model.timeZone))
-                ctl.Attributes.AddSafe("timezone", _model.timeZone);
+                ctl.Attributes.AddSafe("data-timezone", _model.timeZone);
 
             if (!string.IsNullOrEmpty(_model.plugin))
             {
