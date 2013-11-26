@@ -155,7 +155,6 @@
     <Content Include="Content\themes\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\videre.css" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\videre.extensions.js" />
     <Content Include="Scripts\videre.js" />
     <Content Include="Scripts\widgets\videre.widgets.editor.base.js" />
