@@ -200,7 +200,6 @@
     <None Include="ConnectionStrings.config.debug" />
     <Content Include="_packages\Videre.CoreSiteTemplate.zip" />
     <Content Include="_packages\Videre.FirstTimeUserContent.zip" />
-    <Content Include="_packages\jQuery-1.7.1.zip" />
     <Content Include="_packages\jQuery-ui-1.8.18.zip" />
     <Content Include="_packages\jsRender-1.0BC15.zip" />
     <Content Include="_packages\prettify-1.0.zip" />
@@ -213,6 +212,7 @@
     <Content Include="Views\Shared\WidgetSectionHeader.cshtml" />
     <Content Include="_packages\DataTables-1.9.4-BS3.zip" />
     <Content Include="_packages\jquery-ui-timepicker-1.4.1.zip" />
+    <Content Include="_packages\jQuery-1.10.2.zip" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.manifest" />
