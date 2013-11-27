@@ -51,17 +51,17 @@ namespace Videre.Core.Extensions.Bootstrap
         public IBootstrapDateTimePicker DatePicker(string id = null, string plugin = null)
         {
             plugin = plugin ?? BootstrapDateTimePickerModel.Plugin.BootstrapDateTimePicker.GetDescription();
-            return new BootstrapDateTimePicker(Html, id).DataType("date").PickDate(true).PickTime(false).Plugin(plugin);
+            return new BootstrapDateTimePicker(Html, id).DataType("date").Plugin(plugin);
         }
         public IBootstrapDateTimePicker DateTimePicker(string id = null, string plugin = null)
         {
             plugin = plugin ?? BootstrapDateTimePickerModel.Plugin.BootstrapDateTimePicker.GetDescription();
-            return new BootstrapDateTimePicker(Html, id).DataType("datetime").PickDate(true).PickTime(true).Plugin(plugin);
+            return new BootstrapDateTimePicker(Html, id).DataType("datetime").Plugin(plugin);
         }
         public IBootstrapDateTimePicker TimePicker(string id = null, string plugin = null)
         {
             plugin = plugin ?? BootstrapDateTimePickerModel.Plugin.BootstrapDateTimePicker.GetDescription();
-            return new BootstrapDateTimePicker(Html, id).DataType("time").PickDate(false).PickTime(true).Plugin(plugin);
+            return new BootstrapDateTimePicker(Html, id).DataType("time").Plugin(plugin);
         }
 
         public IBootstrapDropDownList TagsInput(string id = null, string plugin = null)

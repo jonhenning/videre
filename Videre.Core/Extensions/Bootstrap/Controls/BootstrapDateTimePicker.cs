@@ -27,8 +27,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
         public string plugin { get; set; }
         public string timeZone { get; set; }
-        public bool pickTime { get; set; }
-        public bool pickDate { get; set; }
+        //public bool pickTime { get; set; }
+        //public bool pickDate { get; set; }
     }
 
     public interface IBootstrapDateTimePicker : IFluentBootstrapInputControl<IBootstrapDateTimePicker, BootstrapDateTimePickerModel>
@@ -37,8 +37,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         IBootstrapDateTimePicker Plugin(string plugin);
         IBootstrapDateTimePicker TimeZone(string timeZone);
         IBootstrapDateTimePicker UserTimeZone();
-        IBootstrapDateTimePicker PickDate(bool pickDate);
-        IBootstrapDateTimePicker PickTime(bool pickTime);
+        //IBootstrapDateTimePicker PickDate(bool pickDate);
+        //IBootstrapDateTimePicker PickTime(bool pickTime);
     }
 
     public class BootstrapDateTimePicker : BootstrapBaseInputControl<IBootstrapDateTimePicker, BootstrapDateTimePickerModel>, IBootstrapDateTimePicker
@@ -46,8 +46,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         public BootstrapDateTimePicker(HtmlHelper html) : base(html) { }
         public BootstrapDateTimePicker(HtmlHelper html, string id) : base(html, id)
         {
-            _model.pickDate = true;
-            _model.pickTime = true;
+            //_model.pickDate = true;
+            //_model.pickTime = true;
         }
 
         public IBootstrapDateTimePicker Plugin(BootstrapDateTimePickerModel.Plugin plugin)
@@ -68,16 +68,16 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         {
             return TimeZone(Services.Account.GetUserTimeZoneString());
         }
-        public IBootstrapDateTimePicker PickDate(bool pickDate)
-        {
-            this._model.pickDate = pickDate;
-            return this;
-        }
-        public IBootstrapDateTimePicker PickTime(bool pickTime)
-        {
-            this._model.pickTime = pickTime;
-            return this;
-        }
+        //public IBootstrapDateTimePicker PickDate(bool pickDate)
+        //{
+        //    this._model.pickDate = pickDate;
+        //    return this;
+        //}
+        //public IBootstrapDateTimePicker PickTime(bool pickTime)
+        //{
+        //    this._model.pickTime = pickTime;
+        //    return this;
+        //}
 
         public override string ToHtmlString()
         {
@@ -89,10 +89,10 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             if (!string.IsNullOrEmpty(_model.val))
                 ctl.Attributes.AddSafe("val", _model.val);  //encode?
 
-            if (_model.pickDate)
-                ctl.Attributes.AddSafe("data-pick-date", "true");
-            if (_model.pickTime)
-                ctl.Attributes.AddSafe("data-pick-time", "true");
+            //if (_model.pickDate)
+            //    ctl.Attributes.AddSafe("data-pick-date", "true");
+            //if (_model.pickTime)
+            //    ctl.Attributes.AddSafe("data-pick-time", "true");
 
             if (!string.IsNullOrEmpty(_model.timeZone))
                 ctl.Attributes.AddSafe("data-timezone", _model.timeZone);
