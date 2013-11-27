@@ -82,7 +82,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
             }
         });
 
-        this.getControl('[data-column="LayoutName"]').change(videre.createDelegate(this, this._onLayoutChanged));
+        this._widget.find('[data-column="LayoutName"]').change(videre.createDelegate(this, this._onLayoutChanged));
         this.refreshTemplates();
     },
 
@@ -204,7 +204,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
     showEditTemplate: function()
     {
         this.bindData(this._selectedTemplate, this.getControl('GeneralTab'));
-        this.bindPanes(this.getControl('[data-column="LayoutName"]').val());
+        this.bindPanes(this._widget.find('[data-column="LayoutName"]').val());
         this.showEdit();
     },
 
@@ -463,7 +463,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
 
     _onLayoutChanged: function()
     {
-        this.bindPanes(this.getControl('[data-column="LayoutName"]').val());
+        this.bindPanes(this._widget.find('[data-column="LayoutName"]').val());
     }
 
 });
