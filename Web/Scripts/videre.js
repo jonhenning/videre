@@ -38,7 +38,7 @@
     {
         var d = moment(value);
         if (zone)
-            d = d.zone(zone);
+            d = d.zone(videre.timeZones.getOffset(zone, d).Format);
         if (format)
             return d.format(format);
         return d;

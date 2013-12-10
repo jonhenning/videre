@@ -14,12 +14,27 @@ namespace Videre.Core.Models
             Attributes = new Dictionary<string, object>();
         }
 
+        private string _timeZone = null;
+
         public string Id { get; set; }
         public string PortalId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Locale { get; set; }
-        public string TimeZone { get; set; }
+        public string TimeZone
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_timeZone))
+                    return System.TimeZone.CurrentTimeZone.StandardName;
+
+                return _timeZone;
+            }
+            set
+            {
+                _timeZone = value;
+            }
+        }
 
         //[ScriptIgnore, JsonIgnore]
         [SerializeIgnore(new string[] { "db", "client" })]
