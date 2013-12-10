@@ -13,6 +13,7 @@ namespace Videre.Core.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Locale { get; set; }
+        public string TimeZone { get; set; }
         public Dictionary<string, object> Attributes {get;set;}
 
         public string Password1 { get; set; }

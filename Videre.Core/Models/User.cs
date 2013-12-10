@@ -19,6 +19,7 @@ namespace Videre.Core.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Locale { get; set; }
+        public string TimeZone { get; set; }
 
         //[ScriptIgnore, JsonIgnore]
         [SerializeIgnore(new string[] { "db", "client" })]

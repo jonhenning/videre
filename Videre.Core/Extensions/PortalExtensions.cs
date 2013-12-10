@@ -150,6 +150,23 @@ namespace Videre.Core.Extensions
             helper.ScriptMarkup("coreconstants", "var ROOT_URL = '" + HtmlExtensions.RootPath + "';");
         }
 
+        public static void RegisterUserTimeZoneScript(this HtmlHelper helper)
+        {
+            var tz = Account.GetUserTimeZone();
+            if (tz != null)
+                helper.RegisterTimeZoneScript(tz.StandardName);
+        }
+
+        public static void RegisterTimeZoneScript(this HtmlHelper helper, string timeZone)
+        {
+            var tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            if (tz == null)
+                throw new Exception("Unknown Timezone: " + timeZone);
+
+            helper.RegisterWebReferenceGroup("videre");
+            helper.RegisterScript("~/ServerJS/TimeZoneInformation/" + tz.Id);
+        }
+
         public static void RegisterTheme(this HtmlHelper helper, PageTemplate template)
         {
             var theme = UI.PortalTheme;

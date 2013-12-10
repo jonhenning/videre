@@ -1011,6 +1011,132 @@ videre.modals =
     }
 };
 
+videre.timeZones =
+{
+    zones: {},
+    register: function (key, data)
+    {
+        this.zones[key] = data;
+    },
+    getOffset: function(key, date)
+    {
+        if (this.zones[key] != null)
+        {
+            date = moment(date);
+            if (this.zones[key].Rules == null)
+                return { Minutes: this.zones[key].OffsetMinutes, Format: this.zones[key].Format };
+
+            var ret = { Minutes: this.zones[key].OffsetMinutes, Format: this.zones[key].FormatString };
+            for (var i = 0; i < this.zones[key].Rules.length; i++)
+            {
+                var rule = this.zones[key].Rules[i];
+                if (moment(rule.RuleStart) < date && moment(rule.RuleEnd) > date)
+                {
+                    var start = videre.timeZones._getCutoff(rule, date, 'Start', this.zones[key].FormatString); //time is local time, so before change use use non-DST time (-06:00)
+                    var end = videre.timeZones._getCutoff(rule, date, 'End', rule.DSTInfo.FormatString);    //time is local time, so before we change BACK we use DST time (-05:00)
+                    if (date > start && date < end)
+                        ret = { Minutes: this.zones[key].OffsetMinutes + rule.DSTInfo.DeltaMinutes, Format: rule.DSTInfo.FormatString };
+                }
+            }
+            return ret;
+        }
+
+    },
+
+    _getCutoff: function (rule, date, type, cutoffTimeFormat)
+    {
+        var dst = rule.DSTInfo;
+        if (!dst.Fixed)
+        {
+            //Day - Gets the day on which the time change occurs. ***is for Fixed only***
+            //DayOfWeek - Gets the day of the week on which the time change occurs.
+            //Month - Gets the month in which the time change occurs.
+            //Time - Gets the hour, minute, and second at which the time change occurs.
+            //Week - Gets the week of the month in which a time change occurs. - if = 5 then LAST WEEK IN MONTH (for when there is 4 weeks)
+
+            var firstDayOfMonth = moment.utc(date).month(dst[type].Month - 1).date(1).hour(0).minute(0).second(0).millisecond(0);    //passed in year, rule's month, first day of month so we can calculate week of year and do math
+
+            var weekOfYear = firstDayOfMonth.isoWeek();
+            var ruleDate = firstDayOfMonth.add('weeks', dst[type].Week);
+            if (firstDayOfMonth.month() != ruleDate.month())
+                ruleDate = ruleDate.add('weeks', -1);
+            ruleDate = ruleDate.isoWeekday(dst[type].DayOfWeek);
+            //somehow we need to take the time here and convert it to UTC based on passed in date (2AM in local time)
+            ruleDate = moment.utc(ruleDate.format('YYYY-MM-DD') + 'T' + dst[type].Time + cutoffTimeFormat);
+            return ruleDate;
+        }
+        else
+            alert('Fixed not supported yet...'); //anyone use this? - should be easy!
+    }
+
+};
+
+//videre.timeZones.register('Central Standard Time', {
+//    "Id": "Central Standard Time",
+//    "OffsetMinutes": -360.0,
+//    "FormatString": "-06:00",
+//    "UsesDST": true,
+//    "Rules": [
+//      {
+//          "RuleStart": "0001-01-01T06:00:00Z",
+//          "RuleEnd": "2006-12-31T06:00:00Z",
+//          "DSTInfo": {
+//              "DeltaMinutes": 60.0,
+//              "FormatString": "-05:00",
+//              "Start": {
+//                  "DayOfWeek": 0,
+//                  "Month": 4,
+//                  "Week": 1,
+//                  "Day": 1,
+//                  "Time": "02:00:00",
+//                  "Fixed": false
+//              },
+//              "End": {
+//                  "DayOfWeek": 0,
+//                  "Month": 10,
+//                  "Week": 5,
+//                  "Day": 1,
+//                  "Time": "02:00:00",
+//                  "Fixed": false
+//              }
+//          }
+//      },
+//      {
+//          "RuleStart": "2007-01-01T06:00:00Z",
+//          "RuleEnd": "9999-12-31T06:00:00Z",
+//          "DSTInfo": {
+//              "DeltaMinutes": 60.0,
+//              "FormatString": "-05:00",
+//              "Start": {
+//                  "DayOfWeek": 0,
+//                  "Month": 3,
+//                  "Week": 2,
+//                  "Day": 1,
+//                  "Time": "02:00:00",
+//                  "Fixed": false
+//              },
+//              "End": {
+//                  "DayOfWeek": 0,
+//                  "Month": 11,
+//                  "Week": 1,
+//                  "Day": 1,
+//                  "Time": "02:00:00",
+//                  "Fixed": false
+//              }
+//          }
+//      }
+//    ]
+//});
+
+//videre.enableLogging = true;
+//videre.log(videre.serialize(videre.timeZones.getOffset('Central Standard Time', '2015-03-07T12:22:00Z')));
+//videre.log(videre.serialize(videre.timeZones.getOffset('Central Standard Time', '2015-03-08T08:00:00Z')));
+//videre.log(videre.serialize(videre.timeZones.getOffset('Central Standard Time', '2015-03-08T08:01:00Z')));
+//videre.log(videre.serialize(videre.timeZones.getOffset('Central Standard Time', '2015-11-01T01:22:00Z')));
+//videre.log(videre.serialize(videre.timeZones.getOffset('Central Standard Time', '2015-11-01T06:59:00Z')));
+//videre.log(videre.serialize(videre.timeZones.getOffset('Central Standard Time', '2015-11-01T07:00:00Z')));
+
+
 videre.localization = {
     items: [],
     dateFormats: { datetime: 'M/D/YY h:mm A', date: 'M/D/YY', time: 'h:mm A' }, //switching to moment - { datetime: 'm/d/yy h:MM TT', date: 'm/d/yy', time: 'h:MM TT' },
