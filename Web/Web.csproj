@@ -159,6 +159,16 @@
     <Content Include="Scripts\videre.js" />
     <Content Include="Scripts\widgets\videre.widgets.editor.base.js" />
     <Content Include="Scripts\widgets\videre.widgets.installer.js" />
+    <Content Include="Scripts\_tests\index.html" />
+    <Content Include="Scripts\_tests\phantom.js" />
+    <Content Include="Scripts\_tests\server.js" />
+    <Content Include="Scripts\_tests\unit\videre.js" />
+    <Content Include="Scripts\_tests\unit\videre.extensions.js" />
+    <Content Include="Scripts\_tests\unit\videre-phantom.js" />
+    <Content Include="Scripts\_tests\vendor\jquery.js" />
+    <Content Include="Scripts\_tests\vendor\moment.min.js" />
+    <Content Include="Scripts\_tests\vendor\qunit.css" />
+    <Content Include="Scripts\_tests\vendor\qunit.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Web.config">
