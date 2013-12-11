@@ -95,7 +95,7 @@ namespace Videre.Web.Controllers
                 )
             };
 
-            return o.ToJson(true);
+            return o.ToJson();
         }
 
 //videre.timeZones.register('Central Standard Time', {
