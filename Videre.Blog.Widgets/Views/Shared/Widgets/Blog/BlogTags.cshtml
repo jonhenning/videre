@@ -15,7 +15,7 @@
     <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         @{Html.RenderPartial("WidgetHeader", Model);}
         <h4>@Model.GetText("Tags.Text", "Tags")</h4>
-        <ul class="unstyled">
+        <ul class="list-unstyled">
             @foreach (var tag in groupedTags.OrderBy(t => t.name))
             {
                 <li style="float: left; margin-right: 5px;">

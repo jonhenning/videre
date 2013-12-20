@@ -16,7 +16,7 @@
         @{Html.RenderPartial("WidgetHeader", Model);}
         <h4>@Model.GetText("Archive.Text", "Archive")</h4>
 
-        <ul class="unstyled">
+        <ul class="list-unstyled">
             @foreach (var g in groupedEntries.OrderByDescending(g => g.Key))
             {
                 <li>
