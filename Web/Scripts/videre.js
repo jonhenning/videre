@@ -483,7 +483,15 @@ videre.UI.registerControlType('list',
 videre.UI.registerControlType('checkbox',
     {
         get: function (ctl) { return ctl.is(':checked'); },
-        set: function (ctl, val) { ctl.prop('checked', val); },
+        set: function (ctl, val, isMarkup)  //todo: this is a bit messy
+        {
+            if (videre.typename(val) == 'string')
+                val = eval(val);
+            if (isMarkup)   //if rendering html to markup, prop will not work
+                ctl.attr('checked', val);
+            else 
+                ctl.prop('checked', val);
+        },
         init: function (ctl) { }
     });
 
@@ -1123,15 +1131,15 @@ if ($.views != null)
             {
                 ctl = $('<input>').addClass('form-control').attr({ type: data.InputType || 'text', 'data-column': keyName }); //.val(dataValue);
 
-                if (data.DataType)
-                    ctl.attr('data-datatype', data.DataType);
+                if (data.ControlType)
+                    ctl.attr('data-controltype', data.ControlType);
                 if (!String.isNullOrEmpty(dataValue))
                 {
                     //ideally setControlValue would do _dataTypes check, but causes recursive calls...  refactoring in order
-                    var dataType = videre.UI._dataTypes[ctl.data('datatype')];
-                    if (dataType != null && dataType.set != null)
+                    var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+                    if (controlType != null && controlType.set != null)
                     {
-                        dataType.set(ctl, dataValue);
+                        controlType.set(ctl, dataValue, true);
                         dataValue = ctl.val();
                     }
 
