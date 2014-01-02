@@ -19,7 +19,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         this._delegates = {
             onDataReturn: videre.createDelegate(this, this._onDataReturn),
             onSaveReturn: videre.createDelegate(this, this._onSaveReturn)
-        }
+        };
     },
 
     _onLoad: function(src, args)

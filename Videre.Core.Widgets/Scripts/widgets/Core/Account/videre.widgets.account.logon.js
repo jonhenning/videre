@@ -13,7 +13,7 @@ videre.widgets.account.logon = videre.widgets.base.extend(
 
         this._delegates = {
             onLogonResult: videre.createDelegate(this, this._onLogonResult)
-        }
+        };
     },
 
     _onLoad: function(src, args)
