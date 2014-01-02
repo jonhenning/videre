@@ -140,6 +140,12 @@ namespace Videre.Core.Services
             return user;
         }
 
+        public static Models.User Get(Func<Models.User, bool> statement, string portalId = null)
+        {
+            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+            return AccountService.Get(portalId, statement).FirstOrDefault();
+        }
+
         public static Models.User GetUser(string name, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
@@ -201,19 +207,19 @@ namespace Videre.Core.Services
             return AccountService.Delete(id, userId);
         }
 
-        public static Models.User Login(string UserName, string Password, bool Persistant)
+        public static Models.User Login(string userName, string password, bool persistant)
         {
-            var user = AccountService.Login(UserName, Password);
+            var user = AccountService.Login(userName, password);
             if (user != null)
             {
-                IssueAuthenticationTicket(user.Id.ToString(), user.Roles, 30, Persistant);
+                IssueAuthenticationTicket(user.Id.ToString(), user.Roles, 30, persistant);
             }
             return user;
         }
 
-        public static void IssueAuthenticationTicket(string IdentityName, List<string> Roles, int Days, bool Persistant)
+        public static void IssueAuthenticationTicket(string identityName, List<string> roles, int days, bool persistant)
         {
-            var ticket = new FormsAuthenticationTicket(1, IdentityName, DateTime.Now, DateTime.Now.AddDays(Days), Persistant, String.Join("," , Roles));
+            var ticket = new FormsAuthenticationTicket(1, identityName, DateTime.Now, DateTime.Now.AddDays(days), persistant, String.Join("," , roles));
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
             cookie.Expires = ticket.Expiration;
             HttpContext.Current.Response.Cookies.Add(cookie);
@@ -224,9 +230,9 @@ namespace Videre.Core.Services
             FormsAuthentication.SignOut();
         }
 
-        public static bool RoleAuthorized(List<string> Roles)
+        public static bool RoleAuthorized(List<string> roles)
         {
-            return (Roles.Count == 0 || Roles.Exists(r => Services.Account.IsInRole(r)));
+            return (roles.Count == 0 || roles.Exists(r => Services.Account.IsInRole(r)));
         }
 
         public static Models.Role GetRoleById(string id)
