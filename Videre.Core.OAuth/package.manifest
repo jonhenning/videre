@@ -1,0 +1,8 @@
+{
+	Version: '1.0',
+	Name: "Videre OAuth Services",
+	Type: "Widget",
+	Source: "Core",
+	Description: "OAuth Services",
+	PackagedDate: ""
+}

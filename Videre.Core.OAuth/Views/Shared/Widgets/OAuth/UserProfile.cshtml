@@ -1,0 +1,92 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using Services = Videre.Core.OAuth.Services;
+@using CoreServices = Videre.Core.Services;
+@model Videre.Core.Models.Widget
+
+@{
+    
+    var providers = Services.OAuth.GetRegisteredAuthenticationClients();
+    var user = CoreServices.Account.CurrentUser;
+    
+    Html.RegisterControlPresenter(Model, "videre.widgets.oauth.userprofile", new Dictionary<string, object>() 
+    { 
+        { "data", CoreServices.Account.GetUserProfile() }, 
+        { "OAuthProviders", providers },
+        { "userAuthProviders", user.Attributes.Keys.Where(k => k.StartsWith("OAuthToken_")).Select(k => k.Substring("OAuthToken_".Length)).ToList() },
+        
+    });
+
+}
+
+<div id="@Model.GetId("Widget")">
+    @{Html.RenderPartial("WidgetHeader", Model);}
+    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "User Profile") }));}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">@Model.GetText("ProfileInfo.Text", "Profile Information")</div>
+                <div class="panel-body form-horizontal">
+                    <div id="@Model.GetId("StandardElementsCtr")">
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Email.Text", "Email").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Email().DataColumn("Email").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Locale.Text", "Locale").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Locale"), BootstrapUnits.GridSize.MediumDevice3)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("TimeZone.Text", "Time Zone").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().DropDownList().DataColumn("TimeZone").Options(TimeZoneInfo.GetSystemTimeZones().Select(t => new SelectListItem() { Value = t.StandardName, Text = t.DisplayName }).ToList()), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").DataColumn("Password").DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ConfirmPassword.Text", "Confirm Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword2").DataColumn("Password").MustMatch("txtPassword").DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+                    </div>
+                    @if (CoreServices.Account.CustomUserElements.Where(e => e.UserCanEdit).Count() > 0)
+                    {   
+                        <div id="@Model.GetId("CustomElementsCtr")">
+                            @foreach (var element in CoreServices.Account.CustomUserElements.Where(e => e.UserCanEdit))
+                            {
+                                if (element.Values != null)
+                                {
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label(element.SafeName + ".Text", element.Name).GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().DropDownList().Options(element.Values).DataColumn(element.Name).Required(element.Required), BootstrapUnits.GridSize.MediumDevice8)
+                                }
+                                else
+                                {
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label(element.SafeName + ".Text", element.Name).GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn(element.Name).Required(element.Required), BootstrapUnits.GridSize.MediumDevice8)
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        @if (providers.Count > 0)
+        {
+            <div class="col-md-6">
+                <div class="panel panel-default" id="@Model.GetId("UnassociatedOAuthCtr")">
+                    <div class="panel-heading">@Model.GetText("AssociateAccount.Text", "Associate Account")</div>
+                    <div class="panel-body">
+                        @foreach (var provider in providers)
+                        {
+                            <a class="btn btn-default" data-oauthprovider="@provider" href="@CoreServices.Portal.ResolveUrl(string.Format("~/oauth/authentication/ExternalLogin?provider={0}&returnUrl={1}", provider, CoreServices.Portal.ResolveCurrentUrl("")))"><span class="glyphicon glyphicon-plus"></span>&nbsp;@provider</a>
+                        }
+                    </div>
+                </div>
+                <div class="panel panel-default" id="@Model.GetId("AssociatedOAuthCtr")">
+                    <div class="panel-heading">@Model.GetText("DisassociateAccount.Text", "Disassociate Account")</div>
+                    <div class="panel-body">
+                        @foreach (var provider in providers)
+                        {
+                            <a class="btn btn-default" data-oauthprovider="@provider"><span class="glyphicon glyphicon-minus"></span>&nbsp;@provider</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="videre-form-actions">
+                @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
+            </div>
+        </div>
+    </div>
+</div>
+
