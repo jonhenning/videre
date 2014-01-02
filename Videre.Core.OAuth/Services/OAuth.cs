@@ -12,6 +12,11 @@ namespace Videre.Core.OAuth.Services
 {
     public class OAuth
     {
+        public static List<string> GetUserAuthProviders(CoreModels.User user)
+        {
+            return user.Attributes.Keys.Where(k => k.StartsWith("OAuthToken_")).Select(k => k.Substring("OAuthToken_".Length)).ToList();
+        }
+
         public static CoreModels.User GetUserByOAuthToken(string provider, string token, string portalId = null)
         {
             return CoreServices.Account.Get(u => u.Attributes.ContainsKey("OAuthToken_" + provider) && u.Attributes["OAuthToken_" + provider].ToString() == token, portalId);

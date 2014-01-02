@@ -9,14 +9,12 @@
 @{
     
     var providers = Services.OAuth.GetRegisteredAuthenticationClients();
-    var user = CoreServices.Account.CurrentUser;
     
     Html.RegisterControlPresenter(Model, "videre.widgets.oauth.userprofile", new Dictionary<string, object>() 
     { 
         { "data", CoreServices.Account.GetUserProfile() }, 
         { "OAuthProviders", providers },
-        { "userAuthProviders", user.Attributes.Keys.Where(k => k.StartsWith("OAuthToken_")).Select(k => k.Substring("OAuthToken_".Length)).ToList() },
-        
+        { "userAuthProviders", Services.OAuth.GetUserAuthProviders(CoreServices.Account.CurrentUser) }
     });
 
 }

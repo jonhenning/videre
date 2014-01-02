@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Videre.Core.ActionResults;
 using Videre.Core.Services;
@@ -42,15 +43,18 @@ namespace Videre.Core.OAuth.Controllers
                 return RedirectToAction("ExternalLoginFailure");
         }
 
-        public JsonResult<CoreModels.UserProfile> DisassociateExternalLogin(string provider)
+        public JsonResult<dynamic> DisassociateExternalLogin(string provider)
         {
-            return API.Execute<CoreModels.UserProfile>(r =>
+            return API.Execute<dynamic>(r =>
             {
                 if (!CoreServices.Account.IsAuthenticated)
                     throw new Exception(Localization.GetLocalization(CoreModels.LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));   //sneaky!
 
                 Services.OAuth.DisassociateOAuthToken(CoreServices.Account.CurrentUser.Id, provider);
-                r.Data = CoreServices.Account.GetUserProfile(CoreServices.Account.CurrentUser.Id);
+                r.Data = new {
+                    profile = CoreServices.Account.GetUserProfile(CoreServices.Account.CurrentUser.Id),
+                    userAuthProviders = Services.OAuth.GetUserAuthProviders(CoreServices.Account.CurrentUser)
+                };
             });
         }
 

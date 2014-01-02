@@ -25,7 +25,8 @@ videre.widgets.oauth.userprofile = videre.widgets.base.extend(
 
         this._delegates = {
             onDataReturn: videre.createDelegate(this, this._onDataReturn),
-            onSaveReturn: videre.createDelegate(this, this._onSaveReturn)
+            onSaveReturn: videre.createDelegate(this, this._onSaveReturn),
+            onDisassociateReturn: videre.createDelegate(this, this._onDisassociateReturn)
         };
     },
 
@@ -79,7 +80,7 @@ videre.widgets.oauth.userprofile = videre.widgets.base.extend(
 
     _disassociateProvider: function(provider)
     {
-        this.ajax('~/OAuth/Authentication/DisassociateExternalLogin', { provider: provider }, this._delegates.onSaveReturn);
+        this.ajax('~/OAuth/Authentication/DisassociateExternalLogin', { provider: provider }, this._delegates.onDisassociateReturn);
     },
 
     _onDataReturn: function(result, ctx)
@@ -91,11 +92,20 @@ videre.widgets.oauth.userprofile = videre.widgets.base.extend(
         }
     },
 
-    _onSaveReturn: function(result)
+    _onSaveReturn: function (result)
+    {
+        if (!result.HasError && result.Data)
+            this.refresh();
+    },
+
+    _onDisassociateReturn: function (result)
     {
         if (!result.HasError && result.Data)
         {
-            this.refresh();
+            this.set_data(result.Data.profile);
+            this._userAuthProviders = result.Data.userAuthProviders;
+            this.bind();
+            //this.refresh();
         }
     },
 
