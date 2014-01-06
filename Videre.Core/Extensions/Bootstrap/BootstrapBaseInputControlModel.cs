@@ -10,8 +10,8 @@ namespace Videre.Core.Extensions.Bootstrap
         public string mustMatch { get; set; }
         public bool readOnly { get; set; }
         public bool required { get; set; }
-        public IBootstrapBaseControl appendControl { get; set; }
-        public IBootstrapBaseControl prependControl { get; set; }
+        public List<IBootstrapBaseControl> appendControls { get; set; }
+        public List<IBootstrapBaseControl> prependControls { get; set; }
 
         public Bootstrap.BootstrapUnits.InputSize inputSize { get; set; }
         public bool disableAutoComplete { get; set; }

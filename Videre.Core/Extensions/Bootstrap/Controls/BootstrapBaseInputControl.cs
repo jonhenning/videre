@@ -11,10 +11,12 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         where TModel : BootstrapBaseInputControlModel, new()
         where TControl : class, IFluentBootstrapInputControl<TControl, TModel>
     {
-        public BootstrapBaseInputControl(HtmlHelper html) : base(html)
+        public BootstrapBaseInputControl(HtmlHelper html)
+            : base(html)
         {
         }
-        public BootstrapBaseInputControl(HtmlHelper html, string id) : this(html)
+        public BootstrapBaseInputControl(HtmlHelper html, string id)
+            : this(html)
         {
             if (!string.IsNullOrEmpty(id))
                 this._model.id = GetId(id);
@@ -79,13 +81,17 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
         public TControl Append(Bootstrap.IBootstrapBaseControl ctl)
         {
-            _model.appendControl = ctl;
+            if (_model.appendControls == null)
+                _model.appendControls = new List<IBootstrapBaseControl>();
+            _model.appendControls.Add(ctl);
             return _control;
         }
 
         public TControl Prepend(Bootstrap.IBootstrapBaseControl ctl)
         {
-            _model.prependControl = ctl;
+            if (_model.prependControls == null)
+                _model.prependControls = new List<IBootstrapBaseControl>();
+            _model.prependControls.Add(ctl);
             return _control;
         }
 
@@ -116,43 +122,46 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
         protected string Render(TagBuilder ctl)
         {
-            if (_model.appendControl != null || _model.prependControl != null)
+            if (_model.appendControls != null || _model.prependControls != null)
             {
                 var ctr = new TagBuilder("div");
                 ctr.AddCssClass("input-group");
 
                 //todo: inputgroup size
-                HandleAddOn(ctr, _model.prependControl);
+                HandleAddOn(ctr, _model.prependControls);
                 ctr.InnerHtml += ctl.ToString(TagRenderMode.Normal);
-                HandleAddOn(ctr, _model.appendControl);               
+                HandleAddOn(ctr, _model.appendControls);
                 return ctr.ToString(TagRenderMode.Normal);
             }
-            else 
+            else
                 return ctl.ToString(TagRenderMode.Normal);
         }
 
-        private void HandleAddOn(TagBuilder ctr, IBootstrapBaseControl ctl)
+        private void HandleAddOn(TagBuilder ctr, List<IBootstrapBaseControl> ctls)
         {
-            if (ctl != null)
+            if (ctls != null)
             {
-                if (ctl is IBootstrapButton)
+                foreach (var ctl in ctls)
                 {
-                    var inputGroup = new TagBuilder("span");
-                    inputGroup.AddCssClass("input-group-btn");
-                    inputGroup.InnerHtml = ctl.ToHtmlString();
-                    ctr.InnerHtml += inputGroup.ToString(TagRenderMode.Normal);
-                }
-                else
-                {
-                    ctl.AddCss("input-group-addon");
-                    ctr.InnerHtml += ctl.ToHtmlString();
+                    if (ctl is IBootstrapButton)
+                    {
+                        var inputGroup = new TagBuilder("span");
+                        inputGroup.AddCssClass("input-group-btn");
+                        inputGroup.InnerHtml = ctl.ToHtmlString();
+                        ctr.InnerHtml += inputGroup.ToString(TagRenderMode.Normal);
+                    }
+                    else
+                    {
+                        ctl.AddCss("input-group-addon");
+                        ctr.InnerHtml += ctl.ToHtmlString();
+                    }
                 }
             }
         }
 
     }
 
-    
+
 
 
 }
