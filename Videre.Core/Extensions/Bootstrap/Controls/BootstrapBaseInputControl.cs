@@ -73,6 +73,12 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             return _control;
         }
 
+        public TControl MaxLength(int maxLength)
+        {
+            _model.maxLength = maxLength;
+            return _control;
+        }
+
         public TControl DisableAutoComplete()
         {
             _model.disableAutoComplete = true;
@@ -108,6 +114,9 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
                 ctl.Attributes.AddSafe("data-controltype", _model.controlType);
             if (!string.IsNullOrEmpty(_model.mustMatch))
                 ctl.Attributes.AddSafe("data-match", _model.mustMatch);
+
+            if (_model.maxLength.HasValue)
+                ctl.Attributes.AddSafe("maxlength", _model.maxLength.Value.ToString());
 
             if (_model.inputSize != BootstrapUnits.InputSize.Default)
                 ctl.AddCssClass(Bootstrap.BootstrapUnits.GetInputSizeCss(_model.inputSize));

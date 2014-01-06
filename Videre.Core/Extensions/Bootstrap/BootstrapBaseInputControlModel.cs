@@ -10,6 +10,7 @@ namespace Videre.Core.Extensions.Bootstrap
         public string mustMatch { get; set; }
         public bool readOnly { get; set; }
         public bool required { get; set; }
+        public int? maxLength { get; set; }
         public List<IBootstrapBaseControl> appendControls { get; set; }
         public List<IBootstrapBaseControl> prependControls { get; set; }
 
