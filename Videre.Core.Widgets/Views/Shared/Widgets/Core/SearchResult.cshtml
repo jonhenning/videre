@@ -3,7 +3,7 @@
 @using CoreModels = Videre.Core.Models;
 @using Videre.Core.Services;
 @model CoreModels.Widget
-@{
+@{   
     var term = Request["q"];    
     var results = Videre.Core.Services.Search.Query(term, 100);
 
@@ -17,8 +17,8 @@
 
 <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
     <div class="row">
-        <div class="span3">
-            <ul class="nav nav-list" id="@Model.GetId("FilterList")">
+        <div class="col-md-2">
+            <ul class="nav nav-pills nav-stacked" id="@Model.GetId("FilterList")">
                 <li class="active" data-filter="">
                 <a>@Model.GetText("Everything.Text", "Everything")</a>
                 </li>
@@ -30,22 +30,18 @@
 }
             </ul>
         </div>
-        <div class="span9">
+        <div class="col-md-10">
             <div class="row">
-                <div class="span4">
-                    <div class="controls">
-                        <div class="input-append">
-                            <input type="text" id="@Model.GetId("Term")" value="@term" autocomplete="off" />
-                            <button class="btn" type="button" id="@Model.GetId("btnSearch")"><i class="icon-search"></i></button>
-                        </div>
-                    </div>
+                <div class="col-md-4">
+                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Term.Text", "Term").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("Term").Val(term)
+                        .Append(Html.Bootstrap().Button("btnSearch").Css("btn-default").Icon("glyphicon glyphicon-search")), BootstrapUnits.GridSize.MediumDevice9)
                 </div>
                 <div class="span5">
                     @{Html.RenderPartial("WidgetHeader", Model);}
                 </div>
             </div>
             <div class="row">
-                <div class="span9">
+                <div class="col-md-8">
                     <ul id="@Model.GetId("ItemList")" class="list-unstyled">
                     </ul>
                     <script id="@Model.GetId("ItemListTemplate")" type="text/html">

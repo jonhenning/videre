@@ -89,7 +89,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             ctl.Attributes.AddSafe("type", "text");
 
             if (!string.IsNullOrEmpty(_model.val))
-                ctl.Attributes.AddSafe("val", _model.val);  //encode?
+                ctl.Attributes.AddSafe("value", _model.val);  //encode?
 
             //if (_model.pickDate)
             //    ctl.Attributes.AddSafe("data-pick-date", "true");

@@ -61,7 +61,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             //chk.Attributes.AddSafe("data-controltype", "checkbox");
 
             if (!string.IsNullOrEmpty(_model.val))
-                chk.Attributes.AddSafe("val", _model.val); 
+                chk.Attributes.AddSafe("value", _model.val); 
 
             if (_model.isChecked)
                 chk.Attributes.AddSafe("checked", "checked");
