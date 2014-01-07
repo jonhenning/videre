@@ -453,7 +453,12 @@ videre.UI = {
 
         'datetime':
         {
-            isValid: function (val) { return moment(val, videre.localization.dateFormats.datetime).isValid(); }
+            isValid: function (val) { return moment(val, videre.localization.dateFormats.datetime).isValid(); },
+            set: function (ctl, val)
+            {
+                var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.datetime, ctl.data('timezone')) : '';
+                ctl.is(':input') ? ctl.val(text) : ctl.text(text);
+            }
         },
 
         'time':
@@ -463,7 +468,12 @@ videre.UI = {
 
         'date':
         {
-            isValid: function (val) { return moment(val, videre.localization.dateFormats.date).isValid(); }
+            isValid: function (val) { return moment(val, videre.localization.dateFormats.date).isValid(); },
+            set: function (ctl, val)
+            {
+                var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.date, ctl.data('timezone')) : '';
+                ctl.is(':input') ? ctl.val(text) : ctl.text(text);
+            }
         }
     }
 
