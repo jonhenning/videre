@@ -49,7 +49,9 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
                 {
                     if (string.IsNullOrEmpty(this._model.label.Model.forId))    //assign forId if not already assigned
                         this._model.label.Model.forId = c.Id;
-                    c.AddCss("form-control"); 
+
+                    if (c is IInputControl)
+                        c.AddCss("form-control"); 
                 });
             this._model.controls.AddRange(controls);
         }

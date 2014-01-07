@@ -4,7 +4,11 @@ using System.ComponentModel;
 
 namespace Videre.Core.Extensions.Bootstrap
 {
-    public interface IFluentBootstrapInputControl<TControl, TModel> : IFluentBootstrapControlBase<TControl, TModel>
+    public interface IInputControl  //need way to determine if control is input of any type... todo: can we check for IFluentBootstrapControlBase of any type?
+    {
+    }
+
+    public interface IFluentBootstrapInputControl<TControl, TModel> : IFluentBootstrapControlBase<TControl, TModel>, IInputControl
     {
         TControl Val(string text);
 

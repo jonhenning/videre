@@ -31,7 +31,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         public BootstrapLabel(HtmlHelper html, string token, string defaulText, string forId, string id) : base(html, id)
         {
             this._model.forId = GetId(forId);
-            this.Text(token, defaulText);
+            if (!string.IsNullOrEmpty(token))
+                this.Text(token, defaulText);
         }
 
         public IBootstrapLabel Text(string text)

@@ -27,6 +27,11 @@ namespace Videre.Core.Extensions.Bootstrap
             return new BootstrapSpan(Html, id);
         }
 
+        public IBootstrapParagraph Paragraph(string id = null)
+        {
+            return new BootstrapParagraph(Html, id);
+        }
+
         public IBootstrapLabel Label(string token, string text, string forId)
         {
             return new BootstrapLabel(Html, token, text, forId);
