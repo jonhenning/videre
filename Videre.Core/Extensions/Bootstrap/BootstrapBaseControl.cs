@@ -67,9 +67,23 @@ namespace Videre.Core.Extensions.Bootstrap
             return _control;
         }
 
+        public TControl DataAttributes(object attributes)
+        {
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(attributes))
+                _model.htmlAttributes.AddSafe("data-" + property.Name, property.GetValue(attributes));
+            return _control;
+        }
+
         public TControl StyleAttribute(string key, string value)
         {
             _model.styleAttributes.AddSafe(key, value);
+            return _control;
+        }
+
+        public TControl StyleAttributes(object attributes)
+        {
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(attributes))
+                _model.styleAttributes.AddSafe(property.Name, property.GetValue(attributes).ToString());
             return _control;
         }
 
