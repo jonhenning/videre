@@ -32,9 +32,9 @@ namespace Videre.Core.Extensions
                     RegisterWebReferenceGroup(helper, dep);
 
                 if (wr.Type == Models.WebReferenceType.ScriptReference)
-                    helper.RegisterScript(wr.Url, wr.LoadType == Models.WebReferenceLoadType.Defer);
+                    helper.RegisterScript(wr.Url, wr.LoadType == Models.WebReferenceLoadType.Defer, excludeFromBundle: wr.ExcludeFromBundle);
                 else if (wr.Type == Models.WebReferenceType.StyleSheetReference)
-                    helper.RegisterStylesheet(wr.Url, wr.LoadType == Models.WebReferenceLoadType.Defer);
+                    helper.RegisterStylesheet(wr.Url, wr.LoadType == Models.WebReferenceLoadType.Defer, excludeFromBundle: wr.ExcludeFromBundle);
                 else if (wr.Type == Models.WebReferenceType.Script)
                 {
                     if (wr.LoadType == Models.WebReferenceLoadType.Inline)
@@ -112,24 +112,24 @@ namespace Videre.Core.Extensions
             {
                 if (runAtEnd)
                 {
-                    GetMarkupList(helper, "documentreadyendjs").Add(script);
+                    Services.WebReferenceBundler.GetReferenceList(helper, "documentreadyendjs").Add(new Models.ReferenceListItem() { Src = key, Text = script } );
                 }
                 else
                 {
-                    GetMarkupList(helper, "documentreadyjs").Add(script);
+                    Services.WebReferenceBundler.GetReferenceList(helper, "documentreadyjs").Add(new Models.ReferenceListItem() { Src = key, Text = script });
                     RegisterKey(helper, key);
                 }
             }
             //}
         }
-        public static void RegisterScript(this HtmlHelper helper, string src, bool defer = true, Dictionary<string, string> dataAttributes = null)
+        public static void RegisterScript(this HtmlHelper helper, string src, bool defer = true, Dictionary<string, string> dataAttributes = null, bool excludeFromBundle = false)
         {
             //lock (_lockObj)
             //{
                 if (!IsKeyRegistered(helper, src))
                 {
                     if (defer)
-                        GetMarkupList(helper, "js").Add(GetPath(src));
+                        Services.WebReferenceBundler.GetReferenceList(helper, "js").Add(new Models.ReferenceListItem() { Src = GetPath(src), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle });
                     else
                         helper.ViewContext.HttpContext.Response.Write(string.Format("<script src=\"{0}\" type=\"text/javascript\" {1}></script>", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
                     RegisterKey(helper, src);
@@ -146,73 +146,35 @@ namespace Videre.Core.Extensions
             }
         }
 
-        public static void RegisterStylesheet(this HtmlHelper helper, string src, bool defer = true, Dictionary<string, string> dataAttributes = null)
+        public static void RegisterStylesheet(this HtmlHelper helper, string src, bool defer = true, Dictionary<string, string> dataAttributes = null, bool excludeFromBundle = false)
         {
             //lock (_lockObj)
             //{
                 if (!IsKeyRegistered(helper, src))
                 {
-                    string sMarkup = string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", GetPath(src), GetDataAttributeMarkup(dataAttributes));
                     if (defer)
-                        GetMarkupList(helper, "css").Add(sMarkup);
+                        Services.WebReferenceBundler.GetReferenceList(helper, "css").Add(new Models.ReferenceListItem() { Src = GetPath(src), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle });
                     else
-                        helper.ViewContext.HttpContext.Response.Write(sMarkup);
+                        helper.ViewContext.HttpContext.Response.Write(string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
                     RegisterKey(helper, src);
                 }
             //}
         }
         public static string RenderScripts(this HtmlHelper helper)
         {
-            //lock (_lockObj)
-            //{
-                var sb = new System.Text.StringBuilder();
-
-                var list = GetUnrenderedMarkupList(helper, "js");
-                foreach (string src in list)
-                {
-                    sb.AppendLine(string.Format("<script src=\"{0}\" type=\"text/javascript\"></script>", src));
-                }
-                SetMarkupListRendered(helper, "js");
-
-                list = GetUnrenderedMarkupList(helper, "inlinejs");
-                if (list.Count > 0)
-                {
-                    sb.AppendLine(string.Format("<script type=\"text/javascript\">{0}</script>", String.Join("\r\n", list.ToArray())));
-                }
-                SetMarkupListRendered(helper, "inlinejs");
-
-                list = GetUnrenderedMarkupList(helper, "documentreadyjs");
-                if (list.Count > 0)
-                {
-                    sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", list.ToArray())));
-                }
-                SetMarkupListRendered(helper, "documentreadyjs");
-
-                list = GetUnrenderedMarkupList(helper, "documentreadyendjs");
-                if (list.Count > 0)
-                {
-                    sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", list.ToArray())));
-                }
-                SetMarkupListRendered(helper, "documentreadyendjs");
-
-                return sb.ToString();
-            //}
+            return Services.WebReferenceBundler.GenerateUnrenderedScriptMarkup(helper);
         }
+        
         public static string RenderStylesheets(this HtmlHelper helper)
         {
-            var sb = new System.Text.StringBuilder();
-
-            var list = GetUnrenderedMarkupList(helper, "css");
-            sb.AppendLine(String.Join("\r\n", list.ToArray()));
-            SetMarkupListRendered(helper, "css");
-
-            return sb.ToString();
+            return Services.WebReferenceBundler.GenerateUnrenderedStylesheetMarkup(helper);
         }
+
         public static void ScriptMarkup(this HtmlHelper helper, string key, string script)
         {
             if (!IsKeyRegistered(helper, key))
             {
-                GetMarkupList(helper, "inlinejs").Add(script);
+                Services.WebReferenceBundler.GetReferenceList(helper, "inlinejs").Add(new Models.ReferenceListItem() { Src = key, Text = script });
                 RegisterKey(helper, key);
             }
         }
@@ -369,47 +331,6 @@ namespace Videre.Core.Extensions
             }
         }
 
-        // private methods
-        private static List<string> GetMarkupList(HtmlHelper helper, string type)
-        {
-            var dict = GetContextItem<ConcurrentDictionary<string, List<string>>>(helper, "MarkupList");
-            //var dict = helper.ViewContext.HttpContext.Items.GetSetting<ConcurrentDictionary<string, List<string>>>("MarkupList", null);
-            //if (dict == null)
-            //{
-            //    dict = new ConcurrentDictionary<string, List<string>>();
-            //    helper.ViewContext.HttpContext.Items["MarkupList"] = dict;
-            //}
-            if (!dict.ContainsKey(type))
-                dict[type] = new List<string>();
-
-            return dict[type];
-        }
-
-        private static List<string> GetUnrenderedMarkupList(HtmlHelper helper, string type)
-        {
-            var list = GetMarkupList(helper, type);
-            var alreadyRendered = GetRenderedMarkupList(helper, type);
-            return list.Where(l => alreadyRendered.ContainsKey(l) == false).ToList();
-        }
-
-        private static void SetMarkupListRendered(HtmlHelper helper, string type)
-        {
-            var list = GetMarkupList(helper, type);
-            var alreadyRendered = GetRenderedMarkupList(helper, type);
-            foreach (var script in list)
-                alreadyRendered[script] = true;
-        }
-
-        private static ConcurrentDictionary<string, bool> GetRenderedMarkupList(HtmlHelper helper, string type)
-        {
-            return GetContextItem<ConcurrentDictionary<string, bool>>(helper, "MarkupListRendered_" + type);
-        }
-
-        private static string GetPath(string src)
-        {
-            return src.Replace("~/", RootPath);
-        }
-
         public static bool IsKeyRegistered(HtmlHelper helper, string key)
         {
             var dict = GetRegisteredKeyDict(helper);
@@ -422,12 +343,7 @@ namespace Videre.Core.Extensions
             dict[key.ToLower()] = true;
         }
 
-        private static ConcurrentDictionary<string, bool> GetRegisteredKeyDict(HtmlHelper helper)
-        {
-            return GetContextItem<ConcurrentDictionary<string, bool>>(helper, "KeyRegisteredDict");
-        }
-
-        private static T GetContextItem<T>(this HtmlHelper helper, string key) where T : class, new()
+        public static T GetContextItem<T>(this HtmlHelper helper, string key) where T : class, new()
         {
             T o = helper.ViewContext.HttpContext.Items.GetSetting<T>(key, null);
             if (o == null)
@@ -436,6 +352,17 @@ namespace Videre.Core.Extensions
                 helper.ViewContext.HttpContext.Items[key] = o;
             }
             return o;
+        }
+
+        // private methods
+        private static string GetPath(string src)
+        {
+            return src.Replace("~/", HtmlExtensions.RootPath);
+        }
+
+        private static ConcurrentDictionary<string, bool> GetRegisteredKeyDict(HtmlHelper helper)
+        {
+            return GetContextItem<ConcurrentDictionary<string, bool>>(helper, "KeyRegisteredDict");
         }
 
         private static MvcHtmlString GetControlGroup(Models.IClientControl widget, string id, string textKey, string defaultText, string controlMarkup, string controlsCss = "")
@@ -467,7 +394,9 @@ namespace Videre.Core.Extensions
                 dataAttributes["match"] = valueMatchControl;
             return dataAttributes;
         }
-        private static string GetDataAttributeMarkup(Dictionary<string, string> dataAttributes)
+        
+        //todo: move to better location?
+        public static string GetDataAttributeMarkup(Dictionary<string, string> dataAttributes)
         {
             var markup = "";
             if (dataAttributes != null)

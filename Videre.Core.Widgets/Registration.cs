@@ -62,6 +62,18 @@ namespace Videre.Core.Widgets
                 LabelText = "Remote Package Url"
             });
 
+            updates += CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition()
+            {
+                Name = "UseResourceBundles",
+                DefaultValue = false,
+                Required = false,
+                LabelKey = "UseResourceBundles.Text",
+                LabelText = "Use Resource Bundles",
+                DataType = "boolean",
+                InputType = "checkbox",
+                ControlType = "checkbox"
+            });
+
             CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition() { Name = "SearchIndexDir", DefaultValue = "~/App_Data/SearchIndex", Required = true, LabelKey = "SearchIndexDir.Text", LabelText = "Search Index Directory" });
             CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition() { Name = "SearchUrl", DefaultValue = "~/search", Required = true, LabelKey = "SearchUrl.Text", LabelText = "Search Url" });
 

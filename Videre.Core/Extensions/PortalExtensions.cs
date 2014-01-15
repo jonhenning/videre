@@ -144,7 +144,7 @@ namespace Videre.Core.Extensions
         public static void RegisterCoreScripts(this HtmlHelper helper)
         {
             helper.RegisterWebReferenceGroup("videre");
-            helper.RegisterScript("~/ServerJS/GlobalClientTranslations");
+            helper.RegisterScript("~/ServerJS/GlobalClientTranslations", true, excludeFromBundle: true);
 
             //todo: FIX!
             helper.ScriptMarkup("coreconstants", "var ROOT_URL = '" + HtmlExtensions.RootPath + "';");

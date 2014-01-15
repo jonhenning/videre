@@ -516,6 +516,13 @@ namespace Videre.Core.Services
             return ConfigurationManager.AppSettings.GetSetting<T>(key, defaultValue);
         }
 
+        public static T GetPortalSetting<T>(string groupName, string key, T defaultValue)
+        {
+            if (Portal.CurrentPortal != null)
+                return Portal.CurrentPortal.GetAttribute(groupName, key, defaultValue);
+            return defaultValue;
+        }
+
         public static string GetFilePath()
         {
             return GetAppSetting("FileDir", "~/App_Data/FileRepo");

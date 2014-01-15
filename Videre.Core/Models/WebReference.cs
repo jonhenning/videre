@@ -35,6 +35,7 @@ namespace Videre.Core.Models
         public string Url { get; set; }
         public string Text { get; set; }
         public int? Sequence { get; set; }
+        public bool ExcludeFromBundle { get; set; }
         public WebReferenceType Type { get; set; }
         public WebReferenceLoadType LoadType { get; set; }
         //public bool ForTheme { get; set; }  //todo: bad name?

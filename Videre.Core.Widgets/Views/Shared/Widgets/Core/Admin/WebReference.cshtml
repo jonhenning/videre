@@ -36,6 +36,7 @@
                         <th>@Model.GetText("Name.Text", "Name")</th>
                         <th>@Model.GetText("Group.Text", "Group")</th>
                         <th>@Model.GetText("DependencyGroups.Text", "Dependency Groups")</th>
+                        <th style="width: 170px;">@Model.GetText("ExcludeFromBundle.Text", "Exclude From Bundle")</th>
                     </tr>
                 </thead>
                 <tbody id="@Model.GetId("ItemList")"></tbody>
@@ -51,6 +52,7 @@
                     <td>{{:Name}}</td>
                     <td>{{:Group}}</td>
                     <td>{{:DependencyGroups.join(', ')}}</td>
+                    <td style="text-align: center;">{{:(ExcludeFromBundle ? '<span class="glyphicon glyphicon-ok">&nbsp;</span>' : '')}}</td>
                 </tr>
             </script>
         </div>
@@ -75,6 +77,7 @@
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("LoadType.Text", "Load Type").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().Options(default(Models.WebReferenceLoadType).ToListItemList()).DataColumn("LoadType"), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Text.Text", "Text").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextArea().Rows(5).DataColumn("Text").Css("videre-code-font-small"), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Sequence.Text", "Sequence").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataType("number").DataColumn("Sequence"), BootstrapUnits.GridSize.MediumDevice2)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ExcludeFromBundle.Text", "Exclude From Bundle").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().CheckBox().DataColumn("ExcludeFromBundle"), BootstrapUnits.GridSize.MediumDevice2)
                     </div>
                 </div>
                 <div class="modal-footer">
