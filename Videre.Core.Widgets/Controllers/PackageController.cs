@@ -144,11 +144,14 @@ namespace Videre.Core.Widgets.Controllers
 
             var content = exportPackage.ToObject<Models.PortalExport>();
 
-            return File(new Dictionary<string, string>()
+            var ret =  File(new Dictionary<string, string>()
                 {
                     {"package.manifest", m.ToJson(true, "db") },
                     {"content.json", content.ToJson(true, "db") }
                 }.ZipToByteArray(), "application/zip");
+            ret.FileDownloadName = m.FileName;
+
+            return ret;
         }
 
         [AcceptVerbs(HttpVerbs.Post)]

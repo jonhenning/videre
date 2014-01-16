@@ -9,16 +9,12 @@ namespace Videre.Core.ContentProviders
         //todo:  always tokenize???
         T IWidgetContentProvider.Get<T>(List<string> ids)
         {
-            var locs = Services.Localization.Get(ids) ;
-            locs.ForEach(l => l.Text = Services.TokenParser.ReplaceTokensWithContent(l.Text));
-            return locs as T;
+            return Services.Localization.Get(ids) as T;
         }
 
-        public string GetJson(List<string> ids)
+        public string GetJson(List<string> ids, string ignoreType = null)
         {
-            var locs = Services.Localization.Get(ids);
-            locs.ForEach(l => l.Text = Services.TokenParser.ReplaceTokensWithContent(l.Text));
-            return locs.ToJson(); 
+            return Services.Localization.Get(ids).ToJson(ignoreType: ignoreType);
         }
 
         public List<string> Save(string ns, string json)
@@ -31,7 +27,8 @@ namespace Videre.Core.ContentProviders
                 {
                     loc.Type = Models.LocalizationType.WidgetContent;
                     loc.PortalId = string.IsNullOrEmpty(loc.PortalId) ? Services.Portal.CurrentPortalId : loc.PortalId;
-                    loc.Text = Services.TokenParser.ReplaceContentWithTokens(loc.Text);
+                    
+                    //loc.Text = Services.TokenParser.ReplaceContentWithTokens(loc.Text);
 
                     var singleInstanceNamespace = "__" + ns;//using __ to allow distinction between shared content vs. single instance - minor hack!
                     if (string.IsNullOrEmpty(loc.Namespace))

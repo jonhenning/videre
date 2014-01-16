@@ -15,7 +15,7 @@
     {
         Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model);
     }
-    var html = TokenParser.ReplaceViewOnlyTokensWithContent(Localization.GetContent(locs, "Content.Text", Model.GetText("ContentMissing.Text", "[Content Missing]")));
+    var html = Localization.GetContent(locs, "Content.Text", Model.GetText("ContentMissing.Text", "[Content Missing]"));
     Html.RegisterPrettifyScriptIfNeeded(html);  //todo: do we like this???  or just always load it, or make it configuration in Portal level?
 }
 

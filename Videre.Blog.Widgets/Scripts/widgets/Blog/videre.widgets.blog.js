@@ -49,7 +49,7 @@ videre.widgets.blog = videre.widgets.base.extend(
 
     newEntry: function()
     {
-        this._blogEntry = { Id: '', Url: '', Title: '', Summary: '', Body: '', PostDate: null, Tags: [] };
+        this._blogEntry = { Id: '', Url: '', Title: '', Summary: '', Body: '', DisplayBody: '', PostDate: null, Tags: [] };
         this.showEntryEdit();
     },
 

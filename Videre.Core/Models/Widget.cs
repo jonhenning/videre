@@ -126,15 +126,15 @@ namespace Videre.Core.Models
             return true;
         }
 
-        public string GetPortalText(string key, string efaultValue)
+        public string GetPortalText(string key, string defaultValue)
         {
-            return Services.Localization.GetPortalText(key, efaultValue);
+            return Services.Localization.GetPortalText(key, defaultValue);
         }
 
-        public string GetContentJson()
+        public string GetContentJson(string ignoreType = null)
         {
             var provider = Manifest.GetContentProvider();
-            return provider != null ? provider.GetJson(ContentIds) : null;
+            return provider != null ? provider.GetJson(ContentIds, ignoreType) : null;
         }
 
         public void SaveContentJson(string json)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Videre.Core.Extensions;
 
 namespace Videre.Core.Services
 {
@@ -14,9 +15,13 @@ namespace Videre.Core.Services
                 TokenRule = (string text, Models.TokenParserRule rule) => 
                 {
                     var baseUrl = Videre.Core.Services.Portal.ResolveUrl("~/");
+                    var absoluteUrl = Videre.Core.Services.Portal.RequestRootUrl.TrimEnd('/');
                     //todo:  regex probably better here!
                     text = text.Replace(string.Format(" href=\"{0}", baseUrl), " href=\"" + GetTokenText(rule.Token));
                     text = text.Replace(string.Format(" src=\"{0}", baseUrl), " src=\"" + GetTokenText(rule.Token));
+
+                    text = text.Replace(string.Format(" href=\"{0}", absoluteUrl), " href=\"" + GetTokenText(rule.Token));
+                    text = text.Replace(string.Format(" src=\"{0}", absoluteUrl), " src=\"" + GetTokenText(rule.Token));
                     return text;
                 },
                 DetokenRule = (string text, Models.TokenParserRule rule) => 
@@ -74,19 +79,6 @@ namespace Videre.Core.Services
         public static string ReplaceTokensWithContent(string value)
         {
             foreach (var rule in _tokenRules.Where(r => r.DetokenRule != null && r.TokenRule != null && value.IndexOf(GetTokenText(r.Token)) > -1).OrderBy(r => r.Priority))
-                value = rule.DetokenRule(value, rule);
-            return value;
-        }
-
-        /// <summary>
-        /// Replace tokenized content with their replacement text
-        /// Rules that do NOT have a TokenRule will be processed here.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static string ReplaceViewOnlyTokensWithContent(string value)
-        {
-            foreach (var rule in _tokenRules.Where(r => r.DetokenRule != null && r.TokenRule == null && value.IndexOf(GetTokenText(r.Token)) > -1).OrderBy(r => r.Priority))
                 value = rule.DetokenRule(value, rule);
             return value;
         }

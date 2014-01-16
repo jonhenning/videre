@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeEndeavors.Extensions.Serialization;
+using System;
 
 namespace Videre.Core.Models
 {
@@ -17,6 +18,19 @@ namespace Videre.Core.Models
         public string Id { get; set; }      //Resource.Id
         public string Key { get; set; }     //Resource.Key
         public string Text { get; set; }    //Resource.Data
+
+        [SerializeIgnore(new string[] { "db" })]
+        public string DisplayText
+        {
+            get
+            {
+                return Services.TokenParser.ReplaceTokensWithContent(Text);
+            }
+            set
+            {
+                Text = Services.TokenParser.ReplaceContentWithTokens(value);
+            }
+        }
 
         public LocalizationType Type { get; set; }  
 

@@ -50,7 +50,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
 
                 export.WidgetContent = export.WidgetContent ?? new Dictionary<string, string>();
                 //todo: should fix extension method to use dictionary, not create a new one!
-                export.WidgetContent = export.WidgetContent.Merge(allWidgets.Where(w => w.Manifest.GetContentProvider() != null).ToDictionary(w => w.Id, wc => wc.GetContentJson()));
+                export.WidgetContent = export.WidgetContent.Merge(allWidgets.Where(w => w.Manifest.GetContentProvider() != null).ToDictionary(w => w.Id, wc => wc.GetContentJson("db")));
             }
             return export;
         }

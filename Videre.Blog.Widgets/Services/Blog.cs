@@ -13,10 +13,7 @@ namespace Videre.Blog.Widgets.Services
         {
             var res = CoreServices.Repository.Current.GetResourceById<Models.Blog>(id);
             if (res != null)
-            {
-                DetokenizeEntries(res.Data);
                 return res.Data;
-            }
             return null;
         }
 
@@ -31,7 +28,6 @@ namespace Videre.Blog.Widgets.Services
         {
             portalId = string.IsNullOrEmpty(portalId) ? CoreServices.Portal.CurrentPortalId : portalId;
             var blog = CoreServices.Repository.Current.GetResourceData<Models.Blog>("Blog", m => m.Data.PortalId == portalId && m.Data.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase), null);
-            DetokenizeEntries(blog);
             return blog;
         }
 
@@ -145,17 +141,17 @@ namespace Videre.Blog.Widgets.Services
             entry.Body = CoreServices.TokenParser.ReplaceContentWithTokens(entry.Body);
         }
 
-        public static void DetokenizeEntries(Models.Blog blog)
-        {
-            if (blog != null)
-                blog.Entries.ForEach(e => DetokenizeEntry(e));
-        }
+        //public static void DetokenizeEntries(Models.Blog blog)
+        //{
+        //    if (blog != null)
+        //        blog.Entries.ForEach(e => DetokenizeEntry(e));
+        //}
 
-        public static void DetokenizeEntry(Models.BlogEntry entry)
-        {
-            entry.Summary = CoreServices.TokenParser.ReplaceTokensWithContent(entry.Summary);
-            entry.Body = CoreServices.TokenParser.ReplaceTokensWithContent(entry.Body);
-        }
+        //public static void DetokenizeEntry(Models.BlogEntry entry)
+        //{
+        //    entry.Summary = CoreServices.TokenParser.ReplaceTokensWithContent(entry.Summary);
+        //    entry.Body = CoreServices.TokenParser.ReplaceTokensWithContent(entry.Body);
+        //}
 
     }
 

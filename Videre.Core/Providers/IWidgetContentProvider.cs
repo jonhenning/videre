@@ -8,7 +8,7 @@ namespace Videre.Core.ContentProviders
 {
     public interface IWidgetContentProvider
     {
-        string GetJson(List<string> ids);
+        string GetJson(List<string> ids, string ignoreType = null);
         T Get<T>(List<string> ids) where T : class;
         List<string> Save(string ns, string json);
         Dictionary<string, string> Import(string portalId, string ns, string json, Dictionary<string, string> idMap); //return <oldId, newId>

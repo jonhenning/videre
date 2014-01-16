@@ -14,12 +14,12 @@ namespace Videre.Blog.Widgets.ContentProviders
             return blog as T; //hack:  [0]?   - exception when more than one?
         }
 
-        public string GetJson(List<string> ids)
+        public string GetJson(List<string> ids, string ignoreType = null)
         {
             var id = ids.Count > 0 ? ids[0] : "";
             var blog = Services.Blog.GetById(id);
             //detokenizeEntries(blog); //not necessary as blog is not saved from provider
-            return blog.ToJson(); //todo:  pass in ignoreType? //hack:  [0]? - exception when more than one?
+            return blog.ToJson(ignoreType: ignoreType); //todo:  pass in ignoreType? //hack:  [0]? - exception when more than one?
         }
 
         public Dictionary<string, string> Import(string portalId, string ns, string json, Dictionary<string, string> idMap)

@@ -14,10 +14,10 @@ namespace Videre.Core.Widgets.ContentProviders
             return CoreServices.Menu.GetById(id) as T; //hack:  [0]?
         }
 
-        public string GetJson(List<string> ids)
+        public string GetJson(List<string> ids, string ignoreType = null)
         {
             var id = ids.Count > 0 ? ids[0] : "";
-            return CoreServices.Menu.GetById(id).ToJson(); //todo:  pass in ignoreType? //hack:  [0]?
+            return CoreServices.Menu.GetById(id).ToJson(ignoreType: ignoreType); //hack:  [0]?
         }
 
         public Dictionary<string, string> Import(string portalId, string ns, string json, Dictionary<string, string> idMap)

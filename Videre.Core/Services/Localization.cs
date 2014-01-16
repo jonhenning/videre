@@ -165,7 +165,7 @@ namespace Videre.Core.Services
             var items = content.Where(c => c.Key == key);
             var matches = queries.GetMatches(items, true);
             if (matches.Count > 0)
-                return matches[0].Text;
+                return matches[0].DisplayText;
             return defaultValue;
             
             //var content = Repository.Current.Get(Content.Select(c => c.ToResource()).ToList(), GetLocalizationQueries(CurrentUserLocale), true);
