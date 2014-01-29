@@ -77,7 +77,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             ctl.AddCssClass(Bootstrap.BootstrapUnits.GetButtonStyleCss(_model.style));
 
             if (!string.IsNullOrEmpty(_model.href))
-                ctl.Attributes.Add("href", _model.href);
+                ctl.Attributes.Add("href", Core.Services.Portal.ResolveUrl(_model.href));
 
             if (!string.IsNullOrEmpty(_model.icon))
             {
