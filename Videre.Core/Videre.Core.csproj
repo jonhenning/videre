@@ -153,6 +153,7 @@
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapDateTimePicker.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapParagraph.cs" />
     <Compile Include="Extensions\Bootstrap\Controls\BootstrapRadioButton.cs" />
+    <Compile Include="Extensions\Bootstrap\Controls\BootstrapAnchorButton.cs" />
     <Compile Include="Extensions\Bootstrap\IFluentBootstrapInputControl.cs" />
     <Compile Include="Extensions\Bootstrap\IFluentInterface.cs" />
     <Compile Include="Extensions\Bootstrap\IBootstrapBaseControl.cs" />
