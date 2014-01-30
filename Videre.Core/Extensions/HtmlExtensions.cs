@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using CodeEndeavors.Extensions;
 using System.Collections.Concurrent;
+using System.Web.Helpers;
 
 namespace Videre.Core.Extensions
 {
@@ -94,6 +95,17 @@ namespace Videre.Core.Extensions
         //    //helper.RegisterScript("~/scripts/jquery-ui-timepicker-1.0.1/jquery-ui-timepicker-addon.js", true);
         //    //helper.RegisterStylesheet("~/scripts/jquery-ui-timepicker-1.0.1/jquery-ui-timepicker-addon.css", true);
         //}
+
+        public static void RegisterAntiForgeryVerificationToken(this HtmlHelper helper)
+        {
+            if (Services.API.AntiForgeryTokenVerification)
+            {
+                string cookieToken;
+                string formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                helper.RegisterDocumentReadyScript("AntiForgeryToken", string.Format("videre._csrfToken = '{0}:{1}'", cookieToken, formToken));
+            }
+        }
 
         public static void RegisterScript(this HtmlHelper helper, string key, string script)
         {

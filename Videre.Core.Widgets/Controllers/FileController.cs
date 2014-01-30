@@ -104,7 +104,7 @@ namespace Videre.Core.Widgets.Controllers
                 }
                 else
                     throw new Exception(Localization.GetExceptionText("InvalidMimeType.Error", "{0} is invalid.", ext));
-            });
+            }, false);
         }
 
         public static bool IsMimeTypeAllowed(string MimeType)   //todo: secure this!

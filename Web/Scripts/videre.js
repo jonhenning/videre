@@ -4,6 +4,7 @@
     _timings: {},
     _lastLog: new Date(),
     _timers: {},
+    _csrfToken: null,
     registerNamespace: function(namespacePath)
     {
         var rootObject = window;
@@ -160,6 +161,12 @@
     ajax: function(url, data, success, error, ctx, options)
     {
         options = options || {};
+        if (videre._csrfToken != null)
+        {
+            if (options.headers == null)
+                options.headers = {};
+            options.headers.RequestVerificationToken = videre._csrfToken;
+        }
         return $.ajax({
             type: options.type || "POST",
             url: videre.resolveUrl(url),

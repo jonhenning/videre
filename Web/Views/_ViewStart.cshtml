@@ -5,6 +5,7 @@
 @{
 
     Html.RegisterWebReferenceGroup("videre");
+    Html.RegisterAntiForgeryVerificationToken();
     
     var template = ViewContext.ViewData.Model as Videre.Core.Models.PageTemplate;
     if (template != null)

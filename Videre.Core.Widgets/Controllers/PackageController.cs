@@ -181,7 +181,7 @@ namespace Videre.Core.Widgets.Controllers
                     manifest = manifest != null ? manifest.ToObject<Models.Package>() : null,
                     content = content != null ? content.ToObject<Models.PortalExport>() : null
                 };
-            });
+            }, false);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -236,7 +236,7 @@ namespace Videre.Core.Widgets.Controllers
                 }
                 else
                     throw new Exception(Localization.GetExceptionText("InvalidMimeType.Error", "{0} is invalid.", ext));
-            });
+            }, false);
         }
 
 
