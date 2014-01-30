@@ -12,11 +12,15 @@ namespace Videre.Core.Models
     {
         private readonly string _subClientId;
 
-        public SubWidget(Widget widget)
+        public SubWidget(Widget widget) : this(widget, true)
+        {
+        }
+
+        public SubWidget(Widget widget, bool separateNamespace)
         {
             Attributes = new Dictionary<string, object>();
             Widget = widget;
-            _subClientId = Services.Portal.NextClientId();
+            _subClientId = separateNamespace ? Services.Portal.NextClientId() : "";
         }
 
         public Widget Widget { get; set; }
@@ -32,7 +36,12 @@ namespace Videre.Core.Models
         [SerializeIgnore(new[] {"db", "client"})]
         public string ClientId
         {
-            get { return string.Format("{0}_{1}", _subClientId, Widget.ClientId); }
+            get 
+            { 
+                if (!string.IsNullOrEmpty(_subClientId))
+                    return string.Format("{0}_{1}", _subClientId, Widget.ClientId);
+                return Widget.ClientId;
+            }
         }
 
         [SerializeIgnore(new[] {"db", "client"})]

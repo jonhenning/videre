@@ -93,9 +93,14 @@ namespace Videre.Core.Extensions
             RenderWidget(helper, widget, defer);
         }
 
-        public static void RenderSubWidget(this HtmlHelper helper, Widget widget, string view, Dictionary<string, object> attributes = null)
+        public static void RenderSubWidget(this HtmlHelper helper, Widget widget, string view, Dictionary<string, object> attributes = null, bool separateNamespace = true)
         {
-            helper.RenderPartial("Widgets/" + widget.Manifest.Path.PathCombine(view, "/"), new SubWidget(widget) {Attributes = attributes});
+            helper.RenderPartial("Widgets/" + widget.Manifest.Path.PathCombine(view, "/"), new SubWidget(widget, separateNamespace) { Attributes = attributes });
+        }
+
+        public static void RenderSubWidget(this HtmlHelper helper, Widget widget, string view, object attributes = null, bool separateNamespace = true)
+        {
+            RenderSubWidget(helper, widget, view, attributes.AnonymousToDictionary(), separateNamespace);
         }
 
         public static void RenderWidgetEditor(this HtmlHelper helper, WidgetManifest manifest)

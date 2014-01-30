@@ -43,5 +43,12 @@ namespace Videre.Core.Extensions
                 return value.ToString();
         }
 
+        public static Dictionary<string, object> AnonymousToDictionary(this object obj)
+        {
+            var dict = new Dictionary<string, object>();
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(obj))
+                dict[property.Name] = property.GetValue(obj);
+            return dict;
+        }
     }
 }
