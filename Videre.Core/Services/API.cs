@@ -10,7 +10,12 @@ namespace Videre.Core.Services
     public class API
     {
         public delegate void JsonResultHandler<T>(JsonResult<T> result) where T : new();
-        public static JsonResult<T> Execute<T>(JsonResultHandler<T> codeFunc, bool verifyAntiForgeryToken = true) where T : new()
+        public static JsonResult<T> Execute<T>(JsonResultHandler<T> codeFunc) where T : new()
+        {
+            return Execute<T>(codeFunc, true);
+        }
+
+        public static JsonResult<T> Execute<T>(JsonResultHandler<T> codeFunc, bool verifyAntiForgeryToken) where T : new()
         {
             var result = new JsonResult<T>();
             try
