@@ -22,6 +22,11 @@ namespace Videre.Core.Extensions.Bootstrap
             return new BootstrapButton(Html, id);
         }
 
+        public IBootstrapAnchorButton AnchorButton(string id = null)
+        {
+            return new BootstrapAnchorButton(Html, id);
+        }
+
         public IBootstrapRadioButton RadioButton(string id = null)
         {
             return new BootstrapRadioButton(Html, id);
