@@ -255,6 +255,14 @@ videre.UI = {
             }, { text: 'Cancel', css: 'btn-default', close: true }]);
     },
 
+    alert: function(id, title, text, icon, style)
+    {
+        if (style == null)
+            style = '';
+        //todo:  hardcoded styles?
+        videre.UI.prompt(id, title, String.format('<div style="{0}"><div class="{1}" style="font-size: 32px; margin: 10px; vertical-align: middle; display: inline-block;"></div> {2}</div>', style, icon, text), [], [{ text: 'Ok', close: true }]);
+    },
+
     //usage:
     //videre.UI.prompt('test', 'My Title', null,
     //    [
