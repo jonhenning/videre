@@ -17,7 +17,7 @@ namespace Videre.Core.ActionResults
             IgnoreType = "client";
         }
 
-        private List<Models.Message> Messages { get; set; }
+        public List<Models.Message> Messages { get; set; }
         //private string _errorMessage;
         public new T Data { get; set; }
         public Dictionary<string, object> Context { get; set; }
