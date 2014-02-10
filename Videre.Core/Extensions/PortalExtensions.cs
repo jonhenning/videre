@@ -65,23 +65,37 @@ namespace Videre.Core.Extensions
 
         public static void RenderLayoutHeader(this HtmlHelper helper)
         {
-            helper.ViewContext.Writer.WriteLine(helper.RenderScripts());
-            helper.ViewContext.Writer.WriteLine(helper.RenderStylesheets());
+            try
+            {
+                helper.ViewContext.Writer.WriteLine(helper.RenderScripts());
+                helper.ViewContext.Writer.WriteLine(helper.RenderStylesheets());
+            }
+            catch (Exception ex)
+            {
+                helper.RenderPartial("Widgets/Core/Error", null, new ViewDataDictionary { { "Exception", ex } });
+            }
         }
 
         public static void RenderLayoutDeferred(this HtmlHelper helper)
         {
-            foreach (var widget in DeferredWidgets)
-                RenderWidget(helper, widget);
-
-            if (Portal.CurrentTemplate != null)
+            try
             {
-                helper.RegisterWebReferences(Portal.CurrentTemplate.Layout.WebReferences);
-                helper.RegisterWebReferences(Portal.CurrentTemplate.WebReferences);
-            }
+                foreach (var widget in DeferredWidgets)
+                    RenderWidget(helper, widget);
 
-            helper.ViewContext.Writer.WriteLine(helper.RenderScripts());
-            helper.ViewContext.Writer.WriteLine(helper.RenderStylesheets());
+                if (Portal.CurrentTemplate != null)
+                {
+                    helper.RegisterWebReferences(Portal.CurrentTemplate.Layout.WebReferences);
+                    helper.RegisterWebReferences(Portal.CurrentTemplate.WebReferences);
+                }
+
+                helper.ViewContext.Writer.WriteLine(helper.RenderScripts());
+                helper.ViewContext.Writer.WriteLine(helper.RenderStylesheets());
+            }
+            catch (Exception ex)
+            {
+                helper.RenderPartial("Widgets/Core/Error", null, new ViewDataDictionary { { "Exception", ex } });
+            }
         }
 
         public static void RenderWidget(this HtmlHelper helper, string manifestFullName, Dictionary<string, object> attributes = null, bool defer = false, string css = null, string style = null)
