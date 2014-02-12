@@ -25,8 +25,8 @@ namespace Videre.Core.Models
         {
             get
             {
-                if (string.IsNullOrEmpty(_timeZone))
-                    return System.TimeZone.CurrentTimeZone.StandardName;
+                //if (string.IsNullOrEmpty(_timeZone))
+                //    return System.TimeZone.CurrentTimeZone.StandardName;
 
                 return _timeZone;
             }
