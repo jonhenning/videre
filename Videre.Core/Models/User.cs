@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 //using System.Web.Script.Serialization;
 //using Newtonsoft.Json;
+using CodeEndeavors.Extensions;
 using CodeEndeavors.Extensions.Serialization;
 
 namespace Videre.Core.Models
@@ -68,7 +69,7 @@ namespace Videre.Core.Models
         {
             get
             {
-                if (_roles.Count > 0)
+                if (_roles != null && _roles.Count > 0)
                 {
                     _roleIds.AddRange(_roles);
                     _roles.Clear();
@@ -98,7 +99,7 @@ namespace Videre.Core.Models
         {
             get
             {
-                //if (_roles.Count > 0)    //conversion for backwards compat
+                //if (_roles != null && _roles.Count > 0)    //conversion for backwards compat
                 //{
                 //    AssignRoleIds(_roles);
                 //    _roles.Clear();
@@ -109,6 +110,14 @@ namespace Videre.Core.Models
             {
                 _claims = value;
             }
+        }
+
+        public T GetClaimValue<T>(string type, string issuer, T defaultValue)
+        {
+            var claim = Claims.Where(c => c.Type.Equals(type, System.StringComparison.InvariantCultureIgnoreCase) && c.Issuer.Equals(issuer, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (claim != null)
+                return claim.Value.ToType<T>();
+            return defaultValue;
         }
 
         //private void AssignRoleIds(List<string> roles)

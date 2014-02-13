@@ -45,7 +45,7 @@ namespace Videre.Core.Models
         {
             get
             {
-                if (_roles.Count > 0)
+                if (_roles != null && _roles.Count > 0)
                 {
                     _roleIds.AddRange(_roles);
                     _roles.Clear();
