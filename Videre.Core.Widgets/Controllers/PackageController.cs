@@ -81,7 +81,7 @@ namespace Videre.Core.Widgets.Controllers
             {
                 remotePackages = CoreServices.Package.GetRemotePackages();
             }
-            catch (Exception ex)
+            catch 
             {
                 //ignore?
             }
