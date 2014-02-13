@@ -13,7 +13,7 @@ namespace Videre.Core.Models
         {
             Widgets = new List<Widget>();
             Urls = new List<string>();
-            Roles = new List<string>();
+            //Roles = new List<string>();
             WebReferences = new List<string>();
         }
 
@@ -25,7 +25,38 @@ namespace Videre.Core.Models
         public string ThemeName { get; set; }
         public List<string> Urls { get; set; }
         public string PortalId { get; set; }
-        public List<string> Roles { get; set; }
+        private List<string> _roles = new List<string>();
+        [System.Obsolete("Use RoleIds")]
+        [SerializeIgnore(new string[] { "client" })]
+        public List<string> Roles
+        {
+            get
+            {
+                return _roles;
+            }
+            set
+            {
+                _roles = value;
+            }
+        }
+
+        private List<string> _roleIds = new List<string>();
+        public List<string> RoleIds
+        {
+            get
+            {
+                if (_roles.Count > 0)
+                {
+                    _roleIds.AddRange(_roles);
+                    _roles.Clear();
+                }
+                return _roleIds;
+            }
+            set
+            {
+                _roleIds = value;
+            }
+        }
         public bool? Authenticated { get; set; }
         public List<string> WebReferences { get; set; }
 
@@ -55,7 +86,7 @@ namespace Videre.Core.Models
         {
             get
             {
-                return Services.Account.RoleAuthorized(Roles) &&
+                return Services.Account.RoleAuthorized(RoleIds) &&
                     (!Authenticated.HasValue || Authenticated == Services.Account.IsAuthenticated);
             }
         }

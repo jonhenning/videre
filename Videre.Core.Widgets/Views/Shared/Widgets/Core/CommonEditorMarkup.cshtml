@@ -18,7 +18,7 @@
         Html.Bootstrap().DropDownList().Plugin(Plugin.BootstrapSelect).Options(new List<SelectListItem>() { new SelectListItem() { Text="No", Value="false" }, new SelectListItem() { Text="Yes", Value="true"} }).DataColumn("ShowHeader"), BootstrapUnits.GridSize.MediumDevice9)
 
     @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Roles.Text", "Roles").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
-        Html.Bootstrap().RoleList().Plugin(Plugin.BootstrapSelect).Multiple().DataColumn("Roles"), BootstrapUnits.GridSize.MediumDevice9)
+        Html.Bootstrap().RoleList().Plugin(Plugin.BootstrapSelect).Multiple().DataColumn("RoleIds"), BootstrapUnits.GridSize.MediumDevice9)
 
     @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Authentication.Text", "Authentication").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
         Html.Bootstrap().AuthorizedList().Plugin(Plugin.BootstrapSelect).DataColumn("Authenticated"), BootstrapUnits.GridSize.MediumDevice9)

@@ -38,11 +38,11 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 //layouts are linked by name (not id) so we can choose a page template without the layout
                 //allWidgets.AddRange(pageTemplate.Layout.Widgets);
 
-                var allRoleNames = pageTemplate.Roles;
-                allRoleNames.AddRange(pageTemplate.Widgets.SelectMany(w => w.Roles));
+                var allRoleIds = pageTemplate.RoleIds;
+                allRoleIds.AddRange(pageTemplate.Widgets.SelectMany(w => w.RoleIds));
 
                 export.Roles = export.Roles ?? new List<Models.Role>();
-                export.Roles.AddRange(Services.Account.GetRoles(portalId).Where(r => allRoleNames.Contains(r.Name)));
+                export.Roles.AddRange(Services.Account.GetRoles(portalId).Where(r => allRoleIds.Contains(r.Id)));
 
                 export.Manifests = export.Manifests ?? new List<Models.WidgetManifest>();
                 export.Manifests.AddRange(Services.Widget.GetWidgetManifests().Where(m => allWidgets.Select(w => w.ManifestId).Contains(m.Id)));

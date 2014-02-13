@@ -30,7 +30,7 @@ namespace Videre.Core.Services
             var existing = GetSecureActivity(portalId, activity.Area, activity.Name);
             activity.Id = existing != null ? existing.Id : null;
             activity.PortalId = portalId;
-            activity.Roles = GetNewRoleIds(activity.Roles, idMap);
+            activity.RoleIds = GetNewRoleIds(activity.RoleIds, idMap);
             return Save(activity, userId);
         }
         public static string Save(Models.SecureActivity activity, string userId = null)
@@ -74,14 +74,14 @@ namespace Videre.Core.Services
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
             var activity = GetSecureActivity(portalId, area, name);
             if (activity != null)
-                Services.Account.VerifyInRole(activity.Roles);
+                Services.Account.VerifyInRole(activity.RoleIds);
         }
         public static bool IsActivityAuthorized(string area, string name, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
             var activity = GetSecureActivity(portalId, area, name);
             if (activity != null)
-                return Services.Account.IsInRole(activity.Roles, false);
+                return Services.Account.IsInRole(activity.RoleIds, false);
             return false;
         }
 
@@ -89,7 +89,7 @@ namespace Videre.Core.Services
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             var activities = GetSecureActivities(portalId: Portal.CurrentPortalId);
-            return activities.Where(a => Services.Account.IsInRole(userId, a.Roles)).ToList();
+            return activities.Where(a => Services.Account.IsInRole(userId, a.RoleIds)).ToList();
         }
 
         //public static List<Models.SecureActivity> GetAuthorizedSecureActivities()

@@ -143,7 +143,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
     addItem: function()
     {
-        var item = { genId: this._nextId(), Text: 'New Item', Items: [], Url: '', Roles: [], Authenticated: null };
+        var item = { genId: this._nextId(), Text: 'New Item', Items: [], Url: '', RoleIds: [], Authenticated: null };
         this._widgetData.Content.Items.push(item);
         this._selectedItem = item;
         this.bindMenu();

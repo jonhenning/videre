@@ -93,7 +93,7 @@ namespace Videre.Core.Services
         {
             var user = GetUserById(userId);
             if (user != null)
-                return user.Roles.Exists(r => roleIds.Contains(r));
+                return user.RoleIds.Exists(r => roleIds.Contains(r));
             return false;
         }
 
@@ -172,7 +172,7 @@ namespace Videre.Core.Services
             var existing = GetUser(user.Name, portalId);
             user.PortalId = portalId;
             user.Id = existing != null ? existing.Id : null;
-            user.Roles = Security.GetNewRoleIds(user.Roles, idMap);
+            user.RoleIds = Security.GetNewRoleIds(user.RoleIds, idMap);
             return SaveUser(user, userId);
         }
 
@@ -212,7 +212,7 @@ namespace Videre.Core.Services
             var user = AccountService.Login(userName, password);
             if (user != null)
             {
-                IssueAuthenticationTicket(user.Id.ToString(), user.Roles, 30, persistant);
+                IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, persistant);
             }
             return user;
         }
@@ -310,27 +310,11 @@ namespace Videre.Core.Services
             id = string.IsNullOrEmpty(id) ? Account.CurrentIdentityName : id;
             var user = GetUserById(id);
             if (user != null)
-            {
-                var profile = new Models.UserProfile() 
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Email = user.Email,
-                    Locale = user.Locale,
-                    TimeZone = user.TimeZone
-                };
-                foreach (var element in GetEditableProfileElements())
-                {
-                    if (user.Attributes.ContainsKey(element.Name))
-                        profile.Attributes[element.Name] = user.Attributes[element.Name];
-                }
-                return profile;
-
-            }
+                return new Models.UserProfile(user);
             return null;
         }
 
-        private static List<CustomDataElement> GetEditableProfileElements()
+        public static List<CustomDataElement> GetEditableProfileElements()
         {
             return Account.CustomUserElements.Where(e => e.UserCanEdit).ToList();
         }
@@ -357,24 +341,7 @@ namespace Videre.Core.Services
 
             //cloning user so cached dies not get changed until actual save occurs
             var user = GetUserById(userProfile.Id, true);
-
-            //todo: mapping here or in object?
-            user.Name = userProfile.Name;
-            user.Email = userProfile.Email;
-            user.Locale = userProfile.Locale;
-            user.TimeZone = userProfile.TimeZone;
-            user.Password = userProfile.Password1;
-
-            //ONLY update attributes user is able to edit
-            if (userProfile.Attributes != null)
-            {
-                foreach (var element in GetEditableProfileElements())
-                {
-                    if (userProfile.Attributes.ContainsKey(element.Name))
-                        user.Attributes[element.Name] = userProfile.Attributes[element.Name];
-                }
-            }
-
+            userProfile.ApplyProfileToUser(user);
             return !string.IsNullOrEmpty(SaveUser(user, userProfile.Id));   //at the point of calling the Account service we should have already validated user has permission to change this user id
         }
 

@@ -415,7 +415,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
     _createWidget: function(manifestId, pane, widget, insertAfter)
     {
         if (widget == null)
-            widget = { ManifestId: manifestId, PaneName: pane, Seq: 0, Css: '', Style: '', Authenticated: '', Roles: [], Attributes: {}, ContentJson: null };
+            widget = { ManifestId: manifestId, PaneName: pane, Seq: 0, Css: '', Style: '', Authenticated: '', RoleIds: [], Attributes: {}, ContentJson: null };
 
         widget.GenId = this._nextId(); //client-side only Id
 

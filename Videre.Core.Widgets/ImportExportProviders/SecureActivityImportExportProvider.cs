@@ -36,7 +36,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 export.SecureActivities.Add(a);
 
                 export.Roles = export.Roles ?? new List<Models.Role>();
-                export.Roles.AddRange(Services.Account.GetRoles(portalId).Where(r => a.Roles.Contains(r.Id)));
+                export.Roles.AddRange(Services.Account.GetRoles(portalId).Where(r => a.RoleIds.Contains(r.Id)));
             }
 
             return export;

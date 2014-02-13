@@ -47,7 +47,7 @@ namespace Videre.Core.Services
         {
             foreach (var subItem in items)
             {
-                subItem.Roles = Security.GetNewRoleIds(subItem.Roles, idMap);
+                subItem.RoleIds = Security.GetNewRoleIds(subItem.RoleIds, idMap);
                 ImportSubMenuItems(subItem.Items, idMap);
             }
         }

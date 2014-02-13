@@ -161,6 +161,7 @@
     <Compile Include="Extensions\Bootstrap\BootstrapBaseControlModel.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
+    <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />
     <Compile Include="Providers\DynamicContentProviderFactory.cs" />
     <Compile Include="Providers\FastTemplateDynamicContentProvider.cs" />

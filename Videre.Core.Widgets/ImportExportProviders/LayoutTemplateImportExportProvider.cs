@@ -36,8 +36,8 @@ namespace Videre.Core.Widgets.ImportExportProviders
             {
                 var allWidgets = layoutTemplate.Widgets.ToList();
 
-                var allRoleNames = layoutTemplate.Roles;
-                allRoleNames.AddRange(layoutTemplate.Widgets.SelectMany(w => w.Roles));
+                var allRoleNames = layoutTemplate.RoleIds;
+                allRoleNames.AddRange(layoutTemplate.Widgets.SelectMany(w => w.RoleIds));
 
                 export.Roles = export.Roles ?? new List<Models.Role>();
                 export.Roles.AddRange(Services.Account.GetRoles(portalId).Where(r => allRoleNames.Contains(r.Name)));

@@ -179,16 +179,16 @@ namespace Videre.Core.Widgets
             //portal init
             updates += CoreServices.Update.Register(new List<CoreModels.SecureActivity>()
             {
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Portal", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "PageTemplate", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "LayoutTemplate", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Localization", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Upload", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Account", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Content", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Comment", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Search", Name = "Upload", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Portal", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "PageTemplate", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "LayoutTemplate", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Localization", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Upload", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Account", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Content", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Comment", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Search", Name = "Upload", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }
             });
 
             updates += CoreServices.Update.Register(Services.Web.GetDefaultWebReferences(portalId));

@@ -315,7 +315,7 @@ namespace Videre.Core.Services
 
                 updates += Core.Services.Update.Register(new List<Core.Models.User>()
                 {
-                    new Core.Models.User() { PortalId = portalId, Name = adminUser.Name, Email = adminUser.Email, Password = adminUser.Password, Roles = new List<string>() {Core.Services.Update.GetAdminRoleId(portalId)} }
+                    new Core.Models.User() { PortalId = portalId, Name = adminUser.Name, Email = adminUser.Email, Password = adminUser.Password, RoleIds = new List<string>() {Core.Services.Update.GetAdminRoleId(portalId)} }
                 });
             }
             if (updates > 0)

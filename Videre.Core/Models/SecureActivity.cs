@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CodeEndeavors.Extensions.Serialization;
+using System.Collections.Generic;
 
 namespace Videre.Core.Models
 {
@@ -13,14 +14,47 @@ namespace Videre.Core.Models
     {
         public SecureActivity()
         {
-            Roles = new List<string>();
+            //Roles = new List<string>();
         }
 
         public string Id { get; set; }
         public string PortalId { get; set; }
         public string Area { get; set; }
         public string Name { get; set; }
-        public List<string> Roles { get; set; }
+
+        private List<string> _roles = new List<string>();
+        [System.Obsolete("Use RoleIds")]
+        [SerializeIgnore(new string[] { "client" })]
+        public List<string> Roles
+        {
+            get
+            {
+                return _roles;
+            }
+            set
+            {
+                _roles = value;
+            }
+        }
+
+        private List<string> _roleIds = new List<string>();
+        public List<string> RoleIds
+        {
+            get
+            {
+                if (_roles.Count > 0)
+                {
+                    _roleIds.AddRange(_roles);
+                    _roles.Clear();
+                }
+                return _roleIds;
+            }
+            set
+            {
+                _roleIds = value;
+            }
+        }
+
         public bool? Authenticated { get; set; }
     }
 }

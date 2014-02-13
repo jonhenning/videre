@@ -222,12 +222,12 @@ namespace Videre.Core.Services
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             var existing = Portal.GetLayoutTemplate(portalId, template.LayoutName);
             template.PortalId = portalId;
-            template.Roles = Security.GetNewRoleIds(template.Roles, idMap);
+            template.RoleIds = Security.GetNewRoleIds(template.RoleIds, idMap);
             template.Id = existing != null ? existing.Id : null;
             foreach (var widget in template.Widgets)
             {
                 widget.ManifestId = GetIdMap<WidgetManifest>(widget.ManifestId, idMap);
-                widget.Roles = Security.GetNewRoleIds(widget.Roles, idMap);
+                widget.RoleIds = Security.GetNewRoleIds(widget.RoleIds, idMap);
 
                 //todo: not creating/mapping new widget ids?
                 if (widgetContent.ContainsKey(widget.Id))
@@ -248,13 +248,13 @@ namespace Videre.Core.Services
             var existing = Portal.GetPageTemplate(pageTemplate.Urls.Count > 0 ? pageTemplate.Urls[0] : "", portalId);
             //todo:  by first url ok???
             pageTemplate.PortalId = portalId;
-            pageTemplate.Roles = Security.GetNewRoleIds(pageTemplate.Roles, idMap);
+            pageTemplate.RoleIds = Security.GetNewRoleIds(pageTemplate.RoleIds, idMap);
             pageTemplate.Id = existing != null ? existing.Id : null;
 
             foreach (var widget in pageTemplate.Widgets)
             {
                 widget.ManifestId = GetIdMap<WidgetManifest>(widget.ManifestId, idMap);
-                widget.Roles = Security.GetNewRoleIds(widget.Roles, idMap);
+                widget.RoleIds = Security.GetNewRoleIds(widget.RoleIds, idMap);
 
                 //todo: not creating/mapping new widget ids?
                 if (widgetContent.ContainsKey(widget.Id))

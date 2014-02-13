@@ -34,7 +34,7 @@ namespace Videre.Core.Models
         public MenuItem()
         {
             Items = new List<MenuItem>();
-            Roles = new List<string>();
+            //Roles = new List<string>();
         }
 
         public string Text { get; set; }    //TODO: LOCALIZE!
@@ -42,7 +42,38 @@ namespace Videre.Core.Models
         public List<MenuItem> Items { get; set; }
         public string TemplateId { get; set; }  //??? - think its for eventual mapping to template, regardless of its url...
         public string Url { get; set; }
-        public List<string> Roles { get; set; }
+        private List<string> _roles = new List<string>();
+        [System.Obsolete("Use RoleIds")]
+        [SerializeIgnore(new string[] { "client" })]
+        public List<string> Roles
+        {
+            get
+            {
+                return _roles;
+            }
+            set
+            {
+                _roles = value;
+            }
+        }
+
+        private List<string> _roleIds = new List<string>();
+        public List<string> RoleIds
+        {
+            get
+            {
+                if (_roles.Count > 0)
+                {
+                    _roleIds.AddRange(_roles);
+                    _roles.Clear();
+                }
+                return _roleIds;
+            }
+            set
+            {
+                _roleIds = value;
+            }
+        }
         public bool? Authenticated { get; set; }
         public bool AlignRight { get; set; }
 
@@ -52,7 +83,7 @@ namespace Videre.Core.Models
         {
             get
             {
-                if (Roles == null || Roles.Count == 0 || Roles.Exists(r => Services.Account.IsInRole(r)))       //todo: how can we get null roles?
+                if (RoleIds == null || RoleIds.Count == 0 || RoleIds.Exists(r => Services.Account.IsInRole(r)))       //todo: how can we get null roles?
                 {
                     if (!Authenticated.HasValue || Authenticated.Value == Services.Account.IsAuthenticated) 
                         return true;
