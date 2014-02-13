@@ -322,7 +322,7 @@ namespace Videre.Core.Services
         public static TimeZoneInfo GetUserTimeZone()
         {
             var user = Account.CurrentUser;
-            if (user != null)
+            if (user != null && !string.IsNullOrEmpty(user.TimeZone))
                 return TimeZoneInfo.FindSystemTimeZoneById(user.TimeZone);
             return null;
         }
