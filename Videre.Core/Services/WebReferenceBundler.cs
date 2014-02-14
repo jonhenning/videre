@@ -1,21 +1,71 @@
-﻿using System;
+﻿using StructureMap;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using Videre.Core.Extensions;
+using Videre.Core.Providers;
+using CoreModels = Videre.Core.Models;
+using CoreServices = Videre.Core.Services;
 
 namespace Videre.Core.Services
 {
     public class WebReferenceBundler
     {
-        public static bool UseBundles
+        private static List<IWebReferenceBundleProvider> _webReferenceBundleProviders = new List<IWebReferenceBundleProvider>();
+
+        public static void RegisterWebReferenceBundlers()
+        {
+            ObjectFactory.Configure(x =>
+                x.Scan(scan =>
+                {
+                    scan.AssembliesFromApplicationBaseDirectory();
+                    scan.AddAllTypesOf<IWebReferenceBundleProvider>();
+                }));
+            _webReferenceBundleProviders = ObjectFactory.GetAllInstances<IWebReferenceBundleProvider>().ToList();
+            foreach (var provider in _webReferenceBundleProviders)
+                provider.Register();
+
+            var bundlers = new List<string>() { "" };
+            bundlers.AddRange(_webReferenceBundleProviders.Select(b => b.Name));
+
+            var updates = CoreServices.Update.Register("Web References", new CoreModels.AttributeDefinition()
+            {
+                Name = "WebReferenceBundleProvider",
+                Values = bundlers,
+                DefaultValue = "",
+                Required = false,
+                LabelKey = "WebReferenceBundleProvider.Text",
+                LabelText = "Web Reference Bundle Provider"
+            });
+
+            updates += CoreServices.Update.Register("Web References", new CoreModels.AttributeDefinition()
+            {
+                Name = "EnableBundleOptimizations",
+                DefaultValue = false,
+                Required = false,
+                LabelKey = "EnableBundleOptimizations.Text",
+                LabelText = "Enable Bundle Optimizations",
+                DataType = "boolean",
+                InputType = "checkbox",
+                ControlType = "checkbox"
+            });
+            if (updates > 0)
+                CoreServices.Repository.SaveChanges();
+        }
+
+        public static List<IWebReferenceBundleProvider> GetWebReferenceBundleProviders()
+        {
+            return _webReferenceBundleProviders;
+        }
+
+        public static IWebReferenceBundleProvider WebReferenceBundleProvider
         {
             get
             {
-                return Services.Portal.GetPortalSetting("Core", "UseResourceBundles", false);
+                return GetWebReferenceBundleProviders().Where(p => p.Name == Services.Portal.GetPortalSetting("Web References", "WebReferenceBundleProvider", "")).FirstOrDefault();
             }
         }
 
@@ -23,7 +73,7 @@ namespace Videre.Core.Services
         {
             get
             {
-                return Services.Portal.GetAppSetting("EnableBundleOptimizations", true);
+                return Services.Portal.GetPortalSetting("Web References", "EnableBundleOptimizations", true);
             }
         }
 
@@ -33,29 +83,8 @@ namespace Videre.Core.Services
 
             var listItems = GetUnrenderedMarkupList(helper, "js");
 
-            if (UseBundles)
-            {
-                var lists = GetBundlingLists(listItems);
-                foreach (var list in lists) //lists is a grouping of lists that can be bundled
-                {
-                    if (list.Bundle)
-                    {
-                        var hash = String.Join("~", list.Items.Select(i => i.Src)).GetHashCode();
-                        var src = "~/Scripts/_" + hash;
-                        var bundle = new ScriptBundle(src).Include(list.Items.Select(i => "~/" + i.Src).ToArray());
-
-                        bundle.Orderer = new PassthruBundleOrderer();
-                        BundleTable.Bundles.Add(bundle);
-                        BundleTable.EnableOptimizations = EnableBundleOptimizations;
-                        sb.AppendLine(System.Web.Optimization.Scripts.Render(src).ToHtmlString());
-                    }
-                    else
-                    {
-                        foreach (var item in list.Items)
-                            sb.AppendLine(string.Format("<script src=\"{0}\" type=\"text/javascript\" {1}></script>", item.Src, HtmlExtensions.GetDataAttributeMarkup(item.DataAttributes)));
-                    }
-                }
-            }
+            if (WebReferenceBundleProvider != null)
+                sb.AppendLine(WebReferenceBundleProvider.BundleScripts(GetBundlingLists(listItems), EnableBundleOptimizations));
             else
             {
                 foreach (var item in listItems)
@@ -92,30 +121,8 @@ namespace Videre.Core.Services
             var sb = new System.Text.StringBuilder();
 
             var listItems = GetUnrenderedMarkupList(helper, "css");
-
-            if (UseBundles)
-            {
-                var lists = GetBundlingLists(listItems);
-                foreach (var list in lists) //lists is a grouping of lists that can be bundled
-                {
-                    if (list.Bundle)
-                    {
-                        var hash = String.Join("~", list.Items.Select(i => i.Src)).GetHashCode();
-                        var src = "~/Content/_" + hash;
-                        var bundle = new StyleBundle(src).Include(list.Items.Select(i => "~/" + i.Src).ToArray());
-
-                        bundle.Orderer = new PassthruBundleOrderer();
-                        BundleTable.Bundles.Add(bundle);
-                        BundleTable.EnableOptimizations = EnableBundleOptimizations;
-                        sb.AppendLine(System.Web.Optimization.Styles.Render(src).ToHtmlString());
-                    }
-                    else
-                    {
-                        foreach (var item in list.Items)
-                            sb.AppendLine(string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", item.Src, HtmlExtensions.GetDataAttributeMarkup(item.DataAttributes)));
-                    }
-                }
-            }
+            if (WebReferenceBundleProvider != null)
+                sb.AppendLine(WebReferenceBundleProvider.BundleCss(GetBundlingLists(listItems), EnableBundleOptimizations));
             else
             {
                 foreach (var item in listItems)
@@ -154,37 +161,20 @@ namespace Videre.Core.Services
             return helper.GetContextItem<ConcurrentDictionary<string, bool>>("MarkupListRendered_" + type);
         }
 
-        private class PassthruBundleOrderer : IBundleOrderer
-        {
-            public IEnumerable<BundleFile> OrderFiles(BundleContext context, IEnumerable<BundleFile> files)
-            {
-                return files;
-            }
-        }
-
-        private class BundleList
-        {
-            public BundleList()
-            {
-                Items = new List<Models.ReferenceListItem>();
-            }
-            public List<Models.ReferenceListItem> Items { get; set; }
-            public bool Bundle { get; set; }
-        }
         //todo:  better way to do this?
         //determine the breaks in the bundles so we can maintain our ordering while allowing for bundled and unbundled references to co-exist
-        private static List<BundleList> GetBundlingLists(List<Models.ReferenceListItem> items)
+        private static List<Models.BundleList> GetBundlingLists(List<Models.ReferenceListItem> items)
         {
-            var ret = new List<BundleList>();
+            var ret = new List<Models.BundleList>();
             if (items.Count > 0)
             {
-                var list = new BundleList() { Bundle = items[0].CanBundle };
+                var list = new Models.BundleList() { Bundle = items[0].CanBundle };
                 foreach (var item in items)
                 {
                     if (item.CanBundle != list.Bundle)
                     {
                         ret.Add(list);
-                        list = new BundleList() { Bundle = item.CanBundle };
+                        list = new Models.BundleList() { Bundle = item.CanBundle };
                     }
                     list.Items.Add(item);
                 }

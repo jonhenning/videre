@@ -351,6 +351,7 @@ namespace Videre.Core.Services
             Services.Update.RegisterWidgets();
             Services.Update.RegisterImportExportProviders();
             Services.Authentication.RegisterAuthenticationProviders();
+            Services.WebReferenceBundler.RegisterWebReferenceBundlers();
         }
 
         public static void RegisterWidgets()
