@@ -77,14 +77,14 @@
                         {
                             var safeGroupName = groupName.Replace(" ", "-").Replace(".", "-");
                         <div class="tab-pane" id="@Model.GetId("tab" + safeGroupName)">
-                            <div class="form-horizontal col-md-6" id="@Model.GetId("AttributeList-" + safeGroupName)" data-group="@groupName"></div>
+                            <div class="form-horizontal col-md-9" id="@Model.GetId("AttributeList-" + safeGroupName)" data-group="@groupName"></div>
                         </div>
                         }
                     }
                     <script id="@Model.GetId("AttributeListTemplate")" type="text/html">
                         <div class="form-group">
-                            <label class="control-label col-md-3">{{:LabelText}}</label>
-                            <div class="col-md-9" data-type="input">
+                            <label class="control-label col-md-4">{{:LabelText}}</label>
+                            <div class="col-md-6 {{:#data.InputType == 'checkbox' ? 'checkbox' : ''}}" data-type="input">
                                 {{:~bindInputs(#data, ~attributes, '$' + ~groupName + '.' + #data.Name)}}
                             </div>
                         </div>

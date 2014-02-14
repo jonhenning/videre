@@ -1185,6 +1185,13 @@ if ($.views != null)
             if (data.Dependencies != null && data.Dependencies.length > 0)
                 ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
             ctl.appendTo(tempParent);
+
+            if (data.InputType == 'checkbox')
+            {
+                ctl.removeClass('form-control');
+                tempParent.addClass('checkbox');
+            }
+
             return tempParent.html(); //minor hack to get outerHTML
         }
     });
