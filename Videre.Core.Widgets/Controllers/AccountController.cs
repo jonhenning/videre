@@ -1,4 +1,4 @@
-﻿
+﻿using CodeEndeavors.Extensions;
 using System.Web.Mvc;
 using Videre.Core.ActionResults;
 using System.Collections.Generic;
@@ -24,9 +24,46 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
+        public ActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            return new ExternalAuthenticationResult(provider, CoreServices.Authentication.GetExternalLoginCallbackUrl(provider, returnUrl, false));
+        }
+
+        public ActionResult AssociateExternalLogin(string provider, string returnUrl)
+        {
+            return new ExternalAuthenticationResult(provider, CoreServices.Authentication.GetExternalLoginCallbackUrl(provider, returnUrl, true));
+        }
+
+        public JsonResult<dynamic> DisassociateExternalLogin(string provider)
+        {
+            return API.Execute<dynamic>(r =>
+            {
+                if (!CoreServices.Account.IsAuthenticated)
+                    throw new Exception(Localization.GetLocalization(CoreModels.LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));   //sneaky!
+
+                CoreServices.Authentication.DisassociateAuthenticationToken(CoreServices.Account.CurrentUser.Id, provider);
+                r.Data = new
+                {
+                    profile = CoreServices.Account.GetUserProfile(CoreServices.Account.CurrentUser.Id),
+                    userAuthProviders = CoreServices.Authentication.GetUserAuthenticationProviders(CoreServices.Account.CurrentUser)
+                };
+            });
+        }
+
+        public ActionResult ExternalLoginCallback(string provider, string returnUrl, bool associate)
+        {
+            if (CoreServices.Authentication.ProcessExternalAuthentication(provider, returnUrl, associate))
+            {
+                //todo: FIX THIS!
+                //if (Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+            }
+            throw new Exception("Error in External Login Callback");
+        }
+
         public ActionResult LogOff()
         {
-            CoreServices.Account.RevokeAuthenticationTicket();
+            CoreServices.Authentication.RevokeAuthenticationTicket();
             return RedirectToRoute("Route");
         }
 

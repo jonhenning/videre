@@ -2,6 +2,7 @@
 @using Videre.Core.Extensions;
 @using Videre.Core.Models;
 @using System.Web.Mvc.Html;
+@using CoreServices = Videre.Core.Services;
 
 @model Widget
 
@@ -17,6 +18,7 @@
     }
 
     Html.RegisterControlPresenter(Model, "videre.widgets.account.logon", props);
+    var providers = CoreServices.Authentication.GetAuthenticationProviders().Where(p => p.Enabled).ToList();
 }
 
 <div id="@Model.GetId("Widget")">
@@ -32,6 +34,10 @@
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
                     </div>
                     <div class="videre-form-actions">
+                        @foreach (var provider in providers)
+                        {
+                            <a class="btn btn-default" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/ExternalLogin?provider={0}&returnUrl={1}", provider.Name, props["returnUrl"]))">@provider.LoginButtonText</a>
+                        }
                         <a class="btn btn-primary" id="@Model.GetId("btnLogon")">@Model.GetText("Logon.Text", "Log On")</a>
                     </div>
                 </div>

@@ -120,6 +120,7 @@
   <ItemGroup>
     <Compile Include="ActionFilters\ETagAttribute.cs" />
     <Compile Include="ActionResults\AtomResult.cs" />
+    <Compile Include="ActionResults\ExternalAuthenticationResult.cs" />
     <Compile Include="ActionResults\JsonNetResult.cs" />
     <Compile Include="ActionResults\JsonResult.cs" />
     <Compile Include="ActionResults\RssResult.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />
+    <Compile Include="Providers\IAuthenticationProvider.cs" />
     <Compile Include="Providers\DynamicContentProviderFactory.cs" />
     <Compile Include="Providers\FastTemplateDynamicContentProvider.cs" />
     <Compile Include="Providers\IDynamicContentProvider.cs" />
@@ -219,6 +221,7 @@
     <Compile Include="Services\Account.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\API.cs" />
+    <Compile Include="Services\Authentication.cs" />
     <Compile Include="Services\Comment.cs" />
     <Compile Include="Services\CacheTimer.cs" />
     <Compile Include="Services\DynamicContent.cs" />

@@ -350,6 +350,7 @@ namespace Videre.Core.Services
             //}
             Services.Update.RegisterWidgets();
             Services.Update.RegisterImportExportProviders();
+            Services.Authentication.RegisterAuthenticationProviders();
         }
 
         public static void RegisterWidgets()

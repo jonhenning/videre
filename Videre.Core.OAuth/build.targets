@@ -36,30 +36,18 @@
   <Target Name="CreatePackage">
     <MakeDir Directories="$(RedistDir)"/>
     <CreateItem Include="
-                $(MSBuildProjectDirectory)\package.manifest;
-                $(MSBuildProjectDirectory)\**\*.js;
-                $(MSBuildProjectDirectory)\**\*.css;
-                $(MSBuildProjectDirectory)\**\*.gif;
-                $(MSBuildProjectDirectory)\**\*.jpg;
-                $(MSBuildProjectDirectory)\**\*.png;
-                $(MSBuildProjectDirectory)\**\*.cshtml;
-                $(TargetDir)Microsoft.Web.WebPages.OAuth.dll;
+                $(TargetDir)Microsoft.*.dll;
                 $(TargetDir)DotNetOpenAuth.*.dll;
                 $(TargetDir)$(Name).dll;
+                $(MSBuildProjectDirectory)\package.manifest;
                 $(TargetDir)$(Name).pdb;">
       <Output TaskParameter="Include" ItemName="DebugWidgets" />
     </CreateItem>
     <CreateItem Include="
-                $(MSBuildProjectDirectory)\package.manifest;
-                $(MSBuildProjectDirectory)\**\*.js;
-                $(MSBuildProjectDirectory)\**\*.css;
-                $(MSBuildProjectDirectory)\**\*.gif;
-                $(MSBuildProjectDirectory)\**\*.jpg;
-                $(MSBuildProjectDirectory)\**\*.png;
-                $(MSBuildProjectDirectory)\**\*.cshtml;
-                $(TargetDir)Microsoft.Web.WebPages.OAuth.dll;
+                $(TargetDir)Microsoft.*.dll;
                 $(TargetDir)DotNetOpenAuth.*.dll;
                 $(TargetDir)$(Name).dll;
+                $(MSBuildProjectDirectory)\package.manifest;
                 ">
       <Output TaskParameter="Include" ItemName="ReleaseWidgets" />
     </CreateItem>

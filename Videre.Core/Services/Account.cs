@@ -125,7 +125,7 @@ namespace Videre.Core.Services
                 {
                     var user = GetUserById(CurrentIdentityName);
                     if (user == null)
-                        RevokeAuthenticationTicket();
+                        Core.Services.Authentication.RevokeAuthenticationTicket();
                     return user;
                 }
                 return null;
@@ -212,22 +212,9 @@ namespace Videre.Core.Services
             var user = AccountService.Login(userName, password);
             if (user != null)
             {
-                IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, persistant);
+                Authentication.IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, persistant);
             }
             return user;
-        }
-
-        public static void IssueAuthenticationTicket(string identityName, List<string> roles, int days, bool persistant)
-        {
-            var ticket = new FormsAuthenticationTicket(1, identityName, DateTime.Now, DateTime.Now.AddDays(days), persistant, String.Join("," , roles));
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
-            cookie.Expires = ticket.Expiration;
-            HttpContext.Current.Response.Cookies.Add(cookie);
-        }
-
-        public static void RevokeAuthenticationTicket()
-        {
-            FormsAuthentication.SignOut();
         }
 
         public static bool RoleAuthorized(List<string> roles)

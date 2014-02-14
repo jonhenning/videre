@@ -1,8 +1,8 @@
 {
 	Version: '1.0',
-	Name: "Videre OAuth Services",
-	Type: "Widget",
+	Name: "Videre OAuth Providers",
+	Type: "Provider",
 	Source: "Core",
-	Description: "OAuth Services",
+	Description: "Videre OAuth Providers",
 	PackagedDate: ""
 }
