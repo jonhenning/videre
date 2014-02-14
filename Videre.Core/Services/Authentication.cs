@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Videre.Core.AuthenticationProviders;
+using Videre.Core.Providers;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
 using CodeEndeavors.Extensions;

@@ -5,7 +5,7 @@ using System.Text;
 using Videre.Core.Services;
 
 //todo: change namespace to just Providers
-namespace Videre.Core.AuthenticationProviders
+namespace Videre.Core.Providers
 {
     public interface IAuthenticationProvider
     {

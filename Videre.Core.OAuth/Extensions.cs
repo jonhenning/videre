@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Videre.Core.AuthenticationProviders;
+using Videre.Core.Providers;
 using CoreServices = Videre.Core.Services;
 
 namespace Videre.Core.OAuth
