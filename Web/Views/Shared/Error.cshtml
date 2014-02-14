@@ -1,9 +1,44 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@using Videre.Core.Extensions;
+@using CoreServices = Videre.Core.Services;
+
+@model System.Web.Mvc.HandleErrorInfo
 
 @{
-    ViewBag.Title = "Error";
+    CoreServices.Logging.Logger.Error("Videre Error", Model.Exception);
 }
 
-<h2>
-    Sorry, an error occurred while processing your request.
-</h2>
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@CoreServices.Localization.GetPortalText("VidereError.Text", "Videre Error")</title>
+        @{Html.RenderLayoutHeader();}
+    </head>
+    <body>
+		<div class="container">			
+            <h3>@CoreServices.Localization.GetPortalText("VidereError.Text", "Videre Error")</h3>
+            <hr />
+			<div class="content" style="min-height: 500px;">	
+
+                <div class="alert alert-danger">
+                    @CoreServices.Localization.GetPortalText("UnexpectedError.Text", "An unexpected error has occurred. Please contact the system administrator.")
+                </div>
+                @if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+                {
+                    <div>
+                        <p>
+                            <b>Exception:</b> @Model.Exception.Message<br />
+                            <b>Controller:</b> @Model.ControllerName<br />
+                            <b>Action:</b> @Model.ActionName
+                        </p>
+                        <div style="overflow: scroll">
+                            <pre>
+                @Model.Exception.StackTrace
+                                </pre>
+                        </div>
+                    </div>
+                }
+			</div> 
+        </div>                    
+    </body>
+</html>
