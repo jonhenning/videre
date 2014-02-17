@@ -18,7 +18,8 @@
     }
 
     Html.RegisterControlPresenter(Model, "videre.widgets.account.logon", props);
-    var providers = CoreServices.Authentication.GetAuthenticationProviders().Where(p => p.Enabled).ToList();
+    var providers = CoreServices.Authentication.GetExternalAuthenticationProviders().Where(p => p.Enabled).ToList();
+    var standardProvider = CoreServices.Authentication.GetActiveStandardAuthenticationProvider(); 
 }
 
 <div id="@Model.GetId("Widget")">
@@ -38,7 +39,10 @@
                         {
                             <a class="btn btn-default" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/ExternalLogin?provider={0}&returnUrl={1}", provider.Name, props["returnUrl"]))">@provider.LoginButtonText</a>
                         }
-                        <a class="btn btn-primary" id="@Model.GetId("btnLogon")">@Model.GetText("Logon.Text", "Log On")</a>
+                        @if (standardProvider != null)
+                        {
+                            <a class="btn btn-primary" data-standardprovider="@standardProvider.Name">@standardProvider.LoginButtonText</a>
+                        }
                     </div>
                 </div>
             </div>

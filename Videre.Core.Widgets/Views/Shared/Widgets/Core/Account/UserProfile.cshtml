@@ -8,7 +8,7 @@
 
 @{
  
-    var providers = CoreServices.Authentication.GetAuthenticationProviders().Where(p => p.Enabled).ToList();
+    var providers = CoreServices.Authentication.GetExternalAuthenticationProviders().Where(p => p.Enabled).ToList();
       
     Html.RegisterControlPresenter(Model, "videre.widgets.account.userprofile", new Dictionary<string, object>() { 
         { "data", CoreServices.Account.GetUserProfile() },

@@ -19,26 +19,27 @@ videre.widgets.account.logon = videre.widgets.base.extend(
     _onLoad: function(src, args)
     {
         this._base(); //call base
-        this.getControl('btnLogon').button().click(videre.createDelegate(this, this._onLogonClick));
+        this._widget.find('[data-standardprovider]').button().click(videre.createDelegate(this, this._onLogonClick));
 
     },
 
-    login: function()
+    login: function(provider)
     {
         this.clearMsgs();
         this.lock();
-        videre.ajax('~/core/Account/LogIn', { UserName: this.getControl('txtName').val(), Password: this.getControl('txtPassword').val(), RememberMe: true }, this._delegates.onLogonResult, this._baseDelegates.onAjaxFail);
+        videre.ajax('~/core/Account/LogIn', { userName: this.getControl('txtName').val(), password: this.getControl('txtPassword').val(), rememberMe: true, provider: provider }, this._delegates.onLogonResult, this._baseDelegates.onAjaxFail);
     },
 
     _onWidgetKeyDown: function(e)
     {
         if (e.keyCode == 13)
-            this.login();
+            this.login(this._widget.find('[data-standardprovider]').data('standardprovider'));
     },
 
     _onLogonClick: function(e)
     {
-        this.login();
+        var provider = $(e.target).closest('[data-standardprovider]').data('standardprovider');
+        this.login(provider);
     },
 
     _onLogonResult: function(result)

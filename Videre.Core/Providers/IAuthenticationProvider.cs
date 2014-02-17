@@ -13,7 +13,19 @@ namespace Videre.Core.Providers
         string LoginButtonText { get; }
         bool Enabled { get; }
         void Register();
+    }
+
+    public interface IStandardAuthenticationProvider : IAuthenticationProvider
+    {
+        AuthenticationResult Login(string userName, string password);
+        string GeneratePasswordHash(string password, string salt);
+        string GenerateSalt();
+    }
+
+    public interface IExternalAuthenticationProvider : IAuthenticationProvider 
+    {
         AuthenticationResult VerifyAuthentication(string returnUrl);
         void RequestAuthentication(string provider, string returnUrl);
     }
+
 }

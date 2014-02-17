@@ -21,8 +21,8 @@ namespace Videre.Core.ActionResults
         public override void ExecuteResult(ControllerContext context)
         {
             var provider = CoreServices.Authentication.GetAuthenticationProvider(Provider);
-            if (provider != null)
-                provider.RequestAuthentication(Provider, ReturnUrl);
+            if (provider != null)   //todo:  verify it implements this interface or assume we couldn't get here without it
+                ((Providers.IExternalAuthenticationProvider)provider).RequestAuthentication(Provider, ReturnUrl);
             throw new Exception("Authentication Provider not found: " + Provider);
         }
     }

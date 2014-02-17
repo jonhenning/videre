@@ -10,7 +10,7 @@ namespace Videre.Core.AccountProviders
     {
         void Initialize(string connection);
         bool ReadOnly { get; }
-        Models.User Login(string userName, string password);
+        //Models.User Login(string userName, string password);
         List<Models.User> Get(string portalId);
         List<Models.User> Get(string portalId, Func<Models.User, bool> statement);
         string Save(Models.User user, string userId);

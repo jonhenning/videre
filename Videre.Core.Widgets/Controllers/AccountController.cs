@@ -12,11 +12,11 @@ namespace Videre.Core.Widgets.Controllers
 {
     public class AccountController : Controller
     {
-        public JsonResult<Dictionary<string, object>> LogIn(string UserName, string Password, bool RememberMe)
+        public JsonResult<Dictionary<string, object>> LogIn(string userName, string password, bool rememberMe, string provider)
         {
             return API.Execute<Dictionary<string, object>>(r =>
             {
-                var user = CoreServices.Account.Login(UserName, Password, RememberMe);
+                var user = CoreServices.Account.Login(userName, password, rememberMe, provider);
                 if (user != null)
                     r.Data["user"] = user;
                 else

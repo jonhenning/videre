@@ -192,6 +192,20 @@ namespace Videre.Core.Services
             }
 
             AccountService.Validate(user);
+
+            if (!string.IsNullOrEmpty(user.Password))
+            {
+                var provider = Authentication.GetActiveStandardAuthenticationProvider();
+                if (provider != null)
+                {
+                    user.PasswordSalt = provider.GenerateSalt();
+                    user.PasswordHash = provider.GeneratePasswordHash(user.Password, user.PasswordSalt);
+                    user.Password = null;
+                }
+                else
+                    throw new Exception("Cannot persist password if no standard authentication provider enabled");  //ever happen?
+            }
+
             return AccountService.Save(user, editUserId);
         }
 
@@ -207,14 +221,19 @@ namespace Videre.Core.Services
             return AccountService.Delete(id, userId);
         }
 
-        public static Models.User Login(string userName, string password, bool persistant)
+        public static Models.User Login(string userName, string password, bool persistant, string provider)
         {
-            var user = AccountService.Login(userName, password);
-            if (user != null)
+            var authResult = Authentication.Login(userName, password, provider);
+            if (authResult.Success)
             {
-                Authentication.IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, persistant);
+                var user = AccountService.GetById(authResult.ProviderUserId);
+                if (user != null)
+                {
+                    Authentication.IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, persistant); //todo: ticket needs refactoring on who does it
+                }
+                return user;
             }
-            return user;
+            return null;
         }
 
         public static bool RoleAuthorized(List<string> roles)

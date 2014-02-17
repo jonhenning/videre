@@ -17,11 +17,11 @@ namespace Videre.Core.AccountProviders
         {
         }
 
-        public Models.User Login(string userName, string password)
-        {
-            var users = Get(null, u => u.Name == userName);
-            return users.Where(u => u.PasswordHash == GeneratePasswordHash(password, u.PasswordSalt)).FirstOrDefault();
-        }
+        //public Models.User Login(string userName, string password)
+        //{
+        //    var users = Get(null, u => u.Name == userName);
+        //    return users.Where(u => u.PasswordHash == GeneratePasswordHash(password, u.PasswordSalt)).FirstOrDefault();
+        //}
 
         public List<Models.User> Get(string portalId)
         {
@@ -36,12 +36,6 @@ namespace Videre.Core.AccountProviders
 
         public string Save(Models.User user, string userId)
         {
-            if (!string.IsNullOrEmpty(user.Password))
-            {
-                user.PasswordSalt = GenerateSalt();
-                user.PasswordHash = GeneratePasswordHash(user.Password, user.PasswordSalt);
-                user.Password = null;
-            }
             var res = Repository.Current.StoreResource("User", null, user, userId);
             return res.Id;
         }
@@ -62,18 +56,18 @@ namespace Videre.Core.AccountProviders
             return null;
         }
 
-        private static string GeneratePasswordHash(string password, string salt)
-        {
-            return FormsAuthentication.HashPasswordForStoringInConfigFile(string.Concat(password, salt), "md5");
-        }
+        //private static string GeneratePasswordHash(string password, string salt)
+        //{
+        //    return FormsAuthentication.HashPasswordForStoringInConfigFile(string.Concat(password, salt), "md5");
+        //}
 
-        private static string GenerateSalt()
-        {
-            var random = new Byte[64];
-            var rng = new RNGCryptoServiceProvider();
-            rng.GetNonZeroBytes(random);
-            return Convert.ToBase64String(random);
-        }
+        //private static string GenerateSalt()
+        //{
+        //    var random = new Byte[64];
+        //    var rng = new RNGCryptoServiceProvider();
+        //    rng.GetNonZeroBytes(random);
+        //    return Convert.ToBase64String(random);
+        //}
 
         public Models.Role GetRoleById(string id)
         {

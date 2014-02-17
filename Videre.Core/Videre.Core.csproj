@@ -205,6 +205,7 @@
     <Compile Include="Models\WidgetManifest.cs" />
     <Compile Include="Providers\IRouteParser.cs" />
     <Compile Include="Models\TokenParserRule.cs" />
+    <Compile Include="Providers\VidereAuthenticationProvider.cs" />
     <Compile Include="Providers\VidereRouteParser.cs" />
     <Compile Include="Services\Account.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

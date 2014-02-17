@@ -13,23 +13,27 @@ using System.Web;
 
 namespace Videre.Core.Services
 {
+    
     public class AuthenticationResult
     {
         public AuthenticationResult()
         {
             Errors = new List<string>();
+            Claims = new List<CoreModels.UserClaim>();
         }
+
         public bool Success { get; set; }
         public List<string> Errors { get; set; }
         public string Provider { get; set; }
         public string ProviderUserId { get; set; }
         public string UserName { get; set; }
+        public List<Models.UserClaim> Claims { get; set; }
         public IDictionary<string, string> ExtraData { get; set; }
     }
 
     public class Authentication
     {
-        private const string _authenticationClaimType = "AuthenticationToken";
+        private const string _externalAuthenticationClaimType = "ExternalAuthenticationToken";
         private static List<IAuthenticationProvider> _authenticationProviders = new List<IAuthenticationProvider>();
 
         public static void IssueAuthenticationTicket(string identityName, List<string> roles, int days, bool persistant)
@@ -63,6 +67,16 @@ namespace Videre.Core.Services
             return _authenticationProviders;
         }
 
+        public static List<IExternalAuthenticationProvider> GetExternalAuthenticationProviders()
+        {
+            return GetAuthenticationProviders().Where(p => p is IExternalAuthenticationProvider).Select(p => (IExternalAuthenticationProvider)p).ToList();
+        }
+
+        public static IStandardAuthenticationProvider GetActiveStandardAuthenticationProvider()
+        {
+            return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && p.Enabled).Select(p => (IStandardAuthenticationProvider)p).FirstOrDefault();
+        }
+
         public static IAuthenticationProvider GetAuthenticationProvider(string provider)
         {
             return GetAuthenticationProviders().Where(p => p.Name.Equals(provider, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
@@ -70,12 +84,12 @@ namespace Videre.Core.Services
 
         public static List<string> GetUserAuthenticationProviders(CoreModels.User user)
         {
-            return user.Claims.Where(c => c.Type == _authenticationClaimType).Select(c => c.Issuer).ToList();
+            return user.Claims.Where(c => c.Type == _externalAuthenticationClaimType).Select(c => c.Issuer).ToList();
         }
 
         public static CoreModels.User GetUserByAuthenticationToken(string provider, string token, string portalId = null)
         {
-            return CoreServices.Account.Get(u => u.Claims.Exists(c => c.Type == _authenticationClaimType && c.Issuer == provider), portalId);
+            return CoreServices.Account.Get(u => u.Claims.Exists(c => c.Type == _externalAuthenticationClaimType && c.Issuer == provider), portalId);
         }
 
         public static CoreModels.User AssociateAuthenticationToken(string userId, string provider, string token)
@@ -84,10 +98,10 @@ namespace Videre.Core.Services
             var existing = GetUserByAuthenticationToken(provider, token, user.PortalId);
             if (existing == null || existing.Id == user.Id)
             {
-                var claim = user.GetClaim(_authenticationClaimType, provider);
+                var claim = user.GetClaim(_externalAuthenticationClaimType, provider);
                 if (claim == null)
                 {
-                    claim = new CoreModels.UserClaim() { Issuer = provider, Type = _authenticationClaimType };
+                    claim = new CoreModels.UserClaim() { Issuer = provider, Type = _externalAuthenticationClaimType };
                     user.Claims.Add(claim);
                 }
                 claim.Value = token;
@@ -102,12 +116,12 @@ namespace Videre.Core.Services
         public static CoreModels.User DisassociateAuthenticationToken(string userId, string provider)
         {
             var user = CoreServices.Account.GetUserById(userId);
-            if (user.Claims.Exists(c => c.Type == _authenticationClaimType))
+            if (user.Claims.Exists(c => c.Type == _externalAuthenticationClaimType))
             {
-                var authCount = user.Claims.Where(c => c.Type == _authenticationClaimType).Count(); 
+                var authCount = user.Claims.Where(c => c.Type == _externalAuthenticationClaimType).Count(); 
                 if (!string.IsNullOrEmpty(user.PasswordHash) || authCount > 1)
                 {
-                    var claim = user.GetClaim(_authenticationClaimType, provider);
+                    var claim = user.GetClaim(_externalAuthenticationClaimType, provider);
                     if (claim != null)
                         user.Claims.Remove(claim);
                     CoreServices.Account.SaveUser(user);
@@ -129,9 +143,9 @@ namespace Videre.Core.Services
         public static bool ProcessExternalAuthentication(string provider, string returnUrl, bool associate)
         {
             var authProvider = CoreServices.Authentication.GetAuthenticationProvider(provider);
-            if (authProvider != null)
+            if (authProvider != null)   //todo:  verify it implements this interface or assume we couldn't get here without it
             {
-                var result = authProvider.VerifyAuthentication(GetExternalLoginCallbackUrl(provider, returnUrl, associate));
+                var result = ((Providers.IExternalAuthenticationProvider)authProvider).VerifyAuthentication(GetExternalLoginCallbackUrl(provider, returnUrl, associate));
                 if (result.Success)
                 {
                     //if authenticated, then we are in user profile, and associating    - todo: better way to detects?   probably simply use another controller and method
@@ -159,6 +173,15 @@ namespace Videre.Core.Services
             else
                 throw new Exception("Authentication Provider not found: " + provider);
 
+        }
+
+        public static AuthenticationResult Login(string userName, string password, string provider)
+        {
+            var authProvider = CoreServices.Authentication.GetAuthenticationProvider(provider);
+            if (authProvider != null)   //todo:  verify it implements this interface or assume we couldn't get here without it
+                return ((Providers.IStandardAuthenticationProvider)authProvider).Login(userName, password);
+            else
+                throw new Exception("Authentication Provider not found: " + provider);
         }
 
 
