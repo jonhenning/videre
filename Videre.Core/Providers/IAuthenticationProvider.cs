@@ -18,11 +18,11 @@ namespace Videre.Core.Providers
     public interface IStandardAuthenticationProvider : IAuthenticationProvider
     {
         AuthenticationResult Login(string userName, string password);
-        string GeneratePasswordHash(string password, string salt);
-        string GenerateSalt();
+        AuthenticationResult SaveAuthentication(string userId, string userName, string password);
+        void InitializePersistance(string connection);
     }
 
-    public interface IExternalAuthenticationProvider : IAuthenticationProvider 
+    public interface IExternalAuthenticationProvider : IAuthenticationProvider
     {
         AuthenticationResult VerifyAuthentication(string returnUrl);
         void RequestAuthentication(string provider, string returnUrl);

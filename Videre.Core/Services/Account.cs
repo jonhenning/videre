@@ -181,32 +181,28 @@ namespace Videre.Core.Services
             user.PortalId = string.IsNullOrEmpty(user.PortalId) ? Portal.CurrentPortalId : user.PortalId;
             editUserId = string.IsNullOrEmpty(editUserId) ? AuditId : editUserId; //we do not blindly accept what user id they passed in user object.  Enforce that editing current logged in user if no editUserId passed
 
-            if (string.IsNullOrEmpty(user.Password))
-            {
-                var existing = GetUserById(user.Id);
-                if (existing != null)
-                {
-                    user.PasswordHash = existing.PasswordHash;  //not sending hash to client, so we need to get it from server.
-                    user.PasswordSalt = existing.PasswordSalt;
-                }
-            }
-
             AccountService.Validate(user);
 
-            if (!string.IsNullOrEmpty(user.Password))
+            //if password set, we need to remember it and remove it from our user object (which is only in memory - probably not necessary)
+            var password = user.Password;
+            user.Password = null;
+
+            var userId = AccountService.Save(user, editUserId);
+
+            //if we need to update password, then use the persistance provider
+            if (!string.IsNullOrEmpty(password))
             {
-                var provider = Authentication.GetActiveStandardAuthenticationProvider();
-                if (provider != null)
+                if (Authentication.PersistanceProvider != null)
                 {
-                    user.PasswordSalt = provider.GenerateSalt();
-                    user.PasswordHash = provider.GeneratePasswordHash(user.Password, user.PasswordSalt);
-                    user.Password = null;
+                    var persistanceResult = Authentication.PersistanceProvider.SaveAuthentication(userId, user.Name, password);
+                    if (!persistanceResult.Success)
+                        throw new Exception(persistanceResult.Errors.ToJson());
                 }
                 else
-                    throw new Exception("Cannot persist password if no standard authentication provider enabled");  //ever happen?
+                    throw new Exception("Cannot persist password if no authentication persistance provider enabled");
             }
+            return userId;
 
-            return AccountService.Save(user, editUserId);
         }
 
         public static bool Exists(Models.User user)
@@ -217,7 +213,7 @@ namespace Videre.Core.Services
 
         public static bool DeleteUser(string id, string userId = null)
         {
-            userId = string.IsNullOrEmpty(userId) ? AuditId :  userId;
+            userId = string.IsNullOrEmpty(userId) ? AuditId : userId;
             return AccountService.Delete(id, userId);
         }
 
@@ -269,7 +265,7 @@ namespace Videre.Core.Services
 
         public static string SaveRole(Models.Role role, string userId = null)
         {
-            userId = string.IsNullOrEmpty(userId) ? AuditId :  userId;
+            userId = string.IsNullOrEmpty(userId) ? AuditId : userId;
             role.PortalId = string.IsNullOrEmpty(role.PortalId) ? Portal.CurrentPortalId : role.PortalId;
 
             Validate(role);
@@ -293,7 +289,7 @@ namespace Videre.Core.Services
                 return r.Id != role.Id;
             return false;
         }
-        
+
         public static bool Exists(Models.Role role)
         {
             return GetRole(role.Name, role.PortalId) != null;
@@ -307,7 +303,7 @@ namespace Videre.Core.Services
 
         public static bool DeleteRole(string id, string userId = null)
         {
-            userId = string.IsNullOrEmpty(userId) ? AuditId :  userId;
+            userId = string.IsNullOrEmpty(userId) ? AuditId : userId;
             return AccountService.DeleteRole(id, userId);
         }
 

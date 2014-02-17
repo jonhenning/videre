@@ -10,10 +10,11 @@ using CoreServices = Videre.Core.Services;
 using CodeEndeavors.Extensions;
 using System.Web.Security;
 using System.Web;
+using System.Configuration;
 
 namespace Videre.Core.Services
 {
-    
+
     public class AuthenticationResult
     {
         public AuthenticationResult()
@@ -60,6 +61,19 @@ namespace Videre.Core.Services
             _authenticationProviders = ObjectFactory.GetAllInstances<IAuthenticationProvider>().ToList();
             foreach (var provider in _authenticationProviders)
                 provider.Register();
+
+            _authenticationPersistanceProvider = ConfigurationManager.AppSettings.GetSetting("AuthenticationPersistanceProvider", "Videre.Core.Providers.VidereAuthenticationProvider, Videre.Core").GetInstance<Providers.IStandardAuthenticationProvider>();
+            if (_authenticationPersistanceProvider != null)
+                _authenticationPersistanceProvider.InitializePersistance(ConfigurationManager.AppSettings.GetSetting("AuthenticationPersistanceConnection", ""));
+        }
+
+        private static Providers.IStandardAuthenticationProvider _authenticationPersistanceProvider;
+        public static Providers.IStandardAuthenticationProvider PersistanceProvider
+        {
+            get
+            {
+                return _authenticationPersistanceProvider;
+            }
         }
 
         public static List<IAuthenticationProvider> GetAuthenticationProviders()
@@ -72,10 +86,21 @@ namespace Videre.Core.Services
             return GetAuthenticationProviders().Where(p => p is IExternalAuthenticationProvider).Select(p => (IExternalAuthenticationProvider)p).ToList();
         }
 
+        public static List<IStandardAuthenticationProvider> GetStandardAuthenticationProviders()
+        {
+            return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider).Select(p => (IStandardAuthenticationProvider)p).ToList();
+        }
+
         public static IStandardAuthenticationProvider GetActiveStandardAuthenticationProvider()
         {
             return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && p.Enabled).Select(p => (IStandardAuthenticationProvider)p).FirstOrDefault();
         }
+
+        //public static IStandardAuthenticationProvider GetActivePersistanceProvider()
+        //{
+        //    return GetStandardAuthenticationProviders().Where(p => p.Name == Services.Portal.GetPortalSetting("Authentication", "AuthenticationPersistanceProvider", "")).FirstOrDefault();
+        //    //return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && p.Enabled).Select(p => (IStandardAuthenticationProvider)p).FirstOrDefault();
+        //}
 
         public static IAuthenticationProvider GetAuthenticationProvider(string provider)
         {
@@ -118,7 +143,7 @@ namespace Videre.Core.Services
             var user = CoreServices.Account.GetUserById(userId);
             if (user.Claims.Exists(c => c.Type == _externalAuthenticationClaimType))
             {
-                var authCount = user.Claims.Where(c => c.Type == _externalAuthenticationClaimType).Count(); 
+                var authCount = user.Claims.Where(c => c.Type == _externalAuthenticationClaimType).Count();
                 if (!string.IsNullOrEmpty(user.PasswordHash) || authCount > 1)
                 {
                     var claim = user.GetClaim(_externalAuthenticationClaimType, provider);

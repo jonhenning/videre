@@ -109,7 +109,7 @@ namespace Videre.Core.AccountProviders
         public void Validate(Models.User user)
         {
             Validation.ValidateEmail(user.Email);
-            if (string.IsNullOrEmpty(user.Name) || (string.IsNullOrEmpty(user.Password) && string.IsNullOrEmpty(user.PasswordHash)))
+            if (string.IsNullOrEmpty(user.Name)) // || (string.IsNullOrEmpty(user.Password) && string.IsNullOrEmpty(user.PasswordHash)))
                 throw new Exception(Localization.GetExceptionText("InvalidResource.Error", "{0} is invalid.", "User"));
             if (Account.Exists(user))
                 throw new Exception(Localization.GetExceptionText("DuplicateResource.Error", "{0} already exists.   Duplicates Not Allowed.", "User"));
