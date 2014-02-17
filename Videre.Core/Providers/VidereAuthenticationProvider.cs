@@ -11,7 +11,7 @@ using CoreServices = Videre.Core.Services;
 
 namespace Videre.Core.Providers
 {
-    public class VidereAuthenticationProvider : IStandardAuthenticationProvider
+    public class VidereAuthenticationProvider : IStandardAuthenticationProvider, IAuthenticationPersistance
     {
         public string Name
         {

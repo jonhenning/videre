@@ -18,6 +18,10 @@ namespace Videre.Core.Providers
     public interface IStandardAuthenticationProvider : IAuthenticationProvider
     {
         AuthenticationResult Login(string userName, string password);
+    }
+
+    public interface IAuthenticationPersistance
+    {
         AuthenticationResult SaveAuthentication(string userId, string userName, string password);
         void InitializePersistance(string connection);
     }

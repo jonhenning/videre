@@ -62,13 +62,20 @@ namespace Videre.Core.Services
             foreach (var provider in _authenticationProviders)
                 provider.Register();
 
-            _authenticationPersistanceProvider = ConfigurationManager.AppSettings.GetSetting("AuthenticationPersistanceProvider", "Videre.Core.Providers.VidereAuthenticationProvider, Videre.Core").GetInstance<Providers.IStandardAuthenticationProvider>();
+            //allow for this to not be set...  (i.e. set to empty string) - TODO:  should be cleaner way to accomplish this!
+            var providerName = ConfigurationManager.AppSettings.GetSetting<string>("AuthenticationPersistanceProvider", null);
+            if (providerName == null)
+                providerName = "Videre.Core.Providers.VidereAuthenticationProvider, Videre.Core";
+            
+            if (providerName != "")
+                _authenticationPersistanceProvider = providerName.GetInstance<Providers.IAuthenticationPersistance>();
+
             if (_authenticationPersistanceProvider != null)
                 _authenticationPersistanceProvider.InitializePersistance(ConfigurationManager.AppSettings.GetSetting("AuthenticationPersistanceConnection", ""));
         }
 
-        private static Providers.IStandardAuthenticationProvider _authenticationPersistanceProvider;
-        public static Providers.IStandardAuthenticationProvider PersistanceProvider
+        private static Providers.IAuthenticationPersistance _authenticationPersistanceProvider;
+        public static Providers.IAuthenticationPersistance PersistanceProvider
         {
             get
             {

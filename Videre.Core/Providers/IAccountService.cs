@@ -9,7 +9,7 @@ namespace Videre.Core.AccountProviders
     public interface IAccountService
     {
         void Initialize(string connection);
-        bool ReadOnly { get; }
+        //bool ReadOnly { get; }
         //Models.User Login(string userName, string password);
         List<Models.User> Get(string portalId);
         List<Models.User> Get(string portalId, Func<Models.User, bool> statement);

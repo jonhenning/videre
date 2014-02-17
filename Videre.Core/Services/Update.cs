@@ -306,7 +306,8 @@ namespace Videre.Core.Services
             var updates = 0;
 
             //portal Init
-            if (!Core.Services.Account.ReadOnly)    //todo:  don't allow this?!?!  or does UI disable this?
+            //if (!Core.Services.Account.ReadOnly)    //todo:  don't allow this?!?!  or does UI disable this?
+            if (Core.Services.Authentication.PersistanceProvider != null)
             {
                 updates += Core.Services.Update.Register(new List<Core.Models.Role>()
                 {

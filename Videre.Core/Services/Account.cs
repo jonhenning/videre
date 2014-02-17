@@ -37,7 +37,7 @@ namespace Videre.Core.Services
             }
         }
 
-        public static bool ReadOnly { get { return AccountService.ReadOnly; } } //todo: kinda hacky...
+        //public static bool ReadOnly { get { return AccountService.ReadOnly; } } //todo: kinda hacky...
 
         public static bool IsAuthenticated
         {
