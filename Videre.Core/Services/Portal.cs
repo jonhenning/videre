@@ -456,6 +456,13 @@ namespace Videre.Core.Services
             return false;
         }
 
+        public static T GetPortalAttribute<T>(string groupName, string name, T defaultValue)
+        {
+            if (CurrentPortal != null)
+                return CurrentPortal.GetAttribute(groupName, name, defaultValue);
+            return defaultValue;
+        }
+
         public static string NextClientId()
         {
             lock (clientIdLock)

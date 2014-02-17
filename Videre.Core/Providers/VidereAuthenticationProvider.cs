@@ -28,9 +28,7 @@ namespace Videre.Core.Providers
                 //STACK OVERFLOW
                 //if (CoreServices.Authentication.GetAuthenticationProviders().Where(p => p.Enabled).Count() == 0)
                 //    return true;
-                if (CoreServices.Portal.CurrentPortal == null)
-                    return true;
-                return CoreServices.Portal.CurrentPortal.GetAttribute("Authentication Providers", "Videre", true); 
+                return CoreServices.Portal.GetPortalAttribute("Authentication Providers", "Videre", true);
             }
         }
 
