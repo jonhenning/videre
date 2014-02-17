@@ -45,6 +45,12 @@ namespace Videre.Core.Models
             return defaultValue;
         }
 
+        public void SetAttribute<T>(string groupName, string name, T value)
+        {
+            var key = GetAttributeKey(groupName, name);
+            Attributes[key] = value;
+        }
+
         public string GetAttributeKey(string groupName, string name)
         {
             return string.Format("{0}.{1}", groupName, name);

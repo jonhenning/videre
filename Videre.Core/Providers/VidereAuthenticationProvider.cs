@@ -18,7 +18,7 @@ namespace Videre.Core.Providers
 
         public string LoginButtonText
         {
-            get { return CoreServices.Localization.GetPortalText("Login.Text", "Login "); }
+            get { return CoreServices.Localization.GetPortalText("Login.Text", "Login"); }
         }
 
         public bool Enabled
