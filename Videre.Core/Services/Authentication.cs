@@ -45,6 +45,17 @@ namespace Videre.Core.Services
             HttpContext.Current.Response.Cookies.Add(cookie);
         }
 
+        public static void ProcessAuthenticationTicket()
+        {
+            //' Fires upon attempting to authenticate the use
+            if (HttpContext.Current.User != null)
+            {
+                var identity = (FormsIdentity)HttpContext.Current.User.Identity;
+                if (HttpContext.Current.User.Identity.IsAuthenticated)
+                    HttpContext.Current.User = new System.Security.Principal.GenericPrincipal(identity, identity.Ticket.UserData.Split(','));
+            }
+        }
+
         public static void RevokeAuthenticationTicket()
         {
             FormsAuthentication.SignOut();
@@ -124,9 +135,9 @@ namespace Videre.Core.Services
             return CoreServices.Account.Get(u => u.Claims.Exists(c => c.Type == _externalAuthenticationClaimType && c.Issuer == provider), portalId);
         }
 
-        public static CoreModels.User AssociateAuthenticationToken(string userId, string provider, string token)
+        public static CoreModels.User AssociateAuthenticationToken(Models.User user, string provider, string token)
         {
-            var user = CoreServices.Account.GetUserById(userId);
+            //var user = CoreServices.Account.GetUserById(userId);
             var existing = GetUserByAuthenticationToken(provider, token, user.PortalId);
             if (existing == null || existing.Id == user.Id)
             {
@@ -185,7 +196,7 @@ namespace Videre.Core.Services
                     if (associate)
                     {
                         if (CoreServices.Account.IsAuthenticated)
-                            CoreServices.Authentication.AssociateAuthenticationToken(CoreServices.Account.CurrentUser.Id, result.Provider, result.ProviderUserId);
+                            CoreServices.Authentication.AssociateAuthenticationToken(CoreServices.Account.CurrentUser, result.Provider, result.ProviderUserId);
                         else
                             throw new Exception("Cannot associate Authentication without logged in user");
                     }

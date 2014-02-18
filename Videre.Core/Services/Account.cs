@@ -111,9 +111,10 @@ namespace Videre.Core.Services
         {
             get
             {
-                if (CurrentUser != null)
-                    return CurrentUser.Id;
-                return null;
+                return CurrentIdentityName;
+                //if (CurrentUser != null)
+                //    return CurrentUser.Id;
+                //return null;
             }
         }
 
@@ -123,7 +124,8 @@ namespace Videre.Core.Services
             {
                 if (IsAuthenticated)
                 {
-                    var user = GetUserById(CurrentIdentityName);
+                    //todo: this could be expensive to do a lookup to the database each time!
+                    var user = GetUserById(CurrentIdentityName, true);
                     if (user == null)
                         Core.Services.Authentication.RevokeAuthenticationTicket();
                     return user;
@@ -197,12 +199,12 @@ namespace Videre.Core.Services
                     var persistanceResult = Authentication.PersistanceProvider.SaveAuthentication(userId, user.Name, password);
                     if (!persistanceResult.Success)
                         throw new Exception(persistanceResult.Errors.ToJson());
+                    Authentication.AssociateAuthenticationToken(user, persistanceResult.Provider, persistanceResult.ProviderUserId);
                 }
                 else
                     throw new Exception("Cannot persist password if no authentication persistance provider enabled");
             }
             return userId;
-
         }
 
         public static bool Exists(Models.User user)
@@ -222,9 +224,50 @@ namespace Videre.Core.Services
             var authResult = Authentication.Login(userName, password, provider);
             if (authResult.Success)
             {
-                var user = AccountService.GetById(authResult.ProviderUserId);
+                var user = Authentication.GetUserByAuthenticationToken(authResult.Provider, authResult.ProviderUserId);
+                
+                //if authenticated but not existant, we want to create one
+                if (user == null)
+                {
+                    user = GetUser(userName);   //TODO:  this is temporary as we won't allow changing of userName yet... to support backwards compat allowing user's without tokens to obtain them
+                    if (user == null)
+                    {
+                        user = new Models.User()
+                        {
+                            Name = userName,
+                            PortalId = Portal.CurrentPortalId
+                        };
+                    }
+                    user.Id = SaveUser(user); //must save before we associate
+                    Authentication.AssociateAuthenticationToken(user, authResult.Provider, authResult.ProviderUserId);
+                }
+
+                //var user = AccountService.GetById(authResult.ProviderUserId);
                 if (user != null)
                 {
+                    var changes = 0;
+                    //todo: optimize?  dictionary or something...
+                    foreach (var claim in authResult.Claims)
+                    {
+                        if (user.GetClaim(claim.Type, claim.Issuer) == null)
+                        {
+                            user.Claims.Add(claim);
+                            changes++;
+                        }
+                    }
+                    //user.Claims.AddRange(authResult.Claims);
+
+                    foreach (var key in authResult.ExtraData.Keys)
+                    {
+                        if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            user.Attributes[key] = authResult.ExtraData[key];
+                            changes++;
+                        }
+                    }
+                    if (changes > 0)
+                        SaveUser(user); //for now we will persist any information coming back from the authentication provider...  may change mind
+
                     Authentication.IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, persistant); //todo: ticket needs refactoring on who does it
                 }
                 return user;

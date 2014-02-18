@@ -60,7 +60,8 @@ namespace Videre.Core.Providers
             {
                 Success = user != null,
                 Provider = Name,
-                ProviderUserId = user != null ? user.UserId : null,
+                //ProviderUserId = user != null ? user.UserId : null,
+                ProviderUserId = user != null ? user.Id : null, //NOT LOGIN ID - TOKEN!
                 UserName = userName
             };
         }

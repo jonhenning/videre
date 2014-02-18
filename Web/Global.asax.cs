@@ -82,14 +82,7 @@ namespace Videre.Web
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            //' Fires upon attempting to authenticate the use
-            if (HttpContext.Current.User != null)
-            {
-                var identity = (FormsIdentity)HttpContext.Current.User.Identity;
-                if (HttpContext.Current.User.Identity.IsAuthenticated)
-                    HttpContext.Current.User = new System.Security.Principal.GenericPrincipal(identity, identity.Ticket.UserData.Split(','));
-
-            }
+            Services.Authentication.ProcessAuthenticationTicket();
         }
 
         public void Application_End()
