@@ -132,7 +132,7 @@ namespace Videre.Core.Services
 
         public static CoreModels.User GetUserByAuthenticationToken(string provider, string token, string portalId = null)
         {
-            return CoreServices.Account.Get(u => u.Claims.Exists(c => c.Type == _externalAuthenticationClaimType && c.Issuer == provider), portalId);
+            return CoreServices.Account.Get(u => u.Claims.Exists(c => c.Type == _externalAuthenticationClaimType && c.Issuer == provider && c.Value == token), portalId);
         }
 
         public static CoreModels.User AssociateAuthenticationToken(Models.User user, string provider, string token)
