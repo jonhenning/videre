@@ -247,22 +247,27 @@ namespace Videre.Core.Services
                 {
                     var changes = 0;
                     //todo: optimize?  dictionary or something...
-                    foreach (var claim in authResult.Claims)
+                    if (authResult.Claims != null)
                     {
-                        if (user.GetClaim(claim.Type, claim.Issuer) == null)
+                        foreach (var claim in authResult.Claims)
                         {
-                            user.Claims.Add(claim);
-                            changes++;
+                            if (user.GetClaim(claim.Type, claim.Issuer) == null)
+                            {
+                                user.Claims.Add(claim);
+                                changes++;
+                            }
                         }
                     }
                     //user.Claims.AddRange(authResult.Claims);
-
-                    foreach (var key in authResult.ExtraData.Keys)
+                    if (authResult.ExtraData != null)
                     {
-                        if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
+                        foreach (var key in authResult.ExtraData.Keys)
                         {
-                            user.Attributes[key] = authResult.ExtraData[key];
-                            changes++;
+                            if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                user.Attributes[key] = authResult.ExtraData[key];
+                                changes++;
+                            }
                         }
                     }
                     if (changes > 0)
