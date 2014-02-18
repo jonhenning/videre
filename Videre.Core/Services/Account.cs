@@ -124,10 +124,15 @@ namespace Videre.Core.Services
             {
                 if (IsAuthenticated)
                 {
-                    //todo: this could be expensive to do a lookup to the database each time!
-                    var user = GetUserById(CurrentIdentityName, true);
+                    var user = Portal.GetRequestContextData<Models.User>("VidereCurrentUser", null);
                     if (user == null)
-                        Core.Services.Authentication.RevokeAuthenticationTicket();
+                    {
+                        //todo: this could be expensive to do a lookup to the database each time!
+                        user = GetUserById(CurrentIdentityName, true);
+                        if (user == null)
+                            Core.Services.Authentication.RevokeAuthenticationTicket();
+                        Portal.SetRequestContextData("VidereCurrentUser", user);
+                    }
                     return user;
                 }
                 return null;
