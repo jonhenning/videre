@@ -26,7 +26,7 @@ namespace Videre.Blog.Widgets.Models
                 var ret = Body;
                 if (!string.IsNullOrEmpty(Summary))
                     ret = Summary;
-                if (!string.IsNullOrEmpty(Body) && Body.Length > 100)
+                else if (!string.IsNullOrEmpty(Body) && Body.Length > 100)
                     ret = Body.Substring(0, 100);
                 return Videre.Core.Services.TokenParser.ReplaceTokensWithContent(ret);
             }
