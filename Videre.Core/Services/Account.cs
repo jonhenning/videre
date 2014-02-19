@@ -268,10 +268,30 @@ namespace Videre.Core.Services
                     {
                         foreach (var key in authResult.ExtraData.Keys)
                         {
-                            if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
+                            //if provider is returning an email and we don't have email yet, use it
+                            if (key.Equals("email", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                user.Attributes[key] = authResult.ExtraData[key];
-                                changes++;
+                                if (string.IsNullOrEmpty(user.Email))
+                                {
+                                    user.Email = authResult.ExtraData[key];
+                                    changes++;
+                                }
+                            }
+                            else if (key.Equals("locale", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                if (string.IsNullOrEmpty(user.Locale))
+                                {
+                                    user.Locale = authResult.ExtraData[key];
+                                    changes++;
+                                }
+                            }
+                            else
+                            {
+                                if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    user.Attributes[key] = authResult.ExtraData[key];
+                                    changes++;
+                                }
                             }
                         }
                     }
