@@ -37,53 +37,47 @@ namespace Videre.Core.Services
             }
         }
 
-        //public static bool ReadOnly { get { return AccountService.ReadOnly; } } //todo: kinda hacky...
+        [Obsolete("Use Authentication.IsAuthenticated")]
+        public static bool IsAuthenticated { get { return Authentication.IsAuthenticated; } }
+        [Obsolete("Use Authentication.AuthenticatedUserId")]
+        public static string CurrentIdentityName { get { return Authentication.AuthenticatedUserId; } }
+        public static string AuditId { get { return Authentication.AuthenticatedUserId; } }
 
-        public static bool IsAuthenticated
+        public static void VerifyInRole(string roleId)
         {
-            get
-            {
-                if (HttpContext.Current != null && HttpContext.Current.User != null)
-                    return HttpContext.Current.User.Identity.IsAuthenticated;
-                return false;
-            }
+            IsInRole(new List<string>() { roleId }, true);
         }
 
-        public static void VerifyInRole(string role)
+        public static void VerifyInRole(List<string> roleIds)
         {
-            IsInRole(new List<string>() { role }, true);
+            IsInRole(roleIds, true);
         }
 
-        public static void VerifyInRole(List<string> roles)
+        public static bool IsInRole(string userId, string roleId)
         {
-            IsInRole(roles, true);
+            return IsInRole(userId, new List<string>() { roleId });
         }
 
-        public static bool IsInRole(string userId, string role)
+        public static bool IsInRole(string roleId, bool throwException = false)
         {
-            return IsInRole(userId, new List<string>() { role });
+            return IsInRole(new List<string>() { roleId }, throwException);
         }
 
-        public static bool IsInRole(string role, bool throwException = false)
+        public static bool IsInRoleNames(string userId, List<string> roleNames)
         {
-            return IsInRole(new List<string>() { role }, throwException);
+            return IsInRole(userId, GetRoles().Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList());
         }
 
-        public static bool IsInRoleNames(string userId, List<string> roles)
+        public static bool IsInRoleNames(List<string> roleNames, bool throwException = false)
         {
-            return IsInRole(userId, GetRoles().Where(r => roles.Contains(r.Name)).Select(r => r.Id).ToList());
-        }
-
-        public static bool IsInRoleNames(List<string> roles, bool throwException = false)
-        {
-            return IsInRole(GetRoles().Where(r => roles.Contains(r.Name)).Select(r => r.Id).ToList(), throwException);
+            return IsInRole(GetRoles().Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList(), throwException);
         }
 
         public static bool IsInRole(List<string> roleIds, bool throwException = false)
         {
             var inRole = false;
-            if (IsAuthenticated)
-                inRole = roleIds.Count == 0 || roleIds.Exists(r => HttpContext.Current.User.IsInRole(r));
+            if (Authentication.IsAuthenticated)
+                inRole = roleIds.Count == 0 || roleIds.Exists(r => Authentication.AuthenticatedUser.IsInRole(r));
             if (!inRole && throwException)
                 throw new Exception(Localization.GetLocalization(LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));
             return inRole;
@@ -91,47 +85,27 @@ namespace Videre.Core.Services
 
         public static bool IsInRole(string userId, List<string> roleIds)
         {
-            var user = GetUserById(userId);
+            var user = Authentication.AuthenticatedUser; //GetUserById(userId);
             if (user != null)
                 return user.RoleIds.Exists(r => roleIds.Contains(r));
             return false;
-        }
-
-        public static string CurrentIdentityName
-        {
-            get
-            {
-                if (IsAuthenticated)
-                    return HttpContext.Current.User.Identity.Name;
-                return null;
-            }
-        }
-
-        public static string AuditId
-        {
-            get
-            {
-                return CurrentIdentityName;
-                //if (CurrentUser != null)
-                //    return CurrentUser.Id;
-                //return null;
-            }
         }
 
         public static Models.User CurrentUser
         {
             get
             {
-                if (IsAuthenticated)
+                if (Authentication.IsAuthenticated)
                 {
                     var user = Portal.GetRequestContextData<Models.User>("VidereCurrentUser", null);
                     if (user == null)
                     {
                         //todo: this could be expensive to do a lookup to the database each time!
-                        user = GetUserById(CurrentIdentityName, true);
+                        user = GetUserById(Authentication.AuthenticatedUserId, true);
                         if (user == null)
                             Core.Services.Authentication.RevokeAuthenticationTicket();
-                        Portal.SetRequestContextData("VidereCurrentUser", user);
+                        else 
+                            Portal.SetRequestContextData("VidereCurrentUser", user);
                     }
                     return user;
                 }
