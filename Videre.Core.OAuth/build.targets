@@ -11,53 +11,56 @@
         <CommonLibDir>$(RootDir)\lib</CommonLibDir>
         <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
     </PropertyGroup>
+    <ItemGroup>
+        <DeployDirs Include="$(DeployDir)" />
+    </ItemGroup>
     <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets')"/>
 
-  <Target Name="AfterBuild">
-    <CallTarget Targets="UpdatePackageManifest" />
-    <CallTarget Targets="CreatePackage" />
-    <CallTarget Targets="Deploy" />
-    <CallTarget Targets="ResetPackageManifest" />
-  </Target>
+    <Target Name="AfterBuild">
+        <CallTarget Targets="UpdatePackageManifest" />
+        <CallTarget Targets="CreatePackage" />
+        <CallTarget Targets="Deploy" />
+        <CallTarget Targets="ResetPackageManifest" />
+    </Target>
 
-  <Target Name="UpdatePackageManifest">
-    <!--<Attrib ReadOnly="false" Files="$(MSBuildProjectDirectory)\package.manifest" />-->
-    <Time Format="o" Kind="Utc">
-      <Output TaskParameter="FormattedTime" PropertyName="packageDate" />
-    </Time>
-    <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;$(packageDate)&quot;" />
-    <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: '$(Version)'," />
-  </Target>
-  <Target Name="ResetPackageManifest">
-    <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;&quot;" />
-    <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: '1.0'," />
-  </Target>
+    <Target Name="UpdatePackageManifest">
+        <!--<Attrib ReadOnly="false" Files="$(MSBuildProjectDirectory)\package.manifest" />-->
+        <Time Format="o" Kind="Utc">
+            <Output TaskParameter="FormattedTime" PropertyName="packageDate" />
+        </Time>
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;$(packageDate)&quot;" />
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: '$(Version)'," />
+    </Target>
+    <Target Name="ResetPackageManifest">
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="PackagedDate: &quot;.*&quot;" ReplacementText="PackagedDate: &quot;&quot;" />
+        <FileUpdate Files="$(MSBuildProjectDirectory)\package.manifest" Encoding="ASCII" Regex="Version: .*," ReplacementText="Version: '1.0'," />
+    </Target>
 
-  <Target Name="CreatePackage">
-    <MakeDir Directories="$(RedistDir)"/>
-    <CreateItem Include="
+    <Target Name="CreatePackage">
+        <MakeDir Directories="$(RedistDir)"/>
+        <CreateItem Include="
                 $(TargetDir)Microsoft.*.dll;
                 $(TargetDir)DotNetOpenAuth.*.dll;
                 $(TargetDir)$(Name).dll;
                 $(MSBuildProjectDirectory)\package.manifest;
                 $(TargetDir)$(Name).pdb;">
-      <Output TaskParameter="Include" ItemName="DebugWidgets" />
-    </CreateItem>
-    <CreateItem Include="
+            <Output TaskParameter="Include" ItemName="DebugWidgets" />
+        </CreateItem>
+        <CreateItem Include="
                 $(TargetDir)Microsoft.*.dll;
                 $(TargetDir)DotNetOpenAuth.*.dll;
                 $(TargetDir)$(Name).dll;
                 $(MSBuildProjectDirectory)\package.manifest;
                 ">
-      <Output TaskParameter="Include" ItemName="ReleaseWidgets" />
-    </CreateItem>
-    <Zip Files="@(DebugWidgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" Condition=" '$(Configuration)' == 'Debug' "/>
-    <Zip Files="@(ReleaseWidgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" Condition=" '$(Configuration)' == 'Release' " />
-  </Target>
+            <Output TaskParameter="Include" ItemName="ReleaseWidgets" />
+        </CreateItem>
+        <Zip Files="@(DebugWidgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" Condition=" '$(Configuration)' == 'Debug' "/>
+        <Zip Files="@(ReleaseWidgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" Condition=" '$(Configuration)' == 'Release' " />
+    </Target>
 
-  <Target Name="Deploy">
-    <MakeDir Directories="$(DeployDir)\_updates"/>
-    <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="$(DeployDir)\_updates" />
-  </Target>
+    <Target Name="Deploy">
+        <!--<MakeDir Directories="$(DeployDir)\_updates"/>-->
+        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="%(DeployDirs.FullPath)\_updates" />
+    </Target>
 
 </Project>
