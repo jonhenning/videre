@@ -149,6 +149,7 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
     <Compile Include="Models\BundleList.cs" />
+    <Compile Include="Models\AuthenticatedUser.cs" />
     <Compile Include="Models\UserAuthentication.cs" />
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />

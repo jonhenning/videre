@@ -11,6 +11,7 @@ using CodeEndeavors.Extensions;
 using System.Web.Security;
 using System.Web;
 using System.Configuration;
+using System.Security.Principal;
 
 namespace Videre.Core.Services
 {
@@ -37,6 +38,16 @@ namespace Videre.Core.Services
         private const string _externalAuthenticationClaimType = "ExternalAuthenticationToken";
         private static List<IAuthenticationProvider> _authenticationProviders = new List<IAuthenticationProvider>();
 
+        public static bool IsAuthenticated
+        {
+            get
+            {
+                if (HttpContext.Current != null && HttpContext.Current.User != null)
+                    return HttpContext.Current.User.Identity.IsAuthenticated;
+                return false;
+            }
+        }
+
         public static void IssueAuthenticationTicket(string identityName, List<string> roles, int days, bool persistant)
         {
             var ticket = new FormsAuthenticationTicket(1, identityName, DateTime.Now, DateTime.Now.AddDays(days), persistant, String.Join(",", roles));
@@ -52,7 +63,44 @@ namespace Videre.Core.Services
             {
                 var identity = (FormsIdentity)HttpContext.Current.User.Identity;
                 if (HttpContext.Current.User.Identity.IsAuthenticated)
-                    HttpContext.Current.User = new System.Security.Principal.GenericPrincipal(identity, identity.Ticket.UserData.Split(','));
+                    HttpContext.Current.User = new GenericPrincipal(identity, identity.Ticket.UserData.Split(','));
+            }
+        }
+
+        public static string AuthenticatedUserId
+        {
+            get
+            {
+                if (IsAuthenticated)
+                    return AuthenticatedUser.Id;
+                return null;
+            }
+        }
+
+
+        public static Models.AuthenticatedUser AuthenticatedUser
+        {
+            get
+            {
+                if (IsAuthenticated)
+                {
+                    var user = Portal.GetRequestContextData<Models.AuthenticatedUser>("VidereAuthenticatedUser", null);
+                    if (user == null)
+                    {
+                        var principal = (GenericPrincipal)HttpContext.Current.User;
+                        var identity = (FormsIdentity)principal.Identity;
+                        //eventually add claims when upgrade to .NET 4.5
+                        user = new Models.AuthenticatedUser()
+                        {
+                            Id = identity.Name,
+                            RoleIds = identity.Ticket.UserData.Split(',').ToList()
+                        };
+                        Portal.SetRequestContextData("VidereAuthenticatedUser", user);
+                    }
+                    return user;
+
+                }
+                return null;
             }
         }
 
