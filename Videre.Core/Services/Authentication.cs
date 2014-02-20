@@ -157,9 +157,9 @@ namespace Videre.Core.Services
             return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider).Select(p => (IStandardAuthenticationProvider)p).ToList();
         }
 
-        public static IStandardAuthenticationProvider GetActiveStandardAuthenticationProvider()
+        public static List<IStandardAuthenticationProvider> GetActiveStandardAuthenticationProviders()
         {
-            return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && p.Enabled).Select(p => (IStandardAuthenticationProvider)p).FirstOrDefault();
+            return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && p.Enabled).Select(p => (IStandardAuthenticationProvider)p).ToList();
         }
 
         //public static IStandardAuthenticationProvider GetActivePersistanceProvider()
