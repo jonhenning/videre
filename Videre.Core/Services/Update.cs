@@ -297,35 +297,55 @@ namespace Videre.Core.Services
         //todo: allowing passing in of objects, but currently using very little of them
         public static string InstallPortal(Core.Models.User adminUser, Core.Models.Portal portal)
         {
-            //todo: hardcoding default for now...
-            //if (Core.Services.Update.Register(new Videre.Core.Models.Portal() { Name = portal.Name, ThemeName = portal.ThemeName }) > 0)
-            if (Core.Services.Update.Register(portal) > 0)
-                Core.Services.Repository.SaveChanges();
-
-            var portalId = Core.Services.Portal.GetPortal(portal.Name).Id; //Core.Services.Portal.CurrentPortalId;
-            var updates = 0;
-
-            //portal Init
-            //if (!Core.Services.Account.ReadOnly)    //todo:  don't allow this?!?!  or does UI disable this?
-            if (Core.Services.Authentication.PersistanceProvider != null)
+            try
             {
+                //todo: hardcoding default for now...
+                //if (Core.Services.Update.Register(new Videre.Core.Models.Portal() { Name = portal.Name, ThemeName = portal.ThemeName }) > 0)
+                if (Core.Services.Update.Register(portal) > 0)
+                    Core.Services.Repository.SaveChanges();
+
+                var portalId = Core.Services.Portal.GetPortal(portal.Name).Id; //Core.Services.Portal.CurrentPortalId;
+                var updates = 0;
+
+                //portal Init
                 updates += Core.Services.Update.Register(new List<Core.Models.Role>()
                 {
                     new Core.Models.Role() { Name = "admin", PortalId = portalId, Description = "Administrative Priviledges" }
                 });
 
-                updates += Core.Services.Update.Register(new List<Core.Models.User>()
+
+                var newAdminUser = new Core.Models.User() { PortalId = portalId, Name = adminUser.Name, Email = adminUser.Email, Password = adminUser.Password, RoleIds = new List<string>() { Core.Services.Update.GetAdminRoleId(portalId) } };
+                if (Authentication.PersistanceProvider == null) //user must exist in authentication and we need to add the admin role to it.
                 {
-                    new Core.Models.User() { PortalId = portalId, Name = adminUser.Name, Email = adminUser.Email, Password = adminUser.Password, RoleIds = new List<string>() {Core.Services.Update.GetAdminRoleId(portalId)} }
-                });
+                    var userAuthenticated = false;
+                    //todo:  try each one?   seems a bit much, but user is not able to configure them yet...
+                    foreach (var provider in Authentication.GetStandardAuthenticationProviders())
+                    {
+                        var result = Authentication.Login(adminUser.Name, adminUser.Password, provider.Name);
+                        if (result.Success)
+                        {
+                            newAdminUser.Password = null; //password handled by outside provider
+                            userAuthenticated = true;
+                            break;
+                        }
+                    }
+                    if (!userAuthenticated)
+                        throw new Exception("Invalid Login for user.  User must already exist in one of the standard login providers.");
+                }
+                updates += Core.Services.Update.Register(new List<Core.Models.User>() { newAdminUser });
+
+                if (updates > 0)
+                    CoreServices.Repository.SaveChanges();
+
+                SendWelcomeEmail(adminUser, portal);
+
+                return portalId;
             }
-            if (updates > 0)
-                CoreServices.Repository.SaveChanges();
-
-            SendWelcomeEmail(adminUser, portal);
-
-            return portalId;
-
+            catch (Exception ex)
+            {
+                Update.ResetAllPortals();
+                throw ex;
+            }
         }
 
         public static void SendWelcomeEmail(Core.Models.User adminUser, Core.Models.Portal portal)
@@ -423,5 +443,23 @@ namespace Videre.Core.Services
             return updates;
         }
 
+        //nuclear option!
+        public static void ResetAllPortals()
+        {           
+            Repository.Current.DeleteAll<Models.PageTemplate>("PageTemplate");
+            Repository.Current.DeleteAll<Models.LayoutTemplate>("LayoutTemplate");
+            Repository.Current.DeleteAll<Models.Menu>("Menu");
+            Repository.Current.DeleteAll<Models.Package>("Package");
+            Repository.Current.DeleteAll<Models.Localization>("Localization");
+            Repository.Current.DeleteAll<Models.Portal>("Portal");
+            Repository.Current.DeleteAll<Models.Role>("Role");
+            Repository.Current.DeleteAll<Models.SearchProvider>("SearchProvider");
+            Repository.Current.DeleteAll<Models.SecureActivity>("SecureActivity");
+            Repository.Current.DeleteAll<Models.User>("User");
+            Repository.Current.DeleteAll<Models.WebReference>("WebReference");
+            Repository.Current.DeleteAll<Models.WidgetManifest>("WidgetManifest");
+            CoreServices.Repository.Current.PendingUpdates = 0;
+
+        }
     }
 }
