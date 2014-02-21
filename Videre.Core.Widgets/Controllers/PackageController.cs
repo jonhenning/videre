@@ -100,7 +100,7 @@ namespace Videre.Core.Widgets.Controllers
             var result =  API.Execute<List<Models.Package>>(r =>
             {
                 r.Data = CoreServices.Package.GetPublishedPackages();
-            });
+            }, false);
             return result.Data.ToJson();
         }
 
