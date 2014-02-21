@@ -29,7 +29,7 @@
                 <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
                     <thead>
                         <tr>
-                            <th style="width: 120px;"></th>
+                            <th style="width: 80px;"></th>
                             <th>@Model.GetText("Name.Text", "Name")</th>
                             <th>@Model.GetText("Type.Text", "Type")</th>
                             <th>@Model.GetText("Version.Text", "Version")</th>
@@ -43,7 +43,7 @@
                 </table>
                 <script id="@Model.GetId("ItemListTemplate")" type="text/html">
                     <tr>
-                        <td style="white-space: nowrap;">
+                        <td style="white-space: nowrap; width: 80px;">
                             {{if installedDate != null || availPackageDate != null || remoteDate != null}}
                             <div class="btn-group" style="float: right">
                                 @Html.Bootstrap().Button().Text("Action.Text", "Action").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
