@@ -42,11 +42,15 @@ namespace Videre.Core.Extensions.Bootstrap
             return new BootstrapParagraph(Html, id);
         }
 
+        public IBootstrapUnorderedList UnorderedList(string id = null)
+        {
+            return new BootstrapUnorderedList(Html, id);
+        }
+
         public IBootstrapLabel Label(string token, string text, string forId)
         {
             return new BootstrapLabel(Html, token, text, forId);
         }
-
         public IBootstrapLabel Label(string token, string text)
         {
             return new BootstrapLabel(Html, token, text);
