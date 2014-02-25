@@ -26,6 +26,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
     {
         IBootstrapLabel Label();
         List<IBootstrapBaseControl> Controls();
+        IBootstrapFormGroup ControlsCss(string css);
     }
 
     public class BootstrapFormGroup : BootstrapControlBase<IBootstrapFormGroup, BootstrapFormGroupModel>, IBootstrapFormGroup
@@ -56,6 +57,11 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             this._model.controls.AddRange(controls);
         }
 
+        public IBootstrapFormGroup ControlsCss(string css)
+        {
+            this._model.controlGroupCssClasses.Add(css);
+            return this;
+        }
 
         public IBootstrapLabel Label()
         {
@@ -69,8 +75,11 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         public override string ToHtmlString()
         {
             var group = new TagBuilder("div");
+            AddBaseMarkup(group);
             group.AddCssClass("form-group");
             var controlsCtr = new TagBuilder("div");
+
+
             //controlsCtr.AddCssClass("controls");
             foreach (var css in _model.controlGroupCssClasses)
                 controlsCtr.AddCssClass(css);
