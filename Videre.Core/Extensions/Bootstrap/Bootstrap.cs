@@ -91,7 +91,7 @@ namespace Videre.Core.Extensions.Bootstrap
 
         public IBootstrapTextEditor TextEditor(string id = null, string plugin = null)
         {
-            plugin = plugin ?? Services.Portal.CurrentPortal.GetAttribute("Core", "TextEditor", "cktexteditor").ToLower();
+            plugin = plugin ?? Services.Portal.CurrentPortal.GetAttribute("Core", "TextEditor", "").ToLower();
             return new BootstrapTextEditor(Html, id).Plugin(plugin);
         }
 

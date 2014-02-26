@@ -53,8 +53,35 @@ namespace Videre.Core.Widgets.ImportExportProviders
         public void Import(PortalExport export, Dictionary<string, string> idMap, string portalId)
         {
             var definitions = GetDefinitionsFromCustom(export);
+            var existingDefs = AllPortalAttributeDefinitions();
             foreach (var def in definitions)
+            {
+                //being selective about how we update this.
+                var existingDef = existingDefs.Where(d => d.GroupName == def.GroupName && d.Name == def.Name).FirstOrDefault();
+                if (existingDef != null)
+                {
+                    //todo: this logic could use some improvement... brute forcing it for lack of time..
+                    def.Id = existingDef.Id;
+                    def.LabelKey = existingDef.LabelKey ?? def.LabelKey;
+                    def.LabelText = existingDef.LabelText ?? def.LabelText;
+                    def.DataType = existingDef.DataType ?? def.DataType;
+                    def.ControlType = existingDef.ControlType ?? def.ControlType;
+                    def.InputType = existingDef.InputType ?? def.InputType;
+                    def.InputType = existingDef.InputType ?? def.InputType;
+                    def.Required = existingDef.Required;
+                    def.DefaultValue = existingDef.DefaultValue ?? def.DefaultValue;
+
+                    if (def.Values != null && existingDef.Values != null)
+                        def.Values = def.Values.Union(existingDef.Values).ToList(); //merge lists
+                    else if (def.Values == null)
+                        def.Values = existingDef.Values;
+                    if (def.Dependencies != null && existingDef.Dependencies != null)
+                        def.Dependencies = def.Dependencies.Union(existingDef.Dependencies).ToList(); //merge lists
+                    else if (def.Dependencies == null)
+                        def.Dependencies = existingDef.Dependencies;
+                }
                 Services.Update.Register(def);
+            }
         }
 
         private List<AttributeDefinition> AllPortalAttributeDefinitions()

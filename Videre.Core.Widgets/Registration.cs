@@ -38,8 +38,8 @@ namespace Videre.Core.Widgets
             {
                 GroupName = "Core",
                 Name = "TextEditor",
-                Values = new List<string>() { "cktexteditor", "cltexteditor", "wysihtml5texteditor" },
-                DefaultValue = "cktexteditor",
+                Values = new List<string>() { "" },
+                DefaultValue = "",
                 Required = true,
                 LabelKey = "TextEditor.Text",
                 LabelText = "Text Editor"

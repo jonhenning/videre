@@ -9,7 +9,7 @@ namespace Videre.Core.Models
             Values = new List<string>();
             Dependencies = new List<AttributeDependency>();
         }
-
+        public string Id { get; set; }
         public string LabelKey { get; set; }
         public string LabelText { get; set; }
         public string Name { get; set; }

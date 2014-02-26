@@ -38,7 +38,7 @@ namespace Videre.Core.Models
 
             if (Services.Portal.AttributeDefinitions.ContainsKey(groupName))
             {
-                var attribute = Services.Portal.AttributeDefinitions[groupName].Where(a => a.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
+                var attribute = Services.Portal.AttributeDefinitions[groupName].Where(a => a.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                 if (attribute != null)
                     return attribute.DefaultValue.ToType<T>();
             }
