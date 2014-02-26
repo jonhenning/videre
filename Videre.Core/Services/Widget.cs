@@ -58,14 +58,6 @@ namespace Videre.Core.Services
             return GetWidgetManifests().FirstOrDefault(m => m.Id == Id);
         }
 
-        public static string Import(WidgetManifest manifest, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var existing = GetWidgetManifest(manifest.FullName);
-            manifest.Id = existing != null ? existing.Id : null;
-            return Save(manifest, userId);
-        }
-
         public static string Save(WidgetManifest manifest, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;

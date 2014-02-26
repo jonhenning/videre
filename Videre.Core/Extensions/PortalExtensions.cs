@@ -209,14 +209,14 @@ namespace Videre.Core.Extensions
             //HtmlExtensions.RegisterStylesheet(helper, "~/scripts/bootstrap-2.1.0/css/bootstrap.css", true, new Dictionary<string, string>() { { "type", "theme" } });
         }
 
-        public static MvcHtmlString AuthorizedControlGroup(this HtmlHelper helper, IClientControl widget, string id, string textKey, string defaultText, string dataColumn)
-        {
-            return helper.DropDownControlGroup(widget, id, textKey, defaultText, dataColumn, new List<SelectListItem>
-            {
-                new SelectListItem {Text = widget.GetPortalText("None.Text", "None"), Value = ""},
-                new SelectListItem {Text = widget.GetPortalText("Authenticated.Text", "Authenticated"), Value = "true"},
-                new SelectListItem {Text = widget.GetPortalText("NotAuthenticated.Text", "Not Authenticated"), Value = "false"}
-            });
-        }
+        //public static MvcHtmlString AuthorizedControlGroup(this HtmlHelper helper, IClientControl widget, string id, string textKey, string defaultText, string dataColumn)
+        //{
+        //    return helper.DropDownControlGroup(widget, id, textKey, defaultText, dataColumn, new List<SelectListItem>
+        //    {
+        //        new SelectListItem {Text = widget.GetPortalText("None.Text", "None"), Value = ""},
+        //        new SelectListItem {Text = widget.GetPortalText("Authenticated.Text", "Authenticated"), Value = "true"},
+        //        new SelectListItem {Text = widget.GetPortalText("NotAuthenticated.Text", "Not Authenticated"), Value = "false"}
+        //    });
+        //}
     }
 }

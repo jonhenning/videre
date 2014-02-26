@@ -56,15 +56,16 @@ namespace Videre.Core.Services
             return Repository.Current.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId).Select(l => l.Data).ToList();
         }
 
+        //since currently part of content provider, place in service 
         public static string Import(string portalId, Models.Localization localization, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            
+
             if (localization.Type == LocalizationType.Portal)
                 localization.Namespace = portalId;   //type portal uses portalid as namespace
 
             var existing = Localization.Get(portalId, localization.Type, localization.Namespace, localization.Key, localization.Locale);
-            
+
             localization.PortalId = portalId;
             localization.Id = existing != null ? existing.Id : null;
             return Save(localization, userId);

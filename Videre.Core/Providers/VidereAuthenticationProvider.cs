@@ -36,7 +36,7 @@ namespace Videre.Core.Providers
 
         public void Register()
         {
-            var updates = CoreServices.Update.Register("Authentication", new CoreModels.AttributeDefinition() { Name = Name, DefaultValue = "true", LabelKey = "VidereAuthentication.Text", LabelText = "Videre Authentication", DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name, DefaultValue = "true", LabelKey = "VidereAuthentication.Text", LabelText = "Videre Authentication", DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
 
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();

@@ -214,12 +214,18 @@ namespace Videre.Core.Services
             return count;
         }
 
+        [Obsolete("Use Register(attribute) instead.  GroupName now on Attribute Model")]
         public static int Register(string groupName, Models.AttributeDefinition attribute)
+        {
+            attribute.GroupName = groupName;
+            return Register(attribute);
+        }
+
+        public static int Register(Models.AttributeDefinition attribute)
         {
             var portals = Services.Portal.GetPortals();
             var count = 0;
-            foreach (var portal in portals)
-                count += Services.Portal.RegisterPortalAttribute(portal.Id, groupName, attribute) ? 1 : 0;
+            count += Services.Portal.RegisterPortalAttribute(attribute) ? 1 : 0;
             return count;
         }
 

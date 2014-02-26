@@ -39,15 +39,6 @@ namespace Videre.Core.Services
             //return Repository.Current.Get<Models.File>("File", f => f.PortalId == PortalId && f.Urls.Contains(Url), null);
         }
 
-        public static string Import(string portalId, Models.File file, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var existing = Get(portalId, file.Url);
-            file.PortalId = portalId;
-            file.Id = existing != null ? existing.Id : null;
-            return Save(file, userId);
-        }
-
         public static string Save(Models.File file, string userId = null)
         {
             file.PortalId = string.IsNullOrEmpty(file.PortalId) ? Portal.CurrentPortalId : file.PortalId;

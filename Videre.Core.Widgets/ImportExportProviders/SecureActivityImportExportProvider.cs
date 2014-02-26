@@ -6,12 +6,17 @@ using Videre.Core.Models;
 using CodeEndeavors.Extensions;
 using System.Collections.Concurrent;
 using Videre.Core.ImportExportProviders;
+using Videre.Core.Services;
 
 namespace Videre.Core.Widgets.ImportExportProviders
 {
     public class SecureActivityImportExportProvider : IImportExportProvider
     {
         public string Name { get { return "Secure Activity"; } }
+        public List<string> ProviderDependencies
+        {
+            get { return new List<string>() { "Role" }; }
+        }
 
         public List<ImportExportContent> GetExportContentItems(PortalExport export = null, string portalId = null)
         {
@@ -40,6 +45,26 @@ namespace Videre.Core.Widgets.ImportExportProviders
             }
 
             return export;
+        }
+
+        public void Import(PortalExport export, Dictionary<string, string> idMap, string portalId)
+        {
+            if (export.SecureActivities != null)
+            {
+                Logging.Logger.DebugFormat("Importing {0} secure activities...", export.SecureActivities.Count);
+                foreach (var exportActivity in export.SecureActivities)
+                    ImportExport.SetIdMap<SecureActivity>(exportActivity.Id, Import(portalId, exportActivity, idMap), idMap);
+            }
+        }
+
+        private string Import(string portalId, Models.SecureActivity activity, Dictionary<string, string> idMap, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var existing = Services.Security.GetSecureActivity(portalId, activity.Area, activity.Name);
+            activity.Id = existing != null ? existing.Id : null;
+            activity.PortalId = portalId;
+            activity.RoleIds = Services.Security.GetNewRoleIds(activity.RoleIds, idMap);
+            return Services.Security.Save(activity, userId);
         }
 
     }

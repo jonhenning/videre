@@ -6,12 +6,17 @@ using Videre.Core.Models;
 using CodeEndeavors.Extensions;
 using System.Collections.Concurrent;
 using Videre.Core.ImportExportProviders;
+using Videre.Core.Services;
 
 namespace Videre.Core.Widgets.ImportExportProviders
 {
     public class FileImportExportProvider : IImportExportProvider
     {
         public string Name { get { return "File"; } }
+        public List<string> ProviderDependencies
+        {
+            get { return new List<string>(); }
+        }
 
         public List<ImportExportContent> GetExportContentItems(PortalExport export = null, string portalId = null)
         {
@@ -40,6 +45,37 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 export.FileContent[file.Id] = Services.Portal.GetFile(file.Id).GetFileBase64();
             }
             return export;
+        }
+
+        public void Import(PortalExport export, Dictionary<string, string> idMap, string portalId)
+        {
+            if (export.Files != null)
+            {
+                Logging.Logger.DebugFormat("Importing {0} files...", export.Files.Count);
+
+                //todo:  embed file base64???
+                foreach (var file in export.Files)
+                {
+                    var origId = file.Id;
+                    ImportExport.SetIdMap<Models.File>(file.Id, Import(portalId, file), idMap);
+                    if (export.FileContent.ContainsKey(origId))
+                    {
+                        var fileName = Services.Portal.GetFile(file.Id);
+                        if (System.IO.File.Exists(fileName))
+                            System.IO.File.Delete(fileName);
+                        export.FileContent[origId].Base64ToFile(fileName);
+                    }
+                }
+            }
+        }
+
+        private string Import(string portalId, Models.File file, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var existing = Services.File.Get(portalId, file.Url);
+            file.PortalId = portalId;
+            file.Id = existing != null ? existing.Id : null;
+            return Services.File.Save(file, userId);
         }
 
     }

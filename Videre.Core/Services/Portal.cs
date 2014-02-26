@@ -17,7 +17,23 @@ namespace Videre.Core.Services
 {
     public static class Portal
     {
-        public static ConcurrentDictionary<string, List<AttributeDefinition>> AttributeDefinitions = new ConcurrentDictionary<string, List<AttributeDefinition>>();
+        private static ConcurrentDictionary<string, List<AttributeDefinition>> _attributeDefinitions = null;
+
+        public static ConcurrentDictionary<string, List<AttributeDefinition>> AttributeDefinitions 
+        {
+            get
+            {
+                if (_attributeDefinitions == null)
+                {
+                    var definitions = Repository.Current.GetResources<AttributeDefinition>("AttributeDefinition").Select(a => a.Data).GroupBy(a => a.GroupName).ToDictionary(a => a.Key, a => a.ToList());
+                    if (definitions != null)
+                        _attributeDefinitions = definitions.ToJson().ToObject<ConcurrentDictionary<string, List<AttributeDefinition>>>();
+                    if (_attributeDefinitions == null)
+                        _attributeDefinitions = new ConcurrentDictionary<string, List<AttributeDefinition>>();
+                }
+                return _attributeDefinitions;
+            }
+        }
 
         public static object clientIdLock = new object();
 
@@ -439,22 +455,49 @@ namespace Videre.Core.Services
             return res != null;
         }
 
-        public static bool RegisterPortalAttribute(string portalId, string groupName,
-            AttributeDefinition attribute)
+        [Obsolete("Use RegisterPortalAttribute(attribute) instead.  GroupName now on Attribute Model")]
+        public static bool RegisterPortalAttribute(string groupName, AttributeDefinition attribute)
         {
-            var portal = GetPortalById(portalId);
-            if (!AttributeDefinitions.ContainsKey(groupName))
-                AttributeDefinitions[groupName] = new List<AttributeDefinition>();
-            if (
-                !AttributeDefinitions[groupName].Exists(
-                    a => a.Name.Equals(attribute.Name, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                AttributeDefinitions[groupName].Add(attribute);
-                //Save(portal);
-                return true;
-            }
-            return false;
+            attribute.GroupName = groupName;
+            return RegisterPortalAttribute(attribute);
         }
+
+        public static bool RegisterPortalAttribute(AttributeDefinition attribute)
+        {
+            var changed = false;
+            //var portal = GetPortalById(portalId);
+
+            if (!AttributeDefinitions.ContainsKey(attribute.GroupName))
+                AttributeDefinitions[attribute.GroupName] = new List<AttributeDefinition>();
+
+            var def = AttributeDefinitions[attribute.GroupName].Where(a => a.Name.Equals(attribute.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (def == null)
+            {
+                AttributeDefinitions[attribute.GroupName].Add(attribute);
+                changed = true;
+            }
+            else if (def.ToJson() != attribute.ToJson())
+            {
+                AttributeDefinitions[attribute.GroupName][AttributeDefinitions[attribute.GroupName].IndexOf(def)] = attribute;
+                changed = true;
+            }
+
+            if (changed)
+                Repository.Current.StoreResource("AttributeDefinition", null, attribute, Account.AuditId);
+            return changed;
+        }
+
+        private static bool AttributeDefinitionChanged(AttributeDefinition attribute)
+        {
+            if (!AttributeDefinitions.ContainsKey(attribute.GroupName))
+                AttributeDefinitions[attribute.GroupName] = new List<AttributeDefinition>();
+            var def = AttributeDefinitions[attribute.GroupName].Where(a => a.Name.Equals(attribute.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (def != null)
+                return def.ToJson() != attribute.ToJson();  //todo: not sure this is reliable
+            else
+                return true;
+        }
+
 
         public static T GetPortalAttribute<T>(string groupName, string name, T defaultValue)
         {

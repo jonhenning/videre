@@ -31,14 +31,6 @@ namespace Videre.Core.Services
         {
             return GetWebReferences().Where(r => r.Id == id).FirstOrDefault();
         }
-        public static string Import(string portalId, Models.WebReference webReference, Dictionary<string, string> idMap, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var existing = GetWebReference(portalId, webReference.Name);
-            webReference.Id = existing != null ? existing.Id : null;
-            webReference.PortalId = portalId;
-            return Save(webReference, userId);
-        }
         public static string Save(Models.WebReference webReference, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;

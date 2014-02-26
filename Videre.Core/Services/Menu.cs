@@ -29,6 +29,7 @@ namespace Videre.Core.Services
             return Repository.Current.GetResourceData<Models.Menu>("Menu", m => m.Data.PortalId == portalId && m.Data.Name == name, null);
         }
 
+        //since currently part of content provider, place in service 
         public static string Import(string portalId, Models.Menu menu, Dictionary<string, string> idMap, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;

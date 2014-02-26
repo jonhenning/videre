@@ -6,12 +6,17 @@ using Videre.Core.Models;
 using CodeEndeavors.Extensions;
 using System.Collections.Concurrent;
 using Videre.Core.ImportExportProviders;
+using Videre.Core.Services;
 
 namespace Videre.Core.Widgets.ImportExportProviders
 {
     public class LayoutTemplateImportExportProvider : IImportExportProvider
     {
         public string Name { get { return "Layout Template"; } }
+        public List<string> ProviderDependencies
+        {
+            get { return new List<string>() { "Role", "Widget Manifest" }; }
+        }
 
         public List<ImportExportContent> GetExportContentItems(PortalExport export = null, string portalId = null)
         {
@@ -53,6 +58,41 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 export.WidgetContent = export.WidgetContent.Merge(allWidgets.Where(w => w.Manifest.GetContentProvider() != null).ToDictionary(w => w.Id, wc => wc.GetContentJson("db")));
             }
             return export;
+        }
+
+        public void Import(PortalExport export, Dictionary<string, string> idMap, string portalId)
+        {
+            if (export.LayoutTemplates != null)
+            {
+                Logging.Logger.DebugFormat("Importing {0} layout templates...", export.LayoutTemplates.Count);
+                foreach (var exportTemplate in export.LayoutTemplates)
+                    ImportExport.SetIdMap<LayoutTemplate>(exportTemplate.Id, Import(portalId, exportTemplate, export.WidgetContent, idMap), idMap);
+            }
+        }
+
+        private string Import(string portalId, LayoutTemplate template, Dictionary<string, string> widgetContent, Dictionary<string, string> idMap, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var existing = Services.Portal.GetLayoutTemplate(portalId, template.LayoutName);
+            template.PortalId = portalId;
+            template.RoleIds = Security.GetNewRoleIds(template.RoleIds, idMap);
+            template.Id = existing != null ? existing.Id : null;
+            foreach (var widget in template.Widgets)
+            {
+                widget.ManifestId = ImportExport.GetIdMap<WidgetManifest>(widget.ManifestId, idMap);
+                widget.RoleIds = Security.GetNewRoleIds(widget.RoleIds, idMap);
+
+                //todo: not creating/mapping new widget ids?
+                if (widgetContent.ContainsKey(widget.Id))
+                {
+                    var contentProvider = widget.Manifest.GetContentProvider();
+                    if (contentProvider != null)
+                        widget.ContentIds =
+                            contentProvider.Import(portalId, widget.Id, widgetContent[widget.Id], idMap).Values.ToList();
+                    //returns mapped dictionary of old id to new id... we just need to use the new ids
+                }
+            }
+            return Services.Portal.Save(template);
         }
 
     }

@@ -31,8 +31,9 @@ namespace Videre.Core.Services
             var bundlers = new List<string>() { "" };
             bundlers.AddRange(_webReferenceBundleProviders.Select(b => b.Name));
 
-            var updates = CoreServices.Update.Register("Web References", new CoreModels.AttributeDefinition()
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition()
             {
+                GroupName = "Web References",
                 Name = "WebReferenceBundleProvider",
                 Values = bundlers,
                 DefaultValue = "",
@@ -41,8 +42,9 @@ namespace Videre.Core.Services
                 LabelText = "Web Reference Bundle Provider"
             });
 
-            updates += CoreServices.Update.Register("Web References", new CoreModels.AttributeDefinition()
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition()
             {
+                GroupName = "Web References",
                 Name = "EnableBundleOptimizations",
                 DefaultValue = false,
                 Required = false,

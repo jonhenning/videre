@@ -24,15 +24,6 @@ namespace Videre.Core.Services
         {
             return GetSecureActivities().Where(r => r.Id == Id).FirstOrDefault();
         }
-        public static string Import(string portalId, Models.SecureActivity activity, Dictionary<string, string> idMap, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var existing = GetSecureActivity(portalId, activity.Area, activity.Name);
-            activity.Id = existing != null ? existing.Id : null;
-            activity.PortalId = portalId;
-            activity.RoleIds = GetNewRoleIds(activity.RoleIds, idMap);
-            return Save(activity, userId);
-        }
         public static string Save(Models.SecureActivity activity, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;

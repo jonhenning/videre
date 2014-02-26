@@ -37,6 +37,9 @@ namespace Videre.Core.Models
         public Dictionary<string, string> FileContent { get; set; }
         public List<Models.WebReference> WebReferences { get; set; }
         public List<Models.Menu> Menus { get; set; }
+
+        public Dictionary<string, object> Custom { get; set; }
+
         
     }
 }

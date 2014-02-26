@@ -34,8 +34,9 @@ namespace Videre.Core.Widgets
 
 
             //App init (for now... eventually may add PortalId)
-            var updates = CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition()
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition()
             {
+                GroupName = "Core",
                 Name = "TextEditor",
                 Values = new List<string>() { "cktexteditor", "cltexteditor", "wysihtml5texteditor" },
                 DefaultValue = "cktexteditor",
@@ -44,8 +45,9 @@ namespace Videre.Core.Widgets
                 LabelText = "Text Editor"
             });
 
-            updates += CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition()
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition()
             {
+                GroupName = "Core",
                 Name = "ThemeAPIUrl",
                 DefaultValue = "http://api.bootswatch.com/3",
                 Required = true,
@@ -53,8 +55,9 @@ namespace Videre.Core.Widgets
                 LabelText = "Theme API Url"
             });
 
-            updates += CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition()
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition()
             {
+                GroupName = "Core",
                 Name = "RemotePackageUrl",
                 DefaultValue = "",
                 Required = false,
@@ -62,8 +65,8 @@ namespace Videre.Core.Widgets
                 LabelText = "Remote Package Url"
             });
 
-            CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition() { Name = "SearchIndexDir", DefaultValue = "~/App_Data/SearchIndex", Required = true, LabelKey = "SearchIndexDir.Text", LabelText = "Search Index Directory" });
-            CoreServices.Update.Register("Core", new CoreModels.AttributeDefinition() { Name = "SearchUrl", DefaultValue = "~/search", Required = true, LabelKey = "SearchUrl.Text", LabelText = "Search Url" });
+            CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Core", Name = "SearchIndexDir", DefaultValue = "~/App_Data/SearchIndex", Required = true, LabelKey = "SearchIndexDir.Text", LabelText = "Search Index Directory" });
+            CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Core", Name = "SearchUrl", DefaultValue = "~/search", Required = true, LabelKey = "SearchUrl.Text", LabelText = "Search Url" });
 
             //App init
             updates += CoreServices.Update.Register(new List<CoreModels.WidgetManifest>()

@@ -62,6 +62,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CodeEndeavors.ResourceManager.1.0.5\lib\net40\CodeEndeavors.ResourceManager.File.dll</HintPath>
     </Reference>
+    <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -117,6 +121,9 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\LocalizationController.cs" />
     <Compile Include="ContentProviders\MenuContentProvider.cs" />
+    <Compile Include="ImportExportProviders\AttributeDefinitionImportExportProvider.cs" />
+    <Compile Include="ImportExportProviders\WidgetManifestImportExportProvider.cs" />
+    <Compile Include="ImportExportProviders\RoleImportExportProvider.cs" />
     <Compile Include="ImportExportProviders\MenuImportExportProvider.cs" />
     <Compile Include="ImportExportProviders\WebReferenceImportExportProvider.cs" />
     <Compile Include="ImportExportProviders\UserImportExportProvider.cs" />

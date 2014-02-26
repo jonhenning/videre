@@ -13,6 +13,7 @@ namespace Videre.Core.Models
         public string LabelKey { get; set; }
         public string LabelText { get; set; }
         public string Name { get; set; }
+        public string GroupName { get; set; }
         public string DataType { get; set; }
         public string ControlType { get; set; }
         public string InputType { get; set; }

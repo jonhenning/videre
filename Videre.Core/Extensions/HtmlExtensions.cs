@@ -210,111 +210,111 @@ namespace Videre.Core.Extensions
         //                            widget.GetId(id), GetDataAttributeMarkup(GetDataAttributeDict(dataColumn)), css));
         //}
 
-        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn = null, string inputCss = null, string inputType = null, bool readOnly = false, bool required = false, string dataType = null, string valueMatchControl = null, bool disableAutoComplete = false, int? maxLength = null, string placeHolderText = null)
-        {
-            if (!string.IsNullOrEmpty(valueMatchControl))
-                valueMatchControl = widget.GetId(valueMatchControl);    //todo: right place for this?
+        //public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn = null, string inputCss = null, string inputType = null, bool readOnly = false, bool required = false, string dataType = null, string valueMatchControl = null, bool disableAutoComplete = false, int? maxLength = null, string placeHolderText = null)
+        //{
+        //    if (!string.IsNullOrEmpty(valueMatchControl))
+        //        valueMatchControl = widget.GetId(valueMatchControl);    //todo: right place for this?
 
-            if (dataType == "datetime") //todo: auto do this?
-                helper.RegisterWebReferenceGroup("timepicker");
+        //    if (dataType == "datetime") //todo: auto do this?
+        //        helper.RegisterWebReferenceGroup("timepicker");
 
-            return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType, valueMatchControl: valueMatchControl), required, inputCss, inputType, readOnly, disableAutoComplete, maxLength, placeHolderText);
-        }
-        public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = null, string inputType = null, bool readOnly = false, bool disableAutoComplete = false, int? maxLength = null, string placeHolderText = null)
-        {
-            return GetControlGroup(widget, id, textKey, defaultText, 
-                                string.Format("<input type=\"{3}\" class=\"{2}\" id=\"{0}\" name=\"{0}\" {1} {4} {5} {6} {7} {8}/>",
-                                widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, string.IsNullOrEmpty(inputType) ? "text" : inputType, readOnly ? "readonly=\"readonly\"" : "", required ? "required=\"required\"" : "", disableAutoComplete ? "autocomplete=\"off\"" : "", maxLength.HasValue ? string.Format("maxlength=\"{0}\"", maxLength) : "", !string.IsNullOrEmpty(placeHolderText) ? string.Format("placeholder=\"{0}\"", placeHolderText) : ""));
-        }
+        //    return InputControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, dataType: dataType, valueMatchControl: valueMatchControl), required, inputCss, inputType, readOnly, disableAutoComplete, maxLength, placeHolderText);
+        //}
+        //public static MvcHtmlString InputControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = null, string inputType = null, bool readOnly = false, bool disableAutoComplete = false, int? maxLength = null, string placeHolderText = null)
+        //{
+        //    return GetControlGroup(widget, id, textKey, defaultText, 
+        //                        string.Format("<input type=\"{3}\" class=\"{2}\" id=\"{0}\" name=\"{0}\" {1} {4} {5} {6} {7} {8}/>",
+        //                        widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, string.IsNullOrEmpty(inputType) ? "text" : inputType, readOnly ? "readonly=\"readonly\"" : "", required ? "required=\"required\"" : "", disableAutoComplete ? "autocomplete=\"off\"" : "", maxLength.HasValue ? string.Format("maxlength=\"{0}\"", maxLength) : "", !string.IsNullOrEmpty(placeHolderText) ? string.Format("placeholder=\"{0}\"", placeHolderText) : ""));
+        //}
 
-        public static MvcHtmlString InputFileBrowserControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, string inputCss = null, string mimeType = "", bool required = false)
-        {
-            return InputFileBrowserControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn), inputCss, mimeType);
-        }       
-        public static MvcHtmlString InputFileBrowserControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, string inputCss = null, string mimeType = "", bool required = false)
-        {
-            //ONLY REGISTER ONCE AND AT END?!?!
-            helper.RenderWidget("Core/Admin/FileBrowser", new Dictionary<string, object>() { { "MimeType", mimeType } }, true);
+        //public static MvcHtmlString InputFileBrowserControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, string inputCss = null, string mimeType = "", bool required = false)
+        //{
+        //    return InputFileBrowserControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn), inputCss, mimeType);
+        //}       
+        //public static MvcHtmlString InputFileBrowserControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, string inputCss = null, string mimeType = "", bool required = false)
+        //{
+        //    //ONLY REGISTER ONCE AND AT END?!?!
+        //    helper.RenderWidget("Core/Admin/FileBrowser", new Dictionary<string, object>() { { "MimeType", mimeType } }, true);
 
-            return GetControlGroup(widget, id, textKey, defaultText,  
-                                    string.Format("   <input type=\"text\" class=\"{2}\" id=\"{0}\" {1} {3} />" +
-                                    "   <a class=\"btn\" data-action=\"filebrowser\" data-control=\"{0}\" ><i class=\"icon-picture\"></i></a>",
-                                    widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, required ? "required=\"required\"" : ""), "input-append");
-        }
+        //    return GetControlGroup(widget, id, textKey, defaultText,  
+        //                            string.Format("   <input type=\"text\" class=\"{2}\" id=\"{0}\" {1} {3} />" +
+        //                            "   <a class=\"btn\" data-action=\"filebrowser\" data-control=\"{0}\" ><i class=\"icon-picture\"></i></a>",
+        //                            widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, required ? "required=\"required\"" : ""), "input-append");
+        //}
 
-        public static MvcHtmlString UploadButtonControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string buttonTextKey, string defaultButtonText, string inputCss = null, string inputType = null)
-        {
-            //helper.RegisterScript("~/scripts/fileuploader.js", true);
-            helper.RegisterWebReference("fileuploader");
-            return GetControlGroup(widget, id, textKey, defaultText, 
-                                    string.Format("   <a class=\"btn {1}\" id=\"{0}\" >{2}</a>",
-                                widget.GetId(id), inputCss, HttpUtility.HtmlEncode(widget.GetText(buttonTextKey, defaultButtonText))));
-        }
+        //public static MvcHtmlString UploadButtonControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string buttonTextKey, string defaultButtonText, string inputCss = null, string inputType = null)
+        //{
+        //    //helper.RegisterScript("~/scripts/fileuploader.js", true);
+        //    helper.RegisterWebReference("fileuploader");
+        //    return GetControlGroup(widget, id, textKey, defaultText, 
+        //                            string.Format("   <a class=\"btn {1}\" id=\"{0}\" >{2}</a>",
+        //                        widget.GetId(id), inputCss, HttpUtility.HtmlEncode(widget.GetText(buttonTextKey, defaultButtonText))));
+        //}
 
-        public static MvcHtmlString TextAreaControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, string controlType = "", string inputCss = "", int rows = 3, bool required = false, bool readOnly = false)
-        {
-            return TextAreaControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, controlType), required, inputCss, rows, readOnly);
-        }
-        public static MvcHtmlString TextAreaControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = "", int rows = 3, bool readOnly = false )
-        {
-            return GetControlGroup(widget, id, textKey, defaultText, 
-                                    string.Format("<textarea type=\"text\" class=\"{2}\" id=\"{0}\" {1} rows=\"{3}\" {4} {5}></textarea>",
-                                widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, rows, required ? "required=\"required\"" : "", readOnly ? "readonly=\"readonly\"" : ""));
-        }
+        //public static MvcHtmlString TextAreaControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, string controlType = "", string inputCss = "", int rows = 3, bool required = false, bool readOnly = false)
+        //{
+        //    return TextAreaControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, controlType), required, inputCss, rows, readOnly);
+        //}
+        //public static MvcHtmlString TextAreaControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, string inputCss = "", int rows = 3, bool readOnly = false )
+        //{
+        //    return GetControlGroup(widget, id, textKey, defaultText, 
+        //                            string.Format("<textarea type=\"text\" class=\"{2}\" id=\"{0}\" {1} rows=\"{3}\" {4} {5}></textarea>",
+        //                        widget.GetId(id), GetDataAttributeMarkup(dataAttributes), inputCss, rows, required ? "required=\"required\"" : "", readOnly ? "readonly=\"readonly\"" : ""));
+        //}
 
-        public static MvcHtmlString TextEditorControl(this HtmlHelper helper, Models.IClientControl clientControl, string id, string dataColumn, bool required = false, string labelText = null)
-        {
-            var model = new Models.DataControl(dataColumn, Services.Portal.CurrentPortal.GetAttribute("Core", "TextEditor", "Core/CKTextEditor"));
-            model.ClientId = clientControl.GetId(id);
-            model.Required = required;
-            model.LabelText = labelText;
-            helper.RenderPartial("Controls/" + model.Path, model);
-            return null;
-        }
+        //public static MvcHtmlString TextEditorControl(this HtmlHelper helper, Models.IClientControl clientControl, string id, string dataColumn, bool required = false, string labelText = null)
+        //{
+        //    var model = new Models.DataControl(dataColumn, Services.Portal.CurrentPortal.GetAttribute("Core", "TextEditor", "Core/CKTextEditor"));
+        //    model.ClientId = clientControl.GetId(id);
+        //    model.Required = required;
+        //    model.LabelText = labelText;
+        //    helper.RenderPartial("Controls/" + model.Path, model);
+        //    return null;
+        //}
 
-        public static MvcHtmlString RoleControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, List<string> selectedRoles = null, string inputCss = null, bool required = false)
-        {
-            return RoleControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, "multiselect"), required, selectedRoles, inputCss);
-        }
-        public static MvcHtmlString RoleControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, List<string> selectedRoles = null, string inputCss = null)
-        {
-            selectedRoles = selectedRoles == null ? new List<string>() : selectedRoles;
-            var items = Services.Account.GetRoles().Select(r => new SelectListItem() { Value = r.Id, Text = r.Name, Selected = selectedRoles.Contains(r.Id) }).ToList();
-            return MultiSelectControlGroup(helper, widget, id, textKey, defaultText, dataAttributes, required, items, inputCss);
-        }
+        //public static MvcHtmlString RoleControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, List<string> selectedRoles = null, string inputCss = null, bool required = false)
+        //{
+        //    return RoleControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, "multiselect"), required, selectedRoles, inputCss);
+        //}
+        //public static MvcHtmlString RoleControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, List<string> selectedRoles = null, string inputCss = null)
+        //{
+        //    selectedRoles = selectedRoles == null ? new List<string>() : selectedRoles;
+        //    var items = Services.Account.GetRoles().Select(r => new SelectListItem() { Value = r.Id, Text = r.Name, Selected = selectedRoles.Contains(r.Id) }).ToList();
+        //    return MultiSelectControlGroup(helper, widget, id, textKey, defaultText, dataAttributes, required, items, inputCss);
+        //}
 
-        public static MvcHtmlString MultiSelectControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, bool required, List<SelectListItem> items, string inputCss = null)
-        {
-            return MultiSelectControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, "multiselect"), required, items, inputCss);
-        }
+        //public static MvcHtmlString MultiSelectControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, bool required, List<SelectListItem> items, string inputCss = null)
+        //{
+        //    return MultiSelectControlGroup(helper, widget, id, textKey, defaultText, GetDataAttributeDict(dataColumn, "multiselect"), required, items, inputCss);
+        //}
 
-        public static MvcHtmlString MultiSelectControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, List<SelectListItem> items, string inputCss = null)
-        {
-            var clientId = widget.GetId(id);
+        //public static MvcHtmlString MultiSelectControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, Dictionary<string, string> dataAttributes, bool required, List<SelectListItem> items, string inputCss = null)
+        //{
+        //    var clientId = widget.GetId(id);
             
-            helper.RegisterWebReferenceGroup("multiselect");
-            //helper.RegisterScript("~/scripts/multiselect/jquery.multiselect.min.js", true);
-            //helper.RegisterStylesheet("~/scripts/multiselect/jquery.multiselect.css", true);
+        //    helper.RegisterWebReferenceGroup("multiselect");
+        //    //helper.RegisterScript("~/scripts/multiselect/jquery.multiselect.min.js", true);
+        //    //helper.RegisterStylesheet("~/scripts/multiselect/jquery.multiselect.css", true);
 
-            //todo: localize text (Select Options)
-            //helper.RegisterDocumentReadyScript("multiselect-init", string.Format("$('select[data-controltype=\"multiselect\"]').multiselect({{ selectedList: 3 }});", clientId));
+        //    //todo: localize text (Select Options)
+        //    //helper.RegisterDocumentReadyScript("multiselect-init", string.Format("$('select[data-controltype=\"multiselect\"]').multiselect({{ selectedList: 3 }});", clientId));
 
-            var options = new System.Text.StringBuilder();
-            foreach (var item in items)
-                options.AppendLine(string.Format("<option {0} value=\"{1}\">{2}</option>", item.Selected ? "selected=\"selected\" " : "", item.Value, HttpUtility.HtmlEncode(item.Text)));
+        //    var options = new System.Text.StringBuilder();
+        //    foreach (var item in items)
+        //        options.AppendLine(string.Format("<option {0} value=\"{1}\">{2}</option>", item.Selected ? "selected=\"selected\" " : "", item.Value, HttpUtility.HtmlEncode(item.Text)));
 
-            return GetControlGroup(widget, id, textKey, defaultText,
-                                    string.Format("   <select class=\"{2}\" id=\"{0}\" {1}  multiple=\"multiple\" {4}>{3}</select>",
-                                clientId, GetDataAttributeMarkup(dataAttributes), inputCss, options.ToString(), required ? "required=\"required\"" : ""));
-        }
+        //    return GetControlGroup(widget, id, textKey, defaultText,
+        //                            string.Format("   <select class=\"{2}\" id=\"{0}\" {1}  multiple=\"multiple\" {4}>{3}</select>",
+        //                        clientId, GetDataAttributeMarkup(dataAttributes), inputCss, options.ToString(), required ? "required=\"required\"" : ""));
+        //}
 
-        public static MvcHtmlString DropDownControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, IEnumerable<SelectListItem> selectList, string inputCss = null, SelectListItem blankItem = null)
-        {
-            var list = selectList.ToList(); //todo: minor little hack...
-            if (blankItem != null)
-                list.Insert(0, blankItem);
-            return GetControlGroup(widget, id, textKey, defaultText, helper.DropDownList(widget.GetId(id), list, new {@class = inputCss, data_column = dataColumn}).ToString());
-        }
+        //public static MvcHtmlString DropDownControlGroup(this HtmlHelper helper, Models.IClientControl widget, string id, string textKey, string defaultText, string dataColumn, IEnumerable<SelectListItem> selectList, string inputCss = null, SelectListItem blankItem = null)
+        //{
+        //    var list = selectList.ToList(); //todo: minor little hack...
+        //    if (blankItem != null)
+        //        list.Insert(0, blankItem);
+        //    return GetControlGroup(widget, id, textKey, defaultText, helper.DropDownList(widget.GetId(id), list, new {@class = inputCss, data_column = dataColumn}).ToString());
+        //}
 
         public static List<SelectListItem> ToListItemList(this Enum type)//<T>(this T type) where T : Type//struct //todo: where is the enum constraint?!?!
         {

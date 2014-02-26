@@ -6,12 +6,17 @@ using Videre.Core.Models;
 using CodeEndeavors.Extensions;
 using System.Collections.Concurrent;
 using Videre.Core.ImportExportProviders;
+using Videre.Core.Services;
 
 namespace Videre.Core.Widgets.ImportExportProviders
 {
     public class UserImportExportProvider : IImportExportProvider
     {
         public string Name { get { return "User"; } }
+        public List<string> ProviderDependencies
+        {
+            get { return new List<string>() {"Role"}; }
+        }
 
         public List<ImportExportContent> GetExportContentItems(PortalExport export = null, string portalId = null)
         {
@@ -39,6 +44,26 @@ namespace Videre.Core.Widgets.ImportExportProviders
             }
 
             return export;
+        }
+
+        public void Import(PortalExport export, Dictionary<string, string> idMap, string portalId)
+        {
+            if (export.Users != null)
+            {
+                Logging.Logger.DebugFormat("Importing {0} users...", export.Users.Count);
+                foreach (var exportUser in export.Users)
+                    ImportExport.SetIdMap<User>(exportUser.Id, Import(portalId, exportUser, idMap), idMap);
+            }
+        }
+
+        private string Import(string portalId, Models.User user, Dictionary<string, string> idMap, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var existing = Account.GetUser(user.Name, portalId);
+            user.PortalId = portalId;
+            user.Id = existing != null ? existing.Id : null;
+            user.RoleIds = Security.GetNewRoleIds(user.RoleIds, idMap);
+            return Account.SaveUser(user, userId);
         }
 
     }

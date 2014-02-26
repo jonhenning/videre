@@ -147,16 +147,6 @@ namespace Videre.Core.Services
             return AccountService.Get(portalId, statement);
         }
 
-        public static string ImportUser(string portalId, Models.User user, Dictionary<string, string> idMap, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var existing = GetUser(user.Name, portalId);
-            user.PortalId = portalId;
-            user.Id = existing != null ? existing.Id : null;
-            user.RoleIds = Security.GetNewRoleIds(user.RoleIds, idMap);
-            return SaveUser(user, userId);
-        }
-
         public static string SaveUser(Models.User user, string editUserId = null)
         {
             user.PortalId = string.IsNullOrEmpty(user.PortalId) ? Portal.CurrentPortalId : user.PortalId;
@@ -299,15 +289,6 @@ namespace Videre.Core.Services
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
             return GetRoles(portalId).Where(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-        }
-
-        public static string ImportRole(string portalId, Models.Role role, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var existing = GetRole(role.Name, portalId);
-            role.PortalId = portalId;
-            role.Id = existing != null ? existing.Id : null;
-            return SaveRole(role, userId);
         }
 
         public static string SaveRole(Models.Role role, string userId = null)
