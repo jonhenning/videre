@@ -42,7 +42,12 @@
         {
             var offset = videre.timeZones.getOffset(zone, d);
             if (offset != null)
-                d = d.zone(offset.Format);
+            {
+                var zoneOffset = offset.Format;
+                if (zoneOffset.indexOf('-') != 0 && zoneOffset.indexOf('+') != 0)
+                    zoneOffset = '+' + zoneOffset;
+                d = d.zone(zoneOffset);
+            }
         }
         if (format)
             return d.format(format);
