@@ -35,7 +35,7 @@ namespace Videre.Core.Services
 
     public class Authentication
     {
-        private const string _externalAuthenticationClaimType = "ExternalAuthenticationToken";
+        private const string _authenticationClaimType = "AuthenticationToken";
         private static List<IAuthenticationProvider> _authenticationProviders = new List<IAuthenticationProvider>();
 
         public static bool IsAuthenticated
@@ -157,9 +157,9 @@ namespace Videre.Core.Services
             return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider).Select(p => (IStandardAuthenticationProvider)p).ToList();
         }
 
-        public static IStandardAuthenticationProvider GetActiveStandardAuthenticationProvider()
+        public static List<IStandardAuthenticationProvider> GetActiveStandardAuthenticationProviders()
         {
-            return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && p.Enabled).Select(p => (IStandardAuthenticationProvider)p).FirstOrDefault();
+            return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && p.Enabled).Select(p => (IStandardAuthenticationProvider)p).ToList();
         }
 
         //public static IStandardAuthenticationProvider GetActivePersistanceProvider()
@@ -175,12 +175,12 @@ namespace Videre.Core.Services
 
         public static List<string> GetUserAuthenticationProviders(CoreModels.User user)
         {
-            return user.Claims.Where(c => c.Type == _externalAuthenticationClaimType).Select(c => c.Issuer).ToList();
+            return user.Claims.Where(c => c.Type == _authenticationClaimType).Select(c => c.Issuer).ToList();
         }
 
         public static CoreModels.User GetUserByAuthenticationToken(string provider, string token, string portalId = null)
         {
-            return CoreServices.Account.Get(u => u.Claims.Exists(c => c.Type == _externalAuthenticationClaimType && c.Issuer == provider && c.Value == token), portalId);
+            return CoreServices.Account.Get(u => u.Claims.Exists(c => c.Type == _authenticationClaimType && c.Issuer == provider && c.Value == token), portalId);
         }
 
         public static CoreModels.User AssociateAuthenticationToken(Models.User user, string provider, string token)
@@ -189,10 +189,10 @@ namespace Videre.Core.Services
             var existing = GetUserByAuthenticationToken(provider, token, user.PortalId);
             if (existing == null || existing.Id == user.Id)
             {
-                var claim = user.GetClaim(_externalAuthenticationClaimType, provider);
+                var claim = user.GetClaim(_authenticationClaimType, provider);
                 if (claim == null)
                 {
-                    claim = new CoreModels.UserClaim() { Issuer = provider, Type = _externalAuthenticationClaimType };
+                    claim = new CoreModels.UserClaim() { Issuer = provider, Type = _authenticationClaimType };
                     user.Claims.Add(claim);
                 }
                 claim.Value = token;
@@ -207,12 +207,12 @@ namespace Videre.Core.Services
         public static CoreModels.User DisassociateAuthenticationToken(string userId, string provider)
         {
             var user = CoreServices.Account.GetUserById(userId);
-            if (user.Claims.Exists(c => c.Type == _externalAuthenticationClaimType))
+            if (user.Claims.Exists(c => c.Type == _authenticationClaimType))
             {
-                var authCount = user.Claims.Where(c => c.Type == _externalAuthenticationClaimType).Count();
+                var authCount = user.Claims.Where(c => c.Type == _authenticationClaimType).Count();
                 if (!string.IsNullOrEmpty(user.PasswordHash) || authCount > 1)
                 {
-                    var claim = user.GetClaim(_externalAuthenticationClaimType, provider);
+                    var claim = user.GetClaim(_authenticationClaimType, provider);
                     if (claim != null)
                         user.Claims.Remove(claim);
                     CoreServices.Account.SaveUser(user);

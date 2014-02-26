@@ -455,17 +455,7 @@ videre.UI = {
         return true;
     },
 
-    _controlTypes: {
-        'list':
-        {
-            get: function(ctl)
-            {
-                var val = ctl.val();
-                return val.length > 0 ? val.split('\n') : null; //todo: ok for template URL?
-            },
-            set: function (ctl, val) { ctl.val(val.join('\n')); }
-        }
-    },
+    _controlTypes: {},
 
     _dataTypes:
     {
@@ -516,10 +506,26 @@ videre.UI.registerControlType('list',
     {
         get: function (ctl)
         {
-            var val = ctl.val();
-            return val.length > 0 ? val.split('\n') : null; //todo: ok for template URL?
+            var val = ctl.find('li');
+            if (val.length > 0)
+            {
+                var ret = [];
+                $.each(val, function(idx, item)
+                {
+                    ret.push($(item).text());
+                });
+                return ret;
+            }
+            return null;
+            
         },
-        set: function (ctl, val) { ctl.val(val.join('\n')); },
+        set: function(ctl, val)
+        {
+            if (val != null)
+                ctl.append(val.select(function(i) { return $('<li></li>').html(i); }));
+            else 
+                ctl.html('');
+        },
         init: function (ctl) { }
     });
 

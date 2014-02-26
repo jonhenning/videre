@@ -41,28 +41,22 @@
             @{Html.RenderPartial("WidgetHeader", Model);}
 
             <div class="row">
-            @if (!Videre.Core.Services.Account.ReadOnly)
-            {
-                    <div class="col-lg-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                Admin User - Enter the user information for the portal administrator
-                            </div>
-                            <div class="panel-body">
-                                <div id="@Model.GetId("AdminUser")" class="form-horizontal">
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Admin User - Enter the user information for the portal administrator
+                        </div>
+                        <div class="panel-body">
+                            <div id="@Model.GetId("AdminUser")" class="form-horizontal">
 
-                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtUserName").DataColumn("Name").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
-                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Email.Text", "Email").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Email("txtEmail").DataColumn("Email").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
-
-                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").DataColumn("Password").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
-
-                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ConfirmPassword.Text", "Confirm Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword2").MustMatch("txtPassword").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
-
-                                </div>
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtUserName").DataColumn("Name").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Email.Text", "Email").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Email("txtEmail").DataColumn("Email").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").DataColumn("Password").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ConfirmPassword.Text", "Confirm Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword2").MustMatch("txtPassword").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
                             </div>
                         </div>
                     </div>
-            }
+                </div>
 
                 <div class="col-lg-6">
                     <div class="panel panel-default">

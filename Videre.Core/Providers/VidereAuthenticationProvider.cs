@@ -92,6 +92,7 @@ namespace Videre.Core.Providers
             {
                 Success = true,
                 UserName = userName,
+                Provider = Name,
                 ProviderUserId = userId
             };
         }
