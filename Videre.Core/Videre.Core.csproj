@@ -251,7 +251,7 @@
     <Compile Include="Services\Search.cs" />
     <Compile Include="Providers\VidereAccount.cs" />
     <Compile Include="Providers\IAccountService.cs" />
-    <Compile Include="Services\ISearchProvider.cs" />
+    <Compile Include="Providers\ISearchProvider.cs" />
     <Compile Include="Services\Menu.cs" />
     <Compile Include="Services\File.cs" />
     <Compile Include="Services\Update.cs" />
