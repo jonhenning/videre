@@ -43,9 +43,14 @@
                     </td>
                     <td>{{:Area}}</td>
                     <td>{{:Name}}</td>
-                    <td>{{for Roles}}
-                        {{:#ctx.roleDataDict[#data] != null ? #ctx.roleDataDict[#data].Name : null}}
+                    <td>
+                        <ul class="list-unstyled">
+                        {{for RoleIds}}
+                            <li>
+                                {{:#ctx.roleDataDict[#data] != null ? #ctx.roleDataDict[#data].Name : null}}
+                            </li>
                         {{/for}}
+                        </ul>
                     </td>
                 </tr>
             </script>
@@ -63,7 +68,7 @@
 
                     <div class="form-horizontal">
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Area.Text", "Area").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Area").ReadOnly(), BootstrapUnits.GridSize.MediumDevice9)
-                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Activity.Text", "Activity").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Activity").ReadOnly(), BootstrapUnits.GridSize.MediumDevice9)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Activity.Text", "Activity").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name").ReadOnly(), BootstrapUnits.GridSize.MediumDevice9)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Roles.Text", "Roles").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().RoleList().Plugin(Plugin.BootstrapSelect).Multiple().DataColumn("RoleIds"), BootstrapUnits.GridSize.MediumDevice9)
                     </div>
                 </div>
