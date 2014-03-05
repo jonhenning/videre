@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Videre.Core.Extensions;
+using CodeEndeavors.Extensions;
 
 namespace Videre.Core.Services
 {
@@ -15,7 +16,7 @@ namespace Videre.Core.Services
                 TokenRule = (string text, Models.TokenParserRule rule) => 
                 {
                     var baseUrl = Videre.Core.Services.Portal.ResolveUrl("~/");
-                    var absoluteUrl = Videre.Core.Services.Portal.RequestRootUrl.TrimEnd('/');
+                    var absoluteUrl = Videre.Core.Services.Portal.RequestRootUrl.PathCombine("", "/");
                     //todo:  regex probably better here!
                     text = text.Replace(string.Format(" href=\"{0}", baseUrl), " href=\"" + GetTokenText(rule.Token));
                     text = text.Replace(string.Format(" src=\"{0}", baseUrl), " src=\"" + GetTokenText(rule.Token));
