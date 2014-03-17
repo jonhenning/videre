@@ -24,7 +24,20 @@ namespace Videre.Core.Models
         {
             get
             {
-                return Services.TokenParser.ReplaceTokensWithContent(Text);
+                return Services.TokenParser.ReplaceTokensWithContent(Text, false);
+            }
+            set
+            {
+                Text = Services.TokenParser.ReplaceContentWithTokens(value);
+            }
+        }
+
+        [SerializeIgnore(new string[] { "db" })]
+        public string EditText
+        {
+            get
+            {
+                return Services.TokenParser.ReplaceTokensWithContent(Text, true);
             }
             set
             {

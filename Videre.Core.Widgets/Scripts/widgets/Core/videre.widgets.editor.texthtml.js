@@ -36,7 +36,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
     {
         this._base(widget, manifest);
 
-        this._newContent = { Id: '', Key: 'Content.Text', Namespace: '', Text: '', DisplayText: '', Locale: '', EffectiveDate: null, ExpirationDate: null };
+        this._newContent = { Id: '', Key: 'Content.Text', Namespace: '', Text: '', EditText: '', Locale: '', EffectiveDate: null, ExpirationDate: null };
         if (widget.Content == null)
             widget.Content = [];
         if (widget.Content.length == 0)
