@@ -478,6 +478,7 @@ namespace Videre.Core.Services
             }
             else if (def.ToJson() != attribute.ToJson())
             {
+                attribute.Id = AttributeDefinitions[attribute.GroupName][AttributeDefinitions[attribute.GroupName].IndexOf(def)].Id;
                 AttributeDefinitions[attribute.GroupName][AttributeDefinitions[attribute.GroupName].IndexOf(def)] = attribute;
                 changed = true;
             }
