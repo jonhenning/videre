@@ -73,13 +73,13 @@ namespace Videre.Core.Services
 
         /// <summary>
         /// Replace tokenized content with their replacement text
-        /// Rules that have both a TokenRule and DetokenRule will be processed here.  
+        /// Rules that have a DetokenRule will be processed here.  
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string ReplaceTokensWithContent(string value)
+        public static string ReplaceTokensWithContent(string value, bool mustSupportTokenize = true)
         {
-            foreach (var rule in _tokenRules.Where(r => r.DetokenRule != null && r.TokenRule != null && value.IndexOf(GetTokenText(r.Token)) > -1).OrderBy(r => r.Priority))
+            foreach (var rule in _tokenRules.Where(r => r.DetokenRule != null && (mustSupportTokenize == false || r.TokenRule != null) && value.IndexOf(GetTokenText(r.Token)) > -1).OrderBy(r => r.Priority))
                 value = rule.DetokenRule(value, rule);
             return value;
         }
