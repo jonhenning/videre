@@ -521,9 +521,10 @@ videre.UI.registerControlType('list',
         },
         set: function(ctl, val)
         {
-            ctl.html('');
             if (val != null)
                 ctl.append(val.select(function(i) { return $('<li></li>').html(i); }));
+            else 
+                ctl.html('');
         },
         init: function (ctl) { }
     });
