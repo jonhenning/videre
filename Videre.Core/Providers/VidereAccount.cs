@@ -101,9 +101,10 @@ namespace Videre.Core.AccountProviders
             return role != null;
         }
 
+        private List<Models.CustomDataElement> _customUserElements = new List<Models.CustomDataElement>();
         public List<Models.CustomDataElement> CustomUserElements
         {
-            get { return new List<Models.CustomDataElement>(); }
+            get { return _customUserElements; }
         }
 
         public void Validate(Models.User user)

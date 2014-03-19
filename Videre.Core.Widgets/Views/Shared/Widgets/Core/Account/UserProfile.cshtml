@@ -48,7 +48,14 @@
                         }
                         else
                         {
+                            if (element.DataType == typeof(bool))
+                            {
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label(element.SafeName + ".Text", element.Name).GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().CheckBox().DataColumn(element.Name).Required(element.Required), BootstrapUnits.GridSize.MediumDevice8)
+                            }
+                            else 
+                            {
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label(element.SafeName + ".Text", element.Name).GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn(element.Name).Required(element.Required), BootstrapUnits.GridSize.MediumDevice8)
+                            }
                         }
                     }
                     </div>
