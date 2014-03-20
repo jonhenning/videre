@@ -11,6 +11,8 @@ videre.widgets.admin.user = videre.widgets.base.extend(
             this._data.Attributes = {};
         this._dataDict = v.toDictionary(function(d) { return d.Id; });
     },
+    get_customElements: function() { return this._data; },
+    set_customElements: function(v) { this._customElements = v; },
 
     //constructor
     init: function()
@@ -68,7 +70,10 @@ videre.widgets.admin.user = videre.widgets.base.extend(
             videre.UI.showModal(this._dialog);
             this.bindData(this._selectedItem, this.getControl('GeneralTab'));
             if (this._hasCustomAttributes)
+            {
+                this._assignDefaultValues();
                 this.bindData(this._selectedItem.Attributes, this.getControl('CustomTab'));
+            }
         }
     },
 
@@ -96,6 +101,20 @@ videre.widgets.admin.user = videre.widgets.base.extend(
         {
             self.ajax('~/core/Account/DeleteUser', { id: id }, self._delegates.onSaveReturn, null);
         });
+    },
+
+    _assignDefaultValues: function()
+    {
+        if (this._selectedItem.Attributes == null)
+            this._selectedItem.Attributes = {};
+        if (this._customElements != null)
+        {
+            for (var i = 0; i < this._customElements.length; i++)
+            {
+                if (this._selectedItem.Attributes[this._customElements[i].Name] == null)
+                    this._selectedItem.Attributes[this._customElements[i].Name] = this._customElements[i].DefaultValue;
+            }
+        }
     },
 
     _handleAction: function(action, id)

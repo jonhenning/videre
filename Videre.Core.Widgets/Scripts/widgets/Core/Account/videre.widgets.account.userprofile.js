@@ -4,10 +4,9 @@ videre.registerNamespace('videre.widgets.account');
 videre.widgets.account.userprofile = videre.widgets.base.extend(
 {
     get_data: function() { return this._data; },
-    set_data: function(v)
-    {
-        this._data = v;
-    },
+    set_data: function(v) { this._data = v; },
+    get_customElements: function() { return this._data; },
+    set_customElements: function(v) { this._customElements = v; },
     get_authProviders: function() { return this._authProviders; },
     set_authProviders: function(v) { this._authProviders = v; },
     get_userAuthProviders: function() { return this._userAuthProviders; },
@@ -18,6 +17,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     {
         this._base();  //call base method
         this._data = null;
+        this._customElements = null;
         this._authProviders = [];
         this._userAuthProviders = [];
         this._hasCustomAttributes = false;
@@ -48,7 +48,10 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     {
         this.bindData(this._data, this.getControl('StandardElementsCtr'));
         if (this._hasCustomAttributes)
+        {
+            this._assignDefaultValues();
             this.bindData(this._data.Attributes, this.getControl('CustomElementsCtr'));
+        }
 
         var self = this;
         this.getControl('UnassociatedAuthCtr').toggle(this._authProviders.length != this._userAuthProviders.length).find('[data-authprovider]').each(function(idx, item)
@@ -61,7 +64,6 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
             //$(item).toggle(self._userAuthProviders.contains($(item).data('authprovider')));
             $(item).toggle(self._userAuthProviders.where(function(d) { return d.toLowerCase() == $(item).data('authprovider').toLowerCase(); }).length > 0);
         });
-
     },
 
     save: function()
@@ -76,6 +78,20 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
                 this.persistData(user.Attributes, false, this.getControl('CustomElementsCtr'));
             }
             this.ajax('~/core/Account/SaveUserProfile', { user: user }, this._delegates.onSaveReturn);
+        }
+    },
+
+    _assignDefaultValues: function()
+    {
+        if (this._data.Attributes == null)
+            this._data.Attributes = {};
+        if (this._customElements != null)
+        {
+            for (var i = 0; i < this._customElements.length; i++)
+            {
+                if (this._data.Attributes[this._customElements[i].Name] == null)
+                    this._data.Attributes[this._customElements[i].Name] = this._customElements[i].DefaultValue;
+            }
         }
     },
 
