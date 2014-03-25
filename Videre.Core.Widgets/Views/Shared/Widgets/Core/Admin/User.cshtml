@@ -10,7 +10,10 @@
 @{
     Html.RegisterWebReferenceGroup("datatables");
 
-    Html.RegisterControlPresenter(Model, "videre.widgets.admin.user", new Dictionary<string, object>() { { "data", Videre.Core.Services.Account.GetUsers() } });
+    Html.RegisterControlPresenter(Model, "videre.widgets.admin.user", new Dictionary<string, object>() { 
+        { "data", Videre.Core.Services.Account.GetUsers() }, 
+        { "customElements", Videre.Core.Services.Account.CustomUserElements}
+    });
 }
 
 <div id="@Model.GetId("Widget")">
@@ -97,7 +100,14 @@
                                     }
                                     else
                                     {
-                                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label(element.SafeName + ".Text", element.Name).GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn(element.Name).Required(element.Required), BootstrapUnits.GridSize.MediumDevice8)
+                                        if (element.DataType == typeof(bool))
+                                        {
+                                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label(element.SafeName + ".Text", element.Name).GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().CheckBox().DataColumn(element.Name).Required(element.Required).Checked(element.DefaultValue == "true"), BootstrapUnits.GridSize.MediumDevice8)
+                                        }
+                                        else 
+                                        {
+                                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label(element.SafeName + ".Text", element.Name).GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn(element.Name).Required(element.Required), BootstrapUnits.GridSize.MediumDevice8)
+                                        }
                                     }
                                 }
                             </div>

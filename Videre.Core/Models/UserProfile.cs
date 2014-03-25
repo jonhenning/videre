@@ -16,6 +16,7 @@ namespace Videre.Core.Models
             this.Email = user.Email;
             this.Locale = user.Locale;
             this.TimeZone = user.TimeZone;
+            this.Attributes = new Dictionary<string, object>();
             foreach (var element in Services.Account.GetEditableProfileElements())
             {
                 if (user.Attributes.ContainsKey(element.Name))
