@@ -399,8 +399,9 @@ videre.UI = {
                 return dataType.get(ctl);
             else
             {
-                var tagName = ctl.prop('tagName').toLowerCase();
-                if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
+                //var tagName = ctl.prop('tagName').toLowerCase();
+                //if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
+                if (!ctl.is(':input'))
                     return ctl.text();
                 else
                 {
@@ -417,8 +418,9 @@ videre.UI = {
     setControlValue: function(ctl, val)
     {
         val = val != null ? val.toString() : '';
-        var tagName = ctl.prop('tagName').toLowerCase();
-        if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
+        //var tagName = ctl.prop('tagName').toLowerCase();
+        //if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
+        if (!ctl.is(':input'))
             ctl.text(val);
         else
         {
@@ -480,7 +482,7 @@ videre.UI = {
             set: function (ctl, val)
             {
                 var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.datetime, ctl.data('timezone')) : '';
-                ctl.is(':input') ? ctl.val(text) : ctl.text(text);
+                videre.UI.setControlValue(ctl, text);
             }
         },
 
@@ -495,9 +497,21 @@ videre.UI = {
             set: function (ctl, val)
             {
                 var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.date, ctl.data('timezone')) : '';
-                ctl.is(':input') ? ctl.val(text) : ctl.text(text);
+                videre.UI.setControlValue(ctl, text);
+            }
+        },
+
+        'money':
+        {
+            isValid: function (val) { return !isNaN(val); },
+            set: function (ctl, val)
+            {
+                var precision = ctl.data('precision') != null ? ctl.data('precision') : 2;
+                var text = (val != null ? val : '0').toFixed(precision);
+                videre.UI.setControlValue(ctl, text);
             }
         }
+
     }
 
 };
