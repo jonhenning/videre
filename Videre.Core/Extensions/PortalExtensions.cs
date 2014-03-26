@@ -129,6 +129,11 @@ namespace Videre.Core.Extensions
             }
         }
 
+        public static void RegisterControlPresenter(this HtmlHelper helper, string clientType, IClientControl model, object properties = null, bool preserveObjectReferences = false)
+        {
+            RegisterControlPresenter(helper, model, clientType, properties != null ? properties.AnonymousToDictionary() : null, preserveObjectReferences);
+        }
+
         public static void RegisterControlPresenter(this HtmlHelper helper, IClientControl model, string clientType, Dictionary<string, object> properties = null, bool preserveObjectReferences = false)
         {
             RegisterControlPresenter(helper, model, clientType, model.ClientId, properties, preserveObjectReferences);

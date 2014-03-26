@@ -1,5 +1,4 @@
-﻿videre.registerNamespace('videre.widgets');
-videre.registerNamespace('videre.widgets.admin');
+﻿videre.registerNamespace('videre.widgets.admin');
 
 videre.widgets.admin.widgetmanifest = videre.widgets.base.extend(
 {
