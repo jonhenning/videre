@@ -24,8 +24,9 @@ videre.widgets.search = videre.widgets.base.extend(
         this._base(); //call base
         this._text = this.getControl('Term');
 
-        this._typeahead = this._text.typeahead({ matcher: function () { return true; } }).data('typeahead'); //matcher by default ensures that displayed element contains the text... we want all results to show
-        this._typeahead.select = videre.createDelegate(this, this._onTermSelect);
+        this._typeahead = this._text.typeahead({ matcher: function() { return true; } }).data('typeahead'); //matcher by default ensures that displayed element contains the text... we want all results to show
+        if (this._typeahead != null)
+            this._typeahead.select = videre.createDelegate(this, this._onTermSelect);
 
         videre.UI.handleEnter(this._text, videre.createDelegate(this, this.search));
         this._text.keyup(videre.createDelegate(this, this._onTermKeyUp));

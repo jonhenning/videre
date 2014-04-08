@@ -98,7 +98,7 @@ videre.widgets.admin.packageexport = videre.widgets.base.extend(
             videre.dataTables.clear(this.getControl('ItemTable'));
             this.getControl('ItemList').html(this.getControl('ItemListTemplate').render(this._contentItems));
             this.getControl('ItemList').find('.btn').click(this._delegates.onActionClicked);
-            videre.dataTables.bind(this.getControl('ItemTable'), [{ bSortable: false, sWidth: '31px' }]);
+            videre.dataTables.bind(this.getControl('ItemTable'), { aoColumns: [{ bSortable: false, sWidth: '31px' }] });
         }
         else
             this._itemListCtr.hide();

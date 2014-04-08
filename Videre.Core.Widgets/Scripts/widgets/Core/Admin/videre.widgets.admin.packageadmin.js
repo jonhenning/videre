@@ -72,7 +72,7 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
         //todo: localize?
         videre.UI.confirm('Uninstall Package', String.format('Do you wish to uninstall this package {0}?  <br/><i>Note:  Currently this just removes the db entry, not the files/content itself.</i>', pkg.name), function ()
         {
-            self.ajax('~/core/Localization/Delete', { id: id }, self._delegates.onSaveReturn);
+            self.ajax('~/core/Package/UninstallPackage', { name: pkg.name, version: pkg.version }, self._delegates.onInstalledPackageReturn);
         });
     },
 

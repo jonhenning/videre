@@ -9,8 +9,7 @@
 @{
     //Html.RegisterJQGridScript();
     Html.RegisterWebReferenceGroup("datatables");
-    Html.RegisterControlPresenter(Model, "videre.widgets.admin.widgetmanifest", new Dictionary<string, object>() {
-        {"data", Widget.GetWidgetManifests() }});
+    Html.RegisterControlPresenter("videre.widgets.admin.widgetmanifest", Model, new { data = Widget.GetWidgetManifests() });
 }
 
 <div id="@Model.GetId("Widget")">

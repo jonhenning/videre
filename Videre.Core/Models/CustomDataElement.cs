@@ -13,6 +13,7 @@ namespace Videre.Core.Models
         public bool UserCanEdit { get; set; }
         public Type DataType { get; set; }
         public List<SelectListItem> Values { get; set; }
+        public string DefaultValue { get; set; }
 
         public string SafeName
         {

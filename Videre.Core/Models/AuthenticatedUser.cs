@@ -24,7 +24,12 @@ namespace Videre.Core.Models
 
         public UserClaim GetClaim(string type, string issuer)
         {
-            return Claims.Where(c => c.Type.Equals(type, System.StringComparison.InvariantCultureIgnoreCase) && c.Issuer.Equals(issuer, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            return GetClaims(type, issuer).FirstOrDefault();
+        }
+
+        public List<UserClaim> GetClaims(string type, string issuer)
+        {
+            return Claims.Where(c => c.Type.Equals(type, System.StringComparison.InvariantCultureIgnoreCase) && c.Issuer.Equals(issuer, System.StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
         public T GetClaimValue<T>(string type, string issuer, T defaultValue)

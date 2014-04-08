@@ -37,6 +37,12 @@ namespace Videre.Core.Services
             }
         }
 
+        public static void RegisterCustomUserElement(Models.CustomDataElement element)
+        {
+            if (!CustomUserElements.Exists(e => e.Name.Equals(element.Name, StringComparison.InvariantCultureIgnoreCase)))
+                CustomUserElements.Add(element);    //todo: worry about locking?
+        }
+
         [Obsolete("Use Authentication.IsAuthenticated")]
         public static bool IsAuthenticated { get { return Authentication.IsAuthenticated; } }
         [Obsolete("Use Authentication.AuthenticatedUserId")]
