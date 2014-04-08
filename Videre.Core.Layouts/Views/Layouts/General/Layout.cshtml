@@ -28,19 +28,16 @@
             <div class="content-header template-header shaded">
                 <h3>@(this.Model != null ? this.Model.Title : "Videre")</h3>
             </div>
-        </div>
-		<div class="container">			
-			<div class="content" style="min-height: 500px;">	
+			<div class="content pain-main" style="min-height: 500px;">	
 				@RenderBody()
                 @{Html.RenderWidgets(this.Model, "Main");}
 			</div> 
-	
             <footer>		
-	            <div class="content well">
+	            <div class="content well pane-footer">
                     @{Html.RenderWidgets(this.Model, "Footer");}
 	            </div> 
             </footer>
-        </div>                    
+        </div>
         @{Html.RenderLayoutDeferred();}
     </body>
 </html>

@@ -53,5 +53,5 @@ Web/_packages/*
 !Web/_packages/videre-sidenav-*.zip
 !Web/_packages/Videre.CoreSiteTemplate.zip
 !Web/_packages/Videre.FirstTimeUserContent*.zip
-
+!Web/_packages/videre-docs-*.zip
 Web/Views/Layouts/*

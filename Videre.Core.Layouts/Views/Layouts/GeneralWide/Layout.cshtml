@@ -25,25 +25,23 @@
     </head>
     <body>
         
-        <div class="container">
+        <div class="container-full">
             <div class="content-header template-header shaded">
                 <h3>@(this.Model != null ? this.Model.Title : "Videre")</h3>
             </div>
-        </div>
-        <div class="container-full">
-		<div>			
-			<div class="content" style="min-height: 500px;">	
-				@RenderBody()
-                @{Html.RenderWidgets(this.Model, "Main");}
-			</div> 
+		    <div>			
+			    <div class="content pain-main" style="min-height: 500px;">	
+				    @RenderBody()
+                    @{Html.RenderWidgets(this.Model, "Main");}
+			    </div> 
 	
-            <footer>		
-	            <div class="content well">
-                    @{Html.RenderWidgets(this.Model, "Footer");}
-	            </div> 
-            </footer>
-        </div>                    
-        @{Html.RenderLayoutDeferred();}
+                <footer>		
+	                <div class="content well pane-footer">
+                        @{Html.RenderWidgets(this.Model, "Footer");}
+	                </div> 
+                </footer>
+            </div>                    
+            @{Html.RenderLayoutDeferred();}
         </div>
     </body>
 </html>
