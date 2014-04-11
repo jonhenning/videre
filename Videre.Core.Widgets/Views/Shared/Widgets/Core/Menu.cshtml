@@ -22,6 +22,7 @@
     var inverseColors = Model.GetAttribute("InverseColors", "No") == "Yes";
     var alwaysOnTop = Model.GetAttribute("AlwaysOnTop", "Yes") == "Yes";
     var showLogo = Model.GetAttribute("ShowLogo", "No") == "Yes";
+    var animate = Model.GetAttribute("Animate", "No") == "Yes";
 
     Models.Menu menu = Model.GetContent<Models.Menu>();
     if (menu != null)
@@ -41,7 +42,7 @@
         {
             Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model);
         }
-    <div id="@Model.GetId("Widget")" class="navbar navbar-default @(inverseColors ? "navbar-inverse" : "") @(alwaysOnTop ? "navbar-fixed-top" : "") @Model.Css" style="@Model.Style" role="navigation">
+    <div id="@Model.GetId("Widget")" class="navbar navbar-default @(inverseColors ? "navbar-inverse" : "") @(alwaysOnTop ? "navbar-fixed-top" : "") @(animate ? "videre-navbar-animate" : "") @Model.Css" style="@Model.Style" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-container">

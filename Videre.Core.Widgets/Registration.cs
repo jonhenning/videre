@@ -130,8 +130,17 @@ namespace Videre.Core.Widgets
                         LabelKey = "ShowSearch.Text",
                         LabelText = "Show Search",
                         ControlType = "bootstrap-select"
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "Animate",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "No",
+                        Required = false,
+                        LabelKey = "Animate.Text",
+                        LabelText = "Animate",
+                        ControlType = "bootstrap-select"
                     }
-
                 }},
                 new CoreModels.WidgetManifest() { Path = "Core", Name = "SideNav", Title = "SideNav", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation" , AttributeDefinitions = new List<AttributeDefinition>()
                 {
