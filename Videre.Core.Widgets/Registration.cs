@@ -34,16 +34,17 @@ namespace Videre.Core.Widgets
 
 
             //App init (for now... eventually may add PortalId)
-            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition()
-            {
-                GroupName = "Core",
-                Name = "TextEditor",
-                Values = new List<string>() { "" },
-                DefaultValue = "",
-                Required = true,
-                LabelKey = "TextEditor.Text",
-                LabelText = "Text Editor"
-            });
+            var updates = 0;
+            //var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition()
+            //{
+            //    GroupName = "Core",
+            //    Name = "TextEditor",
+            //    Values = new List<string>() { "" },
+            //    DefaultValue = "",
+            //    Required = true,
+            //    LabelKey = "TextEditor.Text",
+            //    LabelText = "Text Editor"
+            //});
 
             updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition()
             {
