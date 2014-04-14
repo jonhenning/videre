@@ -165,6 +165,7 @@ namespace Videre.Core.Services
             user.Password = null;
 
             var userId = AccountService.Save(user, editUserId);
+            user.Id = userId;
 
             //if we need to update password, then use the persistance provider
             if (!string.IsNullOrEmpty(password))
