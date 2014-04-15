@@ -39,16 +39,17 @@
                         <div class="form-horizontal tab-pane fade in" id="@Model.GetId("GeneralTab")">
                             <div class="form-group">
                                 <label class="control-label col-md-3">@Model.GetText("Name.Text", "Name")</label>
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     @Html.Bootstrap().DropDownList("ddlName").DataColumn("Id").Css("form-control")
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     @Html.Bootstrap().Button("btnNewMenu").Text("New.Text", "New", true).Icon("glyphicon glyphicon-plus")
+                                    @Html.Bootstrap().Button("btnCloneMenu").Text("Clone.Text", "Clone", true).Icon("glyphicon glyphicon-transfer")
                                     @Html.Bootstrap().Button("btnDeleteMenu").Text("Delete.Text", "Delete", true).Icon("glyphicon glyphicon-trash")
                                 </div>
                             </div>
-                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Text.Text", "Text").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Text"), BootstrapUnits.GridSize.MediumDevice8)
-                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("TextCss.Text", "Text Css").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("TextCss"), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Text.Text", "Text").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Text"), BootstrapUnits.GridSize.MediumDevice9)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("TextCss.Text", "Text Css").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("TextCss"), BootstrapUnits.GridSize.MediumDevice9)
                         </div>
                         <div class="tab-pane fade" id="@Model.GetId("MenuTab")">
                             <div class="row">

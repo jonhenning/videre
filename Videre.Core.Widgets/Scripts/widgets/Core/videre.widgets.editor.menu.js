@@ -32,6 +32,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
         this._newMenuDialog = this.getControl('NewMenuDialog').modal('hide');
         this.getControl('btnNewMenu').click(videre.createDelegate(this, this._onNewMenuClicked));
+        this.getControl('btnCloneMenu').click(videre.createDelegate(this, this._onCloneMenuClicked));
         this.getControl('btnDeleteMenu').click(videre.createDelegate(this, this._onDeleteMenuClicked));
         this.getControl('ddlName').change(videre.createDelegate(this, this._onMenuChanged));
         this.getControl('txtIcon').change(videre.createDelegate(this, this._onIconChanged));
@@ -53,7 +54,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         //    this.bind();
     },
 
-    showNewMenuDialog: function()
+    showNewMenuDialog: function(menuData)
     {
         var self = this;
         videre.UI.prompt(this.getId('NewMenu'), 'New Menu', '', [{ label: 'Name', dataColumn: 'NewName' }],
@@ -62,7 +63,8 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
                 {
                     if (!String.isNullOrEmpty(data.NewName))
                     {
-                        self._newMenuData = self._getNewMenu(data.NewName);
+                        menuData.Name = data.NewName;
+                        self._newMenuData = menuData;
                         self._widgetData.Content = self._newMenuData;
                         self.bindMenus();
                         self._handleMenuChanged();
@@ -216,14 +218,18 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
     _handleMenuChanged: function()
     {
+        this._widgetData.Content = this._getSelectedMenuData();
+        this.bindData(this._widgetData.Content, this.getControl('GeneralTab'));
+        this.bindMenu();
+    },
+
+    _getSelectedMenuData: function()
+    {
         var id = this.getControl('ddlName').val();
         var data = this._menuData.where(function(m) { return m.Id == id; }).singleOrDefault();
         if (data == null)   //if menu not found, it is a new entry
             data = this._newMenuData;
-
-        this._widgetData.Content = data;
-        this.bindData(this._widgetData.Content, this.getControl('GeneralTab'));
-        this.bindMenu();
+        return data;
     },
 
     _handleDeleteMenu: function(id)
@@ -348,7 +354,14 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
     _onNewMenuClicked: function(e)
     {
-        this.showNewMenuDialog();
+        this.showNewMenuDialog(this._newMenuData);
+    },
+
+    _onCloneMenuClicked: function(e)
+    {
+        var data = videre.jsonClone(this._getSelectedMenuData());
+        data.Id = '';
+        this.showNewMenuDialog(data);
     },
 
     _onDeleteMenuClicked: function(e)
