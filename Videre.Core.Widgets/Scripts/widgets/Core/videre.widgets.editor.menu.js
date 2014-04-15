@@ -48,6 +48,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         if (widget.Content == null)
             widget.Content = this._getNewMenu('');
 
+
         //if (this._menuData == null)
             this.refreshMenus();
         //else
@@ -354,7 +355,7 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
     _onNewMenuClicked: function(e)
     {
-        this.showNewMenuDialog(this._newMenuData);
+        this.showNewMenuDialog(this._getNewMenu(''));
     },
 
     _onCloneMenuClicked: function(e)
