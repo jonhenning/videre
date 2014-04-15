@@ -10,7 +10,7 @@
     var template = ViewContext.ViewData.Model as Videre.Core.Models.PageTemplate;
     if (template != null)
     {
-        Layout = UI.GetLayoutPath(template.LayoutName);
+        Layout = UI.GetLayoutPathById(template.LayoutId);
     }
 
     Html.RegisterTheme(template);

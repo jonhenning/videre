@@ -10,8 +10,8 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
     set_manifest: function(v) { this._manifest = v; },
     get_templateId: function() { return this._templateId; },
     set_templateId: function(v) { this._templateId = v; },
-    get_layoutName: function() { return this._layoutName; },
-    set_layoutName: function(v) { this._layoutName = v; },
+    get_layoutId: function() { return this._layoutId; },
+    set_layoutId: function(v) { this._layoutId = v; },
 
     //constructor
     init: function()
@@ -20,7 +20,7 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
         this._widgetModel = null;
         this._manifest = null;
         this._templateId = null;
-        this._layoutName = null;
+        this._layoutId = null;
         this._editor = null;
 
         this._delegates = {
@@ -51,7 +51,7 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
 
     save: function(widget)
     {
-        this.ajax('~/core/Portal/SaveWidget', { templateId: this._templateId, layoutName: this._layoutName, widget: widget }, this._delegates.onSaveReturn, null, this._editor._dialog);    //todo: minihack accessing _dialog
+        this.ajax('~/core/Portal/SaveWidget', { templateId: this._templateId, layoutId: this._layoutId, widget: widget }, this._delegates.onSaveReturn, null, this._editor._dialog);    //todo: minihack accessing _dialog
     },
 
     toggleMenu: function()

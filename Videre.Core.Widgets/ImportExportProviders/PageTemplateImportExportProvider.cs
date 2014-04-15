@@ -40,8 +40,9 @@ namespace Videre.Core.Widgets.ImportExportProviders
             if (pageTemplate != null)
             {
                 var allWidgets = pageTemplate.Widgets.ToList();
-                //layouts are linked by name (not id) so we can choose a page template without the layout
-                //allWidgets.AddRange(pageTemplate.Layout.Widgets);
+                export.LayoutTemplates = export.LayoutTemplates ?? new List<Models.LayoutTemplate>();
+                if (!export.LayoutTemplates.Exists(l => l.Id == pageTemplate.LayoutId)) //if we haven't already added this layout, then we will need its widget (manifests and content)
+                    allWidgets.AddRange(pageTemplate.Layout.Widgets);   
 
                 var allRoleIds = pageTemplate.RoleIds;
                 allRoleIds.AddRange(pageTemplate.Widgets.SelectMany(w => w.RoleIds));
@@ -55,11 +56,10 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 export.PageTemplates = export.PageTemplates ?? new List<Models.PageTemplate>();
                 export.PageTemplates.Add(pageTemplate);
 
-                //export.LayoutTemplates = export.LayoutTemplates ?? new List<Models.LayoutTemplate>();
-                //export.LayoutTemplates.Add(pageTemplate.Layout);
+                if (!export.LayoutTemplates.Exists(l => l.Id == pageTemplate.LayoutId))
+                    export.LayoutTemplates.Add(pageTemplate.Layout);
 
                 export.WidgetContent = export.WidgetContent ?? new Dictionary<string, string>();
-                //todo: should fix extension method to use dictionary, not create a new one!
                 export.WidgetContent = export.WidgetContent.Merge(allWidgets.Where(w => w.Manifest.GetContentProvider() != null).ToDictionary(w => w.Id, wc => wc.GetContentJson("db")));
             }
             return export;
@@ -83,6 +83,16 @@ namespace Videre.Core.Widgets.ImportExportProviders
             pageTemplate.PortalId = portalId;
             pageTemplate.RoleIds = Security.GetNewRoleIds(pageTemplate.RoleIds, idMap);
             pageTemplate.Id = existing != null ? existing.Id : null;
+            pageTemplate.LayoutId = ImportExport.GetIdMap<LayoutTemplate>(pageTemplate.LayoutId, idMap);
+
+            //conversion for older export packages to lookup layoutIds
+            if (string.IsNullOrEmpty(pageTemplate.LayoutId))
+            {
+                var layoutTemplate = Services.Portal.GetLayoutTemplate(portalId, pageTemplate.LayoutName);
+                if (layoutTemplate != null)
+                    pageTemplate.LayoutId = layoutTemplate.Id;
+            }
+
 
             foreach (var widget in pageTemplate.Widgets)
             {

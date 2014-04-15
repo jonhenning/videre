@@ -175,6 +175,8 @@ namespace Videre.Core.Widgets
                 new CoreModels.Role() { Name = "admin", PortalId = portalId, Description = "Administrative Priviledges" }
             });
 
+            updates += UpgradePageTemplatesToUseLayoutId(portalId);
+
             //CoreServices.Repository.SaveChanges();
 
             //portal init
@@ -197,5 +199,25 @@ namespace Videre.Core.Widgets
             return updates;        
         
         }
+
+        //relationship for page templates to Layout is now going to be by Id instead of Name.
+        private int UpgradePageTemplatesToUseLayoutId(string portalId)
+        {
+            var count = 0;
+            var pageTemplates = CoreServices.Portal.GetPageTemplates(portalId).Where(p => p.LayoutId == null).ToList();
+            foreach (var template in pageTemplates)
+            {
+                var layoutTemplate = CoreServices.Portal.GetLayoutTemplate(portalId, template.LayoutName);
+                if (layoutTemplate != null)
+                {
+                    template.LayoutId = layoutTemplate.Id;
+                    count++;
+                    CoreServices.Portal.Save(template);
+                }
+            }
+            return count;
+        }
+        
+
     }
 }

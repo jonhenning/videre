@@ -14,7 +14,7 @@
 
     Html.RegisterControlPresenter(editorModel, "videre.widgets.widgetadmincontextmenu", new Dictionary<string, object>(){
             {"templateId", Portal.CurrentTemplate.Id},
-            {"layoutName", Portal.CurrentTemplate.LayoutName},
+            {"layoutId", Portal.CurrentTemplate.LayoutId},
             {"widget", Model},
             {"manifest", Model.Manifest},
             {"containerId", Model.GetId("Widget")}

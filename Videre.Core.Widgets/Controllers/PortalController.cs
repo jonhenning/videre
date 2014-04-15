@@ -111,7 +111,7 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
-        public JsonResult<bool> SaveWidget(string templateId, string layoutName, CoreModels.Widget widget)
+        public JsonResult<bool> SaveWidget(string templateId, string layoutId, CoreModels.Widget widget)
         {
             return API.Execute<bool>(r =>
             {
@@ -119,7 +119,7 @@ namespace Videre.Core.Widgets.Controllers
 
                 //Unfortnuately, we cannot just save content.  Widgets are persisted on the template and their properties (Css, Style, etc.) may have changed.  We need to re-save the template  //widget.Manifest.GetContentProvider().Save(widget.ContentJson);
                 var pageTemplate = CoreServices.Portal.GetPageTemplateById(templateId);
-                var layoutTemplate = CoreServices.Portal.GetLayoutTemplate(CoreServices.Portal.CurrentPortalId, layoutName);
+                var layoutTemplate = CoreServices.Portal.GetLayoutTemplateById(layoutId);
 
                 //a widget will live on either the page or template, never both.  
                 if (pageTemplate != null)

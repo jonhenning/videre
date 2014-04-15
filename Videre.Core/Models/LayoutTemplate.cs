@@ -11,9 +11,21 @@ namespace Videre.Core.Models
             //Roles = new List<string>();
             WebReferences = new List<string>();
         }
+        private string _layoutViewName = null;
 
         public string Id { get; set; }
         public string LayoutName { get; set; }
+        public string LayoutViewName
+        {
+            get
+            {
+                return string.IsNullOrEmpty(_layoutViewName) ? LayoutName : _layoutViewName;
+            }
+            set
+            {
+                _layoutViewName = value;
+            }
+        }
         public string ThemeName { get; set; }
         public List<Widget> Widgets { get; set; }
         private List<string> _roles = new List<string>();

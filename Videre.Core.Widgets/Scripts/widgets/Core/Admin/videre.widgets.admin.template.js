@@ -17,6 +17,12 @@ videre.widgets.admin.template = videre.widgets.base.extend(
         this._layoutData = v;
         this._layoutDataDict = this._layoutData.toDictionary(function(l) { return l.Name; });
     },
+    get_layoutTemplateData: function() { return this._layoutData; },
+    set_layoutTemplateData: function(v)
+    {
+        this._layoutTemplateData = v;
+        this._layoutTemplateDataDict = this._layoutTemplateData.toDictionary(function(l) { return l.Id; });
+    },
 
     //constructor
     init: function()
@@ -32,6 +38,8 @@ videre.widgets.admin.template = videre.widgets.base.extend(
         this._manifestDataDict = {};
         this._layoutData = null;
         this._layoutDataDict = {};
+        this._layoutTemplateData = null;
+        this._layoutTemplateDataDict = {};
         this._contentData = null;
         this._editors = {};
 
@@ -82,7 +90,8 @@ videre.widgets.admin.template = videre.widgets.base.extend(
             }
         });
 
-        this._widget.find('[data-column="LayoutName"]').change(videre.createDelegate(this, this._onLayoutChanged));
+        this._widget.find('[data-column="LayoutViewName"]').change(videre.createDelegate(this, this._onLayoutChanged));
+        this._widget.find('[data-column="LayoutId"]').change(videre.createDelegate(this, this._onLayoutChanged));
         this.refreshTemplates();
     },
 
@@ -125,10 +134,12 @@ videre.widgets.admin.template = videre.widgets.base.extend(
             this._templateCtr.hide();
     },
 
-    bindPanes: function(layoutName)
+    bindPanes: function(layoutViewName, layoutId)
     {
         var html = '';
-        var layout = this._layoutDataDict[layoutName];
+        if (String.isNullOrEmpty(layoutViewName))   //if pagetemplate, we only have layoutId
+            layoutViewName = this._layoutTemplateDataDict[layoutId].LayoutViewName;
+        var layout = this._layoutDataDict[layoutViewName];
         if (layout != null)
         {
             for (var row = 0; row < layout.Panes.length; row++)
@@ -154,10 +165,10 @@ videre.widgets.admin.template = videre.widgets.base.extend(
 
         this.getControl('Panes').find('.pane').tooltip({ placement: 'right' });
 
-        this.bindWidgets(layoutName);
+        this.bindWidgets(layoutViewName);
     },
 
-    bindWidgets: function(layoutName)
+    bindWidgets: function(layoutViewName)
     {
         this._widgets = {};
         if (this._selectedTemplate != null)
@@ -166,8 +177,8 @@ videre.widgets.admin.template = videre.widgets.base.extend(
             {
                 var widget = this._selectedTemplate.Widgets[i];
 
-                //if (this._layoutDataDict[layoutName].Panes.where(function(p) { return p == widget.PaneName; }).length == 0)
-                //    widget.PaneName = this._layoutDataDict[layoutName].Panes[0];
+                //if (this._layoutDataDict[layoutViewName].Panes.where(function(p) { return p == widget.PaneName; }).length == 0)
+                //    widget.PaneName = this._layoutDataDict[layoutViewName].Panes[0];
 
                 this._createWidget(widget.ManifestId, widget.PaneName, widget);
 
@@ -182,8 +193,8 @@ videre.widgets.admin.template = videre.widgets.base.extend(
     newTemplate: function()
     {
         this._selectedTemplate = this._isLayout ?
-            { Id: '', PortalId: '', LayoutName: '', Widgets: []} :
-            { Id: '', PortalId: '', Title: '', LayoutName: '', Urls: [], Widgets: [] };
+            { Id: '', PortalId: '', LayoutName: '', LayoutViewName: '', Widgets: []} :
+            { Id: '', PortalId: '', Title: '', LayoutId: '', Urls: [], Widgets: [] };
         //this.editTemplate();
         this._contentData = {};
         this.showEditTemplate();
@@ -204,7 +215,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
     showEditTemplate: function()
     {
         this.bindData(this._selectedTemplate, this.getControl('GeneralTab'));
-        this.bindPanes(this._widget.find('[data-column="LayoutName"]').val());
+        this.bindPanes(this._widget.find('[data-column="LayoutViewName"]').val(), this._widget.find('[data-column="LayoutId"]').val());
         this.showEdit();
     },
 
@@ -463,7 +474,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
 
     _onLayoutChanged: function()
     {
-        this.bindPanes(this._widget.find('[data-column="LayoutName"]').val());
+        this.bindPanes(this._widget.find('[data-column="LayoutViewName"]').val(), this._widget.find('[data-column="LayoutId"]').val());
     }
 
 });

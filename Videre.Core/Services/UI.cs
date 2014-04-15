@@ -39,12 +39,25 @@ namespace Videre.Core.Services
 
         public static string GetDefaultLayoutPath()
         {
-            return GetLayoutPath("General");
+            //return GetLayoutPath("General");
+            var layout = Portal.GetLayoutTemplates().Where(l => l.LayoutViewName.Equals("General.cshtml", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (layout == null)
+                throw new Exception("Default Layout General.cshtml not found");
+            return GetLayoutPathById(layout.Id);
         }
 
-        public static string GetLayoutPath(string name)
+        //public static string GetLayoutPath(string name)
+        //{
+        //    var layout = Portal.GetLayoutTemplate(Portal.CurrentPortalId, name);
+        //    if (layout == null)
+        //        throw new Exception("Layout not found: " + name);
+        //    return UI.LayoutPath.PathCombine(layout.LayoutViewName).PathCombine("Layout.cshtml");
+        //}
+
+        public static string GetLayoutPathById(string id)
         {
-            return UI.LayoutPath.PathCombine(name).PathCombine("Layout.cshtml");
+            var layout = Portal.GetLayoutTemplateById(id);
+            return UI.LayoutPath.PathCombine(layout.LayoutViewName).PathCombine("Layout.cshtml");
         }
 
         public static Models.Layout GetLayout(string name)

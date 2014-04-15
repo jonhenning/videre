@@ -3,6 +3,7 @@
 using CodeEndeavors.Extensions.Serialization;
 using Videre.Core.Extensions;
 using CodeEndeavors.Extensions;
+using System;
 //using Newtonsoft.Json;
 
 namespace Videre.Core.Models
@@ -21,6 +22,9 @@ namespace Videre.Core.Models
         public string Id { get; set; }
         //public string Name { get; set; }
         public string Title { get; set; }
+        
+        public string LayoutId { get; set; }
+        [Obsolete("Use LayoutId")]
         public string LayoutName { get; set; }
         public string ThemeName { get; set; }
         public List<string> Urls { get; set; }
@@ -96,10 +100,9 @@ namespace Videre.Core.Models
         {
             get
             {
-                return Services.Portal.GetLayoutTemplate(PortalId, LayoutName);
+                return Services.Portal.GetLayoutTemplateById(LayoutId);
             }
         }
-
 
         //[ScriptIgnore, JsonIgnore()]
         [SerializeIgnore(new string[] {"db", "client"})]
