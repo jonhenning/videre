@@ -229,7 +229,7 @@ a
     -o-transition: -o-transform 0.4s, opacity 0.1s 0.3s;
 }
 
-.videre-navbar-animate.navbar-default .navbar-nav > li.open > ul.dropdown-menu {
+.videre-navbar-animate li.open > ul.dropdown-menu {
     visibility: visible;
     opacity: 1;
     -webkit-transform: rotateX(0deg);
