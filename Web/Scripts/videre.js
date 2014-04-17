@@ -434,14 +434,15 @@ videre.UI = {
 
     validateCtl: function(item)
     {
+        var uniqueId = !String.isNullOrEmpty(item.ctl.attr('id')) ? item.ctl.attr('id') : item.ctl.data('column');
         if (item.ctl.data('dependencymatch') == false)  //if dependent control and it is not matched (shown) it is valid!
             return null;
-        if (item.ctl.attr('required') && item.ctl.val() == '')
-            return { id: item.ctl.attr('id') + 'Required', text: String.format(videre.localization.getText('global', 'RequiredField'), item.labelText), isError: true };
+        if (item.ctl.attr('required') && String.isNullOrEmpty(item.ctl.val()))
+            return { id: uniqueId + 'Required', text: String.format(videre.localization.getText('global', 'RequiredField'), item.labelText), isError: true };
         if (item.ctl.data('datatype') != null && !videre.UI.validDataType(item.ctl.data('datatype'), item.ctl.val()))
-            return { id: item.ctl.attr('id') + 'DataTypeInvalid', text: String.format(videre.localization.getText('global', 'DataTypeInvalid'), item.labelText, item.ctl.data('datatype')), isError: true };
+            return { id: uniqueId + 'DataTypeInvalid', text: String.format(videre.localization.getText('global', 'DataTypeInvalid'), item.labelText, item.ctl.data('datatype')), isError: true };
         if (item.ctl.data('match') != null && item.ctl.val() != $('#' + item.ctl.data('match')).val())
-            return { id: item.ctl.attr('id') + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
+            return { id: uniqueId + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
     },
 
     validDataType: function(type, val)
