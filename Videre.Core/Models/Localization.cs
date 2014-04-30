@@ -26,10 +26,10 @@ namespace Videre.Core.Models
             {
                 return Services.TokenParser.ReplaceTokensWithContent(Text, false);
             }
-            set
-            {
-                Text = Services.TokenParser.ReplaceContentWithTokens(value);
-            }
+            //set
+            //{
+            //    Text = Services.TokenParser.ReplaceContentWithTokens(value);
+            //}
         }
 
         [SerializeIgnore(new string[] { "db" })]
@@ -37,7 +37,7 @@ namespace Videre.Core.Models
         {
             get
             {
-                return Services.TokenParser.ReplaceTokensWithContent(Text, true);
+                return Text; // Services.TokenParser.ReplaceTokensWithContent(Text, true);
             }
             set
             {
