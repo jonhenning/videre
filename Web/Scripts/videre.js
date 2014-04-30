@@ -1210,6 +1210,8 @@ if ($.views != null)
                 ctl.attr('data-controltype', data.ControlType);
             if (data.Dependencies != null && data.Dependencies.length > 0)
                 ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
+            if (data.Tooltip != null)
+                ctl.attr('title', data.Tooltip); 
             ctl.appendTo(tempParent);
 
             if (data.InputType == 'checkbox')

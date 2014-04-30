@@ -64,6 +64,8 @@ namespace Videre.Core.Widgets.ImportExportProviders
                     def.Id = existingDef.Id;
                     def.LabelKey = existingDef.LabelKey ?? def.LabelKey;
                     def.LabelText = existingDef.LabelText ?? def.LabelText;
+                    def.TooltipKey = existingDef.TooltipKey ?? def.TooltipKey;
+                    def.TooltipText = existingDef.TooltipText ?? def.TooltipText;
                     def.DataType = existingDef.DataType ?? def.DataType;
                     def.ControlType = existingDef.ControlType ?? def.ControlType;
                     def.InputType = existingDef.InputType ?? def.InputType;

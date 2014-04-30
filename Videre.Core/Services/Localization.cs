@@ -131,17 +131,21 @@ namespace Videre.Core.Services
 
         public static string GetLocalization(LocalizationType type, string key, string defaultText, string ns, string locale = null, string portalId = null, bool create = true)
         {
-            locale = string.IsNullOrEmpty(locale) ? CurrentUserLocale : locale;
-            portalId = string.IsNullOrEmpty(portalId) ? Services.Portal.CurrentPortalId : portalId;
-            var text = defaultText;
+            if (!string.IsNullOrEmpty(key))
+            {
+                locale = string.IsNullOrEmpty(locale) ? CurrentUserLocale : locale;
+                portalId = string.IsNullOrEmpty(portalId) ? Services.Portal.CurrentPortalId : portalId;
+                var text = defaultText;
 
-            var loc = Repository.Current.GetResourceData<Models.Localization>(type.ToString(), key, GetLocalizationQueries(portalId, ns, locale), null);
-            if (loc == null && create)
-                Services.Localization.Save(new Models.Localization() { Type = type, Key = key, Namespace = ns, Locale = null, PortalId = portalId, Text = defaultText }, Services.Account.AuditId);
-            else
-                text = loc.Text;
+                var loc = Repository.Current.GetResourceData<Models.Localization>(type.ToString(), key, GetLocalizationQueries(portalId, ns, locale), null);
+                if (loc == null && create)
+                    Services.Localization.Save(new Models.Localization() { Type = type, Key = key, Namespace = ns, Locale = null, PortalId = portalId, Text = defaultText }, Services.Account.AuditId);
+                else
+                    text = loc.Text;
 
-            return text;
+                return text;
+            }
+            return null;
         }
 
         private static List<DomainObjects.Query<Models.Localization>> GetLocalizationQueries(string locale)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CodeEndeavors.Extensions.Serialization;
+using System.Collections.Generic;
 
 namespace Videre.Core.Models
 {
@@ -12,6 +13,24 @@ namespace Videre.Core.Models
         public string Id { get; set; }
         public string LabelKey { get; set; }
         public string LabelText { get; set; }
+        [SerializeIgnore("db")]
+        public string Label
+        {
+            get
+            {
+                return Services.Localization.GetPortalText(LabelKey, LabelText);
+            }
+        }
+        public string TooltipKey { get; set; }
+        public string TooltipText { get; set; }
+        [SerializeIgnore("db")]
+        public string Tooltip
+        {
+            get
+            {
+                return Services.Localization.GetPortalText(TooltipKey, TooltipText);
+            }
+        }
         public string Name { get; set; }
         public string GroupName { get; set; }
         public string DataType { get; set; }
