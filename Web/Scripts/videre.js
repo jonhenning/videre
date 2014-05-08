@@ -508,7 +508,7 @@ videre.UI = {
             set: function (ctl, val)
             {
                 var precision = ctl.data('precision') != null ? ctl.data('precision') : 2;
-                var text = (val != null ? val : '0').toFixed(precision);
+                var text = (val != null ? val : 0).toFixed(precision);
                 videre.UI.setControlValue(ctl, text);
             }
         }
