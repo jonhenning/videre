@@ -1175,11 +1175,25 @@ if ($.views != null)
             {
                 ctl = $('<select>').addClass('form-control').attr('data-column', keyName);
 
+                if (data.Multiple)
+                    ctl.attr('multiple', 'multiple');
+
+                if (data.ControlType)
+                    ctl.attr('data-controltype', data.ControlType);
+
                 $.each(data.Values, function (idx, item)
                 {
                     $('<option>').attr('value', item).html(item).appendTo(ctl);
                 });
-                ctl.val(dataValue);
+                var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+                if (controlType != null && controlType.set != null)
+                {
+                    controlType.set(ctl, dataValue, true);
+                    dataValue = ctl.val();
+                }
+                else
+                    ctl.val(dataValue);
+
                 ctl.find(':selected').attr('selected', 'selected'); //need value written into html
             }
             else
@@ -1211,7 +1225,7 @@ if ($.views != null)
             if (data.Dependencies != null && data.Dependencies.length > 0)
                 ctl.attr('data-dependencies', videre.serialize(data.Dependencies));
             if (data.Tooltip != null)
-                ctl.attr('title', data.Tooltip); 
+                ctl.attr('title', data.Tooltip);
             ctl.appendTo(tempParent);
 
             if (data.InputType == 'checkbox')

@@ -69,7 +69,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                     def.DataType = existingDef.DataType ?? def.DataType;
                     def.ControlType = existingDef.ControlType ?? def.ControlType;
                     def.InputType = existingDef.InputType ?? def.InputType;
-                    def.InputType = existingDef.InputType ?? def.InputType;
+                    def.Multiple = existingDef.Multiple;
                     def.Required = existingDef.Required;
                     def.DefaultValue = existingDef.DefaultValue ?? def.DefaultValue;
 
