@@ -195,6 +195,23 @@ namespace Videre.Core.Services
             return AccountService.Delete(id, userId);
         }
 
+        public static bool AssociateExternalLogin(string associateToUserId, string userName, string password, string provider)
+        {
+            var authResult = Authentication.Login(userName, password, provider);
+            if (authResult.Success)
+            {
+                var user = GetUserById(associateToUserId);
+                if (user != null && !Authentication.GetUserAuthenticationProviders(user).Contains(provider))  //if we have a user and haven't already associated a login token
+                {
+                    Authentication.AssociateAuthenticationToken(user, authResult.Provider, authResult.ProviderUserId);
+                    return true;
+                }
+            }
+            else
+                throw new Exception("External Login Failed");   //todo: localize?
+            return false;
+        }
+
         public static Models.User Login(string userName, string password, bool persistant, string provider)
         {
             var authResult = Authentication.Login(userName, password, provider);

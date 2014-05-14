@@ -147,6 +147,11 @@ namespace Videre.Core.Services
             return _authenticationProviders;
         }
 
+        public static List<IAuthenticationProvider> GetExternalAuthenticationProviders()
+        {
+            return GetAuthenticationProviders().Where(p => p is IAuthenticationPersistance == false).Select(p => (IAuthenticationProvider)p).ToList();
+        }
+
         public static List<IOAuthAuthenticationProvider> GetOAuthAuthenticationProviders()
         {
             return GetAuthenticationProviders().Where(p => p is IOAuthAuthenticationProvider).Select(p => (IOAuthAuthenticationProvider)p).ToList();

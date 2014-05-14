@@ -22,11 +22,14 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         this._userAuthProviders = [];
         this._hasCustomAttributes = false;
 
+        this._externalLoginDialog = null;
+
         this._delegates = {
             onDataReturn: videre.createDelegate(this, this._onDataReturn),
             onSaveReturn: videre.createDelegate(this, this._onSaveReturn),
+            onAssociateReturn: videre.createDelegate(this, this._onAssociateReturn),
             onDisassociateReturn: videre.createDelegate(this, this._onDisassociateReturn)
-        };
+    };
     },
 
     _onLoad: function(src, args)
@@ -34,7 +37,12 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         this._base(); //call base
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
         this.getControl('AssociatedAuthCtr').find('[data-authprovider]').click(videre.createDelegate(this, this._onUnassocateProviderClicked));
+        this.getControl('UnassociatedAuthCtr').find('[data-authprovidertype="external"]').click(videre.createDelegate(this, this._onAssocateProviderClicked));
         this._hasCustomAttributes = this.getControl('CustomElementsCtr').length > 0;
+
+        this._externalLoginDialog = this.getControl('ExternalLoginDialog').modal('hide');
+        this.getControl('btnExternalLogin').click(videre.createDelegate(this, this._onExternalLoginClicked));
+
         this.bind();
 
     },
@@ -54,7 +62,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         }
 
         var self = this;
-        this.getControl('UnassociatedAuthCtr').toggle(this._authProviders.length != this._userAuthProviders.length).find('[data-authprovider]').each(function(idx, item)
+        this.getControl('UnassociatedAuthCtr').toggle(this._authProviders.where(function(d) { return self._userAuthProviders.contains(d) == false }).length > 0).find('[data-authprovider]').each(function(idx, item)
         {
             //$(item).toggle(!self._userAuthProviders.contains($(item).data('authprovider')));
             $(item).toggle(!self._userAuthProviders.where(function(d) { return d.toLowerCase() == $(item).data('authprovider').toLowerCase(); }).length > 0);
@@ -81,6 +89,15 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         }
     },
 
+
+    _externalLogin: function()
+    {
+        var provider = this._externalLoginDialog.find('[data-column="AuthenticationProvider"]').text();
+        var user = this._externalLoginDialog.find('[data-column="ExternalUser"]').val();
+        var password = this._externalLoginDialog.find('[data-column="ExternalPassword"]').val();
+        this.ajax('~/core/Account/AssociateExternalLogin', { provider: provider, userName: user, password: password }, this._delegates.onAssociateReturn, null, this._externalLoginDialog);
+    },
+
     _assignDefaultValues: function()
     {
         if (this._data.Attributes == null)
@@ -100,6 +117,14 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         this.ajax('~/core/Account/DisassociateOAuthLogin', { provider: provider }, this._delegates.onDisassociateReturn);
     },
 
+    _associateProvider: function(provider)
+    {
+        this._externalLoginDialog.find('[data-column="AuthenticationProvider"]').text(provider);
+        this._externalLoginDialog.find('[data-column="ExternalUser"]').val('');
+        this._externalLoginDialog.find('[data-column="ExternalPassword"]').val('');
+        this._externalLoginDialog.modal('show');
+    },
+
     _onDataReturn: function(result, ctx)
     {
         if (!result.HasError)
@@ -107,6 +132,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
             this.set_data(result.Data);
             this.bind();
         }
+        this.addMsgs(result.Messages);
     },
 
     _onDisassociateReturn: function(result)
@@ -118,6 +144,22 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
             this.bind();
             //this.refresh();
         }
+        this.addMsgs(result.Messages);
+    },
+
+    _onAssociateReturn: function(result)
+    {
+        if (!result.HasError && result.Data)
+        {
+            if (result.Data.associated)
+            {
+                this.set_data(result.Data.profile);
+                this._userAuthProviders = result.Data.userAuthProviders;
+                this.bind();
+                this._externalLoginDialog.modal('hide');
+            }
+        }
+        this.addMsgs(result.Messages, this._externalLoginDialog);
     },
 
     _onSaveReturn: function(result)
@@ -126,6 +168,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         {
             this.refresh();
         }
+        this.addMsgs(result.Messages);
     },
 
     _onSaveClicked: function(e)
@@ -136,6 +179,16 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     _onUnassocateProviderClicked: function(e)
     {
         this._disassociateProvider($(e.target).closest('[data-authprovider]').data('authprovider'));
+    },
+
+    _onAssocateProviderClicked: function(e)
+    {
+        this._associateProvider($(e.target).closest('[data-authprovider]').data('authprovider'));
+    },
+
+    _onExternalLoginClicked: function(e)
+    {
+        this._externalLogin();
     }
 
 

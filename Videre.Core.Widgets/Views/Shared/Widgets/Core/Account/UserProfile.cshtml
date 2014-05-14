@@ -9,7 +9,7 @@
 
 @{
  
-    var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.Enabled).ToList();
+    var providers = CoreServices.Authentication.GetExternalAuthenticationProviders().Where(p => p.Enabled).ToList();
     Html.RegisterControlPresenter(Model, "videre.widgets.account.userprofile", new Dictionary<string, object>() { 
         { "data", CoreServices.Account.GetUserProfile() },
         { "customElements", CoreServices.Account.CustomUserElements},
@@ -72,7 +72,14 @@
                     <div class="panel-body">
                         @foreach (var provider in providers)
                         {
-                            <a class="btn btn-default" data-authprovider="@provider.Name" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/AssociateOAuthLogin?provider={0}&returnUrl={1}", provider.Name, CoreServices.Portal.ResolveCurrentUrl("")))"><span class="glyphicon glyphicon-plus"></span>&nbsp;@provider.Name</a>
+                            if (provider is Videre.Core.Providers.IOAuthAuthenticationProvider)
+                            {
+                                <a class="btn btn-default" data-authprovider="@provider.Name" data-authprovidertype="oauth" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/AssociateOAuthLogin?provider={0}&returnUrl={1}", provider.Name, CoreServices.Portal.ResolveCurrentUrl("")))"><span class="glyphicon glyphicon-plus"></span>&nbsp;@provider.Name</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-default" data-authprovider="@provider.Name" data-authprovidertype="external"><span class="glyphicon glyphicon-plus"></span>&nbsp;@provider.Name</a>
+                            }
                         }
                     </div>
                 </div>
@@ -95,5 +102,29 @@
             </div>
         </div>
     </div>
+
+    <div id="@Model.GetId("ExternalLoginDialog")" data-target="#@Model.GetId("ExternalLoginDialog")" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <label data-column="AuthenticationProvider"></label> - @Model.GetText("AssociateLogin.Text", "Associate Login")
+                </div>
+                <div class="modal-body">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+                    <div class="form-horizontal">
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("ExternalUser").DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password().DataColumn("ExternalPassword").DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnExternalLogin").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Login.Text", "Login", true)
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 

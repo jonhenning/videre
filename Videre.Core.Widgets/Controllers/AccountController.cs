@@ -34,6 +34,20 @@ namespace Videre.Core.Widgets.Controllers
             return new OAuthAuthenticationResult(provider, CoreServices.Authentication.GetOAuthLoginCallbackUrl(provider, returnUrl, true));
         }
 
+        public JsonResult<dynamic> AssociateExternalLogin(string userName, string password, string provider)
+        {
+            return API.Execute<dynamic>(r =>
+            {
+                var associated = Account.AssociateExternalLogin(Account.CurrentUser.Id, userName, password, provider);
+                r.Data = new
+                {
+                    associated = associated,
+                    profile = CoreServices.Account.GetUserProfile(CoreServices.Account.CurrentUser.Id),
+                    userAuthProviders = CoreServices.Authentication.GetUserAuthenticationProviders(CoreServices.Account.GetUserById(CoreServices.Account.CurrentUser.Id))
+                };
+            });
+        }
+
         public JsonResult<dynamic> DisassociateOAuthLogin(string provider)
         {
             return API.Execute<dynamic>(r =>
