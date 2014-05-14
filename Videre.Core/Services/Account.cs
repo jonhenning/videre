@@ -204,6 +204,7 @@ namespace Videre.Core.Services
                 if (user != null && !Authentication.GetUserAuthenticationProviders(user).Contains(provider))  //if we have a user and haven't already associated a login token
                 {
                     Authentication.AssociateAuthenticationToken(user, authResult.Provider, authResult.ProviderUserId);
+                    processAuthenticationData(authResult, user);
                     return true;
                 }
             }
@@ -238,60 +239,65 @@ namespace Videre.Core.Services
                 //var user = AccountService.GetById(authResult.ProviderUserId);
                 if (user != null)
                 {
-                    var changes = 0;
-                    //todo: optimize?  dictionary or something...
-                    if (authResult.Claims != null)
-                    {
-                        foreach (var claim in authResult.Claims)
-                        {
-                            if (user.GetClaim(claim.Type, claim.Issuer) == null)
-                            {
-                                user.Claims.Add(claim);
-                                changes++;
-                            }
-                        }
-                    }
-                    //user.Claims.AddRange(authResult.Claims);
-                    if (authResult.ExtraData != null)
-                    {
-                        foreach (var key in authResult.ExtraData.Keys)
-                        {
-                            //if provider is returning an email and we don't have email yet, use it
-                            if (key.Equals("email", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                if (string.IsNullOrEmpty(user.Email))
-                                {
-                                    user.Email = authResult.ExtraData[key];
-                                    changes++;
-                                }
-                            }
-                            else if (key.Equals("locale", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                if (string.IsNullOrEmpty(user.Locale))
-                                {
-                                    user.Locale = authResult.ExtraData[key];
-                                    changes++;
-                                }
-                            }
-                            else
-                            {
-                                if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    user.Attributes[key] = authResult.ExtraData[key];
-                                    changes++;
-                                }
-                            }
-                        }
-                    }
-                    if (changes > 0)
-                        SaveUser(user); //for now we will persist any information coming back from the authentication provider...  may change mind
-
+                    processAuthenticationData(authResult, user);
                     Authentication.IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, persistant); //todo: ticket needs refactoring on who does it
                 }
                 return user;
             }
             return null;
         }
+
+        private static void processAuthenticationData(AuthenticationResult authResult, Models.User user)
+        {
+            var changes = 0;
+            //todo: optimize?  dictionary or something...
+            if (authResult.Claims != null)
+            {
+                foreach (var claim in authResult.Claims)
+                {
+                    if (user.GetClaim(claim.Type, claim.Issuer) == null)
+                    {
+                        user.Claims.Add(claim);
+                        changes++;
+                    }
+                }
+            }
+            //user.Claims.AddRange(authResult.Claims);
+            if (authResult.ExtraData != null)
+            {
+                foreach (var key in authResult.ExtraData.Keys)
+                {
+                    //if provider is returning an email and we don't have email yet, use it
+                    if (key.Equals("email", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (string.IsNullOrEmpty(user.Email))
+                        {
+                            user.Email = authResult.ExtraData[key];
+                            changes++;
+                        }
+                    }
+                    else if (key.Equals("locale", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (string.IsNullOrEmpty(user.Locale))
+                        {
+                            user.Locale = authResult.ExtraData[key];
+                            changes++;
+                        }
+                    }
+                    else
+                    {
+                        if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            user.Attributes[key] = authResult.ExtraData[key];
+                            changes++;
+                        }
+                    }
+                }
+            }
+            if (changes > 0)
+                SaveUser(user); //for now we will persist any information coming back from the authentication provider...  may change mind
+        }
+
 
         public static bool RoleAuthorized(List<string> roles)
         {
