@@ -217,9 +217,7 @@ namespace Videre.Core.Services
                 var authCount = user.Claims.Where(c => c.Type == _authenticationClaimType).Count();
                 if (!string.IsNullOrEmpty(user.PasswordHash) || authCount > 1)
                 {
-                    var claim = user.GetClaim(_authenticationClaimType, provider);
-                    if (claim != null)
-                        user.Claims.Remove(claim);
+                    user.Claims.RemoveAll(c => c.Issuer == provider);
                     CoreServices.Account.SaveUser(user);
                     return user;
                 }
