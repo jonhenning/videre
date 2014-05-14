@@ -62,7 +62,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         }
 
         var self = this;
-        this.getControl('UnassociatedAuthCtr').toggle(this._authProviders.where(function(d) { return self._userAuthProviders.contains(d) == false }).length > 0).find('[data-authprovider]').each(function(idx, item)
+        this.getControl('UnassociatedAuthCtr').toggle(this._authProviders.where(function(d) { return self._userAuthProviders.select(function(d) { return d.toLowerCase(); }).contains(d.Name.toLowerCase()) == false }).length > 0).find('[data-authprovider]').each(function(idx, item)    //todo: this is a bit complex, to simply compare two lists case-insensitive...  
         {
             //$(item).toggle(!self._userAuthProviders.contains($(item).data('authprovider')));
             $(item).toggle(!self._userAuthProviders.where(function(d) { return d.toLowerCase() == $(item).data('authprovider').toLowerCase(); }).length > 0);
