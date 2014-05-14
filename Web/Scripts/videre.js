@@ -743,7 +743,7 @@ videre.widgets.base = videre.Class.extend(
     get_id: function() { return this._id; },
     set_id: function(v) { this._id = v; },
     get_ns: function() { return this._ns; },
-    set_ns: function (v) { this._ns = v; },    
+    set_ns: function(v) { this._ns = v; },    
     get_events: function() { return this._eventHandlerList; },
     get_childWidgets: function() { return this._childWidgets; },
 
@@ -751,9 +751,9 @@ videre.widgets.base = videre.Class.extend(
     set_messages: function(v) { this._messages = v; },
     set_user: function(v) { this._user = v; },
     get_user: function() { return this._user; },
-    get_wid: function () { return this._wid; },
-    set_wid: function (v) { this._wid = v; },
-    
+    get_wid: function() { return this._wid; },
+    set_wid: function(v) { this._wid = v; },
+
     init: function()
     {
         this._id = null;
@@ -768,7 +768,9 @@ videre.widgets.base = videre.Class.extend(
         this._messages = [];
         this._user = {};
         this._locked = false;
-
+        this._useProgressDialog = false;
+        this._progressDialog = null;
+        
         //controls
         this._widget = null;
 
@@ -916,20 +918,33 @@ videre.widgets.base = videre.Class.extend(
     lock: function(parent)
     {
         this._locked = true;
-        this.getProgressBar(parent).show();
+        if (this._useProgressDialog)
+            this.getProgressBar(parent).modal('show');
+        else
+            this.getProgressBar(parent).show();
     },
 
     unlock: function(parent)
     {
         this._locked = false;
-        this.getProgressBar(parent).hide();
+        if (this._useProgressDialog)
+            this.getProgressBar(parent).modal('hide');
+        else 
+            this.getProgressBar(parent).hide();
     },
 
     getProgressBar: function(parent)
     {
         if (parent == null)
             parent = this._widget;
-        return parent.find('.progress');
+        if (this._useProgressDialog)
+        {
+            if (this._progressDialog == null)
+                this._progressDialog = parent.find('.progress-dialog').first().appendTo($(document.body)).modal().css('padding-top', '15%'); //only need one
+            return this._progressDialog;
+        }
+        else 
+            return parent.find('.progress-inline');
     },
 
     getMsgCtr: function(parent)

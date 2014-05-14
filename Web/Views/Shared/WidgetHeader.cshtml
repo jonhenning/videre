@@ -1,6 +1,19 @@
-﻿<div class="progress progress-info progress-striped active" style="display: none;">
-  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-  </div>
+﻿@using CoreServices = Videre.Core.Services;
+
+<div class="progress-inline progress progress-info progress-striped active" style="display: none;">
+    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+</div>
+<div class="modal progress-dialog" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3>@CoreServices.Localization.GetPortalText("PleaseWait.Text", "Please Wait...")</h3>
+                <div class="progress progress-info progress-striped active">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="alert alert-block alert-dismissable videre-widget-message" style="display: none;">
     <button type="button" class="close" data-dismiss="alert">×</button>
