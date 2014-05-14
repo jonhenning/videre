@@ -26,7 +26,7 @@ namespace Videre.Core.Providers
         void InitializePersistance(string connection);
     }
 
-    public interface IExternalAuthenticationProvider : IAuthenticationProvider
+    public interface IOAuthAuthenticationProvider : IAuthenticationProvider
     {
         AuthenticationResult VerifyAuthentication(string returnUrl);
         void RequestAuthentication(string provider, string returnUrl);

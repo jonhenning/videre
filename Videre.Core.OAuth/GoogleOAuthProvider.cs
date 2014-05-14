@@ -9,7 +9,7 @@ using CoreServices = Videre.Core.Services;
 
 namespace Videre.Core.OAuth
 {
-    public class GoogleOAuthProvider : IAuthenticationProvider
+    public class GoogleOAuthProvider : IOAuthAuthenticationProvider
     {
         public string Name
         {
@@ -31,13 +31,13 @@ namespace Videre.Core.OAuth
         {
             get 
             {
-                return CoreServices.Portal.CurrentPortal.GetAttribute("Authentication Providers", "Google", false);
+                return CoreServices.Portal.CurrentPortal.GetAttribute("Authentication", "Google", false);
             }
         }
 
         public void Register()
         {
-            CoreServices.Update.Register("Authentication Providers", new CoreModels.AttributeDefinition() { Name = "Google", DefaultValue = "false", LabelKey = "Google.Text", LabelText = "Google", DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "Google", DefaultValue = "false", LabelKey = "Google.Text", LabelText = "Google", DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
             OAuthWebSecurity.RegisterGoogleClient();
         }
 

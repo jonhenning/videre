@@ -24,17 +24,17 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
-        public ActionResult ExternalLogin(string provider, string returnUrl)
+        public ActionResult OAuthLogin(string provider, string returnUrl)
         {
-            return new ExternalAuthenticationResult(provider, CoreServices.Authentication.GetExternalLoginCallbackUrl(provider, returnUrl, false));
+            return new OAuthAuthenticationResult(provider, CoreServices.Authentication.GetOAuthLoginCallbackUrl(provider, returnUrl, false));
         }
 
-        public ActionResult AssociateExternalLogin(string provider, string returnUrl)
+        public ActionResult AssociateOAuthLogin(string provider, string returnUrl)
         {
-            return new ExternalAuthenticationResult(provider, CoreServices.Authentication.GetExternalLoginCallbackUrl(provider, returnUrl, true));
+            return new OAuthAuthenticationResult(provider, CoreServices.Authentication.GetOAuthLoginCallbackUrl(provider, returnUrl, true));
         }
 
-        public JsonResult<dynamic> DisassociateExternalLogin(string provider)
+        public JsonResult<dynamic> DisassociateOAuthLogin(string provider)
         {
             return API.Execute<dynamic>(r =>
             {
@@ -45,14 +45,14 @@ namespace Videre.Core.Widgets.Controllers
                 r.Data = new
                 {
                     profile = CoreServices.Account.GetUserProfile(CoreServices.Account.CurrentUser.Id),
-                    userAuthProviders = CoreServices.Authentication.GetUserAuthenticationProviders(CoreServices.Account.CurrentUser)
+                    userAuthProviders = CoreServices.Authentication.GetUserAuthenticationProviders(CoreServices.Account.GetUserById(CoreServices.Account.CurrentUser.Id))
                 };
             });
         }
-
-        public ActionResult ExternalLoginCallback(string provider, string returnUrl, bool associate)
+        
+        public ActionResult OAuthLoginCallback(string provider, string returnUrl, bool associate)
         {
-            if (CoreServices.Authentication.ProcessExternalAuthentication(provider, returnUrl, associate))
+            if (CoreServices.Authentication.ProcessOAuthAuthentication(provider, returnUrl, associate))
             {
                 //todo: FIX THIS!
                 //if (Url.IsLocalUrl(returnUrl))

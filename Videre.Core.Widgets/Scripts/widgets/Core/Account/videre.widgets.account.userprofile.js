@@ -97,7 +97,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
 
     _disassociateProvider: function(provider)
     {
-        this.ajax('~/core/Account/DisassociateExternalLogin', { provider: provider }, this._delegates.onDisassociateReturn);
+        this.ajax('~/core/Account/DisassociateOAuthLogin', { provider: provider }, this._delegates.onDisassociateReturn);
     },
 
     _onDataReturn: function(result, ctx)

@@ -18,7 +18,7 @@
     }
 
     Html.RegisterControlPresenter(Model, "videre.widgets.account.logon", props);
-    var providers = CoreServices.Authentication.GetExternalAuthenticationProviders().Where(p => p.Enabled).ToList();
+    var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.Enabled).ToList();
     var standardProviders = CoreServices.Authentication.GetActiveStandardAuthenticationProviders(); 
 }
 
@@ -37,7 +37,7 @@
                     <div class="videre-form-actions">
                         @foreach (var provider in providers)
                         {
-                            <a class="btn btn-default" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/ExternalLogin?provider={0}&returnUrl={1}", provider.Name, props["returnUrl"]))">@provider.LoginButtonText</a>
+                            <a class="btn btn-primary" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/OAuthLogin?provider={0}&returnUrl={1}", provider.Name, props["returnUrl"]))">@provider.LoginButtonText</a>
                         }
                         @foreach (var provider in standardProviders)
                         {

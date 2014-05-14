@@ -147,9 +147,9 @@ namespace Videre.Core.Services
             return _authenticationProviders;
         }
 
-        public static List<IExternalAuthenticationProvider> GetExternalAuthenticationProviders()
+        public static List<IOAuthAuthenticationProvider> GetOAuthAuthenticationProviders()
         {
-            return GetAuthenticationProviders().Where(p => p is IExternalAuthenticationProvider).Select(p => (IExternalAuthenticationProvider)p).ToList();
+            return GetAuthenticationProviders().Where(p => p is IOAuthAuthenticationProvider).Select(p => (IOAuthAuthenticationProvider)p).ToList();
         }
 
         public static List<IStandardAuthenticationProvider> GetStandardAuthenticationProviders()
@@ -225,18 +225,18 @@ namespace Videre.Core.Services
                 throw new Exception("User not associated with Authentication Token");
         }
 
-        //needs to be exactly the same between ExternalLogin and ExternLoginCallback methods    - hacky that the service knows URL
-        public static string GetExternalLoginCallbackUrl(string provider, string returnUrl, bool associate)
+        //needs to be exactly the same between OAuthLogin and ExternLoginCallback methods    - hacky that the service knows URL
+        public static string GetOAuthLoginCallbackUrl(string provider, string returnUrl, bool associate)
         {
-            return CoreServices.Portal.RequestRootUrl.PathCombine(CoreServices.Portal.ResolveUrl(string.Format("~/core/Account/ExternalLogInCallback?provider={0}&returnUrl={1}&associate={2}", System.Web.HttpUtility.UrlEncode(provider), System.Web.HttpUtility.UrlEncode(returnUrl), associate)), "/").ToLower();
+            return CoreServices.Portal.RequestRootUrl.PathCombine(CoreServices.Portal.ResolveUrl(string.Format("~/core/Account/OAuthLogInCallback?provider={0}&returnUrl={1}&associate={2}", System.Web.HttpUtility.UrlEncode(provider), System.Web.HttpUtility.UrlEncode(returnUrl), associate)), "/").ToLower();
         }
 
-        public static bool ProcessExternalAuthentication(string provider, string returnUrl, bool associate)
+        public static bool ProcessOAuthAuthentication(string provider, string returnUrl, bool associate)
         {
             var authProvider = CoreServices.Authentication.GetAuthenticationProvider(provider);
             if (authProvider != null)   //todo:  verify it implements this interface or assume we couldn't get here without it
             {
-                var result = ((Providers.IExternalAuthenticationProvider)authProvider).VerifyAuthentication(GetExternalLoginCallbackUrl(provider, returnUrl, associate));
+                var result = ((Providers.IOAuthAuthenticationProvider)authProvider).VerifyAuthentication(GetOAuthLoginCallbackUrl(provider, returnUrl, associate));
                 if (result.Success)
                 {
                     //if authenticated, then we are in user profile, and associating    - todo: better way to detects?   probably simply use another controller and method
@@ -259,7 +259,7 @@ namespace Videre.Core.Services
                     return true;
                 }
                 else
-                    throw new Exception("External Authentication Failed: " + result.Errors.ToJson());//return RedirectToAction("ExternalLoginFailure");
+                    throw new Exception("External Authentication Failed: " + result.Errors.ToJson());//return RedirectToAction("OAuthLoginFailure");
             }
             else
                 throw new Exception("Authentication Provider not found: " + provider);

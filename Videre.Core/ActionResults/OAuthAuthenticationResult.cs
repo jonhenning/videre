@@ -7,9 +7,9 @@ using CoreServices = Videre.Core.Services;
 
 namespace Videre.Core.ActionResults
 {
-    public class ExternalAuthenticationResult : ActionResult
+    public class OAuthAuthenticationResult : ActionResult
     {
-        public ExternalAuthenticationResult(string provider, string returnUrl)
+        public OAuthAuthenticationResult(string provider, string returnUrl)
         {
             Provider = provider;
             ReturnUrl = returnUrl;
@@ -22,7 +22,7 @@ namespace Videre.Core.ActionResults
         {
             var provider = CoreServices.Authentication.GetAuthenticationProvider(Provider);
             if (provider != null)   //todo:  verify it implements this interface or assume we couldn't get here without it
-                ((Providers.IExternalAuthenticationProvider)provider).RequestAuthentication(Provider, ReturnUrl);
+                ((Providers.IOAuthAuthenticationProvider)provider).RequestAuthentication(Provider, ReturnUrl);
             throw new Exception("Authentication Provider not found: " + Provider);
         }
     }
