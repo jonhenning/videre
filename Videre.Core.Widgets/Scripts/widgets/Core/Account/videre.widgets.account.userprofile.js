@@ -61,16 +61,15 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
             this.bindData(this._data.Attributes, this.getControl('CustomElementsCtr'));
         }
 
-        var self = this;
-        this.getControl('UnassociatedAuthCtr').toggle(this._authProviders.where(function(d) { return self._userAuthProviders.select(function(d) { return d.toLowerCase(); }).contains(d.Name.toLowerCase()) == false }).length > 0).find('[data-authprovider]').each(function(idx, item)    //todo: this is a bit complex, to simply compare two lists case-insensitive...  
+        var externalAuthProviderNames = this._authProviders.select(function(d) { return d.Name.toLowerCase(); });
+        var userAuthProviderNames = this._userAuthProviders.select(function(d) { return d.toLowerCase(); });
+        this.getControl('UnassociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return userAuthProviderNames.contains(d) == false }).length > 0).find('[data-authprovider]').each(function(idx, item)
         {
-            //$(item).toggle(!self._userAuthProviders.contains($(item).data('authprovider')));
-            $(item).toggle(!self._userAuthProviders.where(function(d) { return d.toLowerCase() == $(item).data('authprovider').toLowerCase(); }).length > 0);
+            $(item).toggle(!userAuthProviderNames.contains($(item).data('authprovider').toLowerCase()));
         });
-        this.getControl('AssociatedAuthCtr').toggle(this._userAuthProviders.length > 0).find('[data-authprovider]').each(function(idx, item)
+        this.getControl('AssociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return userAuthProviderNames.contains(d) == false }).length != externalAuthProviderNames.length).find('[data-authprovider]').each(function(idx, item)
         {
-            //$(item).toggle(self._userAuthProviders.contains($(item).data('authprovider')));
-            $(item).toggle(self._userAuthProviders.where(function(d) { return d.toLowerCase() == $(item).data('authprovider').toLowerCase(); }).length > 0);
+            $(item).toggle(userAuthProviderNames.contains($(item).data('authprovider').toLowerCase())); 
         });
     },
 
