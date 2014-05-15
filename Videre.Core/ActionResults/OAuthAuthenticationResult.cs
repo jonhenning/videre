@@ -23,7 +23,8 @@ namespace Videre.Core.ActionResults
             var provider = CoreServices.Authentication.GetAuthenticationProvider(Provider);
             if (provider != null)   //todo:  verify it implements this interface or assume we couldn't get here without it
                 ((Providers.IOAuthAuthenticationProvider)provider).RequestAuthentication(Provider, ReturnUrl);
-            throw new Exception("Authentication Provider not found: " + Provider);
+            else 
+                throw new Exception("Authentication Provider not found: " + Provider);
         }
     }
 }

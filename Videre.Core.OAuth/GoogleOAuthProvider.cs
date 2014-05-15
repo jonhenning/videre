@@ -38,6 +38,7 @@ namespace Videre.Core.OAuth
         public void Register()
         {
             CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "Google", DefaultValue = "false", LabelKey = "Google.Text", LabelText = "Google", DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "GoogleAllowCreation", DefaultValue = "false", LabelKey = "GoogleAllowCreation.Text", LabelText = "Allow account creation - Google", DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
             OAuthWebSecurity.RegisterGoogleClient();
         }
 

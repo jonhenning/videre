@@ -31,6 +31,7 @@ namespace Videre.Core.Services
         public string UserName { get; set; }
         public List<Models.UserClaim> Claims { get; set; }
         public IDictionary<string, string> ExtraData { get; set; }
+        public bool SupportsAccountCreation { get; set; }
     }
 
     public class Authentication
@@ -217,7 +218,7 @@ namespace Videre.Core.Services
                 var authCount = user.Claims.Where(c => c.Type == _authenticationClaimType).Count();
                 if (!string.IsNullOrEmpty(user.PasswordHash) || authCount > 1)
                 {
-                    user.Claims.RemoveAll(c => c.Issuer == provider);
+                    user.Claims.RemoveAll(c => c.Issuer.Equals(provider, StringComparison.InvariantCultureIgnoreCase));
                     CoreServices.Account.SaveUser(user);
                     return user;
                 }
@@ -226,6 +227,24 @@ namespace Videre.Core.Services
             }
             else
                 throw new Exception("User not associated with Authentication Token");
+        }
+
+        public static bool AssociateExternalLogin(string associateToUserId, string userName, string password, string provider)
+        {
+            var authResult = Authentication.Authenticate(userName, password, provider);
+            if (authResult.Success)
+            {
+                var user = Account.GetUserById(associateToUserId);
+                if (user != null && !Authentication.GetUserAuthenticationProviders(user).Contains(provider))  //if we have a user and haven't already associated a login token
+                {
+                    Authentication.AssociateAuthenticationToken(user, authResult.Provider, authResult.ProviderUserId);
+                    applyAuthenticationResultToUser(authResult, user);
+                    return true;
+                }
+            }
+            else
+                throw new Exception("External Login Failed");   //todo: localize?
+            return false;
         }
 
         //needs to be exactly the same between OAuthLogin and ExternLoginCallback methods    - hacky that the service knows URL
@@ -242,23 +261,18 @@ namespace Videre.Core.Services
                 var result = ((Providers.IOAuthAuthenticationProvider)authProvider).VerifyAuthentication(GetOAuthLoginCallbackUrl(provider, returnUrl, associate));
                 if (result.Success)
                 {
-                    //if authenticated, then we are in user profile, and associating    - todo: better way to detects?   probably simply use another controller and method
-                    //if (CoreServices.Account.IsAuthenticated)
                     if (associate)
                     {
-                        if (CoreServices.Account.IsAuthenticated)
+                        if (IsAuthenticated)
+                        {
                             CoreServices.Authentication.AssociateAuthenticationToken(CoreServices.Account.CurrentUser, result.Provider, result.ProviderUserId);
+                            applyAuthenticationResultToUser(result, CoreServices.Account.CurrentUser);
+                        }
                         else
                             throw new Exception("Cannot associate Authentication without logged in user");
                     }
                     else
-                    {
-                        var user = GetUserByAuthenticationToken(result.Provider, result.ProviderUserId);
-                        if (user != null)
-                            IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, true);
-                        else
-                            throw new Exception("No user is associated with this provider");
-                    }
+                        processAuthenticationResult(result, true);
                     return true;
                 }
                 else
@@ -269,13 +283,110 @@ namespace Videre.Core.Services
 
         }
 
-        public static AuthenticationResult Login(string userName, string password, string provider)
+        public static Models.User Login(string userName, string password, bool persistant, string provider)
+        {
+            var authResult = Authenticate(userName, password, provider);
+            if (authResult.Success)
+                return processAuthenticationResult(authResult, persistant);
+            return null;
+        }
+
+        public static AuthenticationResult Authenticate(string userName, string password, string provider)
         {
             var authProvider = CoreServices.Authentication.GetAuthenticationProvider(provider);
             if (authProvider != null)   //todo:  verify it implements this interface or assume we couldn't get here without it
                 return ((Providers.IStandardAuthenticationProvider)authProvider).Login(userName, password);
             else
                 throw new Exception("Authentication Provider not found: " + provider);
+        }
+
+        //Note:  this is NOT the logic used in account association to a new authentication provider
+        private static Models.User processAuthenticationResult(AuthenticationResult authResult, bool persistant)
+        {
+            var user = GetUserByAuthenticationToken(authResult.Provider, authResult.ProviderUserId);
+
+            //if authenticated but not existant, we want to create one
+            if (user == null)
+            {
+                if (authResult.SupportsAccountCreation)
+                {
+                    if (Account.GetUser(authResult.UserName) != null)   //do NOT allow a user to associate himself with an existing user if authenticates against system with same name... would be security hole as user could take over account that is not his
+                        throw new Exception("Cannot authenticate, user already exists in system with same username");
+
+                    user = new Models.User()
+                    {
+                        Name = authResult.UserName,
+                        PortalId = Portal.CurrentPortalId
+                    };
+                    user.Id = Account.SaveUser(user); //must save before we associate
+                    Authentication.AssociateAuthenticationToken(user, authResult.Provider, authResult.ProviderUserId);
+                }
+                else
+                    throw new Exception("User does not exist in system and the authentication provider you are using is not configured to allow new account creation");
+            }
+
+            if (user != null)
+            {
+                applyAuthenticationResultToUser(authResult, user);
+                Authentication.IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, persistant); //todo: make expire days configurable?
+            }
+
+            return user;
+        }
+
+        private static void applyAuthenticationResultToUser(AuthenticationResult authResult, Models.User user)
+        {
+            var changes = 0;
+            //todo: optimize?  dictionary or something...
+            if (authResult.Claims != null)
+            {
+                foreach (var claim in authResult.Claims)
+                {
+                    if (user.GetClaim(claim.Type, claim.Issuer) == null)
+                    {
+                        user.Claims.Add(claim);
+                        changes++;
+                    }
+                }
+            }
+            //user.Claims.AddRange(authResult.Claims);
+            if (authResult.ExtraData != null)
+            {
+                foreach (var key in authResult.ExtraData.Keys)
+                {
+                    //if provider is returning an email and we don't have email yet, use it
+                    if (key.Equals("email", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (string.IsNullOrEmpty(user.Email))
+                        {
+                            user.Email = authResult.ExtraData[key];
+                            changes++;
+                        }
+                    }
+                    else if (key.Equals("locale", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (string.IsNullOrEmpty(user.Locale))
+                        {
+                            user.Locale = authResult.ExtraData[key];
+                            changes++;
+                        }
+                    }
+                    else
+                    {
+                        if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            //if it is an element user can edit, then don't overwrite
+                            if (!user.Attributes.ContainsKey(key) || !CoreServices.Account.CustomUserElements.Exists(e => e.Name == key && e.UserCanEdit))
+                            {
+                                user.Attributes[key] = authResult.ExtraData[key];
+                                changes++;
+                            }
+                        }
+                    }
+                }
+            }
+            if (changes > 0)
+                Account.SaveUser(user); //for now we will persist any information coming back from the authentication provider...  may change mind
         }
 
 

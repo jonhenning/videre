@@ -16,7 +16,7 @@ namespace Videre.Core.Widgets.Controllers
         {
             return API.Execute<Dictionary<string, object>>(r =>
             {
-                var user = CoreServices.Account.Login(userName, password, rememberMe, provider);
+                var user = CoreServices.Authentication.Login(userName, password, rememberMe, provider);
                 if (user != null)
                     r.Data["user"] = user;
                 else
@@ -38,7 +38,7 @@ namespace Videre.Core.Widgets.Controllers
         {
             return API.Execute<dynamic>(r =>
             {
-                var associated = Account.AssociateExternalLogin(Account.CurrentUser.Id, userName, password, provider);
+                var associated = CoreServices.Authentication.AssociateExternalLogin(Account.CurrentUser.Id, userName, password, provider);
                 r.Data = new
                 {
                     associated = associated,

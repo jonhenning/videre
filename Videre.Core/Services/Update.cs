@@ -327,7 +327,7 @@ namespace Videre.Core.Services
                     //todo:  try each one?   seems a bit much, but user is not able to configure them yet...
                     foreach (var provider in Authentication.GetStandardAuthenticationProviders())
                     {
-                        var result = Authentication.Login(adminUser.Name, adminUser.Password, provider.Name);
+                        var result = Authentication.Authenticate(adminUser.Name, adminUser.Password, provider.Name);
                         if (result.Success)
                         {
                             newAdminUser.Password = null; //password handled by outside provider
