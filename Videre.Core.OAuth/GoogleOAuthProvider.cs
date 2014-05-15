@@ -27,18 +27,24 @@ namespace Videre.Core.OAuth
             }
         }
 
-        public bool Enabled
-        {
-            get 
-            {
-                return CoreServices.Portal.CurrentPortal.GetAttribute("Authentication", "Google", false);
-            }
-        }
+        //public bool Enabled
+        //{
+        //    get 
+        //    {
+        //        return CoreServices.Portal.CurrentPortal.GetAttribute("Authentication", "Google", false);
+        //    }
+        //}
+
+        public bool AllowAssociation { get { return CoreServices.Portal.GetPortalAttribute("Authentication", Name + "-AllowAssociation", true); } }
+        public bool AllowLogin { get { return CoreServices.Portal.GetPortalAttribute("Authentication", Name + "-AllowLogin", true); } }
+        public bool AllowCreation { get { return CoreServices.Portal.GetPortalAttribute("Authentication", Name + "-AllowCreation", true); } }
 
         public void Register()
         {
-            CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "Google", DefaultValue = "false", LabelKey = "Google.Text", LabelText = "Google", DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
-            CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "GoogleAllowCreation", DefaultValue = "false", LabelKey = "GoogleAllowCreation.Text", LabelText = "Allow account creation - Google", DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-AllowAssociation", DefaultValue = "true", LabelKey = Name + "AllowAssociation.Text", LabelText = "Allow Account Association - " + Name, DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-AllowLogin", DefaultValue = "true", LabelKey = Name + "AllowLogin.Text", LabelText = "Allow Authentication - " + Name, DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-AllowCreation", DefaultValue = "true", LabelKey = Name + "AllowCreation.Text", LabelText = "Allow Account Creation - " + Name, DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+
             OAuthWebSecurity.RegisterGoogleClient();
         }
 

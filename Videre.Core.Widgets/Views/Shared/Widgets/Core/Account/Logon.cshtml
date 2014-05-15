@@ -18,8 +18,8 @@
     }
 
     Html.RegisterControlPresenter(Model, "videre.widgets.account.logon", props);
-    var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.Enabled).ToList();
-    var standardProviders = CoreServices.Authentication.GetActiveStandardAuthenticationProviders(); 
+    var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.AllowLogin).ToList();
+    var standardProviders = CoreServices.Authentication.GetStandardAuthenticationProviders().Where(p => p.AllowLogin).ToList(); 
 }
 
 <div id="@Model.GetId("Widget")">
@@ -33,15 +33,26 @@
                     <div class="form-horizontal videre-form">
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtName").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+
+                        @if (standardProviders.Count > 1)
+                        {
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("AuthenticateAgainst.Text", "Authenticate Against").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().DropDownList("ddlAuthenticationAgainst").Required()
+                                .Options(standardProviders.Select(p => new SelectListItem() { Text = p.Name, Value = p.Name })), BootstrapUnits.GridSize.MediumDevice8)
+                        }
+
                     </div>
                     <div class="videre-form-actions">
                         @foreach (var provider in providers)
                         {
                             <a class="btn btn-primary" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/OAuthLogin?provider={0}&returnUrl={1}", provider.Name, props["returnUrl"]))">@provider.LoginButtonText</a>
                         }
-                        @foreach (var provider in standardProviders)
+                        @if (standardProviders.Count == 1)
                         {
-                            <a class="btn btn-primary" data-standardprovider="@provider.Name">@provider.LoginButtonText@(standardProviders.Count > 1 ? " (" + provider.Name + ")" : "")</a>
+                            <a class="btn btn-primary" data-standardprovider="@standardProviders[0].Name">@standardProviders[0].LoginButtonText</a>
+                        }
+                        else if (standardProviders.Count > 0)
+                        {
+                            <a class="btn btn-primary" data-multipleproviders="true">@standardProviders[0].LoginButtonText</a>
                         }
                     </div>
                 </div>

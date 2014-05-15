@@ -84,7 +84,7 @@
                     }
                     <script id="@Model.GetId("AttributeListTemplate")" type="text/html">
                         <div class="form-group">
-                            <label class="control-label col-md-4">{{:Label}}</label>
+                            <label class="control-label col-md-6">{{:Label}}</label>
                             <div class="col-md-6 {{:#data.InputType == 'checkbox' ? 'checkbox' : ''}}" data-type="input">
                                 {{:~bindInputs(#data, ~attributes, '$' + ~groupName + '.' + #data.Name)}}
                             </div>

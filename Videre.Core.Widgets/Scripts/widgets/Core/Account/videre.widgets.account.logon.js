@@ -20,6 +20,8 @@ videre.widgets.account.logon = videre.widgets.base.extend(
     {
         this._base(); //call base
         this._widget.find('[data-standardprovider]').button().click(videre.createDelegate(this, this._onLogonClick));
+        this._widget.find('[data-multipleproviders]').button().click(videre.createDelegate(this, this._onMultiLogonClick));
+        
 
     },
 
@@ -33,12 +35,22 @@ videre.widgets.account.logon = videre.widgets.base.extend(
     _onWidgetKeyDown: function(e)
     {
         if (e.keyCode == 13)
-            this.login(this._widget.find('[data-standardprovider]').data('standardprovider'));
+        {
+            var provider = this._widget.find('[data-standardprovider]').data('standardprovider');
+            provider = !String.isNullOrEmpty(provider) ? provider : this.getControl('ddlAuthenticationAgainst').val();
+            this.login(provider);
+        }
     },
 
     _onLogonClick: function(e)
     {
         var provider = $(e.target).closest('[data-standardprovider]').data('standardprovider');
+        this.login(provider);
+    },
+
+    _onMultiLogonClick: function(e)
+    {
+        var provider = this.getControl('ddlAuthenticationAgainst').val();
         this.login(provider);
     },
 

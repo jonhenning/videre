@@ -33,7 +33,6 @@ namespace Videre.Core.Services
         public List<Models.UserClaim> Claims { get; set; }
         public List<string> Roles { get; set; }
         public IDictionary<string, string> ExtraData { get; set; }
-        public bool SupportsAccountCreation { get; set; }
     }
 
     public class Authentication
@@ -165,10 +164,10 @@ namespace Videre.Core.Services
             return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider).Select(p => (IStandardAuthenticationProvider)p).ToList();
         }
 
-        public static List<IStandardAuthenticationProvider> GetActiveStandardAuthenticationProviders()
-        {
-            return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && p.Enabled).Select(p => (IStandardAuthenticationProvider)p).ToList();
-        }
+        //public static List<IStandardAuthenticationProvider> GetActiveStandardAuthenticationProviders()
+        //{
+        //    return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && (p.Enabled).Select(p => (IStandardAuthenticationProvider)p).ToList();
+        //}
 
         //public static IStandardAuthenticationProvider GetActivePersistanceProvider()
         //{
@@ -312,7 +311,7 @@ namespace Videre.Core.Services
             //if authenticated but not existant, we want to create one
             if (user == null)
             {
-                if (authResult.SupportsAccountCreation)
+                if (GetAuthenticationProvider(authResult.Provider).AllowCreation)
                 {
                     if (Account.GetUser(authResult.UserName) != null)   //do NOT allow a user to associate himself with an existing user if authenticates against system with same name... would be security hole as user could take over account that is not his
                         throw new Exception("Cannot create new user from authentication.  User already exists in system with same username");

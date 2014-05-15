@@ -19,8 +19,7 @@ namespace Videre.Core.OAuth
                 ExtraData = result.ExtraData,
                 Provider = result.Provider,
                 ProviderUserId = result.ProviderUserId,
-                UserName = result.UserName,
-                SupportsAccountCreation = CoreServices.Portal.CurrentPortal.GetAttribute("Authentication", "GoogleAllowCreation", false)
+                UserName = result.UserName
             };
             if (result.Error != null)
                 ret.Errors.Add(result.Error.Message);

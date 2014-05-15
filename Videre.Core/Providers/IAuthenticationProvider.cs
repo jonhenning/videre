@@ -11,7 +11,10 @@ namespace Videre.Core.Providers
     {
         string Name { get; }
         string LoginButtonText { get; }
-        bool Enabled { get; }
+        //bool Enabled { get; }
+        bool AllowAssociation { get; }
+        bool AllowLogin { get; }
+        bool AllowCreation { get; }
         void Register();
     }
 

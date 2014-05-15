@@ -23,20 +23,26 @@ namespace Videre.Core.Providers
             get { return CoreServices.Localization.GetPortalText("Login.Text", "Login"); }
         }
 
-        public bool Enabled
-        {
-            get
-            {
-                //STACK OVERFLOW
-                //if (CoreServices.Authentication.GetAuthenticationProviders().Where(p => p.Enabled).Count() == 0)
-                //    return true;
-                return CoreServices.Portal.GetPortalAttribute("Authentication", Name, true);
-            }
-        }
+        //public bool Enabled
+        //{
+        //    get
+        //    {
+        //        //STACK OVERFLOW
+        //        //if (CoreServices.Authentication.GetAuthenticationProviders().Where(p => p.Enabled).Count() == 0)
+        //        //    return true;
+        //        return CoreServices.Portal.GetPortalAttribute("Authentication", Name, true);
+        //    }
+        //}
+
+        public bool AllowAssociation { get { return CoreServices.Portal.GetPortalAttribute("Authentication", Name + "-AllowAssociation", true); } }
+        public bool AllowLogin { get { return CoreServices.Portal.GetPortalAttribute("Authentication", Name + "-AllowLogin", true); } }
+        public bool AllowCreation { get { return CoreServices.Portal.GetPortalAttribute("Authentication", Name + "-AllowCreation", true); } }
 
         public void Register()
         {
-            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name, DefaultValue = "true", LabelKey = "VidereAuthentication.Text", LabelText = "Videre Authentication", DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-AllowAssociation", DefaultValue = "true", LabelKey = Name + "AllowAssociation.Text", LabelText = "Allow Account Association - " + Name, DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-AllowLogin", DefaultValue = "true", LabelKey = Name + "AllowLogin.Text", LabelText = "Allow Authentication - " + Name, DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-AllowCreation", DefaultValue = "true", LabelKey = Name + "AllowCreation.Text", LabelText = "Allow Account Creation - " + Name, DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
 
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();
