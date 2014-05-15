@@ -7,5 +7,6 @@ namespace Videre.Core.Models
         public string PortalId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string Issuer { get; set; }
     }
 }

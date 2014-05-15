@@ -22,6 +22,7 @@ namespace Videre.Core.Services
         {
             Errors = new List<string>();
             Claims = new List<CoreModels.UserClaim>();
+            Roles = new List<string>();
         }
 
         public bool Success { get; set; }
@@ -30,6 +31,7 @@ namespace Videre.Core.Services
         public string ProviderUserId { get; set; }
         public string UserName { get; set; }
         public List<Models.UserClaim> Claims { get; set; }
+        public List<string> Roles { get; set; }
         public IDictionary<string, string> ExtraData { get; set; }
         public bool SupportsAccountCreation { get; set; }
     }
@@ -218,7 +220,9 @@ namespace Videre.Core.Services
                 var authCount = user.Claims.Where(c => c.Type == _authenticationClaimType).Count();
                 if (!string.IsNullOrEmpty(user.PasswordHash) || authCount > 1)
                 {
-                    user.Claims.RemoveAll(c => c.Issuer.Equals(provider, StringComparison.InvariantCultureIgnoreCase));
+                    user.Claims.RemoveAll(c => provider.Equals(c.Issuer, StringComparison.InvariantCultureIgnoreCase));
+                    var issuerRoleIds = Account.GetRoles().Where(r => provider.Equals(r.Issuer, StringComparison.InvariantCultureIgnoreCase)).Select(r => r.Id).ToList();
+                    user.RoleIds.RemoveAll(id => issuerRoleIds.Contains(id));
                     CoreServices.Account.SaveUser(user);
                     return user;
                 }
@@ -311,7 +315,7 @@ namespace Videre.Core.Services
                 if (authResult.SupportsAccountCreation)
                 {
                     if (Account.GetUser(authResult.UserName) != null)   //do NOT allow a user to associate himself with an existing user if authenticates against system with same name... would be security hole as user could take over account that is not his
-                        throw new Exception("Cannot authenticate, user already exists in system with same username");
+                        throw new Exception("Cannot create new user from authentication.  User already exists in system with same username");
 
                     user = new Models.User()
                     {
@@ -385,6 +389,23 @@ namespace Videre.Core.Services
                     }
                 }
             }
+
+            //allow provider to create roles and associate them
+            foreach (var roleName in authResult.Roles)
+            {
+                var role = Account.GetRole(roleName);
+                if (role == null)
+                {
+                    role = new CoreModels.Role() { Name = roleName, Description = "Auto created from " + authResult.Provider, Issuer = authResult.Provider };
+                    role.Id = Account.SaveRole(role);
+                }
+                if (!user.RoleIds.Contains(role.Id))
+                {
+                    user.RoleIds.Add(role.Id);
+                    changes++;
+                }
+            }
+
             if (changes > 0)
                 Account.SaveUser(user); //for now we will persist any information coming back from the authentication provider...  may change mind
         }
