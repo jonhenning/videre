@@ -94,6 +94,12 @@ namespace Videre.Core.Widgets.Controllers
             return API.Execute<bool>(r =>
             {
                 CoreServices.Security.VerifyActivityAuthorized("Account", "Administration");
+
+                //claims are not sent to client.  We need to get them and apply
+                var dbUser = CoreServices.Account.GetUserById(user.Id);
+                if (dbUser != null)
+                    user.Claims = dbUser.Claims;
+
                 r.Data = !string.IsNullOrEmpty(CoreServices.Account.SaveUser(user));
             });
         }
@@ -144,7 +150,7 @@ namespace Videre.Core.Widgets.Controllers
         {
             return API.Execute<bool>(r =>
             {
-                if (user.Id != Account.CurrentIdentityName)
+                if (user.Id != Authentication.AuthenticatedUserId)
                     throw new Exception(Localization.GetLocalization(CoreModels.LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));   //sneaky!
 
                 r.Data = CoreServices.Account.SaveUserProfile(user);
