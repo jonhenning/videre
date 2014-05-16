@@ -201,6 +201,17 @@ Array.prototype.sum = function(f)
     return ret;
 };
 
+Array.prototype.max = function(f)
+{
+    var ret = 0;
+    for (var i = 0; i < this.length; i++)
+    {
+        var v = f(this[i], i);
+        ret = !isNaN(v) && v > ret ? v : ret;
+    }
+    return ret;
+};
+
 Array.prototype.toDictionary = function(f)
 {
     var dict = {};
