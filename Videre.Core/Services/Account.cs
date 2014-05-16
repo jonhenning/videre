@@ -195,9 +195,14 @@ namespace Videre.Core.Services
             return AccountService.Delete(id, userId);
         }
 
-        public static bool RoleAuthorized(List<string> roles)
+        public static bool RoleAuthorized(List<string> roleIds)
         {
-            return (roles.Count == 0 || roles.Exists(r => Services.Account.IsInRole(r)));
+            return (roleIds.Count == 0 || roleIds.Exists(r => Services.Account.IsInRole(r)));
+        }
+
+        public static bool UserNotInRole(List<string> roleIds)
+        {
+            return (roleIds.Count == 0 || !roleIds.Exists(r => Services.Account.IsInRole(r)));
         }
 
         public static Models.Role GetRoleById(string id)

@@ -19,6 +19,7 @@ namespace Videre.Core.Models
             ContentIds = new List<string>();
             //Roles = new List<string>();
             WebReferences = new List<string>();
+            ExcludeRoleIds = new List<string>();
         }
 
         public string Id
@@ -86,6 +87,8 @@ namespace Videre.Core.Models
             }
         }
 
+        public List<string> ExcludeRoleIds { get; set; }
+
         public bool? Authenticated { get; set; }
 
         public List<string> WebReferences { get; set; }
@@ -95,8 +98,8 @@ namespace Videre.Core.Models
         {
             get
             {
-                return Account.RoleAuthorized(RoleIds) &&
-                    (!Authenticated.HasValue || Authenticated == Account.IsAuthenticated);
+                return Account.RoleAuthorized(RoleIds) && Account.UserNotInRole(ExcludeRoleIds) &&
+                    (!Authenticated.HasValue || Authenticated == Authentication.IsAuthenticated);
             }
         }
 
