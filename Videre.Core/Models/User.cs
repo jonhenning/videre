@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 //using System.Web.Script.Serialization;
 //using Newtonsoft.Json;
@@ -36,6 +37,17 @@ namespace Videre.Core.Models
             {
                 _timeZone = value;
             }
+        }
+
+        public DateTime GetUserTime(DateTime date)
+        {
+            if (!string.IsNullOrEmpty(TimeZone))
+            {
+                var info = TimeZoneInfo.FindSystemTimeZoneById(TimeZone);
+                if (info != null)
+                    return date.Add(info.BaseUtcOffset);
+            }
+            return date;
         }
 
         //[ScriptIgnore, JsonIgnore]

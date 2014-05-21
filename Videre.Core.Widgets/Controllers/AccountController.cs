@@ -12,13 +12,13 @@ namespace Videre.Core.Widgets.Controllers
 {
     public class AccountController : Controller
     {
-        public JsonResult<Dictionary<string, object>> LogIn(string userName, string password, bool rememberMe, string provider)
+        public JsonResult<LoginResult> LogIn(string userName, string password, bool rememberMe, string provider)
         {
-            return API.Execute<Dictionary<string, object>>(r =>
+            return API.Execute<LoginResult>(r =>
             {
-                var user = CoreServices.Authentication.Login(userName, password, rememberMe, provider);
-                if (user != null)
-                    r.Data["user"] = user;
+                var result = CoreServices.Authentication.Login(userName, password, rememberMe, provider);
+                if (result.UserId != null)
+                    r.Data = result;
                 else
                     r.AddError("The user name or password provided is incorrect.");
             });
@@ -156,6 +156,49 @@ namespace Videre.Core.Widgets.Controllers
                 r.Data = CoreServices.Account.SaveUserProfile(user);
             });
         }
+
+        public JsonResult<bool> SendResetTicket(string userName, string url)
+        {
+            return API.Execute<bool>(r =>
+            {
+                if (Authentication.SupportsReset)
+                {
+                    var result = Authentication.IssueAuthenticationResetTicket(userName, url);
+                    if (result.Errors.Count > 0)
+                        r.AddErrors(result.Errors);
+                    r.Data = result.Success;
+                }
+            });
+        }
+
+        public JsonResult<bool> ChangePassword(string userId, string password)
+        {
+            return API.Execute<bool>(r =>
+            {
+                if (userId != Authentication.AuthenticatedUserId)
+                    throw new Exception(Localization.GetLocalization(CoreModels.LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));   //sneaky!
+
+                var user = Account.GetUserById(userId);
+                if (user != null)
+                {
+                    user.Password = password;
+                    Account.SaveUser(user);
+                    r.Data = true;
+                }
+                else
+                    throw new Exception(Localization.GetLocalization(CoreModels.LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));
+            });
+        }
+
+        public JsonResult<object> GetAntiForgeryToken()
+        {
+            return API.Execute<object>(r =>
+            {
+                r.Data = new {token = API.GetAntiForgeryToken() };
+            }, false);
+
+        }
+
 
     }
 }

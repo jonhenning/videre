@@ -172,11 +172,13 @@
     <Compile Include="Extensions\Bootstrap\BootstrapBaseControlModel.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
+    <Compile Include="Models\AuthenticationResetTicket.cs" />
     <Compile Include="Models\BundleList.cs" />
     <Compile Include="Models\AuthenticatedUser.cs" />
     <Compile Include="Models\UserAuthentication.cs" />
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />
+    <Compile Include="Providers\IAuthenticationResetProvider.cs" />
     <Compile Include="Providers\IWebReferenceBundleProvider.cs" />
     <Compile Include="Providers\IAuthenticationProvider.cs" />
     <Compile Include="Providers\DynamicContentProviderFactory.cs" />
@@ -232,6 +234,7 @@
     <Compile Include="Providers\IRouteParser.cs" />
     <Compile Include="Models\TokenParserRule.cs" />
     <Compile Include="Providers\VidereAuthenticationProvider.cs" />
+    <Compile Include="Providers\VidereAuthenticationResetProvider.cs" />
     <Compile Include="Providers\VidereRouteParser.cs" />
     <Compile Include="Services\Account.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -100,10 +100,10 @@ namespace Videre.Core.Extensions
         {
             if (Services.API.AntiForgeryTokenVerification)
             {
-                string cookieToken;
-                string formToken;
-                AntiForgery.GetTokens(null, out cookieToken, out formToken);
-                helper.RegisterDocumentReadyScript("AntiForgeryToken", string.Format("videre._csrfToken = '{0}:{1}'", cookieToken, formToken));
+                //string cookieToken;
+                //string formToken;
+                //AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                helper.RegisterDocumentReadyScript("AntiForgeryToken", string.Format("videre._csrfToken = '{0}'", Services.API.GetAntiForgeryToken()));//'{0}:{1}'", cookieToken, formToken));
             }
         }
 

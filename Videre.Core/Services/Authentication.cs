@@ -1,20 +1,26 @@
-﻿using StructureMap;
+﻿using CodeEndeavors.Extensions;
+using StructureMap;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
-using System.Text;
+using System.Security.Principal;
+using System.Web;
+using System.Web.Security;
+using Videre.Core.Models;
 using Videre.Core.Providers;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
-using CodeEndeavors.Extensions;
-using System.Web.Security;
-using System.Web;
-using System.Configuration;
-using System.Security.Principal;
 
 namespace Videre.Core.Services
 {
+
+    public class LoginResult
+    {
+        public string UserId { get; set; }
+        public bool MustChangePassword { get; set; }
+        public string RedirectUrl { get; set; }
+    }
 
     public class AuthenticationResult
     {
@@ -35,10 +41,28 @@ namespace Videre.Core.Services
         public IDictionary<string, string> ExtraData { get; set; }
     }
 
+    public class AuthenticationResetResult
+    {
+        public AuthenticationResetResult()
+        {
+            Errors = new List<string>();
+        }
+
+        public bool Success { get; set; }
+        public bool Authenticated { get; set; }
+        public List<string> Errors { get; set; }
+        public string Provider { get; set; }
+        public Models.AuthenticationResetTicket Ticket { get; set; }
+        public IDictionary<string, string> ExtraData { get; set; }
+    }
+
     public class Authentication
     {
         private const string _authenticationClaimType = "AuthenticationToken";
         private static List<IAuthenticationProvider> _authenticationProviders = new List<IAuthenticationProvider>();
+
+        private static List<IAuthenticationResetProvider> _authenticationResetProviders = new List<IAuthenticationResetProvider>();
+
 
         public static bool IsAuthenticated
         {
@@ -164,17 +188,6 @@ namespace Videre.Core.Services
             return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider).Select(p => (IStandardAuthenticationProvider)p).ToList();
         }
 
-        //public static List<IStandardAuthenticationProvider> GetActiveStandardAuthenticationProviders()
-        //{
-        //    return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && (p.Enabled).Select(p => (IStandardAuthenticationProvider)p).ToList();
-        //}
-
-        //public static IStandardAuthenticationProvider GetActivePersistanceProvider()
-        //{
-        //    return GetStandardAuthenticationProviders().Where(p => p.Name == Services.Portal.GetPortalSetting("Authentication", "AuthenticationPersistanceProvider", "")).FirstOrDefault();
-        //    //return GetAuthenticationProviders().Where(p => p is IStandardAuthenticationProvider && p.Enabled).Select(p => (IStandardAuthenticationProvider)p).FirstOrDefault();
-        //}
-
         public static IAuthenticationProvider GetAuthenticationProvider(string provider)
         {
             return GetAuthenticationProviders().Where(p => p.Name.Equals(provider, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
@@ -286,12 +299,27 @@ namespace Videre.Core.Services
 
         }
 
-        public static Models.User Login(string userName, string password, bool persistant, string provider)
+        public static LoginResult Login(string userName, string password, bool persistant, string provider)
         {
+            var ret = new LoginResult();
             var authResult = Authenticate(userName, password, provider);
             if (authResult.Success)
-                return processAuthenticationResult(authResult, persistant);
-            return null;
+            {
+                var user = processAuthenticationResult(authResult, persistant);
+                ret.UserId = user.Id;
+            }
+            else if (SupportsReset)
+            {
+                var resetResult = AuthenticationResetProvider.Authenticate(userName, password);
+                if (resetResult.Authenticated)
+                {
+                    var user = Account.GetUser(userName);
+                    issueAuthenticationTicket(user, true);
+                    ret.UserId = user.Id;
+                    ret.MustChangePassword = true;
+                }
+            }
+            return ret;
         }
 
         public static AuthenticationResult Authenticate(string userName, string password, string provider)
@@ -301,6 +329,71 @@ namespace Videre.Core.Services
                 return ((Providers.IStandardAuthenticationProvider)authProvider).Login(userName, password);
             else
                 throw new Exception("Authentication Provider not found: " + provider);
+        }
+
+        public static bool SupportsReset { get { return AuthenticationResetProvider != null; } }
+
+        public static Services.AuthenticationResetResult IssueAuthenticationResetTicket(string userName, string url)
+        {
+            var errors = new List<string>();
+            if (SupportsReset)
+            {
+                var user = Account.GetUser(userName);
+                if (user != null)
+                    return AuthenticationResetProvider.IssueResetTicket(user.Id, url);
+                else
+                    errors.Add(Localization.GetLocalization(LocalizationType.Exception, "UserNotFound.Error", "User not found.", "Core"));
+            }
+            else
+                errors.Add(Localization.GetLocalization(LocalizationType.Exception, "ResetNotEnabled.Error", "Reset not enabled.", "Core"));
+            return new AuthenticationResetResult() { Success = false, Errors = errors };
+        }
+
+        public static void RegisterAuthenticationResetProviders()
+        {
+            ObjectFactory.Configure(x =>
+                x.Scan(scan =>
+                {
+                    scan.AssembliesFromApplicationBaseDirectory();
+                    scan.AddAllTypesOf<IAuthenticationResetProvider>();
+                }));
+            _authenticationResetProviders = ObjectFactory.GetAllInstances<IAuthenticationResetProvider>().ToList();
+            foreach (var provider in _authenticationResetProviders)
+                provider.Register();
+
+            var providers = new List<string>() { "" };
+            providers.AddRange(_authenticationResetProviders.Select(b => b.Name));
+
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition()
+            {
+                GroupName = "Authentication",
+                Name = "AuthenticationResetProvider",
+                Values = providers,
+                DefaultValue = "",
+                Required = false,
+                LabelKey = "AuthenticationProvider.Text",
+                LabelText = "Authentication Reset Provider"
+            });
+
+            if (updates > 0)
+                CoreServices.Repository.SaveChanges();
+
+            if (AuthenticationResetProvider != null)
+                AuthenticationResetProvider.InitializePersistance(ConfigurationManager.AppSettings.GetSetting("AuthenticationResetConnection", ""));
+        
+        }
+
+        public static List<IAuthenticationResetProvider> GetAuthenticationResetProviders()
+        {
+            return _authenticationResetProviders;
+        }
+
+        public static IAuthenticationResetProvider AuthenticationResetProvider
+        {
+            get
+            {
+                return GetAuthenticationResetProviders().Where(p => p.Name == Services.Portal.GetPortalSetting("Authentication", "AuthenticationResetProvider", "")).FirstOrDefault();
+            }
         }
 
         //Note:  this is NOT the logic used in account association to a new authentication provider
@@ -331,10 +424,15 @@ namespace Videre.Core.Services
             if (user != null)
             {
                 applyAuthenticationResultToUser(authResult, user);
-                Authentication.IssueAuthenticationTicket(user.Id.ToString(), user.RoleIds, 30, persistant); //todo: make expire days configurable?
+                issueAuthenticationTicket(user, persistant);
             }
 
             return user;
+        }
+
+        private static void issueAuthenticationTicket(Models.User user, bool persistant)
+        {
+            Authentication.IssueAuthenticationTicket(user.Id, user.RoleIds, 30, persistant); //todo: make expire days configurable?
         }
 
         private static void applyAuthenticationResultToUser(AuthenticationResult authResult, Models.User user)

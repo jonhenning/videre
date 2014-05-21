@@ -33,6 +33,11 @@
     padding: 8px;
 }
 
+.videre-form-condensed .form-group 
+{
+    margin-bottom: 7px; 
+}
+
 .videre.ui-widget-header
 {
     padding: 4px;

@@ -43,6 +43,14 @@ namespace Videre.Core.Services
             }
         }
 
+        public static string GetAntiForgeryToken()
+        {
+            string cookieToken;
+            string formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+
         public static void VerifyAntiForgeryToken()
         {
             string cookieToken = "";

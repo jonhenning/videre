@@ -30,16 +30,20 @@
                 @if (Model.ShowHeader)
                 {<div class="panel-heading">@Model.GetText("Login.Text", "Log On")</div>}
                 <div class="panel-body">
-                    <div class="form-horizontal videre-form">
+                    <div class="form-horizontal videre-form videre-form-condensed">
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtName").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
-
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("RememberMe.Text", "Remember Me").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().CheckBox("chkRememberMe"), BootstrapUnits.GridSize.MediumDevice8)
+                        @if (CoreServices.Authentication.SupportsReset)
+                        {
+                            <a id="@Model.GetId("lnkForgotPassword")" class="pull-right">@Model.GetText("ForgotPassword.Text", "Forgot Password?")</a>
+                        }
                         @if (standardProviders.Count > 1)
                         {
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("AuthenticateAgainst.Text", "Authenticate Against").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().DropDownList("ddlAuthenticationAgainst").Required()
                                 .Options(standardProviders.Select(p => new SelectListItem() { Text = p.Name, Value = p.Name })), BootstrapUnits.GridSize.MediumDevice8)
                         }
-
+                        <div class="clearfix"></div>
                     </div>
                     <div class="videre-form-actions">
                         @foreach (var provider in providers)
@@ -59,5 +63,55 @@
             </div>
         </div>
     </div>
+
+    <div id="@Model.GetId("ResetPasswordDialog")" data-target="#@Model.GetId("ResetPasswordDialog")" class="modal fade" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("ResetPassword.Text", "Reset Password")
+                </div>
+                <div class="modal-body">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+
+                    <p>@Html.Raw(Model.GetText("PasswordResetInstructions.Text", "Enter your registered username and we will email you a temporary password."))</p>
+
+                    <div class="form-horizontal">
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtResetUserName"), BootstrapUnits.GridSize.MediumDevice8)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnSendReset").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("SendResetCode.Text", "Send Reset Code")
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="@Model.GetId("ChangePasswordDialog")" data-target="#@Model.GetId("ChangePasswordDialog")" class="modal fade" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("ChangePassword.Text", "Change Password")
+                </div>
+                <div class="modal-body">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+
+                    <p>@Html.Raw(Model.GetText("ChangePasswordInstructions.Text", "Please enter a new password."))</p>
+
+                    <div class="form-horizontal">
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtChangePassword1").MustMatch("txtChangePassword2").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ReEnterPassword.Text", "Re-enter password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtChangePassword2"), BootstrapUnits.GridSize.MediumDevice8)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnChangePassword").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
