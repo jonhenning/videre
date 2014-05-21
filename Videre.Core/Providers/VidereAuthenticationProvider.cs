@@ -1,4 +1,5 @@
 ﻿using CodeEndeavors.Extensions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -33,16 +34,22 @@ namespace Videre.Core.Providers
         //        return CoreServices.Portal.GetPortalAttribute("Authentication", Name, true);
         //    }
         //}
+        private List<string> Options
+        {
+            get
+            {
+                var options = CoreServices.Portal.GetPortalAttribute<JArray>("Authentication", Name + "-Options", new JArray()) ?? new JArray();
+                return options.Select(j => j.ToString()).ToList();
+            }
+        }
 
-        public bool AllowAssociation { get { return CoreServices.Portal.GetPortalAttribute("Authentication", Name + "-AllowAssociation", true); } }
-        public bool AllowLogin { get { return CoreServices.Portal.GetPortalAttribute("Authentication", Name + "-AllowLogin", true); } }
-        public bool AllowCreation { get { return CoreServices.Portal.GetPortalAttribute("Authentication", Name + "-AllowCreation", true); } }
+        public bool AllowAssociation { get { return Options.Contains("Allow Association"); } }
+        public bool AllowLogin { get { return Options.Contains("Allow Login"); } }
+        public bool AllowCreation { get { return Options.Contains("Allow Creation"); } }
 
         public void Register()
         {
-            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-AllowAssociation", DefaultValue = "true", LabelKey = Name + "AllowAssociation.Text", LabelText = "Allow Account Association - " + Name, DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
-            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-AllowLogin", DefaultValue = "true", LabelKey = Name + "AllowLogin.Text", LabelText = "Allow Authentication - " + Name, DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
-            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-AllowCreation", DefaultValue = "true", LabelKey = Name + "AllowCreation.Text", LabelText = "Allow Account Creation - " + Name, DataType = "boolean", InputType = "checkbox", ControlType = "checkbox" });
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-Options", DefaultValue = new List<string>() {"Allow Association","Allow Login","Allow Creation"}, LabelKey = Name + "Options.Text", LabelText = Name + " Options", Multiple = true, ControlType = "bootstrap-select", Values = new List<string>() { "Allow Association", "Allow Creation", "Allow Login" } });
 
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();
