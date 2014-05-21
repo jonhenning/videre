@@ -12,6 +12,7 @@ namespace Videre.Core.Models
         public UserProfile(Models.User user)
         {
             this.Id = user.Id;
+            this.DisplayName = user.DisplayName;
             this.Name = user.Name;
             this.Email = user.Email;
             this.Locale = user.Locale;
@@ -26,6 +27,7 @@ namespace Videre.Core.Models
 
         public string Id { get; set; }
         public string Name { get; set; }
+        public string DisplayName { get; set; }
         public string Email { get; set; }
         public string Locale { get; set; }
         public string TimeZone { get; set; }
@@ -38,6 +40,7 @@ namespace Videre.Core.Models
         {
             //todo: mapping here or in object?
             user.Name = Name;
+            user.DisplayName = DisplayName;
             user.Email = Email;
             user.Locale = Locale;
             user.TimeZone = TimeZone;
