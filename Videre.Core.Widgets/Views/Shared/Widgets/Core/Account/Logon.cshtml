@@ -33,15 +33,15 @@
                     <div class="form-horizontal videre-form videre-form-condensed">
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtName").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
                         @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Password.Text", "Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
-                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("RememberMe.Text", "Remember Me").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().CheckBox("chkRememberMe"), BootstrapUnits.GridSize.MediumDevice8)
-                        @if (CoreServices.Authentication.SupportsReset)
-                        {
-                            <a id="@Model.GetId("lnkForgotPassword")" class="pull-right">@Model.GetText("ForgotPassword.Text", "Forgot Password?")</a>
-                        }
                         @if (standardProviders.Count > 1)
                         {
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("AuthenticateAgainst.Text", "Authenticate Against").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().DropDownList("ddlAuthenticationAgainst").Required()
                                 .Options(standardProviders.Select(p => new SelectListItem() { Text = p.Name, Value = p.Name })), BootstrapUnits.GridSize.MediumDevice8)
+                        }
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("RememberMe.Text", "Remember Me").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().CheckBox("chkRememberMe"), BootstrapUnits.GridSize.MediumDevice8)
+                        @if (CoreServices.Authentication.SupportsReset)
+                        {
+                            <a id="@Model.GetId("lnkForgotPassword")" class="pull-right">@Model.GetText("ForgotPassword.Text", "Forgot Password?")</a>
                         }
                         <div class="clearfix"></div>
                     </div>
