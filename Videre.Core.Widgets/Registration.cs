@@ -35,45 +35,22 @@ namespace Videre.Core.Widgets
 
             //App init (for now... eventually may add PortalId)
             var updates = 0;
-            //var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition()
-            //{
-            //    GroupName = "Core",
-            //    Name = "TextEditor",
-            //    Values = new List<string>() { "" },
-            //    DefaultValue = "",
-            //    Required = true,
-            //    LabelKey = "TextEditor.Text",
-            //    LabelText = "Text Editor"
-            //});
 
-            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition()
-            {
-                GroupName = "Core",
-                Name = "ThemeAPIUrl",
-                DefaultValue = "http://api.bootswatch.com/3",
-                Required = true,
-                LabelKey = "ThemeAPIUrl.Text",
-                LabelText = "Theme API Url"
-            });
-
-            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition()
-            {
-                GroupName = "Core",
-                Name = "RemotePackageUrl",
-                DefaultValue = "",
-                Required = false,
-                LabelKey = "RemotePackageUrl.Text",
-                LabelText = "Remote Package Url"
-            });
-
-            CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Core", Name = "SearchIndexDir", DefaultValue = "~/App_Data/SearchIndex", Required = true, LabelKey = "SearchIndexDir.Text", LabelText = "Search Index Directory" });
-            CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Core", Name = "SearchUrl", DefaultValue = "~/search", Required = true, LabelKey = "SearchUrl.Text", LabelText = "Search Url" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Core", Name = "ThemeAPIUrl", DefaultValue = "http://api.bootswatch.com/3", Required = true, LabelKey = "ThemeAPIUrl.Text", LabelText = "Theme API Url" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Core", Name = "RemotePackageUrl", DefaultValue = "",  Required = false, LabelKey = "RemotePackageUrl.Text", LabelText = "Remote Package Url" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Core", Name = "SearchIndexDir", DefaultValue = "~/App_Data/SearchIndex", Required = true, LabelKey = "SearchIndexDir.Text", LabelText = "Search Index Directory" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Core", Name = "SearchUrl", DefaultValue = "~/search", Required = true, LabelKey = "SearchUrl.Text", LabelText = "Search Url" });
+            
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "AccountVerificationUrl", DefaultValue = "~/account/verify", Required = false, LabelKey = "AccountVerificationUrl.Text", LabelText = "Account Verification Url", TooltipKey = "AccountVerificationUrlTooltip.Text", TooltipText = "Url for page template that contains widget responsible for verifying account.  If this is not set, then Account Verification Mode is ignored." });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "CreateAccountUrl", DefaultValue = "~/account/create", Required = false, LabelKey = "AccountCreationUrl.Text", LabelText = "Account Creation Url", TooltipKey = "AccountCreationUrlTooltip.Text", TooltipText = "Url for page template that contains widget responsible for creating account.  If this is not set, then Account Creation specified on the account providers is ignored." });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "AccountVerificationMode", Values = new List<string>() { "None", "Passive", "Enforced" }, DefaultValue = "None", Required = false, LabelKey = "AccountVerificationMode.Text", LabelText = "Account Verification Mode", TooltipKey = "AccountVerificationModeTooltip.Text", TooltipText = "<b>None</b> - No verification.<br/><b>Passive</b> - During login, check to see if verified, if not redirect.  User may skip verification from there.<br/><b>Enforced</b> - User is forced to enter verification.  An authenticated user who is not verified will be forced to Verify page." });
 
             //App init
             updates += CoreServices.Update.Register(new List<CoreModels.WidgetManifest>()
             {
                 new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "LogOn", Title = "Log On", Category = "Account" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "UserProfile", Title = "User Profile", Category = "Account" }, 
+                new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "Verify", Title = "Verify Account", Category = "Account" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Localization", Title = "Localization Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Template", Title = "Template Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "WidgetManifest", Title = "Widget Manifest Admin", Category = "Admin" }, 

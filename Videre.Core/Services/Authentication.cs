@@ -19,6 +19,7 @@ namespace Videre.Core.Services
     {
         public string UserId { get; set; }
         public bool MustChangePassword { get; set; }
+        public bool MustVerify { get; set; }
         public string RedirectUrl { get; set; }
     }
 
@@ -307,6 +308,7 @@ namespace Videre.Core.Services
             {
                 var user = processAuthenticationResult(authResult, persistant);
                 ret.UserId = user.Id;
+                ret.MustVerify = Account.AccountVerificationMode == "Passive" && !Account.IsAccountVerified(user);  //Enforced will take care of it for us
             }
             else if (SupportsReset)
             {
@@ -317,6 +319,7 @@ namespace Videre.Core.Services
                     issueAuthenticationTicket(user, true);
                     ret.UserId = user.Id;
                     ret.MustChangePassword = true;
+                    ret.MustVerify = Account.AccountVerificationMode == "Passive" && !Account.IsAccountVerified(user);  //Enforced will take care of it for us
                 }
             }
             return ret;
@@ -364,16 +367,7 @@ namespace Videre.Core.Services
             var providers = new List<string>() { "" };
             providers.AddRange(_authenticationResetProviders.Select(b => b.Name));
 
-            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition()
-            {
-                GroupName = "Authentication",
-                Name = "AuthenticationResetProvider",
-                Values = providers,
-                DefaultValue = "",
-                Required = false,
-                LabelKey = "AuthenticationProvider.Text",
-                LabelText = "Authentication Reset Provider"
-            });
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "AuthenticationResetProvider", Values = providers, DefaultValue = "", Required = false, LabelKey = "AuthenticationProvider.Text", LabelText = "Authentication Reset Provider" });
 
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();

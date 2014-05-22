@@ -67,13 +67,14 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         this.bindData(this._selectedPortal);
         for(var key in this._attributeDefs)
             this.bindAttributes(key, this._attributeDefs[key]);
+
     },
 
     bindAttributes: function(groupName, defs)
     {
         var ctr = this.getControl('AttributeList-' + this._getSafeGroupName(groupName));
         ctr.html(this.getControl('AttributeListTemplate').render(defs.orderBy(function(d) { return d.Label; }), { groupName: groupName, roleDataDict: this._roleDataDict, attributes: this._selectedPortal.Attributes }));
-        ctr.find('[title]').tooltip();
+        ctr.find('[title]').tooltip({ html: true });
         videre.UI.initializeControlTypes(ctr);;
     },
 

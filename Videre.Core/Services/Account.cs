@@ -306,6 +306,69 @@ namespace Videre.Core.Services
             return !string.IsNullOrEmpty(SaveUser(user, userProfile.Id));   //at the point of calling the Account service we should have already validated user has permission to change this user id
         }
 
+        public static string AccountVerificationMode
+        {
+            get
+            {
+                return Services.Portal.GetPortalAttribute("Authentication", "AccountVerificationMode", "None");
+            }
+        }
+
+        public static string AccountVerificationUrl { get { return Services.Portal.ResolveUrl(Services.Portal.GetPortalAttribute("Authentication", "AccountVerificationUrl", "~/account/verify")); } }
+
+        public static bool IsAccountVerified(Models.User user)
+        {
+            var code = user.GetClaimValue("Account Verification Code", "Videre Account Verification", "");
+            var verifiedOn = user.GetClaimValue<string>("Account Verified On", "Videre Account Verification", null);
+            return !string.IsNullOrEmpty(code) && verifiedOn != null;
+        }
+
+        public static bool VerifyAccount(string userId, string verificationCode)
+        {
+            var user = GetUserById(userId);
+            if (user != null)
+            {
+                if (!IsAccountVerified(user))
+                {
+                    if (user.GetClaimValue("Account Verification Code", "Videre Account Verification", "") == verificationCode)
+                    {
+                        user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = "Videre Account Verification", Value = DateTime.UtcNow.ToJson() });
+                        Account.SaveUser(user);
+                        return true;
+                    }
+                }
+                else
+                    return true;    //already verified
+            }
+            return false;
+        }
+
+        public static bool IssueAccountVerificationCode(string userId)
+        {
+            var user = GetUserById(userId);
+            var claim = user.GetClaim("Account Verification Code", "Videre Account Verification");
+            if (claim == null)
+            {
+                claim = new UserClaim() { Type = "Account Verification Code", Issuer = "Videre Account Verification", Value = System.Web.Security.Membership.GeneratePassword(8, 2) };
+                user.Claims.Add(claim);
+                Account.SaveUser(user);
+            }
+            sendVerificationCode(user, claim.Value);
+            return true;
+        }
+
+        private static void sendVerificationCode(Models.User user, string code)
+        {
+            var subject = Services.Localization.GetPortalText("PortalEmailAccountVerificationSubject.Text", "Account Verification Code");
+            var body = Services.Localization.GetPortalText("PortalEmailAccountVerificationBody.Text", "<p>Please verify your account by logging into <a href=\"$Url\">your account</a> and entering the following code when asked.</p><p><b><a href=\"$Url\">$Code</a></b></p>");
+            var tokens = new Dictionary<string, object>()
+                {
+                    {"Code", code},
+                    {"Url", Portal.RequestRootUrl.PathCombine(Account.AccountVerificationUrl) + "?code=" + HttpUtility.UrlEncode(code)}
+                };
+            Services.Mail.Send(user.Email, user.Email, "AccountVerification", subject, body, tokens, true);
+        }
+
         private static void Validate(Models.UserProfile userProfile)
         {
             if (userProfile.Password1 != userProfile.Password2)

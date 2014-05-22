@@ -10,11 +10,11 @@
 @{
  
     var providers = CoreServices.Authentication.GetExternalAuthenticationProviders().Where(p => p.AllowAssociation).ToList();
-    Html.RegisterControlPresenter(Model, "videre.widgets.account.userprofile", new Dictionary<string, object>() { 
-        { "data", CoreServices.Account.GetUserProfile() },
-        { "customElements", CoreServices.Account.CustomUserElements},
-        { "authProviders", providers },
-        { "userAuthProviders", CoreServices.Authentication.GetUserAuthenticationProviders(CoreServices.Account.CurrentUser) }
+    Html.RegisterControlPresenter("videre.widgets.account.userprofile", Model, new { 
+        data = CoreServices.Account.GetUserProfile(),
+        customElements = CoreServices.Account.CustomUserElements,
+        authProviders = providers,
+        userAuthProviders = CoreServices.Authentication.GetUserAuthenticationProviders(CoreServices.Account.CurrentUser)
     });
 }
 

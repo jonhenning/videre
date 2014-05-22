@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Videre.Core.Services;
 using System.Web.Security;
+using Videre.Core.Providers;
+using StructureMap;
 //using CodeEndeavors.Extensions;
 //using Videre.Core.Extensions;
 //using System.Diagnostics;
@@ -23,8 +25,13 @@ namespace Videre.Web.Controllers
                 return View("Installer", new Core.Models.View() { ClientId = "installer" });
 
             var template = Portal.GetPageTemplateFromUrl(name);
-            if (!template.IsAuthorized)
-                FormsAuthentication.RedirectToLoginPage();  //todo: not authorized may mean we are already logged in.  Fix!
+
+            foreach (var handler in RequestHandlers.OrderBy(h => h.Priority))
+                handler.Execute(name, template);
+
+            //moved to request handler
+            //if (!template.IsAuthorized)
+            //    FormsAuthentication.RedirectToLoginPage();  //todo: not authorized may mean we are already logged in.  Fix!
 
             this.ViewBag.Template = template;   //todo: do we want/need this?
             this.ViewBag.Title = Portal.CurrentPortal != null ? Portal.CurrentPortal.Title : "Videre";
@@ -34,6 +41,26 @@ namespace Videre.Web.Controllers
 
 
             return View();
+        }
+
+        List<IRequestHandler> _requestHandlers = null;
+        private List<IRequestHandler> RequestHandlers
+        {
+            get
+            {
+                if (_requestHandlers == null)
+                {
+                    ObjectFactory.Configure(x =>
+                        x.Scan(scan =>
+                        {
+                            scan.AssembliesFromApplicationBaseDirectory();
+                            scan.AddAllTypesOf<IRequestHandler>();
+                        }));
+                    _requestHandlers = ObjectFactory.GetAllInstances<IRequestHandler>().ToList();
+                }
+                return _requestHandlers;
+
+            }
         }
 
     }

@@ -7,17 +7,9 @@
 @model Widget
 
 @{
-    var props = new Dictionary<String, Object>();
-    if (!string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]))
-    {
-        props["returnUrl"] = Request.QueryString["ReturnUrl"];
-    }
-    else
-    {
-        props["returnUrl"] = VirtualPathUtility.ToAbsolute("~/");
-    }
+    var returnUrl = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) ? Request.QueryString["ReturnUrl"] : CoreServices.Portal.ResolveUrl("~/");
+    Html.RegisterControlPresenter("videre.widgets.account.logon", Model, new { returnUrl = returnUrl, verifyUrl = CoreServices.Account.AccountVerificationUrl });
 
-    Html.RegisterControlPresenter(Model, "videre.widgets.account.logon", props);
     var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.AllowLogin).ToList();
     var standardProviders = CoreServices.Authentication.GetStandardAuthenticationProviders().Where(p => p.AllowLogin).ToList(); 
 }
@@ -48,7 +40,7 @@
                     <div class="videre-form-actions">
                         @foreach (var provider in providers)
                         {
-                            <a class="btn btn-primary" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/OAuthLogin?provider={0}&returnUrl={1}", provider.Name, props["returnUrl"]))">@provider.LoginButtonText</a>
+                            <a class="btn btn-primary" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/OAuthLogin?provider={0}&returnUrl={1}", provider.Name, returnUrl))">@provider.LoginButtonText</a>
                         }
                         @if (standardProviders.Count == 1)
                         {

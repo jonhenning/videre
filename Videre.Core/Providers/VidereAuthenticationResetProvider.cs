@@ -113,7 +113,7 @@ namespace Videre.Core.Providers
                     {"Password", password},
                     {"ResetUrl", ticket.Url}
                 };
-            CoreServices.Mail.Send(user.Email, user.Email, "PasswordReset", subject, body, tokens);
+            CoreServices.Mail.Send(user.Email, user.Email, "PasswordReset", subject, body, tokens, true);
         }
 
         private string GeneratePasswordHash(string password)

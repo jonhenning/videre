@@ -171,6 +171,25 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
+        public JsonResult<bool> SendVerificationCode()
+        {
+            return API.Execute<bool>(r =>
+            {
+                r.Data = Account.IssueAccountVerificationCode(Authentication.AuthenticatedUserId);
+                r.AddMessage(Localization.GetPortalText("AccountVerificationCodeSent.Text", "Account Verification Code sent to: " + Account.CurrentUser.Email));
+            });
+        }
+
+        public JsonResult<bool> VerifyAccount(string code)
+        {
+            return API.Execute<bool>(r =>
+            {
+                r.Data = Account.VerifyAccount(Authentication.AuthenticatedUserId, code);
+                if (r.Data == false)
+                    r.AddMessage(Localization.GetPortalText("AccountVerificationFailed.Text", "Account Verification Failed"));
+            });
+        }
+
         public JsonResult<bool> ChangePassword(string userId, string password)
         {
             return API.Execute<bool>(r =>

@@ -178,6 +178,9 @@
     <Compile Include="Models\UserAuthentication.cs" />
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />
+    <Compile Include="Providers\VidereAccountVerificationHandler.cs" />
+    <Compile Include="Providers\VidereAuthenticationRequestHandler.cs" />
+    <Compile Include="Providers\IRequestHandler.cs" />
     <Compile Include="Providers\IAuthenticationResetProvider.cs" />
     <Compile Include="Providers\IWebReferenceBundleProvider.cs" />
     <Compile Include="Providers\IAuthenticationProvider.cs" />

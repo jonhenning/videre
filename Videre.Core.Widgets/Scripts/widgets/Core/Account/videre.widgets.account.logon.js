@@ -4,12 +4,15 @@ videre.widgets.account.logon = videre.widgets.base.extend(
 {
     get_returnUrl: function() { return this._returnUrl; },
     set_returnUrl: function(v) { this._returnUrl = v; },
+    get_verifyUrl: function() { return this._verifyUrl; },
+    set_verifyUrl: function(v) { this._verifyUrl = v; },
 
     //constructor
     init: function()
     {
         this._base();  //call base method
         this._returnUrl = '';
+        this._verifyUrl = '';
         this._resetDialog = null;
         this._changePasswordDialog = null;
         this._loginResult = null;
@@ -70,7 +73,11 @@ videre.widgets.account.logon = videre.widgets.base.extend(
 
     _handleLoginSuccess: function()
     {
-        location.href = this._loginResult.RedirectUrl != null ? this._loginResult.RedirectUrl : this._returnUrl;
+        var url = location.href = this._loginResult.RedirectUrl != null ? this._loginResult.RedirectUrl : this._returnUrl;
+        if (this._loginResult.MustVerify)
+            location.href = this._verifyUrl + '?ReturnUrl=' + url;
+        else 
+            location.href = url;
     },
 
     _onWidgetKeyDown: function(e)

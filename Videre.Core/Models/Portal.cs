@@ -34,8 +34,14 @@ namespace Videre.Core.Models
         {
             object value;
             if (Attributes.TryGetValue(GetAttributeKey(groupName, name), out value))
-                return value.ToType<T>();
-
+            {
+                if (typeof(T) == typeof(string))
+                    return value.ToType<T>();
+                else if (value != null && value.ToString() == "")    //special case for empty value... use default of whatever datatype is.
+                    return default(T);
+                else
+                    return value.ToType<T>();
+            }
             if (Services.Portal.AttributeDefinitions.ContainsKey(groupName))
             {
                 var attribute = Services.Portal.AttributeDefinitions[groupName].Where(a => a.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
