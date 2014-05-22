@@ -12,34 +12,42 @@
     var code = !string.IsNullOrEmpty(Request.QueryString["code"]) ? Request.QueryString["code"] : "";
     
     Html.RegisterControlPresenter("videre.widgets.account.verify", Model, new { returnUrl = returnUrl });
+
+if (CoreServices.Authentication.IsAuthenticated)
+{
     var user = CoreServices.Account.CurrentUser;
     if (!CoreServices.Account.IsAccountVerified(user))
     {
-<div id="@Model.GetId("Widget")">
-    @{Html.RenderPartial("WidgetHeader", Model);}
+    <div id="@Model.GetId("Widget")">
+        @{Html.RenderPartial("WidgetHeader", Model);}
     
-    <p>@Html.Raw(Model.GetText("Instructions.Text", "Verification on your account is required.  Please fill in the code you were sent in an email.  If you have not received a code, use the Resend Code button."))</p>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default videre-has-form-actions">
-                @if (Model.ShowHeader)
-                {<div class="panel-heading">@Model.GetText("VerifyAccount.Text", "Verify Account")</div>}
-                <div class="panel-body">
-                    <div class="form-horizontal videre-form videre-form-condensed">
-                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("VerificationCode.Text", "Verification Code").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtCode").Required().Val(code).DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
-                    </div>
-                    <div class="videre-form-actions">
-                        @Html.Bootstrap().Button("btnResendCode").Text("ResendCode.Text", "Resend Code", true)
-                        @Html.Bootstrap().Button("btnVerify").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Verify.Text", "Verify", true)
+        <p>@Html.Raw(Model.GetText("Instructions.Text", "Verification on your account is required.  Please fill in the code you were sent in an email.  If you have not received a code, use the Resend Code button."))</p>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-default videre-has-form-actions">
+                    @if (Model.ShowHeader)
+                    {<div class="panel-heading">@Model.GetText("VerifyAccount.Text", "Verify Account")</div>}
+                    <div class="panel-body">
+                        <div class="form-horizontal videre-form videre-form-condensed">
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("VerificationCode.Text", "Verification Code").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtCode").Required().Val(code).DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+                        </div>
+                        <div class="videre-form-actions">
+                            @Html.Bootstrap().Button("btnResendCode").Text("ResendCode.Text", "Resend Code", true)
+                            @Html.Bootstrap().Button("btnVerify").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Verify.Text", "Verify", true)
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    }
+    else 
+    {
+        <p>@Html.Raw(Model.GetText("AlreadyVerified.Text", "Your account is already verified."))</p>
+    }
 }
 else 
 {
-    <p>@Html.Raw(Model.GetText("AlreadyVerified.Text", "Your account is already verified."))</p>
+    <p>@Html.Raw(Model.GetText("NotLoggedInVerify.Text", "You must be logged in to verify your account."))</p>
 }
 }

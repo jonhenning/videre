@@ -176,7 +176,7 @@ namespace Videre.Core.Widgets.Controllers
             return API.Execute<bool>(r =>
             {
                 r.Data = Account.IssueAccountVerificationCode(Authentication.AuthenticatedUserId);
-                r.AddMessage(Localization.GetPortalText("AccountVerificationCodeSent.Text", "Account Verification Code sent to: " + Account.CurrentUser.Email));
+                r.AddMessage(Localization.GetPortalText("AccountVerificationCodeSent.Text", "Account Verification Code sent to: ") + Account.CurrentUser.Email);
             });
         }
 

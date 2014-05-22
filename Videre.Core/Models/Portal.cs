@@ -22,6 +22,7 @@ namespace Videre.Core.Models
         public string Title { get; set; }
         public string LogoUrl { get; set; }
         public string ThemeName { get; set; }
+        public string AdministratorEmail { get; set; }
         public bool Default { get; set; }
         public List<string> Aliases {get;set;}
         //public string ThemeCss { get; set; }

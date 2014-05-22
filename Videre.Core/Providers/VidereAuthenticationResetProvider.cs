@@ -113,7 +113,10 @@ namespace Videre.Core.Providers
                     {"Password", password},
                     {"ResetUrl", ticket.Url}
                 };
-            CoreServices.Mail.Send(user.Email, user.Email, "PasswordReset", subject, body, tokens, true);
+            if (!string.IsNullOrEmpty(Services.Portal.CurrentPortal.AdministratorEmail))
+                CoreServices.Mail.Send(Services.Portal.CurrentPortal.AdministratorEmail, user.Email, "PasswordReset", subject, body, tokens, true);
+            else
+                throw new Exception(Services.Localization.GetExceptionText("AdministratorEmailNotSet.Text", "Administrator Email not set.  Please contact the portal administrator."));
         }
 
         private string GeneratePasswordHash(string password)

@@ -60,6 +60,7 @@
                         <div class="form-horizontal col-md-6">
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice8)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Title.Text", "Title").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Title"), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("AdministratorEmail.Text", "Administrator Email").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Email().DataColumn("AdministratorEmail"), BootstrapUnits.GridSize.MediumDevice8)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("LogoUrl.Text", "Logo Url").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().FileBrowser().DataColumn("LogoUrl"), BootstrapUnits.GridSize.MediumDevice8)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Aliases.Text", "Aliases").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TagsInput().DataColumn("Aliases"), BootstrapUnits.GridSize.MediumDevice8)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Default.Text", "Default").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().CheckBox().DataColumn("Default"), BootstrapUnits.GridSize.MediumDevice2)

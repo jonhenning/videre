@@ -164,8 +164,18 @@ namespace Videre.Core.Services
             var password = user.Password;
             user.Password = null;
 
+            var emailChanged = false;
+            if (!string.IsNullOrEmpty(user.Id))
+            {
+                var existingUser = AccountService.GetById(user.Id);
+                emailChanged = existingUser != null && existingUser.Email != user.Email;
+            }
+
             var userId = AccountService.Save(user, editUserId);
             user.Id = userId;
+
+            if (emailChanged && AccountVerificationMode != "None")
+                RemoveAccountVerification(user.Id);
 
             //if we need to update password, then use the persistance provider
             if (!string.IsNullOrEmpty(password))
@@ -343,6 +353,23 @@ namespace Videre.Core.Services
             return false;
         }
 
+        public static bool RemoveAccountVerification(string userId)
+        {
+            var user = GetUserById(userId);
+            if (user != null)
+            {
+                var claims = user.Claims.Where(c => c.Issuer == "Videre Account Verification").ToList();
+                foreach (var claim in claims)
+                    user.Claims.Remove(claim);
+                if (claims.Count > 0)
+                {
+                    Account.SaveUser(user);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static bool IssueAccountVerificationCode(string userId)
         {
             var user = GetUserById(userId);
@@ -366,7 +393,10 @@ namespace Videre.Core.Services
                     {"Code", code},
                     {"Url", Portal.RequestRootUrl.PathCombine(Account.AccountVerificationUrl) + "?code=" + HttpUtility.UrlEncode(code)}
                 };
-            Services.Mail.Send(user.Email, user.Email, "AccountVerification", subject, body, tokens, true);
+            if (!string.IsNullOrEmpty(Services.Portal.CurrentPortal.AdministratorEmail))
+                Services.Mail.Send(Services.Portal.CurrentPortal.AdministratorEmail, user.Email, "AccountVerification", subject, body, tokens, true);
+            else
+                throw new Exception(Services.Localization.GetExceptionText("AdministratorEmailNotSet.Text", "Administrator Email not set.  Please contact the portal administrator."));
         }
 
         private static void Validate(Models.UserProfile userProfile)
