@@ -48,7 +48,7 @@
             <Output TaskParameter="Include" ItemName="CoreFiles" />
         </CreateItem>
         <Zip Files="@(CoreFiles);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" />
-        <Copy Sourcefiles="@(CoreFiles)" DestinationFolder="$(CommonLibDir)" />
+        <Copy Sourcefiles="$(TargetDir)Videre.Core.dll;" DestinationFolder="$(CommonLibDir)" />
     </Target>
 
     <Target Name="Deploy">

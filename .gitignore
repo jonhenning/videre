@@ -2,6 +2,7 @@
 bin
 obj
 lib/*.zip
+lib/Videre.Core.dll
 redist
 app_data
 *.user
