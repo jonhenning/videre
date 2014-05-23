@@ -25,6 +25,7 @@ namespace Videre.Core.Providers
 
     public interface IAuthenticationPersistance
     {
+        string Name { get; }
         AuthenticationResult SaveAuthentication(string userId, string userName, string password);
         void InitializePersistance(string connection);
     }

@@ -1,5 +1,6 @@
 ﻿using CodeEndeavors.Extensions;
 using System;
+using System.Web;
 using System.Web.Security;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
@@ -18,7 +19,8 @@ namespace Videre.Core.Providers
         public void Execute(string url, Models.PageTemplate template)
         {
             if (!template.IsAuthorized)
-                FormsAuthentication.RedirectToLoginPage(); //todo: use web.config for this, or portal setting?
+                HttpContext.Current.Response.Redirect(FormsAuthentication.LoginUrl);
+                //FormsAuthentication.RedirectToLoginPage(); //todo: use web.config for this, or portal setting?
         }
 
     }

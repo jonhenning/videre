@@ -5,6 +5,10 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
 {
     get_data: function() { return this._data; },
     set_data: function(v) { this._data = v; },
+    get_newUser: function() { return this._newUser; },
+    set_newUser: function(v) { this._newUser = v; },
+    get_loginUrl: function() { return this._loginUrl; },
+    set_loginUrl: function(v) { this._loginUrl = v; },
     get_customElements: function() { return this._data; },
     set_customElements: function(v) { this._customElements = v; },
     get_authProviders: function() { return this._authProviders; },
@@ -17,10 +21,12 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     {
         this._base();  //call base method
         this._data = null;
+        this._newUser = false;
         this._customElements = null;
         this._authProviders = [];
         this._userAuthProviders = [];
         this._hasCustomAttributes = false;
+        this._loginUrl = '';
 
         this._externalLoginDialog = null;
 
@@ -36,8 +42,8 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     {
         this._base(); //call base
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
-        this.getControl('AssociatedAuthCtr').find('[data-authprovider]').click(videre.createDelegate(this, this._onUnassocateProviderClicked));
-        this.getControl('UnassociatedAuthCtr').find('[data-authprovidertype="external"]').click(videre.createDelegate(this, this._onAssocateProviderClicked));
+        this.getControl('AssociatedAuthCtr').toggle(!this._newUser).find('[data-authprovider]').click(videre.createDelegate(this, this._onUnassocateProviderClicked));
+        this.getControl('UnassociatedAuthCtr').toggle(!this._newUser).find('[data-authprovidertype="external"]').click(videre.createDelegate(this, this._onAssocateProviderClicked));
         this._hasCustomAttributes = this.getControl('CustomElementsCtr').length > 0;
 
         this._externalLoginDialog = this.getControl('ExternalLoginDialog').modal('hide');
@@ -61,16 +67,19 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
             this.bindData(this._data.Attributes, this.getControl('CustomElementsCtr'));
         }
 
-        var externalAuthProviderNames = this._authProviders.select(function(d) { return d.Name.toLowerCase(); });
-        var userAuthProviderNames = this._userAuthProviders.select(function(d) { return d.toLowerCase(); });
-        this.getControl('UnassociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return userAuthProviderNames.contains(d) == false }).length > 0).find('[data-authprovider]').each(function(idx, item)
+        if (!this._newUser)
         {
-            $(item).toggle(!userAuthProviderNames.contains($(item).data('authprovider').toLowerCase()));
-        });
-        this.getControl('AssociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return userAuthProviderNames.contains(d) == false }).length != externalAuthProviderNames.length).find('[data-authprovider]').each(function(idx, item)
-        {
-            $(item).toggle(userAuthProviderNames.contains($(item).data('authprovider').toLowerCase())); 
-        });
+            var externalAuthProviderNames = this._authProviders.select(function(d) { return d.Name.toLowerCase(); });
+            var userAuthProviderNames = this._userAuthProviders.select(function(d) { return d.toLowerCase(); });
+            this.getControl('UnassociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return userAuthProviderNames.contains(d) == false }).length > 0).find('[data-authprovider]').each(function(idx, item)
+            {
+                $(item).toggle(!userAuthProviderNames.contains($(item).data('authprovider').toLowerCase()));
+            });
+            this.getControl('AssociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return userAuthProviderNames.contains(d) == false }).length != externalAuthProviderNames.length).find('[data-authprovider]').each(function(idx, item)
+            {
+                $(item).toggle(userAuthProviderNames.contains($(item).data('authprovider').toLowerCase()));
+            });
+        }
     },
 
     save: function()
@@ -84,7 +93,10 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
                     user.Attributes = {};
                 this.persistData(user.Attributes, false, this.getControl('CustomElementsCtr'));
             }
-            this.ajax('~/core/Account/SaveUserProfile', { user: user }, this._delegates.onSaveReturn);
+            if (this._newUser)
+                this.ajax('~/core/Account/CreateAccount', { user: user }, this._delegates.onSaveReturn);
+            else
+                this.ajax('~/core/Account/SaveUserProfile', { user: user }, this._delegates.onSaveReturn);
         }
     },
 
@@ -165,7 +177,10 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     {
         if (!result.HasError && result.Data)
         {
-            this.refresh();
+            if (this._newUser)
+                location.href = this._loginUrl;
+            else
+                this.refresh();
         }
         this.addMsgs(result.Messages);
     },

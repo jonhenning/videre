@@ -316,6 +316,31 @@ namespace Videre.Core.Services
             return !string.IsNullOrEmpty(SaveUser(user, userProfile.Id));   //at the point of calling the Account service we should have already validated user has permission to change this user id
         }
 
+        public static bool CreateAccount(Models.UserProfile userProfile)
+        {
+            Validate(userProfile);
+
+            var user = new User();
+            userProfile.ApplyProfileToUser(user);
+            var userId = SaveUser(user, userProfile.Id);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                if (AccountVerificationMode != "None")
+                    IssueAccountVerificationCode(userId);
+                return true;
+            }
+            return false;
+            
+            //todo:  auto login???
+            //if (!string.IsNullOrEmpty(userId))
+            //{
+                //var loginResult = Authentication.Login(userProfile.Name, userProfile.Password1, false, Authentication.PersistanceProvider.Name);
+                //return loginResult.
+                
+            //}
+            //return false;
+        }
+
         public static string AccountVerificationMode
         {
             get

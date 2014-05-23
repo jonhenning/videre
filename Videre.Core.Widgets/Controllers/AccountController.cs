@@ -157,6 +157,14 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
+        public JsonResult<bool> CreateAccount(CoreModels.UserProfile user)
+        {
+            return API.Execute<bool>(r =>
+            {
+                r.Data = CoreServices.Account.CreateAccount(user);
+            });
+        }
+
         public JsonResult<bool> SendResetTicket(string userName, string url)
         {
             return API.Execute<bool>(r =>

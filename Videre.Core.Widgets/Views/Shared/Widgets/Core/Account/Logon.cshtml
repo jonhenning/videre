@@ -11,7 +11,8 @@
     Html.RegisterControlPresenter("videre.widgets.account.logon", Model, new { returnUrl = returnUrl, verifyUrl = CoreServices.Account.AccountVerificationUrl });
 
     var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.AllowLogin).ToList();
-    var standardProviders = CoreServices.Authentication.GetStandardAuthenticationProviders().Where(p => p.AllowLogin).ToList(); 
+    var standardProviders = CoreServices.Authentication.GetStandardAuthenticationProviders().Where(p => p.AllowLogin).ToList();
+    var createAccountUrl = CoreServices.Portal.GetPortalAttribute("Authentication", "CreateAccountUrl", "");
 }
 
 <div id="@Model.GetId("Widget")">
@@ -38,6 +39,10 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="videre-form-actions">
+                        @if (CoreServices.Authentication.SupportsPersistantCreate)
+                        {
+                            <a class="btn" href="@CoreServices.Portal.ResolveUrl(createAccountUrl)">@Model.GetText("CreateAccount.Text", "Create Account")</a>
+                        }
                         @foreach (var provider in providers)
                         {
                             <a class="btn btn-primary" href="@CoreServices.Portal.ResolveUrl(string.Format("~/Core/Account/OAuthLogin?provider={0}&returnUrl={1}", provider.Name, returnUrl))">@provider.LoginButtonText</a>

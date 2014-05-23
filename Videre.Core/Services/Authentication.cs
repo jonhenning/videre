@@ -64,6 +64,7 @@ namespace Videre.Core.Services
 
         private static List<IAuthenticationResetProvider> _authenticationResetProviders = new List<IAuthenticationResetProvider>();
 
+        public static string LoginUrl { get { return FormsAuthentication.LoginUrl; } }
 
         public static bool IsAuthenticated
         {
@@ -152,7 +153,7 @@ namespace Videre.Core.Services
             var providerName = ConfigurationManager.AppSettings.GetSetting<string>("AuthenticationPersistanceProvider", null);
             if (providerName == null)
                 providerName = "Videre.Core.Providers.VidereAuthenticationProvider, Videre.Core";
-            
+
             if (providerName != "")
                 _authenticationPersistanceProvider = providerName.GetInstance<Providers.IAuthenticationPersistance>();
 
@@ -334,6 +335,15 @@ namespace Videre.Core.Services
                 throw new Exception("Authentication Provider not found: " + provider);
         }
 
+        public static bool SupportsPersistantCreate
+        {
+            get
+            {
+                //todo:  perform check on Persistance Provider as IAuthenticationProvider to see if AllowCreation is turned on?
+                return CoreServices.Authentication.PersistanceProvider != null && !string.IsNullOrEmpty(CoreServices.Portal.GetPortalAttribute("Authentication", "CreateAccountUrl", ""));
+            }
+        }
+
         public static bool SupportsReset { get { return AuthenticationResetProvider != null; } }
 
         public static Services.AuthenticationResetResult IssueAuthenticationResetTicket(string userName, string url)
@@ -374,7 +384,7 @@ namespace Videre.Core.Services
 
             if (AuthenticationResetProvider != null)
                 AuthenticationResetProvider.InitializePersistance(ConfigurationManager.AppSettings.GetSetting("AuthenticationResetConnection", ""));
-        
+
         }
 
         public static List<IAuthenticationResetProvider> GetAuthenticationResetProviders()
