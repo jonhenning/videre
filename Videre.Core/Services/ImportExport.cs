@@ -44,6 +44,8 @@ namespace Videre.Core.Services
                 export.Portal.Default = portal.Default;
 
                 //if export does not contain these values, revert back to originals
+                if (export.Portal.AdministratorEmail == null)
+                    export.Portal.AdministratorEmail = portal.AdministratorEmail;
                 if (export.Portal.ThemeName == null)
                     export.Portal.ThemeName = portal.ThemeName;
                 if (export.Portal.LogoUrl == null)

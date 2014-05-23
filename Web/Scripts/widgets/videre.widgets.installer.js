@@ -30,7 +30,8 @@ videre.widgets.installer = videre.widgets.base.extend(
             var user = this.persistData({}, true, this.getControl('AdminUser'));
             var portal = {
                 Name: 'Default',
-                Default: true
+                Default: true,
+                AdministratorEmail: user.Email
             };
             var packages = [];
             this.getControl('Packages').find(':checked').each(function () { packages.push($(this).val()) });

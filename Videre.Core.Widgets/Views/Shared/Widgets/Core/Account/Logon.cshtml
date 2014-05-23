@@ -41,7 +41,7 @@
                     <div class="videre-form-actions">
                         @if (CoreServices.Authentication.SupportsPersistantCreate)
                         {
-                            <a class="btn" href="@CoreServices.Portal.ResolveUrl(createAccountUrl)">@Model.GetText("CreateAccount.Text", "Create Account")</a>
+                            <a class="btn btn-default" href="@CoreServices.Portal.ResolveUrl(createAccountUrl)">@Model.GetText("CreateAccount.Text", "Create Account")</a>
                         }
                         @foreach (var provider in providers)
                         {
