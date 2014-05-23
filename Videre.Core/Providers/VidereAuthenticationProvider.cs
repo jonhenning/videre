@@ -12,7 +12,7 @@ using CoreServices = Videre.Core.Services;
 
 namespace Videre.Core.Providers
 {
-    public class VidereAuthenticationProvider : IStandardAuthenticationProvider, IAuthenticationPersistance
+    public class VidereAuthenticationProvider : IStandardAuthenticationProvider, IAuthenticationPersistence
     {
         public string Name
         {
@@ -55,7 +55,7 @@ namespace Videre.Core.Providers
                 CoreServices.Repository.SaveChanges();
         }
 
-        public void InitializePersistance(string connection)
+        public void InitializePersistence(string connection)
         {
             var updates = migrateToSeparateDataStore();
             if (updates > 0)
@@ -97,8 +97,11 @@ namespace Videre.Core.Providers
             //var result = CoreServices.Repository.Current.GetResourceById<Models.UserAuthentication>(id);
             var userAuth = CoreServices.Repository.Current.GetResourceData<Models.UserAuthentication>("UserAuthentication", a => a.Data.UserId == userId, new Models.UserAuthentication() { UserId = userId });
             userAuth.Name = userName;
-            userAuth.PasswordSalt = GenerateSalt();
-            userAuth.PasswordHash = GeneratePasswordHash(password, userAuth.PasswordSalt);
+            if (!string.IsNullOrEmpty(password))    //may just be changing username
+            {
+                userAuth.PasswordSalt = GenerateSalt();
+                userAuth.PasswordHash = GeneratePasswordHash(password, userAuth.PasswordSalt);
+            }
             CoreServices.Repository.Current.StoreResource("UserAuthentication", null, userAuth, userId);
 
             return new CoreServices.AuthenticationResult()

@@ -155,14 +155,14 @@ namespace Videre.Core.Services
                 providerName = "Videre.Core.Providers.VidereAuthenticationProvider, Videre.Core";
 
             if (providerName != "")
-                _authenticationPersistanceProvider = providerName.GetInstance<Providers.IAuthenticationPersistance>();
+                _authenticationPersistanceProvider = providerName.GetInstance<Providers.IAuthenticationPersistence>();
 
             if (_authenticationPersistanceProvider != null)
-                _authenticationPersistanceProvider.InitializePersistance(ConfigurationManager.AppSettings.GetSetting("AuthenticationPersistanceConnection", ""));
+                _authenticationPersistanceProvider.InitializePersistence(ConfigurationManager.AppSettings.GetSetting("AuthenticationPersistanceConnection", ""));
         }
 
-        private static Providers.IAuthenticationPersistance _authenticationPersistanceProvider;
-        public static Providers.IAuthenticationPersistance PersistanceProvider
+        private static Providers.IAuthenticationPersistence _authenticationPersistanceProvider;
+        public static Providers.IAuthenticationPersistence PersistenceProvider
         {
             get
             {
@@ -177,7 +177,7 @@ namespace Videre.Core.Services
 
         public static List<IAuthenticationProvider> GetExternalAuthenticationProviders()
         {
-            return GetAuthenticationProviders().Where(p => p is IAuthenticationPersistance == false).Select(p => (IAuthenticationProvider)p).ToList();
+            return GetAuthenticationProviders().Where(p => p is IAuthenticationPersistence == false).Select(p => (IAuthenticationProvider)p).ToList();
         }
 
         public static List<IOAuthAuthenticationProvider> GetOAuthAuthenticationProviders()
@@ -340,7 +340,7 @@ namespace Videre.Core.Services
             get
             {
                 //todo:  perform check on Persistance Provider as IAuthenticationProvider to see if AllowCreation is turned on?
-                return CoreServices.Authentication.PersistanceProvider != null && !string.IsNullOrEmpty(CoreServices.Portal.GetPortalAttribute("Authentication", "CreateAccountUrl", ""));
+                return CoreServices.Authentication.PersistenceProvider != null && !string.IsNullOrEmpty(CoreServices.Portal.GetPortalAttribute("Authentication", "CreateAccountUrl", ""));
             }
         }
 

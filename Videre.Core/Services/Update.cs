@@ -321,7 +321,7 @@ namespace Videre.Core.Services
 
 
                 var newAdminUser = new Core.Models.User() { PortalId = portalId, Name = adminUser.Name, Email = adminUser.Email, Password = adminUser.Password, RoleIds = new List<string>() { Core.Services.Update.GetAdminRoleId(portalId) } };
-                if (Authentication.PersistanceProvider == null) //user must exist in authentication and we need to add the admin role to it.
+                if (Authentication.PersistenceProvider == null) //user must exist in authentication and we need to add the admin role to it.
                 {
                     var userAuthenticated = false;
                     //todo:  try each one?   seems a bit much, but user is not able to configure them yet...

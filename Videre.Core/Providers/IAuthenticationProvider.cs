@@ -23,11 +23,11 @@ namespace Videre.Core.Providers
         AuthenticationResult Login(string userName, string password);
     }
 
-    public interface IAuthenticationPersistance
+    public interface IAuthenticationPersistence
     {
         string Name { get; }
         AuthenticationResult SaveAuthentication(string userId, string userName, string password);
-        void InitializePersistance(string connection);
+        void InitializePersistence(string connection);
     }
 
     public interface IOAuthAuthenticationProvider : IAuthenticationProvider

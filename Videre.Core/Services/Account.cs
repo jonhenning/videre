@@ -165,10 +165,15 @@ namespace Videre.Core.Services
             user.Password = null;
 
             var emailChanged = false;
+            var userNameChanged = false;
             if (!string.IsNullOrEmpty(user.Id))
             {
                 var existingUser = AccountService.GetById(user.Id);
-                emailChanged = existingUser != null && existingUser.Email != user.Email;
+                if (existingUser != null )
+                {
+                    emailChanged = existingUser.Email != user.Email;
+                    userNameChanged = existingUser.Name != user.Name;
+                }
             }
 
             var userId = AccountService.Save(user, editUserId);
@@ -177,12 +182,12 @@ namespace Videre.Core.Services
             if (emailChanged && AccountVerificationMode != "None")
                 RemoveAccountVerification(user.Id);
 
-            //if we need to update password, then use the persistance provider
-            if (!string.IsNullOrEmpty(password))
+            //if we need to update password or username, then use the persistance provider
+            if (!string.IsNullOrEmpty(password) || userNameChanged)
             {
-                if (Authentication.PersistanceProvider != null)
+                if (Authentication.PersistenceProvider != null)
                 {
-                    var persistanceResult = Authentication.PersistanceProvider.SaveAuthentication(userId, user.Name, password);
+                    var persistanceResult = Authentication.PersistenceProvider.SaveAuthentication(userId, user.Name, password);
                     if (!persistanceResult.Success)
                         throw new Exception(persistanceResult.Errors.ToJson());
                     Authentication.AssociateAuthenticationToken(user, persistanceResult.Provider, persistanceResult.ProviderUserId);
