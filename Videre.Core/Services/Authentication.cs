@@ -150,23 +150,23 @@ namespace Videre.Core.Services
                 provider.Register();
 
             //allow for this to not be set...  (i.e. set to empty string) - TODO:  should be cleaner way to accomplish this!
-            var providerName = ConfigurationManager.AppSettings.GetSetting<string>("AuthenticationPersistanceProvider", null);
+            var providerName = ConfigurationManager.AppSettings.GetSetting<string>("AuthenticationPersistenceProvider", null);
             if (providerName == null)
                 providerName = "Videre.Core.Providers.VidereAuthenticationProvider, Videre.Core";
 
             if (providerName != "")
-                _authenticationPersistanceProvider = providerName.GetInstance<Providers.IAuthenticationPersistence>();
+                _authenticationPersistenceProvider = providerName.GetInstance<Providers.IAuthenticationPersistence>();
 
-            if (_authenticationPersistanceProvider != null)
-                _authenticationPersistanceProvider.InitializePersistence(ConfigurationManager.AppSettings.GetSetting("AuthenticationPersistanceConnection", ""));
+            if (_authenticationPersistenceProvider != null)
+                _authenticationPersistenceProvider.InitializePersistence(ConfigurationManager.AppSettings.GetSetting("AuthenticationPersistenceConnection", ""));
         }
 
-        private static Providers.IAuthenticationPersistence _authenticationPersistanceProvider;
+        private static Providers.IAuthenticationPersistence _authenticationPersistenceProvider;
         public static Providers.IAuthenticationPersistence PersistenceProvider
         {
             get
             {
-                return _authenticationPersistanceProvider;
+                return _authenticationPersistenceProvider;
             }
         }
 
@@ -339,7 +339,7 @@ namespace Videre.Core.Services
         {
             get
             {
-                //todo:  perform check on Persistance Provider as IAuthenticationProvider to see if AllowCreation is turned on?
+                //todo:  perform check on Persistence Provider as IAuthenticationProvider to see if AllowCreation is turned on?
                 return CoreServices.Authentication.PersistenceProvider != null && !string.IsNullOrEmpty(CoreServices.Portal.GetPortalAttribute("Authentication", "CreateAccountUrl", ""));
             }
         }
@@ -383,7 +383,7 @@ namespace Videre.Core.Services
                 CoreServices.Repository.SaveChanges();
 
             if (AuthenticationResetProvider != null)
-                AuthenticationResetProvider.InitializePersistance(ConfigurationManager.AppSettings.GetSetting("AuthenticationResetConnection", ""));
+                AuthenticationResetProvider.InitializePersistence(ConfigurationManager.AppSettings.GetSetting("AuthenticationResetConnection", ""));
 
         }
 

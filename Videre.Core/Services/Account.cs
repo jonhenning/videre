@@ -182,18 +182,18 @@ namespace Videre.Core.Services
             if (emailChanged && AccountVerificationMode != "None")
                 RemoveAccountVerification(user.Id);
 
-            //if we need to update password or username, then use the persistance provider
+            //if we need to update password or username, then use the persistence provider
             if (!string.IsNullOrEmpty(password) || userNameChanged)
             {
                 if (Authentication.PersistenceProvider != null)
                 {
-                    var persistanceResult = Authentication.PersistenceProvider.SaveAuthentication(userId, user.Name, password);
-                    if (!persistanceResult.Success)
-                        throw new Exception(persistanceResult.Errors.ToJson());
-                    Authentication.AssociateAuthenticationToken(user, persistanceResult.Provider, persistanceResult.ProviderUserId);
+                    var persistenceResult = Authentication.PersistenceProvider.SaveAuthentication(userId, user.Name, password);
+                    if (!persistenceResult.Success)
+                        throw new Exception(persistenceResult.Errors.ToJson());
+                    Authentication.AssociateAuthenticationToken(user, persistenceResult.Provider, persistenceResult.ProviderUserId);
                 }
                 else
-                    throw new Exception("Cannot persist password if no authentication persistance provider enabled");
+                    throw new Exception("Cannot persist password if no authentication persistence provider enabled");
             }
             return userId;
         }
@@ -339,7 +339,7 @@ namespace Videre.Core.Services
             //todo:  auto login???
             //if (!string.IsNullOrEmpty(userId))
             //{
-                //var loginResult = Authentication.Login(userProfile.Name, userProfile.Password1, false, Authentication.PersistanceProvider.Name);
+                //var loginResult = Authentication.Login(userProfile.Name, userProfile.Password1, false, Authentication.PersistenceProvider.Name);
                 //return loginResult.
                 
             //}

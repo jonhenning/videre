@@ -26,7 +26,7 @@ namespace Videre.Core.Providers
             //    CoreServices.Repository.SaveChanges();
         }
 
-        public void InitializePersistance(string connection)
+        public void InitializePersistence(string connection)
         {
             var oldTicketDate = DateTime.UtcNow.AddDays(-30);
             var oldTickets = CoreServices.Repository.Current.GetResources<Models.AuthenticationResetTicket>("AuthenticationResetTicket", t => t.Data.IssuedDate < oldTicketDate || t.Data.FulfilledDate.HasValue);

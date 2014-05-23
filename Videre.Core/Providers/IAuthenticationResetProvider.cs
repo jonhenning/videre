@@ -11,7 +11,7 @@ namespace Videre.Core.Providers
     {
         string Name { get; }
         void Register();
-        void InitializePersistance(string connection);
+        void InitializePersistence(string connection);
         Services.AuthenticationResetResult IssueResetTicket(string userId, string url);
         Services.AuthenticationResetResult Authenticate(string userName, string password);
     }
