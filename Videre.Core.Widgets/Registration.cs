@@ -48,7 +48,29 @@ namespace Videre.Core.Widgets
             //App init
             updates += CoreServices.Update.Register(new List<CoreModels.WidgetManifest>()
             {
-                new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "LogOn", Title = "Log On", Category = "Account" }, 
+                new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "LogOn", Title = "Log On", Category = "Account", AttributeDefinitions = new List<AttributeDefinition>()
+                {
+                    new AttributeDefinition()
+                    {
+                        Name = "ShowForgotPassword",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "Yes",
+                        Required = false,
+                        LabelKey = "ShowForgotPassword.Text",
+                        LabelText = "Show Forgot Password",
+                        ControlType = "bootstrap-select"
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "ShowCreate",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "Yes",
+                        Required = false,
+                        LabelKey = "ShowCreate.Text",
+                        LabelText = "Show Create",
+                        ControlType = "bootstrap-select"
+                    } 
+                }}, 
                 new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "UserProfile", Title = "User Profile", Category = "Account" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "Verify", Title = "Verify Account", Category = "Account" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Localization", Title = "Localization Admin", Category = "Admin" }, 
@@ -67,7 +89,7 @@ namespace Videre.Core.Widgets
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Package", Title = "Package", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "PackageAdmin", Title = "Package Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "PackageExport", Title = "Package Export", Category = "Admin" }, 
-                new CoreModels.WidgetManifest() { Path = "Core", Name = "Menu", Title = "Menu", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation" , AttributeDefinitions = new List<AttributeDefinition>()
+                new CoreModels.WidgetManifest() { Path = "Core", Name = "Menu", Title = "Menu", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation", AttributeDefinitions = new List<AttributeDefinition>()
                 {
                     new AttributeDefinition()
                     {

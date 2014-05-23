@@ -13,6 +13,10 @@
     var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.AllowLogin).ToList();
     var standardProviders = CoreServices.Authentication.GetStandardAuthenticationProviders().Where(p => p.AllowLogin).ToList();
     var createAccountUrl = CoreServices.Portal.GetPortalAttribute("Authentication", "CreateAccountUrl", "");
+
+    var showForgotPassword = Model.GetAttribute("ShowForgotPassword", "Yes") == "Yes";
+    var showCreate = Model.GetAttribute("ShowCreate", "Yes") == "Yes";
+    
 }
 
 <div id="@Model.GetId("Widget")">
@@ -30,14 +34,14 @@
                         .Options(standardProviders.Select(p => new SelectListItem() { Text = p.Name, Value = p.Name })), BootstrapUnits.GridSize.MediumDevice8)
                 }
                 @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("RememberMe.Text", "Remember Me").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().CheckBox("chkRememberMe"), BootstrapUnits.GridSize.MediumDevice8)
-                @if (CoreServices.Authentication.SupportsReset)
+                @if (CoreServices.Authentication.SupportsReset && showForgotPassword)
                 {
                     <a id="@Model.GetId("lnkForgotPassword")" class="pull-right">@Model.GetText("ForgotPassword.Text", "Forgot Password?")</a>
                 }
                 <div class="clearfix"></div>
             </div>
             <div class="videre-form-actions">
-                @if (CoreServices.Authentication.SupportsPersistantCreate)
+                @if (CoreServices.Authentication.SupportsPersistantCreate && showCreate)
                 {
                     <a class="btn btn-default" href="@CoreServices.Portal.ResolveUrl(createAccountUrl)">@Model.GetText("CreateAccount.Text", "Create Account")</a>
                 }
