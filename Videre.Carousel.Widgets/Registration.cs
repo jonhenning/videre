@@ -75,7 +75,7 @@ namespace Videre.Carousel.Widgets
             updates += CoreServices.Update.Register(
                 new List<WebReference>()
                 {
-                    new WebReference() { Name = "jQuery Mobile Pixadelic", Group = "Pixadelic Camera", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/widgets/carousel/jquery.mobile.customized.min.js", DependencyGroups = new List<string>() {"jQuery"}, Sequence = 1 },
+                    new WebReference() { Name = "jQuery Mobile Pixadelic", Group = "Pixadelic Camera", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/widgets/carousel/jquery.mobile.customized.min.js", DependencyGroups = new List<string>() {"jQuery Migrate"}, Sequence = 1 },
                     //moved to package distro
                     //new WebReference() { Name = "jQuery Easing", Group = "jQuery Easing", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/jQuery.easing.1.3.js", DependencyGroups = new List<string>() {"jQuery"} },
                     new WebReference() { Name = "Pixadelic Camera", Group = "Pixadelic Camera", LoadType = WebReferenceLoadType.Defer, Type = WebReferenceType.ScriptReference, PortalId = portalId, Url = "~/scripts/camera-1.3.3/scripts/camera.min.js", DependencyGroups = new List<string>() {"jQuery Easing"}, Sequence = 2 },
