@@ -67,8 +67,15 @@ namespace Videre.Core.Extensions
         {
             try
             {
+                if (Portal.CurrentTemplate != null)
+                {
+                    helper.RegisterWebReferences(Portal.CurrentTemplate.Layout.WebReferences);
+                    helper.RegisterWebReferences(Portal.CurrentTemplate.WebReferences);
+                }
+
                 helper.ViewContext.Writer.WriteLine(helper.RenderScripts());
                 helper.ViewContext.Writer.WriteLine(helper.RenderStylesheets());
+
             }
             catch (Exception ex)
             {
@@ -83,11 +90,11 @@ namespace Videre.Core.Extensions
                 foreach (var widget in DeferredWidgets)
                     RenderWidget(helper, widget);
 
-                if (Portal.CurrentTemplate != null)
-                {
-                    helper.RegisterWebReferences(Portal.CurrentTemplate.Layout.WebReferences);
-                    helper.RegisterWebReferences(Portal.CurrentTemplate.WebReferences);
-                }
+                //if (Portal.CurrentTemplate != null)
+                //{
+                //    helper.RegisterWebReferences(Portal.CurrentTemplate.Layout.WebReferences);
+                //    helper.RegisterWebReferences(Portal.CurrentTemplate.WebReferences);
+                //}
 
                 helper.ViewContext.Writer.WriteLine(helper.RenderScripts());
                 helper.ViewContext.Writer.WriteLine(helper.RenderStylesheets());
