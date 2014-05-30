@@ -52,7 +52,7 @@ namespace Videre.Core.Widgets.Controllers
         {
             return API.Execute<dynamic>(r =>
             {
-                if (!CoreServices.Account.IsAuthenticated)
+                if (!CoreServices.Authentication.IsAuthenticated)
                     throw new Exception(Localization.GetLocalization(CoreModels.LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));   //sneaky!
 
                 CoreServices.Authentication.DisassociateAuthenticationToken(CoreServices.Account.CurrentUser.Id, provider);

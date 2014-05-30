@@ -60,6 +60,7 @@ namespace Videre.Core.Services
     public class Authentication
     {
         private const string _authenticationClaimType = "AuthenticationToken";
+        private const string _authenticationAccountNameClaimType = "AuthenticationAccountName";
         private static List<IAuthenticationProvider> _authenticationProviders = new List<IAuthenticationProvider>();
 
         private static List<IAuthenticationResetProvider> _authenticationResetProviders = new List<IAuthenticationResetProvider>();
@@ -195,9 +196,9 @@ namespace Videre.Core.Services
             return GetAuthenticationProviders().Where(p => p.Name.Equals(provider, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
-        public static List<string> GetUserAuthenticationProviders(CoreModels.User user)
+        public static Dictionary<string, string> GetUserAuthenticationProviders(CoreModels.User user)
         {
-            return user.Claims.Where(c => c.Type == _authenticationClaimType).Select(c => c.Issuer).ToList();
+            return user.Claims.Where(c => c.Type == _authenticationClaimType).Select(c => new { Issuer = c.Issuer, AccountName = user.GetClaimValue(_authenticationAccountNameClaimType, c.Issuer, "") }).ToDictionary(c => c.Issuer.ToLower(), c => c.AccountName);
         }
 
         public static CoreModels.User GetUserByAuthenticationToken(string provider, string token, string portalId = null)
@@ -211,19 +212,28 @@ namespace Videre.Core.Services
             var existing = GetUserByAuthenticationToken(provider, token, user.PortalId);
             if (existing == null || existing.Id == user.Id)
             {
-                var claim = user.GetClaim(_authenticationClaimType, provider);
-                if (claim == null)
-                {
-                    claim = new CoreModels.UserClaim() { Issuer = provider, Type = _authenticationClaimType };
-                    user.Claims.Add(claim);
-                }
-                claim.Value = token;
-
+                setClaimValue(user, _authenticationClaimType, provider, token);
                 CoreServices.Account.SaveUser(user);
                 return user;
             }
             else
                 throw new Exception("Authentication Token already associated with another user");
+        }
+
+        private static bool setClaimValue(Models.User user, string type, string issuer, string value)
+        {
+            var changed = false;
+            var claim = user.GetClaim(type, issuer);
+            if (claim == null)
+            {
+                claim = new CoreModels.UserClaim() { Issuer = issuer, Type = type };
+                user.Claims.Add(claim);
+                changed = true;
+            }
+            else
+                changed = claim.Value != value;
+            claim.Value = value;
+            return changed;
         }
 
         public static CoreModels.User DisassociateAuthenticationToken(string userId, string provider)
@@ -253,7 +263,7 @@ namespace Videre.Core.Services
             if (authResult.Success)
             {
                 var user = Account.GetUserById(associateToUserId);
-                if (user != null && !Authentication.GetUserAuthenticationProviders(user).Contains(provider))  //if we have a user and haven't already associated a login token
+                if (user != null && !Authentication.GetUserAuthenticationProviders(user).ContainsKey(provider.ToLower()))  //if we have a user and haven't already associated a login token
                 {
                     Authentication.AssociateAuthenticationToken(user, authResult.Provider, authResult.ProviderUserId);
                     applyAuthenticationResultToUser(authResult, user);
@@ -454,6 +464,10 @@ namespace Videre.Core.Services
                     }
                 }
             }
+
+            if (setClaimValue(user, _authenticationAccountNameClaimType, authResult.Provider, authResult.UserName))
+                changes++;
+
             //user.Claims.AddRange(authResult.Claims);
             if (authResult.ExtraData != null)
             {

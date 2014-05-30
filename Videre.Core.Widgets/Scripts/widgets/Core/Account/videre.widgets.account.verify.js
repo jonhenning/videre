@@ -25,7 +25,7 @@ videre.widgets.account.verify = videre.widgets.base.extend(
         this.getControl('txtCode').focus();
     },
 
-    verify: function(provider)
+    verify: function()
     {
         if (this.validControls())
             this.ajax('~/core/Account/VerifyAccount', { code: this.getControl('txtCode').val() }, this._delegates.onVerifyResult);

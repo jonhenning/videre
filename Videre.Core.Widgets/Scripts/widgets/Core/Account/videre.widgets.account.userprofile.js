@@ -24,7 +24,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         this._newUser = false;
         this._customElements = null;
         this._authProviders = [];
-        this._userAuthProviders = [];
+        this._userAuthProviders = {};
         this._hasCustomAttributes = false;
         this._loginUrl = '';
 
@@ -60,6 +60,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
 
     bind: function()
     {
+        var self = this;
         this.bindData(this._data, this.getControl('StandardElementsCtr'));
         if (this._hasCustomAttributes)
         {
@@ -70,14 +71,14 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         if (!this._newUser)
         {
             var externalAuthProviderNames = this._authProviders.select(function(d) { return d.Name.toLowerCase(); });
-            var userAuthProviderNames = this._userAuthProviders.select(function(d) { return d.toLowerCase(); });
-            this.getControl('UnassociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return userAuthProviderNames.contains(d) == false }).length > 0).find('[data-authprovider]').each(function(idx, item)
+            this.getControl('UnassociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return self._userAuthProviders[d] == null }).length > 0).find('[data-authprovider]').each(function(idx, item)
             {
-                $(item).toggle(!userAuthProviderNames.contains($(item).data('authprovider').toLowerCase()));
+                $(item).toggle(self._userAuthProviders[$(item).data('authprovider').toLowerCase()] == null);
             });
-            this.getControl('AssociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return userAuthProviderNames.contains(d) == false }).length != externalAuthProviderNames.length).find('[data-authprovider]').each(function(idx, item)
+            this.getControl('AssociatedAuthCtr').toggle(externalAuthProviderNames.where(function(d) { return self._userAuthProviders[d] == null }).length != externalAuthProviderNames.length).find('[data-authprovider]').each(function(idx, item)
             {
-                $(item).toggle(userAuthProviderNames.contains($(item).data('authprovider').toLowerCase()));
+                var userProvider = self._userAuthProviders[$(item).data('authprovider').toLowerCase()];
+                $(item).toggle(userProvider != null).attr('title', userProvider != null ? userProvider : null);
             });
         }
     },
@@ -134,6 +135,15 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         this._externalLoginDialog.find('[data-column="ExternalUser"]').val('');
         this._externalLoginDialog.find('[data-column="ExternalPassword"]').val('');
         this._externalLoginDialog.modal('show');
+    },
+
+    _onWidgetKeyDown: function(e)
+    {
+        if (e.keyCode == 13)
+        {
+            if (this._externalLoginDialog.data('bs.modal').isShown)
+                this._externalLogin();
+        }
     },
 
     _onDataReturn: function(result, ctx)

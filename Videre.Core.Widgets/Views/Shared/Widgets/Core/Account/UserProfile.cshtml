@@ -24,7 +24,7 @@
         data = userProfile,
         customElements = CoreServices.Account.CustomUserElements,
         authProviders = providers,
-        userAuthProviders = newUser ? new List<string>() : CoreServices.Authentication.GetUserAuthenticationProviders(CoreServices.Account.CurrentUser)
+        userAuthProviders = newUser ? new Dictionary<string, string>() : CoreServices.Authentication.GetUserAuthenticationProviders(CoreServices.Account.CurrentUser)
     });
 }
 
