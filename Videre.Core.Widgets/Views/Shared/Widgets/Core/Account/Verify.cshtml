@@ -18,7 +18,7 @@ if (CoreServices.Authentication.IsAuthenticated)
     var user = CoreServices.Account.CurrentUser;
     if (!CoreServices.Account.IsAccountVerified(user))
     {
-    <div id="@Model.GetId("Widget")">
+    <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         @{Html.RenderPartial("WidgetHeader", Model);}
     
         <p>@Html.Raw(Model.GetText("Instructions.Text", "Verification on your account is required.  Please fill in the code you were sent in an email.  If you have not received a code, use the Resend Code button."))</p>

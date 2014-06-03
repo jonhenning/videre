@@ -28,7 +28,7 @@
     });
 }
 
-<div id="@Model.GetId("Widget")">
+<div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
     @{Html.RenderPartial("WidgetHeader", Model);}
     @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "User Profile") }));}
 

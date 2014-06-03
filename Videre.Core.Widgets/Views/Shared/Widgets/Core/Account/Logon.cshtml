@@ -19,7 +19,7 @@
     
 }
 
-<div id="@Model.GetId("Widget")">
+<div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
     @{Html.RenderPartial("WidgetHeader", Model);}
     <div class="panel panel-default videre-has-form-actions" style="max-width: 500px;">
         @if (Model.ShowHeader)
