@@ -204,11 +204,19 @@ namespace Videre.Core.Services
                         CurrentUrlMatchedGroups = RouteParser.Parse(bestMatch, url);
                         CurrentUrl = CurrentUrlMatchedGroups["0"];
                     }
-                    return templates.SingleOrDefault(t => t.Urls.Contains(bestMatch));
+                    return getBestOfMultipleMatched(templates.Where(t => t.Urls.Contains(bestMatch)));
                 }
             }
             CurrentUrl = string.Empty;
-            return templates.FirstOrDefault(t => t.Urls.Count == 0); //grab default template
+            return getBestOfMultipleMatched(templates.Where(t => t.Urls.Count == 0)); //grab default template
+        }
+
+        private static PageTemplate getBestOfMultipleMatched(IEnumerable<PageTemplate> templates)
+        {
+            //if multiple matches, then check to see if at least one is authorized, and if so filter on it
+            if (templates.Count() > 1 && templates.Where(t => t.IsAuthorized).Count() > 0)
+                templates = templates.Where(t => t.IsAuthorized);
+            return templates.FirstOrDefault();
         }
 
         [Obsolete("Use RouteParser.GetBestMatchedUrl instead")]
