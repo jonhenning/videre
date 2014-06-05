@@ -457,11 +457,13 @@ namespace Videre.Core.Services
             {
                 foreach (var claim in authResult.Claims)
                 {
-                    if (user.GetClaim(claim.Type, claim.Issuer) == null)
-                    {
-                        user.Claims.Add(claim);
+                    if (setClaimValue(user, claim.Type, claim.Issuer, claim.Value))
                         changes++;
-                    }
+                    //if (user.GetClaim(claim.Type, claim.Issuer) == null)
+                    //{
+                    //    user.Claims.Add(claim);
+                    //    changes++;
+                    //}
                 }
             }
 
