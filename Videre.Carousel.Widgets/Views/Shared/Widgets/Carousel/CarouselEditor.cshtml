@@ -46,13 +46,13 @@
                                             @Html.Bootstrap().Button().DataAttribute("action", "down").Icon("glyphicon glyphicon-arrow-down").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
                                         </div>
                                     </div>
-                                    <div style="height: 300px; overflow: auto; padding: 2px; margin-top: 0; margin-bottom: 0;" class="well">
+                                    <div style="height: auto; max-height: 485px; overflow: auto; padding: 2px; margin-top: 0; margin-bottom: 0;" class="well">
                                         <ul id="@Model.GetId("CarouselList")" class="videre-nav-condensed nav nav-pills nav-stacked"></ul>
                                     </div>
                                 </div>
-                                <div class="col-md-8 form-horizontal" id="@Model.GetId("EditCtr")" style="display: none;">
-                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ImageUrl.Text", "Image Url").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().FileBrowser().DataColumn("ImageUrl"), BootstrapUnits.GridSize.MediumDevice8)
-                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("SlideText.Text", "Slide Text").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextEditor().DataColumn("Text"), BootstrapUnits.GridSize.MediumDevice8)
+                                <div class="col-md-8" id="@Model.GetId("EditCtr")" style="display: none;">
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ImageUrl.Text", "Image Url"), Html.Bootstrap().FileBrowser().DataColumn("ImageUrl"))
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("SlideText.Text", "Slide Text"), Html.Bootstrap().TextEditor().DataColumn("Text"))
                                     <div class="videre-form-actions">
                                         @Html.Bootstrap().Button("btnApply").Text("Apply.Text", "Apply")
                                     </div>
