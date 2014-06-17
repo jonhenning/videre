@@ -46,10 +46,11 @@ namespace Videre.Core.Providers
         public bool AllowAssociation { get { return Options.Contains("Allow Association"); } }
         public bool AllowLogin { get { return Options.Contains("Allow Login"); } }
         public bool AllowCreation { get { return Options.Contains("Allow Creation"); } }
+        public bool AllowDuplicateAssociation { get { return Options.Contains("Allow Duplicate Association"); } }
 
         public void Register()
         {
-            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-Options", DefaultValue = new JArray() {"Allow Association","Allow Login","Allow Creation"}, LabelKey = Name + "Options.Text", LabelText = Name + " Options", Multiple = true, ControlType = "bootstrap-select", Values = new List<string>() { "Allow Association", "Allow Creation", "Allow Login" } });
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-Options", DefaultValue = new JArray() {"Allow Association","Allow Login","Allow Creation", "Allow Duplicate Association"}, LabelKey = Name + "Options.Text", LabelText = Name + " Options", Multiple = true, ControlType = "bootstrap-select", Values = new List<string>() { "Allow Association", "Allow Creation", "Allow Login" } });
 
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();

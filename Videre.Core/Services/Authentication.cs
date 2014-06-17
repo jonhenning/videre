@@ -206,13 +206,14 @@ namespace Videre.Core.Services
             return CoreServices.Account.Get(u => u.Claims.Exists(c => c.Type == _authenticationClaimType && c.Issuer == provider && c.Value == token), portalId);
         }
 
-        public static CoreModels.User AssociateAuthenticationToken(Models.User user, string provider, string token)
+        public static CoreModels.User AssociateAuthenticationToken(Models.User user, string providerName, string token)
         {
             //var user = CoreServices.Account.GetUserById(userId);
-            var existing = GetUserByAuthenticationToken(provider, token, user.PortalId);
-            if (existing == null || existing.Id == user.Id)
+            var existing = GetUserByAuthenticationToken(providerName, token, user.PortalId);
+            var provider = GetAuthenticationProvider(providerName);
+            if (existing == null || existing.Id == user.Id || (provider != null && provider.AllowDuplicateAssociation))
             {
-                setClaimValue(user, _authenticationClaimType, provider, token);
+                setClaimValue(user, _authenticationClaimType, providerName, token);
                 CoreServices.Account.SaveUser(user);
                 return user;
             }

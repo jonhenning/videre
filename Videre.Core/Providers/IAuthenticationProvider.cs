@@ -15,6 +15,7 @@ namespace Videre.Core.Providers
         bool AllowAssociation { get; }
         bool AllowLogin { get; }
         bool AllowCreation { get; }
+        bool AllowDuplicateAssociation { get; }
         void Register();
     }
 
