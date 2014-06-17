@@ -103,7 +103,7 @@ namespace Videre.Core.Extensions
                 //string cookieToken;
                 //string formToken;
                 //AntiForgery.GetTokens(null, out cookieToken, out formToken);
-                helper.RegisterDocumentReadyScript("AntiForgeryToken", string.Format("videre._csrfToken = '{0}'", Services.API.GetAntiForgeryToken()));//'{0}:{1}'", cookieToken, formToken));
+                helper.RegisterDocumentReadyScript("AntiForgeryToken", string.Format("videre._csrfToken = '{0}';", Services.API.GetAntiForgeryToken()));//'{0}:{1}'", cookieToken, formToken));
             }
         }
 
