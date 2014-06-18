@@ -163,6 +163,12 @@
         return url;
     },
 
+    getQueryParam: function(name)   //http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+    {
+        var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    },
+
     ajax: function(url, data, success, error, ctx, options)
     {
         options = options || {};
