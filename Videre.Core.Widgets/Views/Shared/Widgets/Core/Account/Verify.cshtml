@@ -16,7 +16,7 @@
 if (CoreServices.Authentication.IsAuthenticated)
 {
     var user = CoreServices.Account.CurrentUser;
-    if (!CoreServices.Account.IsAccountVerified(user))
+    if (!user.IsEmailVerified)
     {
     <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         @{Html.RenderPartial("WidgetHeader", Model);}

@@ -158,6 +158,16 @@ namespace Videre.Core.Models
             return SecureActivities.Exists(a => a.Area.Equals(area, System.StringComparison.InvariantCultureIgnoreCase) && a.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
         }
 
+        [SerializeIgnore(new string[] { "db" })]
+        public bool IsEmailVerified
+        {
+            get
+            {
+                return GetClaimValue<string>("Account Verified On", "Videre Account Verification", null) != null;
+            }
+        }
+
+
 
     }
 }

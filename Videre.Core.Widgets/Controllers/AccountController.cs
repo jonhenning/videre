@@ -104,6 +104,15 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
+        public JsonResult<bool> VerifyEmail(string id)
+        {
+            return API.Execute<bool>(r =>
+            {
+                CoreServices.Security.VerifyActivityAuthorized("Account", "Administration");
+                r.Data = CoreServices.Account.VerifyAccount(id);
+            });
+        }
+
         public JsonResult<bool> DeleteUser(string id)
         {
             return API.Execute<bool>(r =>

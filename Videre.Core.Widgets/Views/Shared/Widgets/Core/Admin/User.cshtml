@@ -116,6 +116,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    @if (Videre.Core.Services.Security.IsActivityAuthorized("Account", "Administration"))
+                    {
+                    @Html.Bootstrap().Button("btnVerify").ButtonStyle(BootstrapUnits.ButtonStyle.Default).Text("Verify.Text", "Verify").StyleAttribute("display", "none")
+                    }
                     @Html.Bootstrap().Button("btnSave").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
                     @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
                 </div>

@@ -38,6 +38,7 @@ videre.widgets.admin.user = videre.widgets.base.extend(
         this._dialog = this.getControl('Dialog').modal('hide');
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
         this.getControl('btnNew').click(videre.createDelegate(this, this._onNewClicked));
+        this.getControl('btnVerify').click(videre.createDelegate(this, this._onVerifyClicked));
         this._hasCustomAttributes = this.getControl('CustomTab').length > 0;
         this.bind();
 
@@ -69,6 +70,7 @@ videre.widgets.admin.user = videre.widgets.base.extend(
             this.clearMsgs(this._dialog);
             videre.UI.showModal(this._dialog);
             this.bindData(this._selectedItem, this.getControl('GeneralTab'));
+            this.getControl('btnVerify').toggle(!this._selectedItem.IsEmailVerified);
             if (this._hasCustomAttributes)
             {
                 this._assignDefaultValues();
@@ -101,6 +103,12 @@ videre.widgets.admin.user = videre.widgets.base.extend(
         {
             self.ajax('~/core/Account/DeleteUser', { id: id }, self._delegates.onSaveReturn, null);
         });
+    },
+
+    verifyEmail: function()
+    {
+        if (this._selectedItem != null)
+            this.ajax('~/core/Account/VerifyEmail', { id: this._selectedItem.Id }, this._delegates.onSaveReturn, null, this._dialog);
     },
 
     _assignDefaultValues: function()
@@ -161,6 +169,11 @@ videre.widgets.admin.user = videre.widgets.base.extend(
     _onNewClicked: function(e)
     {
         this.newItem();
+    },
+
+    _onVerifyClicked: function(e)
+    {
+        this.verifyEmail();
     }
 
 });
