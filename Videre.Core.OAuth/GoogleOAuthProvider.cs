@@ -48,6 +48,7 @@ namespace Videre.Core.OAuth
         public bool AllowAssociation { get { return Options.Contains("Allow Association"); } }
         public bool AllowLogin { get { return Options.Contains("Allow Login"); } }
         public bool AllowCreation { get { return Options.Contains("Allow Creation"); } }
+        public bool AllowDuplicateAssociation { get { return false; } }
 
         public void Register()
         {

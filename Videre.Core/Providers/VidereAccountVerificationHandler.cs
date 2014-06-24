@@ -20,7 +20,7 @@ namespace Videre.Core.Providers
         {
             if (CoreServices.Authentication.IsAuthenticated && CoreServices.Account.AccountVerificationMode == "Enforced")
             {
-                if (!CoreServices.Account.IsAccountVerified(CoreServices.Account.CurrentUser))
+                if (!CoreServices.Account.CurrentUser.IsEmailVerified)
                 {
                     var verifyUrl = CoreServices.Account.AccountVerificationUrl;
                     var fullUrl = CoreServices.Portal.ResolveUrl("~/" + url);

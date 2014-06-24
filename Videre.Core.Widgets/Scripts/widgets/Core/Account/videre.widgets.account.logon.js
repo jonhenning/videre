@@ -75,8 +75,11 @@ videre.widgets.account.logon = videre.widgets.base.extend(
     {
         var url = location.href = this._loginResult.RedirectUrl != null ? this._loginResult.RedirectUrl : this._returnUrl;
         if (this._loginResult.MustVerify)
-            location.href = this._verifyUrl + '?ReturnUrl=' + url;
-        else 
+        {
+            var code = videre.getQueryParam('code');
+            location.href = this._verifyUrl + '?ReturnUrl=' + url + (!String.isNullOrEmpty(code) ? '&code=' + encodeURIComponent(code) : '');
+        }
+        else
             location.href = url;
     },
 

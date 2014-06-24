@@ -7,8 +7,8 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     set_data: function(v) { this._data = v; },
     get_newUser: function() { return this._newUser; },
     set_newUser: function(v) { this._newUser = v; },
-    get_loginUrl: function() { return this._loginUrl; },
-    set_loginUrl: function(v) { this._loginUrl = v; },
+    get_afterCreateUrl: function() { return this._afterCreateUrl; },
+    set_afterCreateUrl: function(v) { this._afterCreateUrl = v; },
     get_customElements: function() { return this._data; },
     set_customElements: function(v) { this._customElements = v; },
     get_authProviders: function() { return this._authProviders; },
@@ -26,7 +26,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         this._authProviders = [];
         this._userAuthProviders = {};
         this._hasCustomAttributes = false;
-        this._loginUrl = '';
+        this._afterCreateUrl = '';
 
         this._externalLoginDialog = null;
 
@@ -188,7 +188,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         if (!result.HasError && result.Data)
         {
             if (this._newUser)
-                location.href = this._loginUrl;
+                location.href = this._afterCreateUrl;
             else
                 this.refresh();
         }

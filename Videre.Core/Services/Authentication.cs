@@ -320,7 +320,7 @@ namespace Videre.Core.Services
             {
                 var user = processAuthenticationResult(authResult, persistant);
                 ret.UserId = user.Id;
-                ret.MustVerify = Account.AccountVerificationMode == "Passive" && !Account.IsAccountVerified(user);  //Enforced will take care of it for us
+                ret.MustVerify = Account.AccountVerificationMode == "Passive" && !user.IsEmailVerified;  //Enforced will take care of it for us
             }
             else if (SupportsReset)
             {
@@ -331,7 +331,7 @@ namespace Videre.Core.Services
                     issueAuthenticationTicket(user, true);
                     ret.UserId = user.Id;
                     ret.MustChangePassword = true;
-                    ret.MustVerify = Account.AccountVerificationMode == "Passive" && !Account.IsAccountVerified(user);  //Enforced will take care of it for us
+                    ret.MustVerify = Account.AccountVerificationMode == "Passive" && !user.IsEmailVerified;  //Enforced will take care of it for us
                 }
             }
             return ret;

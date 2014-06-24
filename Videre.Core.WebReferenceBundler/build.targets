@@ -11,6 +11,9 @@
         <CommonLibDir>$(RootDir)\lib</CommonLibDir>
         <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
     </PropertyGroup>
+    <ItemGroup>
+        <DeployDirs Include="$(DeployDir)" />
+    </ItemGroup>
     <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets')"/>
 
   <Target Name="AfterBuild">
@@ -57,9 +60,9 @@
     <Zip Files="@(ReleaseWidgets);" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" Condition=" '$(Configuration)' == 'Release' " />
   </Target>
 
-  <Target Name="Deploy">
-    <MakeDir Directories="$(DeployDir)\_updates"/>
-    <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="$(DeployDir)\_updates" />
-  </Target>
+    <Target Name="Deploy">
+        <!--<MakeDir Directories="$(DeployDir)\_updates"/>-->
+        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="%(DeployDirs.FullPath)\_updates" />
+    </Target>
 
 </Project>

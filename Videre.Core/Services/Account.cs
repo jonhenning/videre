@@ -356,11 +356,13 @@ namespace Videre.Core.Services
 
         public static string AccountVerificationUrl { get { return Services.Portal.ResolveUrl(Services.Portal.GetPortalAttribute("Authentication", "AccountVerificationUrl", "~/account/verify")); } }
 
+        [Obsolete("Use user.IsEmailVerified")]
         public static bool IsAccountVerified(Models.User user)
         {
-            var code = user.GetClaimValue("Account Verification Code", "Videre Account Verification", "");
-            var verifiedOn = user.GetClaimValue<string>("Account Verified On", "Videre Account Verification", null);
-            return !string.IsNullOrEmpty(code) && verifiedOn != null;
+            return user.IsEmailVerified;
+            //var code = user.GetClaimValue("Account Verification Code", "Videre Account Verification", "");
+            //var verifiedOn = user.GetClaimValue<string>("Account Verified On", "Videre Account Verification", null);
+            //return !string.IsNullOrEmpty(code) && verifiedOn != null;
         }
 
         public static bool VerifyAccount(string userId, string verificationCode)
@@ -368,7 +370,7 @@ namespace Videre.Core.Services
             var user = GetUserById(userId);
             if (user != null)
             {
-                if (!IsAccountVerified(user))
+                if (!user.IsEmailVerified)
                 {
                     if (user.GetClaimValue("Account Verification Code", "Videre Account Verification", "") == verificationCode)
                     {
@@ -379,6 +381,22 @@ namespace Videre.Core.Services
                 }
                 else
                     return true;    //already verified
+            }
+            return false;
+        }
+
+        //allow for admin verification
+        public static bool VerifyAccount(string userId)
+        {
+            var user = GetUserById(userId);
+            if (user != null)
+            {
+                if (!user.IsEmailVerified)
+                {
+                    user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = "Videre Account Verification", Value = DateTime.UtcNow.ToJson() });
+                    Account.SaveUser(user);
+                }
+                return true;
             }
             return false;
         }
