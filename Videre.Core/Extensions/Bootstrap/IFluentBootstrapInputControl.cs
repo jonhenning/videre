@@ -25,6 +25,7 @@ namespace Videre.Core.Extensions.Bootstrap
         TControl Prepend(Bootstrap.IBootstrapBaseControl ctl);
 
         TControl DisableAutoComplete();
-
+        TControl PlaceHolder(string token, string defaultText);
+        TControl PlaceHolder(string token, string defaultText, bool portalText);
     }
 }

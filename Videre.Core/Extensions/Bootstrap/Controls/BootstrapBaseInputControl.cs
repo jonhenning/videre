@@ -85,6 +85,16 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             return _control;
         }
 
+        public TControl PlaceHolder(string token, string defaultText)
+        {
+            return PlaceHolder(token, defaultText, false);
+        }
+        public TControl PlaceHolder(string token, string defaultText, bool portalText)
+        {
+            this._model.placeHolder = portalText ? GetPortalText(token, defaultText) : GetText(token, defaultText);
+            return _control;
+        }
+
         public TControl Append(Bootstrap.IBootstrapBaseControl ctl)
         {
             if (_model.appendControls == null)
@@ -117,6 +127,9 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
             if (_model.maxLength.HasValue)
                 ctl.Attributes.AddSafe("maxlength", _model.maxLength.Value.ToString());
+
+            if (!string.IsNullOrEmpty(_model.placeHolder))
+                ctl.Attributes.AddSafe("placeholder", _model.placeHolder);
 
             if (_model.inputSize != BootstrapUnits.InputSize.Default)
                 ctl.AddCssClass(Bootstrap.BootstrapUnits.GetInputSizeCss(_model.inputSize));
