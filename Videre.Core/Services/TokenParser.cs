@@ -43,6 +43,14 @@ namespace Videre.Core.Services
                 }
             }},
             {new Models.TokenParserRule() { 
+                Token = "VIDERE_USERID", 
+                TokenRule = null,
+                DetokenRule = (string text, Models.TokenParserRule rule) => 
+                {
+                    return text.Replace(GetTokenText(rule.Token), Core.Services.Authentication.AuthenticatedUserId); ;
+                }
+            }},
+            {new Models.TokenParserRule() { 
                 Token = "VIDERE_PORTAL_TITLE", 
                 TokenRule = null,
                 DetokenRule = (string text, Models.TokenParserRule rule) => 
