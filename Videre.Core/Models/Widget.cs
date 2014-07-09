@@ -155,7 +155,7 @@ namespace Videre.Core.Models
 
             helper.RegisterDocumentReadyScript(
                 ClientId + "Presenter",
-                string.Format("videre.widgets.register('{0}', {1}, {2});", ClientId, clientType, properties.ToJson(false, "client", preserveObjectReferences)));
+                string.Format("videre.widgets.register('{0}', {1}, {2});", ClientId, clientType, properties.ToJson(false, "client", preserveObjectReferences).Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
 
             return true;
         }
