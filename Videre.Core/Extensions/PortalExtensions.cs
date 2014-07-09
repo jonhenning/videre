@@ -169,7 +169,7 @@ namespace Videre.Core.Extensions
 
             //Properties["user"] = Services.Account.GetClientUser();
             //var ser = new System.Web.Script.Serialization.JavaScriptSerializer();   //no binders for date conversions...
-            helper.RegisterDocumentReadyScript(model.ClientId + "Presenter", string.Format("videre.widgets.register('{0}', {1}, {2});", model.ClientId, clientType, properties.ToJson(false, "client", preserveObjectReferences)));
+            helper.RegisterDocumentReadyScript(model.ClientId + "Presenter", string.Format("videre.widgets.register('{0}', {1}, {2});", model.ClientId, clientType, properties.ToJson(false, "client", preserveObjectReferences).Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
         }
 
         public static void RegisterCoreScripts(this HtmlHelper helper)
