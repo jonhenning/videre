@@ -55,7 +55,7 @@
 
         //json2.net - reviver
         //var a, d;
-        
+
         //var type = videre.typename(value);
         //if (type == 'string')
         //{
@@ -194,7 +194,7 @@
     {
         var form = $('<form action="' + videre.resolveUrl(url) + '" method="' + (method || 'post') + '"></form>');
         for (var key in data)
-            form.append($('<input type="hidden" />').attr('name', key).val(videre.serialize(data[key]))); 
+            form.append($('<input type="hidden" />').attr('name', key).val(videre.serialize(data[key])));
         //send request
         form.appendTo('body').submit().remove();
     },
@@ -220,18 +220,18 @@ videre.UI = {
     //allows focus to be set on first data-column
     showModal: function(ctr)
     {
-        ctr.modal('show').on('shown.bs.modal', function () { $('[data-column]:first', this).focus(); });
+        ctr.modal('show').on('shown.bs.modal', function() { $('[data-column]:first', this).focus(); });
     },
 
-    hideModal: function (ctr)
+    hideModal: function(ctr)
     {
         ctr.modal('hide');
     },
 
     handleEnter: function(ctl, func)
     {
-        ctl.keypress(function(e) 
-        { 
+        ctl.keypress(function(e)
+        {
             if (e.keyCode == 13)
             {
                 func();
@@ -258,7 +258,7 @@ videre.UI = {
     {
         videre.UI.prompt(videre.UI.getNextId(), title, text, null,
             [{
-                text: 'Ok', css: 'btn-primary', close: true, handler: function ()
+                text: 'Ok', css: 'btn-primary', close: true, handler: function()
                 {
                     onConfirm();
                     return true;
@@ -366,7 +366,7 @@ videre.UI = {
     {
         var cloneData = clone ? videre.jsonClone(data) : data;
         var ctls = parent.find('[data-column]');
-        
+
         ctls.each(function(idx, element)
         {
             var ctl = $(element);
@@ -485,8 +485,8 @@ videre.UI = {
 
         'datetime':
         {
-            isValid: function (val) { return moment(val, videre.localization.dateFormats.datetime).isValid(); },
-            set: function (ctl, val)
+            isValid: function(val) { return moment(val, videre.localization.dateFormats.datetime).isValid(); },
+            set: function(ctl, val)
             {
                 var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.datetime, ctl.data('timezone')) : '';
                 videre.UI.setControlValue(ctl, text);
@@ -495,13 +495,13 @@ videre.UI = {
 
         'time':
         {
-            isValid: function (val) { return moment(val, videre.localization.dateFormats.time).isValid(); }
+            isValid: function(val) { return moment(val, videre.localization.dateFormats.time).isValid(); }
         },
 
         'date':
         {
-            isValid: function (val) { return moment(val, videre.localization.dateFormats.date).isValid(); },
-            set: function (ctl, val)
+            isValid: function(val) { return moment(val, videre.localization.dateFormats.date).isValid(); },
+            set: function(ctl, val)
             {
                 var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.date, ctl.data('timezone')) : '';
                 videre.UI.setControlValue(ctl, text);
@@ -510,8 +510,8 @@ videre.UI = {
 
         'money':
         {
-            isValid: function (val) { return !isNaN(val); },
-            set: function (ctl, val)
+            isValid: function(val) { return !isNaN(val); },
+            set: function(ctl, val)
             {
                 var precision = ctl.data('precision') != null ? ctl.data('precision') : 2;
                 var text = (val != null ? val : 0).toFixed(precision);
@@ -525,7 +525,7 @@ videre.UI = {
 
 videre.UI.registerControlType('list',
     {
-        get: function (ctl)
+        get: function(ctl)
         {
             var val = ctl.find('li');
             if (val.length > 0)
@@ -538,31 +538,31 @@ videre.UI.registerControlType('list',
                 return ret;
             }
             return null;
-            
+
         },
         set: function(ctl, val)
         {
             if (val != null)
                 ctl.html('').append(val.select(function(i) { return $('<li></li>').html(i); }));
-            else 
+            else
                 ctl.html('');
         },
-        init: function (ctl) { }
+        init: function(ctl) { }
     });
 
 videre.UI.registerControlType('checkbox',
     {
-        get: function (ctl) { return ctl.is(':checked'); },
-        set: function (ctl, val, isMarkup)  //todo: this is a bit messy
+        get: function(ctl) { return ctl.is(':checked'); },
+        set: function(ctl, val, isMarkup)  //todo: this is a bit messy
         {
             if (videre.typename(val) == 'string')
                 val = eval(val);
             if (isMarkup)   //if rendering html to markup, prop will not work
                 ctl.attr('checked', val);
-            else 
+            else
                 ctl.prop('checked', val);
         },
-        init: function (ctl) { }
+        init: function(ctl) { }
     });
 
 
@@ -625,22 +625,22 @@ videre.UI.eventHandlerList.prototype =
 };
 
 //JSON Parsing - See http://www.JSON.org/js.html
-var JSON; if (!JSON) { JSON = {} } (function () { function f(n) { return n < 10 ? "0" + n : n } if (typeof Date.prototype.toJSON !== "function") { Date.prototype.toJSON = function (key) { return isFinite(this.valueOf()) ? this.getUTCFullYear() + "-" + f(this.getUTCMonth() + 1) + "-" + f(this.getUTCDate()) + "T" + f(this.getUTCHours()) + ":" + f(this.getUTCMinutes()) + ":" + f(this.getUTCSeconds()) + "Z" : null }; String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function (key) { return this.valueOf() } } var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, gap, indent, meta = { "\b": "\\b", "\t": "\\t", "\n": "\\n", "\f": "\\f", "\r": "\\r", '"': '\\"', "\\": "\\\\" }, rep; function quote(string) { escapable.lastIndex = 0; return escapable.test(string) ? '"' + string.replace(escapable, function (a) { var c = meta[a]; return typeof c === "string" ? c : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4) }) + '"' : '"' + string + '"' } function str(key, holder) { var i, k, v, length, mind = gap, partial, value = holder[key]; if (value && typeof value === "object" && typeof value.toJSON === "function") { value = value.toJSON(key) } if (typeof rep === "function") { value = rep.call(holder, key, value) } switch (typeof value) { case "string": return quote(value); case "number": return isFinite(value) ? String(value) : "null"; case "boolean": case "null": return String(value); case "object": if (!value) { return "null" } gap += indent; partial = []; if (Object.prototype.toString.apply(value) === "[object Array]") { length = value.length; for (i = 0; i < length; i += 1) { partial[i] = str(i, value) || "null" } v = partial.length === 0 ? "[]" : gap ? "[\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "]" : "[" + partial.join(",") + "]"; gap = mind; return v } if (rep && typeof rep === "object") { length = rep.length; for (i = 0; i < length; i += 1) { if (typeof rep[i] === "string") { k = rep[i]; v = str(k, value); if (v) { partial.push(quote(k) + (gap ? ": " : ":") + v) } } } } else { for (k in value) { if (Object.prototype.hasOwnProperty.call(value, k)) { v = str(k, value); if (v) { partial.push(quote(k) + (gap ? ": " : ":") + v) } } } } v = partial.length === 0 ? "{}" : gap ? "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}" : "{" + partial.join(",") + "}"; gap = mind; return v } } if (typeof JSON.stringify !== "function") { JSON.stringify = function (value, replacer, space) { var i; gap = ""; indent = ""; if (typeof space === "number") { for (i = 0; i < space; i += 1) { indent += " " } } else { if (typeof space === "string") { indent = space } } rep = replacer; if (replacer && typeof replacer !== "function" && (typeof replacer !== "object" || typeof replacer.length !== "number")) { throw new Error("JSON.stringify") } return str("", { "": value }) } } if (typeof JSON.parse !== "function") { JSON.parse = function (text, reviver) { var j; function walk(holder, key) { var k, v, value = holder[key]; if (value && typeof value === "object") { for (k in value) { if (Object.prototype.hasOwnProperty.call(value, k)) { v = walk(value, k); if (v !== undefined) { value[k] = v } else { delete value[k] } } } } return reviver.call(holder, key, value) } text = String(text); cx.lastIndex = 0; if (cx.test(text)) { text = text.replace(cx, function (a) { return "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4) }) } if (/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, "@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, "]").replace(/(?:^|:|,)(?:\s*\[)+/g, ""))) { j = eval("(" + text + ")"); return typeof reviver === "function" ? walk({ "": j }, "") : j } throw new SyntaxError("JSON.parse") } } }());
+var JSON; if (!JSON) { JSON = {} } (function() { function f(n) { return n < 10 ? "0" + n : n } if (typeof Date.prototype.toJSON !== "function") { Date.prototype.toJSON = function(key) { return isFinite(this.valueOf()) ? this.getUTCFullYear() + "-" + f(this.getUTCMonth() + 1) + "-" + f(this.getUTCDate()) + "T" + f(this.getUTCHours()) + ":" + f(this.getUTCMinutes()) + ":" + f(this.getUTCSeconds()) + "Z" : null }; String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function(key) { return this.valueOf() } } var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, gap, indent, meta = { "\b": "\\b", "\t": "\\t", "\n": "\\n", "\f": "\\f", "\r": "\\r", '"': '\\"', "\\": "\\\\" }, rep; function quote(string) { escapable.lastIndex = 0; return escapable.test(string) ? '"' + string.replace(escapable, function(a) { var c = meta[a]; return typeof c === "string" ? c : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4) }) + '"' : '"' + string + '"' } function str(key, holder) { var i, k, v, length, mind = gap, partial, value = holder[key]; if (value && typeof value === "object" && typeof value.toJSON === "function") { value = value.toJSON(key) } if (typeof rep === "function") { value = rep.call(holder, key, value) } switch (typeof value) { case "string": return quote(value); case "number": return isFinite(value) ? String(value) : "null"; case "boolean": case "null": return String(value); case "object": if (!value) { return "null" } gap += indent; partial = []; if (Object.prototype.toString.apply(value) === "[object Array]") { length = value.length; for (i = 0; i < length; i += 1) { partial[i] = str(i, value) || "null" } v = partial.length === 0 ? "[]" : gap ? "[\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "]" : "[" + partial.join(",") + "]"; gap = mind; return v } if (rep && typeof rep === "object") { length = rep.length; for (i = 0; i < length; i += 1) { if (typeof rep[i] === "string") { k = rep[i]; v = str(k, value); if (v) { partial.push(quote(k) + (gap ? ": " : ":") + v) } } } } else { for (k in value) { if (Object.prototype.hasOwnProperty.call(value, k)) { v = str(k, value); if (v) { partial.push(quote(k) + (gap ? ": " : ":") + v) } } } } v = partial.length === 0 ? "{}" : gap ? "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}" : "{" + partial.join(",") + "}"; gap = mind; return v } } if (typeof JSON.stringify !== "function") { JSON.stringify = function(value, replacer, space) { var i; gap = ""; indent = ""; if (typeof space === "number") { for (i = 0; i < space; i += 1) { indent += " " } } else { if (typeof space === "string") { indent = space } } rep = replacer; if (replacer && typeof replacer !== "function" && (typeof replacer !== "object" || typeof replacer.length !== "number")) { throw new Error("JSON.stringify") } return str("", { "": value }) } } if (typeof JSON.parse !== "function") { JSON.parse = function(text, reviver) { var j; function walk(holder, key) { var k, v, value = holder[key]; if (value && typeof value === "object") { for (k in value) { if (Object.prototype.hasOwnProperty.call(value, k)) { v = walk(value, k); if (v !== undefined) { value[k] = v } else { delete value[k] } } } } return reviver.call(holder, key, value) } text = String(text); cx.lastIndex = 0; if (cx.test(text)) { text = text.replace(cx, function(a) { return "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4) }) } if (/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, "@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, "]").replace(/(?:^|:|,)(?:\s*\[)+/g, ""))) { j = eval("(" + text + ")"); return typeof reviver === "function" ? walk({ "": j }, "") : j } throw new SyntaxError("JSON.parse") } } }());
 
 //override date serialization - http://www.asp.net/ajaxlibrary/jquery_webforms_serialize_dates_to_json.ashx - .NET 3.5 REMOVES THE NEED FOR THIS!
 //Date.prototype.toJSON = function (key) { return isFinite(this.valueOf()) ? '/Date(' + this.getTime() + ')/' : null };
 
 //http://ejohn.org/blog/simple-javascript-inheritance
 // Inspired by base2 and Prototype
-(function ()
+(function()
 {
-    var initializing = false, fnTest = /xyz/.test(function () { xyz; }) ? /\b_base\b/ : /.*/;
+    var initializing = false, fnTest = /xyz/.test(function() { xyz; }) ? /\b_base\b/ : /.*/;
 
     // The base Class implementation (does nothing)
-    videre.Class = function () { };
+    videre.Class = function() { };
 
     // Create a new Class that inherits from this class
-    videre.Class.extend = function (prop)
+    videre.Class.extend = function(prop)
     {
         var _base = this.prototype;
 
@@ -656,9 +656,9 @@ var JSON; if (!JSON) { JSON = {} } (function () { function f(n) { return n < 10 
             // Check if we're overwriting an existing function
             prototype[name] = typeof prop[name] == "function" &&
         typeof _base[name] == "function" && fnTest.test(prop[name]) ?
-        (function (name, fn)
+        (function(name, fn)
         {
-            return function ()
+            return function()
             {
                 var tmp = this._base;
 
@@ -723,7 +723,9 @@ videre.widgets = {
     findByType: function(type)
     {
         var t = eval(type);
-        return videre.widgets.registeredWidgets.values().where(function(c) { return c instanceof t; });
+        if (t != null)
+            return videre.widgets.registeredWidgets.values().where(function(c) { return c instanceof t; });
+        return [];
     },
 
     _setProperties: function(target, properties)
@@ -749,7 +751,7 @@ videre.widgets.base = videre.Class.extend(
     get_id: function() { return this._id; },
     set_id: function(v) { this._id = v; },
     get_ns: function() { return this._ns; },
-    set_ns: function(v) { this._ns = v; },    
+    set_ns: function(v) { this._ns = v; },
     get_events: function() { return this._eventHandlerList; },
     get_childWidgets: function() { return this._childWidgets; },
 
@@ -776,7 +778,7 @@ videre.widgets.base = videre.Class.extend(
         this._locked = false;
         this._useProgressDialog = false;
         this._progressDialog = null;
-        
+
         //controls
         this._widget = null;
 
@@ -840,7 +842,7 @@ videre.widgets.base = videre.Class.extend(
         if (onFail == null)
             onFail = this._baseDelegates.onAjaxFail;
 
-        var defaultOptions = 
+        var defaultOptions =
         {
             headers: { 'X-Videre-WidgetId': this._wid }
         };
@@ -882,7 +884,7 @@ videre.widgets.base = videre.Class.extend(
         messageCtr = messageCtr != null ? messageCtr : controlCtr;
         this.clearMsgs();
         var ctls = this._getValidationCtls(controlCtr);
-        var errors = [];        
+        var errors = [];
         ctls.forEach(function(item)
         {
             var error = videre.UI.validateCtl(item);
@@ -935,7 +937,7 @@ videre.widgets.base = videre.Class.extend(
         this._locked = false;
         if (this._useProgressDialog)
             this.getProgressBar(parent).modal('hide');
-        else 
+        else
             this.getProgressBar(parent).hide();
     },
 
@@ -949,7 +951,7 @@ videre.widgets.base = videre.Class.extend(
                 this._progressDialog = parent.find('.progress-dialog').first().appendTo($(document.body)).modal().css('padding-top', '15%'); //only need one
             return this._progressDialog;
         }
-        else 
+        else
             return parent.find('.progress-inline');
     },
 
@@ -1102,7 +1104,7 @@ videre.modals =
 videre.timeZones =
 {
     zones: {},
-    register: function (key, data)
+    register: function(key, data)
     {
         this.zones[key] = data;
     },
@@ -1131,7 +1133,7 @@ videre.timeZones =
 
     },
 
-    _getCutoff: function (rule, date, type, cutoffTimeFormat)
+    _getCutoff: function(rule, date, type, cutoffTimeFormat)
     {
         var dst = rule.DSTInfo;
         if (!dst.Fixed)
@@ -1177,15 +1179,15 @@ videre.localization = {
 if ($.views != null)
 {
     $.views.helpers({
-        resolveUrl: function (val) { return val != null ? videre.resolveUrl(val) : ''; },
-        formatDateTime: function (val, format, zone) { return val != null ? videre.parseDate(val, format != null ? format : videre.localization.dateFormats.datetime, zone) : ''; },
-        formatDate: function (val, format, zone) { return val != null ? videre.parseDate(val, format != null ? format : videre.localization.dateFormats.date, zone) : ''; },
-        formatTime: function (val, format, zone) { return val != null ? videre.parseDate(val, format != null ? format : videre.localization.dateFormats.time, zone) : ''; },
-        formatString: function () { return String.format.apply(this, arguments); },
-        nullOrEmpty: function (val) { return String.isNullOrEmpty(val); },
-        coalesce: function (val, label) { return val || (label || ''); },
-        deepCoalesce: function (o, s, label) { return Object.deepGet(o, s) || (label || ''); },
-        bindInputs: function (data, attributes, keyName) //todo: not sure this belongs in videre.js...  
+        resolveUrl: function(val) { return val != null ? videre.resolveUrl(val) : ''; },
+        formatDateTime: function(val, format, zone) { return val != null ? videre.parseDate(val, format != null ? format : videre.localization.dateFormats.datetime, zone) : ''; },
+        formatDate: function(val, format, zone) { return val != null ? videre.parseDate(val, format != null ? format : videre.localization.dateFormats.date, zone) : ''; },
+        formatTime: function(val, format, zone) { return val != null ? videre.parseDate(val, format != null ? format : videre.localization.dateFormats.time, zone) : ''; },
+        formatString: function() { return String.format.apply(this, arguments); },
+        nullOrEmpty: function(val) { return String.isNullOrEmpty(val); },
+        coalesce: function(val, label) { return val || (label || ''); },
+        deepCoalesce: function(o, s, label) { return Object.deepGet(o, s) || (label || ''); },
+        bindInputs: function(data, attributes, keyName) //todo: not sure this belongs in videre.js...  
         {
             keyName = keyName != null ? keyName : data.Name;
             var ctl;
@@ -1202,7 +1204,7 @@ if ($.views != null)
                 if (data.ControlType)
                     ctl.attr('data-controltype', data.ControlType);
 
-                $.each(data.Values, function (idx, item)
+                $.each(data.Values, function(idx, item)
                 {
                     $('<option>').attr('value', item).html(item).appendTo(ctl);
                 });
@@ -1260,3 +1262,4 @@ if ($.views != null)
     });
 }
 $(window).unload(videre.cleanUp);
+
