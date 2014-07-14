@@ -57,6 +57,7 @@ namespace Videre.Core.Services
             }
         }
 
+        private static object _lock = new object(); //todo: probably move this into CodeEndeavors resourcemanager
         public static void Dispose()
         {
             if (IsOpen)
@@ -64,8 +65,11 @@ namespace Videre.Core.Services
                 //Services.Logging.Logger.Debug("Disposing Repository...");
                 if (Current.PendingUpdates > 0) //todo:  auto save here?
                 {
-                    Services.Logging.Logger.DebugFormat("Persisting {0} changes to repository", Current.PendingUpdates);
-                    Current.SaveChanges();
+                    lock (_lock)
+                    {
+                        Services.Logging.Logger.DebugFormat("Persisting {0} changes to repository", Current.PendingUpdates);
+                        Current.SaveChanges();
+                    }
                 }
                 Current.Dispose();
             }
