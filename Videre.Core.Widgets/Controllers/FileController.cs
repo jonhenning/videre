@@ -77,35 +77,39 @@ namespace Videre.Core.Widgets.Controllers
             return API.Execute<dynamic>(r =>
             {
                 r.ContentType = "text/html";
-                string fileName = null;
-                var tempFileName = Portal.GetTempFile();
-                System.IO.Stream stream = null;
-                if (string.IsNullOrEmpty(Request["qqfile"]))    //IE
+                var response = new List<object>();
+
+                if (Request.Files.Count > 0)
                 {
-                    fileName = Request.Files[0].FileName;
-                    stream = Request.Files[0].InputStream;
+                    foreach (string uploadName in Request.Files)
+                        response.Add(processFile(Request.Files[uploadName].FileName, Request.Files[uploadName].InputStream));
                 }
                 else
-                {
-                    fileName = qqfile;
-                    stream = Request.InputStream;
-                }
-                var ext = fileName.Substring(fileName.LastIndexOf(".") + 1);
-                if (Web.MimeTypes.ContainsKey(ext) && IsMimeTypeAllowed(ext))
-                {
-                    var fileSize = stream.WriteStream(tempFileName);
-                    r.Data = new
-                    {
-                        UniqueName = new FileInfo(tempFileName).Name,
-                        FileName = new FileInfo(fileName).Name,
-                        Size = fileSize,
-                        MimeType = Web.MimeTypes[ext]
-                    };
-                }
-                else
-                    throw new Exception(Localization.GetExceptionText("InvalidMimeType.Error", "{0} is invalid.", ext));
+                    response.Add(processFile(qqfile, Request.InputStream));
+
+                r.Data = response;
             }, false);
         }
+
+        private static object processFile(string fileName, Stream stream)
+        {
+            var tempFileName = Portal.GetTempFile();
+            var ext = fileName.Substring(fileName.LastIndexOf(".") + 1);
+            if (Videre.Core.Web.MimeTypes.ContainsKey(ext) && IsMimeTypeAllowed(ext))
+            {
+                var fileSize = stream.WriteStream(tempFileName);
+                return new
+                {
+                    UniqueName = new FileInfo(tempFileName).Name,
+                    FileName = new FileInfo(fileName).Name,
+                    Size = fileSize,
+                    MimeType = Videre.Core.Web.MimeTypes[ext]
+                };
+            }
+            else
+                throw new Exception(Localization.GetExceptionText("InvalidMimeType.Error", "{0} is invalid.", ext));
+        }
+
 
         public static bool IsMimeTypeAllowed(string MimeType)   //todo: secure this!
         {

@@ -13,6 +13,7 @@ videre.widgets.admin.file = videre.widgets.base.extend(
         this._treeData = null;
         this._itemData = null;
         this._itemDataDict = null;
+        this._dropDataDict = {};
 
         this._selectedKey = null;
         this._selectedItem = null;
@@ -26,7 +27,7 @@ videre.widgets.admin.file = videre.widgets.base.extend(
             onSaveReturn: videre.createDelegate(this, this._onSaveReturn),
             onNodeSelected: videre.createDelegate(this, this._onNodeSelected),
             onActionClicked: videre.createDelegate(this, this._onActionClicked)
-        }
+        };
     },
 
     _onLoad: function(src, args)
@@ -42,6 +43,19 @@ videre.widgets.admin.file = videre.widgets.base.extend(
         this._dialog = this.getControl('Dialog').modal('hide');
         this.getControl('btnNew').click(videre.createDelegate(this, this._onNewClicked));
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
+
+        var self = this;
+        var myDropzone = new Dropzone('#' + this.getId('ItemTable'),
+            {
+                paramName: 'qqfile',
+                maxFilesize: 2, // MB
+                url: videre.resolveUrl('~/core/file/upload'),
+                uploadMultiple: true,
+                previewsContainer: '#' + this.getId('DropZoneContainer'),
+                sending: function(file) { self.lock(); },
+                success: videre.createDelegate(this, this._onDropFileComplete),
+                complete: videre.createDelegate(this, this._onDropComplete)
+            });
 
         var uploader = new qq.FileUploaderBasic({
             button: this.getControl('btnUpload')[0],
@@ -97,7 +111,7 @@ videre.widgets.admin.file = videre.widgets.base.extend(
 
     newItem: function()
     {
-        this._selectedItem = { Id: '', PortalId: '', MimeType: '', Url: '', Size: null };
+        this._selectedItem = this._getNewFile();
         this.edit();
     },
 
@@ -149,6 +163,11 @@ videre.widgets.admin.file = videre.widgets.base.extend(
             else if (action == 'delete')
                 this.deleteItem(id);
         }
+    },
+
+    _getNewFile: function()
+    {
+        return { Id: '', PortalId: '', MimeType: '', Url: '', Size: null };
     },
 
     _onNodeSelected: function(node)
@@ -212,9 +231,9 @@ videre.widgets.admin.file = videre.widgets.base.extend(
         this.unlock(this.getControl('Dialog'));
         if (!result.HasError)
         {
-            this._uniqueName = result.Data.UniqueName;
+            this._uniqueName = result.Data[0].UniqueName;
             
-            this.bindData(result.Data, this.getControl('Dialog').find('.file-upload-detail'));
+            this.bindData(result.Data[0], this.getControl('Dialog').find('.file-upload-detail'));
             //this.getControl('txtMimeType').val(result.Data.mimeType);
             //this.getControl('txtFileName').val(result.Data.fileName);
             //this.getControl('txtFileSize').val(result.Data.fileSize);
@@ -225,7 +244,35 @@ videre.widgets.admin.file = videre.widgets.base.extend(
     _onFileMessage: function(message)
     {
         this.addMsg('FileMessage', message, true, this.getControl('Dialog'));   //todo: test!
+    },
+
+    _onDropFileComplete: function(file, response)
+    {
+        var result = videre.deserialize(response);
+        if (!result.HasError)
+            this._dropDataDict = result.Data.toDictionary(function(d) { return d.FileName; });
+
+        this.addMsgs(result.Messages);
+    },
+
+    _onDropComplete: function(file)
+    {
+        this.unlock();
+        if (this._dropDataDict[file.name] != null)
+        {
+            var data = this._dropDataDict[file.name];
+            var newFile = this._getNewFile();
+            var url = data.FileName;
+            if (!String.isNullOrEmpty(this._selectedKey))
+                url = this._selectedKey + '/' + url;
+            newFile.Url = url;
+            newFile.Size = data.Size;
+            newFile.MimeType = data.MimeType;
+            this.ajax('~/core/File/Save', { file: newFile, uniqueName: data.UniqueName }, this._delegates.onSaveReturn);
+        }
+        this._dropDataDict[file.name] != null;
     }
+
 
 
 });
