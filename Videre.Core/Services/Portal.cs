@@ -370,7 +370,7 @@ namespace Videre.Core.Services
         public static bool DeleteLayoutTemplate(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<PageTemplate>(id);
+            var res = Repository.Current.GetResourceById<LayoutTemplate>(id);
             if (res != null)
             {
                 //foreach (var widget in res.Data.Widgets)
