@@ -493,6 +493,14 @@ namespace Videre.Core.Services
                             changes++;
                         }
                     }
+                    else if (key.Equals("displayname", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (string.IsNullOrEmpty(user.DisplayName))
+                        {
+                            user.DisplayName = authResult.ExtraData[key];
+                            changes++;
+                        }
+                    }
                     else
                     {
                         if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
