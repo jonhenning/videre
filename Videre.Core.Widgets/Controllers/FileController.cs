@@ -94,7 +94,7 @@ namespace Videre.Core.Widgets.Controllers
         private static object processFile(string fileName, Stream stream)
         {
             var tempFileName = Portal.GetTempFile();
-            var ext = fileName.Substring(fileName.LastIndexOf(".") + 1);
+            var ext = fileName.Substring(fileName.LastIndexOf(".") + 1).ToLower();
             if (Videre.Core.Web.MimeTypes.ContainsKey(ext) && IsMimeTypeAllowed(ext))
             {
                 var fileSize = stream.WriteStream(tempFileName);
