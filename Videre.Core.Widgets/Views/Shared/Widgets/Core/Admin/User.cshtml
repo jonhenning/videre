@@ -116,7 +116,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    @if (Videre.Core.Services.Security.IsActivityAuthorized("Account", "Administration"))
+                    @if (Videre.Core.Services.Security.IsActivityAuthorized("Account", "Administration") && Account.AccountVerificationMode != "None")
                     {
                     @Html.Bootstrap().Button("btnVerify").ButtonStyle(BootstrapUnits.ButtonStyle.Default).Text("Verify.Text", "Verify").StyleAttribute("display", "none")
                     }
