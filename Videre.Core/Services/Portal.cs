@@ -496,6 +496,25 @@ namespace Videre.Core.Services
             return changed;
         }
 
+        public static bool UnregisterPortalAttribute(string groupName, string name)
+        {
+            if (AttributeDefinitions.ContainsKey(groupName))
+            {
+                var def = AttributeDefinitions[groupName].Where(a => a.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                if (def != null)
+                {
+                    AttributeDefinitions[groupName].Remove(def);
+                    var res = Repository.Current.GetResourceById<Models.SecureActivity>(def.Id);
+                    if (res != null)
+                    {
+                        Repository.Current.Delete(res);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         private static bool AttributeDefinitionChanged(AttributeDefinition attribute)
         {
             if (!AttributeDefinitions.ContainsKey(attribute.GroupName))

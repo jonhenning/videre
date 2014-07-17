@@ -22,7 +22,8 @@ namespace Videre.Core.Services
             {
                 if (_accountService == null)
                 {
-                    _accountService = Portal.GetPortalAttribute("Account", "AccountProvider", Portal.GetAppSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core")).GetInstance<AccountProviders.IAccountService>();
+                    //_accountService = Portal.GetPortalAttribute("Account", "AccountProvider", Portal.GetAppSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core")).GetInstance<AccountProviders.IAccountService>();
+                    _accountService = Portal.GetAppSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core").GetInstance<AccountProviders.IAccountService>();
                     _accountService.Initialize(Portal.GetAppSetting("AccountServicesConnection", ""));
                 }
                 return _accountService;
