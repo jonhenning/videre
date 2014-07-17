@@ -26,7 +26,10 @@
     <div class="row">
         <div class="btn-toolbar col-md-12">
             <div class="btn-group">
+                @if (Authentication.PersistenceProvider != null)
+                {
                 @Html.Bootstrap().Button("btnNew").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewEntry.Text", "New Entry", true).Icon("glyphicon glyphicon-plus")
+                }
             </div>
         </div>
     </div>
