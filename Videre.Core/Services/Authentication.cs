@@ -160,7 +160,7 @@ namespace Videre.Core.Services
             {
                 var providerName = Portal.GetAppSetting<string>("AuthenticationPersistenceProvider", null); //Portal.GetPortalAttribute("Authentication", "PersistenceProvider", Portal.GetAppSetting<string>("AuthenticationPersistenceProvider", null));
                 if (providerName == null)
-                    providerName = "Videre.Core.AccountProviders.VidereAccount, Videre.Core";
+                    providerName = "Videre.Core.Providers.VidereAuthenticationProvider, Videre.Core";
 
                 if (_authenticationPersistenceProvider == null && providerName != "")
                 {
