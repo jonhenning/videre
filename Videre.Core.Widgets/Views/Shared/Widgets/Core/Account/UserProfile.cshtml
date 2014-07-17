@@ -16,7 +16,7 @@
     {
         userProfile = new UserProfile();   
     }
-    var createAccountUrl = CoreServices.Portal.GetPortalAttribute("Authentication", "CreateAccountSuccessUrl", "");
+    var createAccountUrl = CoreServices.Portal.GetPortalAttribute("Account", "CreateAccountSuccessUrl", "");
     
     Html.RegisterControlPresenter("videre.widgets.account.userprofile", Model, new { 
         newUser = newUser,

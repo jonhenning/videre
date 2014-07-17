@@ -38,6 +38,7 @@ namespace Videre.Core.Models
         public string InputType { get; set; }
         public bool Required { get; set; } //todo!
         public bool Multiple { get; set; }
+        public bool ReadOnly { get; set; }
 
         public List<string> Values { get; set; } //todo: if values is set then dropdown, otherwise textbox???
         public object DefaultValue { get; set; }

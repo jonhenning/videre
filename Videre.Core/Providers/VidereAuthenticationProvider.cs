@@ -50,7 +50,7 @@ namespace Videre.Core.Providers
 
         public void Register()
         {
-            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-Options", DefaultValue = new JArray() {"Allow Association","Allow Login","Allow Creation", "Allow Duplicate Association"}, LabelKey = Name + "Options.Text", LabelText = Name + " Options", Multiple = true, ControlType = "bootstrap-select", Values = new List<string>() { "Allow Association", "Allow Creation", "Allow Login" } });
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = Name + "-Options", DefaultValue = new JArray() {"Allow Association","Allow Login","Allow Creation", "Allow Duplicate Association"}, LabelKey = Name + "AuthenticationOptions.Text", LabelText = Name + " Authentication Options", Multiple = true, ControlType = "bootstrap-select", Values = new List<string>() { "Allow Association", "Allow Creation", "Allow Login" } });
 
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();
@@ -58,9 +58,9 @@ namespace Videre.Core.Providers
 
         public void InitializePersistence(string connection)
         {
-            var updates = migrateToSeparateDataStore();
-            if (updates > 0)
-                CoreServices.Repository.SaveChanges();
+            //var updates = migrateToSeparateDataStore();
+            //if (updates > 0)
+            //    CoreServices.Repository.SaveChanges();
         }
 
         public Services.AuthenticationResult Login(string userName, string password)
@@ -115,42 +115,42 @@ namespace Videre.Core.Providers
         }
 
         //this is needed while we still have our migration code in place
-        private static AccountProviders.IAccountService _accountService;
-        private static AccountProviders.IAccountService AccountService
-        {
-            get
-            {
-                if (_accountService == null)
-                {
-                    _accountService = ConfigurationManager.AppSettings.GetSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core").GetInstance<AccountProviders.IAccountService>();
-                    _accountService.Initialize(ConfigurationManager.AppSettings.GetSetting("AccountServicesConnection", ""));
-                }
-                return _accountService;
-            }
-        }
+        //private static AccountProviders.IAccountService _accountService;
+        //private static AccountProviders.IAccountService AccountService
+        //{
+        //    get
+        //    {
+        //        if (_accountService == null)
+        //        {
+        //            _accountService = CoreServices.Portal.GetAppSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core").GetInstance<AccountProviders.IAccountService>();
+        //            _accountService.Initialize(CoreServices.Portal.GetAppSetting("AccountServicesConnection", ""));
+        //        }
+        //        return _accountService;
+        //    }
+        //}
 
         //migrate user password info into own datastore
-        private int migrateToSeparateDataStore()
-        {
-            var count = 0;
-            if (AccountService is Videre.Core.AccountProviders.VidereAccount)   //only do this conversion if using VidereAccount service...  for now... 
-            {
-                var users = AccountService.Get(CoreServices.Portal.CurrentPortalId).Where(u => u.PasswordHash != null).ToList();
-                foreach (var user in users)
-                {
-                    var auth = new Models.UserAuthentication() { UserId = user.Id, Name = user.Name, PasswordHash = user.PasswordHash, PasswordSalt = user.PasswordSalt };
-                    CoreServices.Repository.Current.StoreResource("UserAuthentication", null, auth, user.Id);
+        //private int migrateToSeparateDataStore()
+        //{
+        //    var count = 0;
+        //    if (AccountService is Videre.Core.AccountProviders.VidereAccount)   //only do this conversion if using VidereAccount service...  for now... 
+        //    {
+        //        var users = AccountService.Get(CoreServices.Portal.CurrentPortalId).Where(u => u.PasswordHash != null).ToList();
+        //        foreach (var user in users)
+        //        {
+        //            var auth = new Models.UserAuthentication() { UserId = user.Id, Name = user.Name, PasswordHash = user.PasswordHash, PasswordSalt = user.PasswordSalt };
+        //            CoreServices.Repository.Current.StoreResource("UserAuthentication", null, auth, user.Id);
 
-                    //reset
-                    user.PasswordSalt = null;
-                    user.PasswordHash = null;
-                    AccountService.Save(user, user.Id);
+        //            //reset
+        //            user.PasswordSalt = null;
+        //            user.PasswordHash = null;
+        //            AccountService.Save(user, user.Id);
 
-                    count++;
-                }
-            }
+        //            count++;
+        //        }
+        //    }
 
-            return count;
-        }
+        //    return count;
+        //}
     }
 }

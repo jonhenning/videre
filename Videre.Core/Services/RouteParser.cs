@@ -19,7 +19,7 @@ namespace Videre.Core.Services
             get
             {
                 if (_routeParser == null)
-                    _routeParser = ConfigurationManager.AppSettings.GetSetting("RouteParserProvider", "Videre.Core.Providers.VidereRouteParser, Videre.Core").GetInstance<IRouteParser>();
+                    _routeParser = Portal.GetAppSetting("RouteParserProvider", "Videre.Core.Providers.VidereRouteParser, Videre.Core").GetInstance<IRouteParser>();
                 return _routeParser;
             }
         }

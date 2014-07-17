@@ -1218,6 +1218,9 @@ if ($.views != null)
                     ctl.val(dataValue);
 
                 ctl.find(':selected').attr('selected', 'selected'); //need value written into html
+
+                if (data.ReadOnly)
+                    ctl.attr({ disabled: 'true', readonly: 'readonly' });
             }
             else
             {
@@ -1237,6 +1240,10 @@ if ($.views != null)
 
                     ctl.attr('value', dataValue); //need value written into html
                 }
+
+                if (data.ReadOnly)
+                    ctl.attr('readonly', 'readonly');
+
             }
             ctl.attr('data-label-text', keyName); //todo: mini-hack as labels have no for="" specified
             if (data.Required)

@@ -62,6 +62,7 @@ namespace Videre.Core.Services
         private const string _authenticationClaimType = "AuthenticationToken";
         private const string _authenticationAccountNameClaimType = "AuthenticationAccountName";
         private static List<IAuthenticationProvider> _authenticationProviders = new List<IAuthenticationProvider>();
+        private static List<IAuthenticationPersistence> _authenticationPersistenceProviders = null;
 
         private static List<IAuthenticationResetProvider> _authenticationResetProviders = new List<IAuthenticationResetProvider>();
 
@@ -150,16 +151,6 @@ namespace Videre.Core.Services
             foreach (var provider in _authenticationProviders)
                 provider.Register();
 
-            //allow for this to not be set...  (i.e. set to empty string) - TODO:  should be cleaner way to accomplish this!
-            var providerName = ConfigurationManager.AppSettings.GetSetting<string>("AuthenticationPersistenceProvider", null);
-            if (providerName == null)
-                providerName = "Videre.Core.Providers.VidereAuthenticationProvider, Videre.Core";
-
-            if (providerName != "")
-                _authenticationPersistenceProvider = providerName.GetInstance<Providers.IAuthenticationPersistence>();
-
-            if (_authenticationPersistenceProvider != null)
-                _authenticationPersistenceProvider.InitializePersistence(ConfigurationManager.AppSettings.GetSetting("AuthenticationPersistenceConnection", ""));
         }
 
         private static Providers.IAuthenticationPersistence _authenticationPersistenceProvider;
@@ -167,8 +158,38 @@ namespace Videre.Core.Services
         {
             get
             {
+                var providerName = Portal.GetPortalAttribute("Authentication", "PersistenceProvider", Portal.GetAppSetting<string>("AuthenticationPersistenceProvider", null));
+                if (providerName == null)
+                    providerName = "Videre";
+
+                if (_authenticationPersistenceProvider != null && _authenticationPersistenceProvider.Name != providerName)  //if changed
+                    _authenticationPersistenceProvider = null;
+
+                if (_authenticationPersistenceProvider == null && providerName != "")   //allow for this to not be set...  (i.e. set to empty string) - TODO:  should be cleaner way to accomplish this!
+                {
+                    _authenticationPersistenceProvider = GetAuthenticationPersistenceProviders().Where(p => p.Name == providerName).FirstOrDefault(); //providerName.GetInstance<Providers.IAuthenticationPersistence>();
+
+                    if (_authenticationPersistenceProvider != null)
+                        _authenticationPersistenceProvider.InitializePersistence(Portal.GetAppSetting("AuthenticationPersistenceConnection", ""));
+                }
                 return _authenticationPersistenceProvider;
             }
+        }
+
+        public static List<IAuthenticationPersistence> GetAuthenticationPersistenceProviders()
+        {
+            if (_authenticationPersistenceProviders == null)
+            {
+                ObjectFactory.Configure(x =>
+                    x.Scan(scan =>
+                    {
+                        scan.AssembliesFromApplicationBaseDirectory();
+                        scan.AddAllTypesOf<IAuthenticationPersistence>();
+                    }));
+                _authenticationPersistenceProviders = ObjectFactory.GetAllInstances<IAuthenticationPersistence>().ToList();
+            }
+
+            return _authenticationPersistenceProviders;
         }
 
         public static List<IAuthenticationProvider> GetAuthenticationProviders()
@@ -351,7 +372,7 @@ namespace Videre.Core.Services
             get
             {
                 //todo:  perform check on Persistence Provider as IAuthenticationProvider to see if AllowCreation is turned on?
-                return CoreServices.Authentication.PersistenceProvider != null && !string.IsNullOrEmpty(CoreServices.Portal.GetPortalAttribute("Authentication", "CreateAccountUrl", ""));
+                return CoreServices.Authentication.PersistenceProvider != null && !string.IsNullOrEmpty(CoreServices.Portal.GetPortalAttribute("Account", "CreateAccountUrl", ""));
             }
         }
 
@@ -394,7 +415,7 @@ namespace Videre.Core.Services
                 CoreServices.Repository.SaveChanges();
 
             if (AuthenticationResetProvider != null)
-                AuthenticationResetProvider.InitializePersistence(ConfigurationManager.AppSettings.GetSetting("AuthenticationResetConnection", ""));
+                AuthenticationResetProvider.InitializePersistence(Portal.GetAppSetting("AuthenticationResetConnection", ""));
 
         }
 

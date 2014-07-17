@@ -16,14 +16,14 @@ namespace Videre.Core.Services
     {
         private static AccountProviders.IAccountService _accountService;
 
-        private static AccountProviders.IAccountService AccountService
+        public static AccountProviders.IAccountService AccountService
         {
             get
             {
                 if (_accountService == null)
                 {
-                    _accountService = ConfigurationManager.AppSettings.GetSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core").GetInstance<AccountProviders.IAccountService>();
-                    _accountService.Initialize(ConfigurationManager.AppSettings.GetSetting("AccountServicesConnection", ""));
+                    _accountService = Portal.GetPortalAttribute("Account", "AccountProvider", Portal.GetAppSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core")).GetInstance<AccountProviders.IAccountService>();
+                    _accountService.Initialize(Portal.GetAppSetting("AccountServicesConnection", ""));
                 }
                 return _accountService;
             }
@@ -350,11 +350,11 @@ namespace Videre.Core.Services
         {
             get
             {
-                return Services.Portal.GetPortalAttribute("Authentication", "AccountVerificationMode", "None");
+                return Services.Portal.GetPortalAttribute("Account", "AccountVerificationMode", "None");
             }
         }
 
-        public static string AccountVerificationUrl { get { return Services.Portal.ResolveUrl(Services.Portal.GetPortalAttribute("Authentication", "AccountVerificationUrl", "~/account/verify")); } }
+        public static string AccountVerificationUrl { get { return Services.Portal.ResolveUrl(Services.Portal.GetPortalAttribute("Account", "AccountVerificationUrl", "~/account/verify")); } }
 
         [Obsolete("Use user.IsEmailVerified")]
         public static bool IsAccountVerified(Models.User user)
