@@ -158,19 +158,14 @@ namespace Videre.Core.Services
         {
             get
             {
-                var providerName = Portal.GetPortalAttribute("Authentication", "PersistenceProvider", Portal.GetAppSetting<string>("AuthenticationPersistenceProvider", null));
+                var providerName = Portal.GetAppSetting<string>("AuthenticationPersistenceProvider", null); //Portal.GetPortalAttribute("Authentication", "PersistenceProvider", Portal.GetAppSetting<string>("AuthenticationPersistenceProvider", null));
                 if (providerName == null)
-                    providerName = "Videre";
+                    providerName = "Videre.Core.AccountProviders.VidereAccount, Videre.Core";
 
-                if (_authenticationPersistenceProvider != null && _authenticationPersistenceProvider.Name != providerName)  //if changed
-                    _authenticationPersistenceProvider = null;
-
-                if (_authenticationPersistenceProvider == null && providerName != "")   //allow for this to not be set...  (i.e. set to empty string) - TODO:  should be cleaner way to accomplish this!
+                if (_authenticationPersistenceProvider == null && providerName != "")
                 {
-                    _authenticationPersistenceProvider = GetAuthenticationPersistenceProviders().Where(p => p.Name == providerName).FirstOrDefault(); //providerName.GetInstance<Providers.IAuthenticationPersistence>();
-
-                    if (_authenticationPersistenceProvider != null)
-                        _authenticationPersistenceProvider.InitializePersistence(Portal.GetAppSetting("AuthenticationPersistenceConnection", ""));
+                    _authenticationPersistenceProvider = providerName.GetInstance<Providers.IAuthenticationPersistence>();
+                    _authenticationPersistenceProvider.InitializePersistence(Portal.GetAppSetting("AuthenticationPersistenceConnection", ""));
                 }
                 return _authenticationPersistenceProvider;
             }
