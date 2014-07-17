@@ -70,7 +70,7 @@ videre.widgets.admin.user = videre.widgets.base.extend(
             this.clearMsgs(this._dialog);
             videre.UI.showModal(this._dialog);
             this.bindData(this._selectedItem, this.getControl('GeneralTab'));
-            this.getControl('btnVerify').toggle(!this._selectedItem.IsEmailVerified);
+            this.getControl('btnVerify').toggle(!this._selectedItem.IsEmailVerified && this._selectedItem.Id != null);
             if (this._hasCustomAttributes)
             {
                 this._assignDefaultValues();
