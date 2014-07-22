@@ -97,7 +97,7 @@ namespace Videre.Core.Extensions
                     zipStream.Close();          // Must finish the ZipOutputStream before using outputMemStream.
                 }
                 outputMemStream.Position = 0;
-                return outputMemStream.GetBuffer();
+                return outputMemStream.ToArray(); //.GetBuffer();
             }
 
         }
