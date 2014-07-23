@@ -26,6 +26,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 {
                     Id = f.Id,
                     Name = f.Url,
+                    Type = Name,
                     Included = (export != null && export.Files != null ? export.Files.Exists(f2 => f2.Id == f.Id) : false),
                     Preview = string.Format("<img src=\"{0}\" class=\"img-polaroid\" style=\"height: 30px;\" />", f.MimeType.IndexOf("image/") > -1 ? Services.Portal.ResolveUrl("~/Core/f/" + f.Url) : Services.Portal.ResolveUrl("~/content/images/document.png"))
                 }).ToList();

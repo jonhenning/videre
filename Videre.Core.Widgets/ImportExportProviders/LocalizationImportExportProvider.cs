@@ -26,6 +26,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 {
                     Id = l.Id,
                     Name = l.Namespace + "/" + l.Key,
+                    Type = Name,
                     Included = (export != null && export.Localizations != null ? export.Localizations.Exists(l2 => l2.Id == l.Id) : false),
                     Preview = l.Text
                 }).ToList();

@@ -175,6 +175,7 @@
     <Compile Include="Models\AuthenticationResetTicket.cs" />
     <Compile Include="Models\BundleList.cs" />
     <Compile Include="Models\AuthenticatedUser.cs" />
+    <Compile Include="Models\ImportExportContentJob.cs" />
     <Compile Include="Models\UserAuthentication.cs" />
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />

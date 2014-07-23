@@ -240,5 +240,56 @@ namespace Videre.Core.Widgets.Controllers
         }
 
 
+        public JsonResult<List<Models.ImportExportContentJob>> GetExportJobs()
+        {
+            return API.Execute<List<Models.ImportExportContentJob>>(r =>
+            {
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                r.Data = Services.Package.GetExportJobs();
+            });
+        }
+
+        public JsonResult<bool> SaveExportJob(Models.ImportExportContentJob job)
+        {
+            return API.Execute<bool>(r =>
+            {
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                r.Data = !string.IsNullOrEmpty(Services.Package.SaveExportJob(job));
+            });
+        }
+        
+        [ValidateInput(false)]
+        public FileContentResult DownloadJobPackage(string jobData)
+        {
+            var job = jobData.ToObject<Models.ImportExportContentJob>();
+            return GetJobContent(job);
+        }
+
+        public JsonResult<bool> PublishJobPackage(Models.ImportExportContentJob job)
+        {
+            return API.Execute<bool>(r =>
+            {
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                var content = GetJobContent(job);
+                System.IO.File.WriteAllBytes(Package.PackageDir.PathCombine(job.Package.FileName), content.FileContents);
+                r.Data = true;
+            });
+        }
+
+        private FileContentResult GetJobContent(Models.ImportExportContentJob job)
+        {
+            Models.PortalExport exportPackage = null;
+            foreach (var item in job.Content)
+                exportPackage = ImportExport.GetProvider(item.Type).Export(item.Id, exportPackage);
+
+            job.Package.PackagedDate = DateTime.Now;
+
+            return File(new Dictionary<string, string>()
+                {
+                    {"package.manifest", job.Package.ToJson(true, "db") },
+                    {"content.json", exportPackage.ToJson(true, "db") }
+                }.ZipToByteArray(), "application/zip", job.Package.FileName);
+        }
+
     }
 }

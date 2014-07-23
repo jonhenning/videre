@@ -349,5 +349,56 @@ namespace Videre.Core.Services
         }
 
 
+        public static List<Models.ImportExportContentJob> GetExportJobs(string portalId = null)
+        {
+            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+            return Repository.Current.GetResources<Models.ImportExportContentJob>("ImportExportContentJob").Select(m => m.Data).Where(a =>
+                (string.IsNullOrEmpty(portalId) || a.PortalId == portalId) 
+                ).OrderBy(a => a.Name).ToList();
+        }
+
+        public static Models.ImportExportContentJob GetExportJob(string name, string portalId = null)
+        {
+            return GetExportJobs(portalId).Where(j => name.Equals(j.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+        }
+
+        public static string SaveExportJob(Models.ImportExportContentJob job, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            job.PortalId = string.IsNullOrEmpty(job.PortalId) ? Portal.CurrentPortalId : job.PortalId;
+            //if (string.IsNullOrEmpty(job.Name))
+                job.Name = job.Package.Name;
+            Validate(job);
+            var res = Repository.Current.StoreResource("ImportExportContentJob", null, job, userId);
+            return res.Id;
+        }
+        public static void Validate(Models.ImportExportContentJob job)
+        {
+            if (string.IsNullOrEmpty(job.PortalId) || string.IsNullOrEmpty(job.Name))
+                throw new Exception(Localization.GetExceptionText("InvalidResource.Error", "{0} is invalid.", "Job"));
+            if (IsDuplicate(job))
+                throw new Exception(Localization.GetExceptionText("DuplicateResource.Error", "{0} already exists.   Duplicates Not Allowed.", "Job"));
+        }
+        public static bool IsDuplicate(Models.ImportExportContentJob job)
+        {
+            var e = GetExportJob(job.Name, job.PortalId);
+            return (e != null && e.Id != job.Id);
+        }
+
+        public static bool Exists(Models.ImportExportContentJob job)
+        {
+            return GetExportJob(job.Name, job.PortalId) != null;
+        }
+
+        public static bool DeleteSecureActivity(string id, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var res = Repository.Current.GetResourceById<Models.ImportExportContentJob>(id);
+            if (res != null)
+                Repository.Current.Delete(res);
+            return res != null;
+        }
+
+
     }
 }

@@ -3,7 +3,7 @@
 @using CoreModels = Videre.Core.Models;
 @using Videre.Core.Services;
 @using Bootstrap = Videre.Core.Extensions.Bootstrap;
-@model CoreModels.Widget
+@model CoreModels.SubWidget
 @{
     Html.RegisterWebReferenceGroup("datatables");
     Html.RegisterWebReferenceGroup("fileuploader");
@@ -14,9 +14,8 @@
     
     
 
-    <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
+    <div id="@Model.GetId("Widget")">
         @{Html.RenderPartial("WidgetHeader", Model);}
-        @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "Package Export Administration") }));}
 
         <p>@Html.Raw(Model.GetText("Instructions.Text", "Export Package allows you to craft your own package, including the content you wish.  You can then tweak the content added by editing the JSON directly."))</p>
 

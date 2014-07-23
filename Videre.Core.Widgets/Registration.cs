@@ -59,6 +59,14 @@ namespace Videre.Core.Widgets
             //updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "PersistenceProvider", Values = providers, DefaultValue = "", Required = false, LabelKey = "AuthenticationPersistenceProvider.Text", LabelText = "Authentication Persistence Provider", TooltipKey = "PersistenceProviderTooltip.Text", TooltipText = "Provider used to store user authentication credentials.  It is configured in the app.config", ReadOnly = true });
             updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "PersistenceProvider", DefaultValue = CoreServices.Authentication.PersistenceProvider != null ? (CoreServices.Authentication.PersistenceProvider.GetType().Name + ", " + CoreServices.Authentication.PersistenceProvider.GetType().Assembly.GetName().Name) : "", Required = false, LabelKey = "AuthenticationPersistenceProvider.Text", LabelText = "Authentication Persistence Provider", TooltipKey = "PersistenceProviderTooltip.Text", TooltipText = "Provider used to store user authentication credentials.  It is configured in the app.config", ReadOnly = true });
 
+            //unregister widgets that moved to subwidgets
+            var manifest = CoreServices.Widget.GetWidgetManifest("Core/Admin/PackageAdmin");
+            if (manifest != null)
+                CoreServices.Widget.DeleteManifest(manifest.Id);
+            manifest = CoreServices.Widget.GetWidgetManifest("Core/Admin/PackageExport");
+            if (manifest != null)
+                CoreServices.Widget.DeleteManifest(manifest.Id);
+
             //App init
             updates += CoreServices.Update.Register(new List<CoreModels.WidgetManifest>()
             {
@@ -101,8 +109,6 @@ namespace Videre.Core.Widgets
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Search", Title = "Search Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "WebReference", Title = "Web Reference Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Package", Title = "Package", Category = "Admin" }, 
-                new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "PackageAdmin", Title = "Package Admin", Category = "Admin" }, 
-                new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "PackageExport", Title = "Package Export", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core", Name = "Menu", Title = "Menu", EditorPath = "Widgets/Core/MenuEditor", EditorType = "videre.widgets.editor.menu", ContentProvider = "Videre.Core.Widgets.ContentProviders.MenuContentProvider, Videre.Core.Widgets", Category = "Navigation", AttributeDefinitions = new List<AttributeDefinition>()
                 {
                     new AttributeDefinition()

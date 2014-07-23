@@ -27,6 +27,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 {
                     Id = r.GroupName + "." + r.Name,
                     Name = r.GroupName + "." + r.Name,
+                    Type = Name,
                     Included = exportDefinitions != null && exportDefinitions.Exists(d => d.GroupName == r.GroupName && d.Name == r.Name),
                     Preview = r.DefaultValue != null ? r.DefaultValue.ToString() : ""
                 }).ToList();

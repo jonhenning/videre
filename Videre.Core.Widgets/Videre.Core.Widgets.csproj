@@ -142,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\widgets\core\account\videre.widgets.account.userprofile.js" />
+    <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.packageexportjob.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.packageadmin.js" />
     <Content Include="Scripts\widgets\core\admin\videre.widgets.admin.webreference.js" />
     <Content Include="Scripts\controls\core\videre.widgets.widgetadmincontextmenu.js" />
@@ -208,6 +209,7 @@
     <Content Include="packages.config" />
     <Content Include="Views\Shared\Widgets\Core\Admin\ServerEnvironment.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Account\Verify.cshtml" />
+    <Content Include="Views\Shared\Widgets\Core\Admin\PackageExportJob.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">

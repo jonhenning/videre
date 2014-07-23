@@ -3,7 +3,7 @@
 @using Models = Videre.Core.Models;
 @using System.Web.Mvc.Html;
 @using Videre.Core.Services;
-@model Models.Widget
+@model Models.SubWidget
 
 @{
     Html.RegisterWebReferenceGroup("datatables");
@@ -20,7 +20,6 @@
 <div id="@Model.GetId("Widget")">
     @{Html.RenderPartial("WidgetHeader", Model);}
     
-    @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "Package Administration") }));}
     <p>@Html.Raw(Model.GetText("Instructions.Text", "Package Administration allows you to view installed packages, along with installing new ones."))</p>
 
     <div class="container">

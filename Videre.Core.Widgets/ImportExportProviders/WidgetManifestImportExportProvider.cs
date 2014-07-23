@@ -26,6 +26,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 {
                     Id = u.Id,
                     Name = u.Name,
+                    Type = Name,
                     Included = (export != null && export.Manifests != null ? export.Manifests.Exists(u2 => u2.Id == u.Id) : false)//,
                     //Preview = 
                 }).ToList();

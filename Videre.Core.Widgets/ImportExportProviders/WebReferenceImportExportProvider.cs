@@ -26,6 +26,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 {
                     Id = r.Id,
                     Name = r.Name,
+                    Type = Name,
                     Included = (export != null && export.WebReferences != null ? export.WebReferences.Exists(r2 => r2.Id == r.Id) : false),
                     Preview = r.Url
                 }).ToList();

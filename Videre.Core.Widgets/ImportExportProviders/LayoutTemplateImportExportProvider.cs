@@ -26,6 +26,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 {
                     Id = t.Id,
                     Name = t.LayoutName,
+                    Type = Name,
                     Included = (export != null && export.LayoutTemplates != null ? export.LayoutTemplates.Exists(t2 => t2.Id == t.Id) : false)
                     //Preview = t.ToJson()
                 }).ToList();

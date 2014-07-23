@@ -15,15 +15,19 @@
     @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
     { 
         new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("AdminTab"), Text = @Model.GetText("Administration.Text", "Administration"), Active = true, Icon = "glyphicon glyphicon-gift" },
-        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ExportTab"), Text = @Model.GetText("Export.Text", "Export"), Icon = "glyphicon glyphicon-export" }
+        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ExportJobTab"), Text = @Model.GetText("ExportJob.Text", "Export Job"), Icon = "glyphicon glyphicon-flash" },
+        new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ExportTab"), Text = @Model.GetText("CustomExport.Text", "Custom Export"), Icon = "glyphicon glyphicon-export" }
     }))
 
     <div class="tab-content">
         <div class="tab-pane active" id="@Model.GetId("AdminTab")">
-            @{ Html.RenderWidget("Core/Admin/PackageAdmin"); }
+            @{ Html.RenderSubWidget(Model, "PackageAdmin", new { }, true); }
+        </div>
+        <div class="tab-pane" id="@Model.GetId("ExportJobTab")">
+            @{Html.RenderSubWidget(Model, "PackageExportJob", new { }, true);}
         </div>
         <div class="tab-pane" id="@Model.GetId("ExportTab")">
-            @{ Html.RenderWidget("Core/Admin/PackageExport"); }
+            @{ Html.RenderSubWidget(Model, "PackageExport", new { }, true); }
         </div>
     </div>
 </div>

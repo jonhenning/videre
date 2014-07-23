@@ -11,5 +11,6 @@ namespace Videre.Core.Models
         public string Name { get; set; }
         public string Preview { get; set; }
         public bool Included { get; set; }
+        public string Type { get; set; }
     }
 }

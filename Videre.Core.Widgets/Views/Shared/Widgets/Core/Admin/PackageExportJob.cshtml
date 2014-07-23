@@ -1,0 +1,165 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using CoreModels = Videre.Core.Models;
+@using Videre.Core.Services;
+@using Bootstrap = Videre.Core.Extensions.Bootstrap;
+@model CoreModels.SubWidget
+@{
+    Html.RegisterWebReferenceGroup("datatables");
+    Html.RegisterWebReferenceGroup("fileuploader");
+
+    Html.RegisterControlPresenter("videre.widgets.admin.packageexportjob", Model, new { newJob = new CoreModels.ImportExportContentJob() });
+    var providers = ImportExport.GetRegisteredProviders();
+    
+
+    <div id="@Model.GetId("Widget")" >
+        @{Html.RenderPartial("WidgetHeader", Model);}
+
+        <p>@Html.Raw(Model.GetText("Instructions.Text", "Export Package Job allows you to define the definition of portal elements you wish to create a reusable export for."))</p>
+
+        <div id="@Model.GetId("JobsContainer")">
+            <div class="row">
+                <div class="btn-toolbar col-md-12">
+                    <div class="btn-group">
+                        @Html.Bootstrap().Button().DataAttribute("action", "new-job").Css("action-button").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewEntry.Text", "New Entry", true).Icon("glyphicon glyphicon-plus")
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("JobsTable")">
+                        <thead>
+                            <tr>
+                                <th style="width: 72px"></th>
+                                <th>@Model.GetText("Name.Text", "Name")</th>
+                            </tr>
+                        </thead>
+                        <tbody id="@Model.GetId("JobsList")" class="action-container"></tbody>
+                    </table>
+                    <script id="@Model.GetId("JobsTemplate")" type="text/html">
+                        <tr>
+                            <td>
+                                <div class="btn-group">
+                                    @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "download-job").Icon("glyphicon glyphicon-download-alt").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                    @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit-job").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                    @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete-job").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                </div>
+                            </td>
+                            <td>{{:Name}}</td>
+                        </tr>
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div id="@Model.GetId("EditJobContainer")" style="display: none">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="list-group" id="@Model.GetId("ExportTypeList")">
+                        @foreach (var provider in providers)
+                        {
+                            <a data-filter="@provider" class="list-group-item">@provider</a>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="@Model.GetId("PackageCtr")" class="well action-container">
+                                <h5>@Model.GetText("Package.Text", "Package") - <span data-column="Name"></span><span data-column="Version"></span></h5>
+                                @Html.Bootstrap().Button().DataAttribute("action", "edit-package").Text("EditPackage.Text", "Edit Package").Icon("glyphicon glyphicon-edit")
+                                @Html.Bootstrap().Button().DataAttribute("action", "download-package").Text("DownloadPackage.Text", "Download Package").Icon("glyphicon glyphicon-download-alt")
+                                @Html.Bootstrap().Button().DataAttribute("action", "publish-package").Text("PublishPackage.Text", "Publish Package").Icon("glyphicon glyphicon-gift")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="@Model.GetId("ItemListCtr")" class="col-md-12">
+                            <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ItemTable")">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 31px"></th>
+                                        <th>@Model.GetText("Name.Text", "Name")</th>
+                                        <th>@Model.GetText("Preview.Text", "Preview")</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="@Model.GetId("ItemList")" class="action-container"></tbody>
+                            </table>
+                            <script id="@Model.GetId("ItemListTemplate")" type="text/html">
+                                <tr>
+                                    <td>{{if ~existing[Type + '-' + Id]  == null}}
+                                            @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "add").Icon("glyphicon glyphicon-plus").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                        {{/if}}
+                                    </td>
+                                    <td>{{:Name}}</td>
+                                    <td>{{:Preview}}</td>
+                                </tr>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="videre-form-actions">
+                @Html.Bootstrap().Button().DataAttribute("action", "save-job").Css("action-button").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Save.Text", "Save", true)
+                @Html.Bootstrap().Button().DataAttribute("action", "cancel-job").Css("action-button").Text("Cancel.Text", "Cancel", true)
+            </div>
+        </div>
+
+        <div id="@Model.GetId("PackageDialog")" data-target="#@Model.GetId("PackageDialog")" class="modal fade">
+            <div class="modal-dialog" style="width: 900px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <span class="glyphicon glyphicon-gift"></span> @Model.GetText("EditPackage.Text", "Edit Package")
+                    </div>
+                    <div class="modal-body">
+                        @{Html.RenderPartial("WidgetHeader", Model);}
+                        @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
+                        { 
+                            new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ManifestTab"), Text = @Model.GetText("Manifest.Text", "Manifest"), Active = true, Icon = "glyphicon glyphicon-list-alt" },
+                            new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("ContentTab"), Text = @Model.GetText("Content.Text", "Content"), Icon = "glyphicon glyphicon-book" }
+                        }))
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="@Model.GetId("ManifestTab")">
+                                <div class="form-horizontal">
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice9)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Version.Text", "Version").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Version").DataType("number"), BootstrapUnits.GridSize.MediumDevice9)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("FileName.Text", "File Name").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("FileName").Required(), BootstrapUnits.GridSize.MediumDevice9)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Type.Text", "Type").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Type"), BootstrapUnits.GridSize.MediumDevice9)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Source.Text", "Source").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Source"), BootstrapUnits.GridSize.MediumDevice9)
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Description.Text", "Description").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextArea().DataColumn("Description"), BootstrapUnits.GridSize.MediumDevice9)
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="@Model.GetId("ContentTab")">
+                                <table class="table table-striped table-bordered table-condensed" id="@Model.GetId("ContentItemTable")">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 31px"></th>
+                                            <th>@Model.GetText("Type.Text", "Type")</th>
+                                            <th>@Model.GetText("Name.Text", "Name")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="@Model.GetId("ContentItemList")" class="action-container"></tbody>
+                                </table>
+                                <script id="@Model.GetId("ContentItemListTemplate")" type="text/html">
+                                    <tr>
+                                        <td>
+                                            @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "remove-content").Icon("glyphicon glyphicon-minus").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                                        </td>
+                                        <td>{{:Type}}</td>
+                                        <td>{{:Name}}</td>
+                                    </tr>
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @Html.Bootstrap().Button().DataAttribute("action", "package-ok").Css("action-button").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Ok.Text", "Ok", true)
+                        @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -26,6 +26,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 {
                     Id = t.Id,
                     Name = t.Urls.Count > 0 ? t.Urls[0] : "Default",
+                    Type = Name,
                     Included = (export != null && export.PageTemplates != null ? export.PageTemplates.Exists(t2 => t2.Id == t.Id) : false)
                     //Preview = t.ToJson()
                 }).ToList();

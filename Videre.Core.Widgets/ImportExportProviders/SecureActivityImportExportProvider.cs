@@ -26,6 +26,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 {
                     Id = a.Id,
                     Name = a.Area + "/" + a.Name,
+                    Type = Name,
                     Included = (export != null && export.SecureActivities != null ? export.SecureActivities.Exists(a2 => a2.Id == a.Id) : false)//,
                     //Preview = 
                 }).ToList();
