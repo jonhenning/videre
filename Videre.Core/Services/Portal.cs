@@ -181,11 +181,14 @@ namespace Videre.Core.Services
 
         public static PageTemplate GetPageTemplate(string url, string portalId = null)
         {
+            return GetPageTemplates(url, portalId).FirstOrDefault();
+        }
+
+        public static List<PageTemplate> GetPageTemplates(string url, string portalId = null)
+        {
             portalId = string.IsNullOrEmpty(portalId) ? CurrentPortalId : portalId;
             var templates = GetPageTemplates(portalId);
-            return
-                templates.SingleOrDefault(t2 => (string.IsNullOrEmpty(url) && t2.Urls.Count == 0) ||
-                    t2.Urls.Contains(url) && t2.PortalId == portalId);
+            return templates.Where(t2 => ((string.IsNullOrEmpty(url) && t2.Urls.Count == 0) || t2.Urls.Contains(url)) && t2.PortalId == portalId).ToList();
         }
 
         public static PageTemplate GetMatchedTemplate(string url, string portalId = null)
@@ -307,13 +310,21 @@ namespace Videre.Core.Services
             var templates = GetPageTemplates();
             return pageTemplate.IsDefault
                 ? templates.Exists(t => t.IsDefault)
-                : pageTemplate.Urls.Select(url => templates.SingleOrDefault(t2 => t2.Urls.Contains(url) && t2.PortalId == pageTemplate.PortalId)).Any(t => t != null);
+                : pageTemplate.Urls.Select(url => templates.FirstOrDefault(t2 => t2.Urls.Contains(url) && t2.PortalId == pageTemplate.PortalId)).Any(t => t != null);
         }
 
         public static bool IsDuplicate(PageTemplate pageTemplate)
         {
             var templates = GetPageTemplates();
-            return pageTemplate.Urls.Select(url => templates.SingleOrDefault(t2 => t2.Urls.Contains(url) && t2.PortalId == pageTemplate.PortalId)).Any(t => t != null && t.Id != pageTemplate.Id);
+
+            if (pageTemplate.IsDefault)
+                return templates.Exists(t => t.IsDefault && (t.Authenticated == pageTemplate.Authenticated || t.Authenticated == null || pageTemplate.Authenticated == null) && t.Id != pageTemplate.Id);
+            else
+                return pageTemplate.Urls.Select(url => templates.FirstOrDefault(t2 => t2.Urls.Contains(url)
+                    && t2.PortalId == pageTemplate.PortalId
+                    && (t2.Authenticated == pageTemplate.Authenticated || t2.Authenticated == null || pageTemplate.Authenticated == null)   //for now allow duplicate urls as long as authentication different
+                    && t2.Id != pageTemplate.Id
+                    )).Any(t => t != null);
         }
 
         public static List<LayoutTemplate> GetLayoutTemplates(string portalId = null)

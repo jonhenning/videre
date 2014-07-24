@@ -79,8 +79,15 @@ namespace Videre.Core.Widgets.ImportExportProviders
         private string Import(string portalId, PageTemplate pageTemplate, Dictionary<string, string> widgetContent, Dictionary<string, string> idMap, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var existing = Services.Portal.GetPageTemplate(pageTemplate.Urls.Count > 0 ? pageTemplate.Urls[0] : "", portalId);
-            //todo:  by first url ok???
+            var templates = Services.Portal.GetPageTemplates(pageTemplate.Urls.Count > 0 ? pageTemplate.Urls[0] : "", portalId);
+            PageTemplate existing = null;
+
+            var mappedId = ImportExport.GetIdMap<PageTemplate>(pageTemplate.Id, idMap);
+            existing = templates.Where(t => t.Id == mappedId).FirstOrDefault(); //if already mapped then use it
+            
+            if (existing == null)   //if not already mapped, then find existing one that is not already mapped
+                existing = templates.Where(t => !idMap.Values.Contains(t.Id)).FirstOrDefault(); //grab one that is not already mapped
+
             pageTemplate.PortalId = portalId;
             pageTemplate.RoleIds = Security.GetNewRoleIds(pageTemplate.RoleIds, idMap);
             pageTemplate.Id = existing != null ? existing.Id : null;
