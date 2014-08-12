@@ -50,7 +50,7 @@ videre.widgets.admin.filebrowser = videre.widgets.base.extend(
 
         this._delegates = {
             onNavClick: videre.createDelegate(this, this._onNavClick)
-        }
+        };
     },
 
     _onLoad: function(src, args)

@@ -15,7 +15,7 @@ videre.widgets.admin.packageadmin = videre.widgets.base.extend(
             onInstalledPackageDataReturn: videre.createDelegate(this, this._onInstalledPackageDataReturn),
             onInstalledPackageReturn: videre.createDelegate(this, this._onInstalledPackageReturn),
             onActionClicked: videre.createDelegate(this, this._onActionClicked)
-        }
+        };
     },
 
     _onLoad: function(src, args)

@@ -25,7 +25,7 @@ videre.widgets.admin.localization = videre.widgets.base.extend(
             onSaveReturn: videre.createDelegate(this, this._onSaveReturn),
             onNodeSelected: videre.createDelegate(this, this._onNodeSelected),
             onActionClicked: videre.createDelegate(this, this._onActionClicked)
-        }
+        };
     },
 
     _onLoad: function(src, args)

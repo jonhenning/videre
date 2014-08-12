@@ -24,7 +24,7 @@ videre.widgets.admin.role = videre.widgets.base.extend(
             onDataReturn: videre.createDelegate(this, this._onDataReturn),
             onSaveReturn: videre.createDelegate(this, this._onSaveReturn),
             onActionClicked: videre.createDelegate(this, this._onActionClicked)
-        }
+        };
     },
 
     _onLoad: function(src, args)

@@ -25,7 +25,7 @@ videre.widgets.admin.search = videre.widgets.base.extend(
             onSaveReturn: videre.createDelegate(this, this._onSaveReturn),
             onGenerateReturn: videre.createDelegate(this, this._onGenerateReturn),
             onActionClicked: videre.createDelegate(this, this._onActionClicked)
-        }
+        };
     },
 
     _onLoad: function(src, args)

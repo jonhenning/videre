@@ -61,7 +61,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
             onActionClicked: videre.createDelegate(this, this._onActionClicked),
             onWidgetActionClicked: videre.createDelegate(this, this._onWidgetActionClicked),
             onWidgetSave: videre.createDelegate(this, this._onWidgetSave)
-        }
+        };
     },
 
     _onLoad: function(src, args)

@@ -24,7 +24,7 @@ videre.widgets.admin.webreference = videre.widgets.base.extend(
             onDataReturn: videre.createDelegate(this, this._onDataReturn),
             onDataSaveReturn: videre.createDelegate(this, this._onDataSaveReturn),
             onActionClicked: videre.createDelegate(this, this._onActionClicked)
-        }
+        };
     },
 
     _onLoad: function(src, args)

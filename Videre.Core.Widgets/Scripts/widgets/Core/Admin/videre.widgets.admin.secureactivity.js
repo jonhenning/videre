@@ -33,7 +33,7 @@ videre.widgets.admin.secureactivity = videre.widgets.base.extend(
             onDataSaveReturn: videre.createDelegate(this, this._onDataSaveReturn),
             onActionClicked: videre.createDelegate(this, this._onActionClicked)//,
             //onItemRendered: videre.createDelegate(this, this._onItemRendered)
-        }
+        };
     },
 
     _onLoad: function(src, args)

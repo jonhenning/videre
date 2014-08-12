@@ -14,7 +14,7 @@ videre.widgets.account.verify = videre.widgets.base.extend(
         this._delegates = {
             onVerifyResult: videre.createDelegate(this, this._onVerifyResult),
             onResendResult: videre.createDelegate(this, this._onResendResult)
-    };
+        };
     },
 
     _onLoad: function(src, args)
