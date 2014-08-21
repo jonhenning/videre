@@ -812,6 +812,15 @@ videre.widgets.base = videre.Class.extend(
         return this._controls[id];
     },
 
+    findControl: function(selector, scope)
+    {
+        if (scope == null)
+            scope = this._widget;
+        if (scope == null)
+            scope = document;
+        return scope.find(selector);
+    },
+
     getId: function(id)
     {
         return this._ns + '_' + id;
