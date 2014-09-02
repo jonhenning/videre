@@ -28,6 +28,7 @@
     <Target Name="AfterBuild">
         <CallTarget Targets="UpdatePackageManifest" />
         <CallTarget Targets="CreatePackage" />
+        <CallTarget Targets="CreateNewInstallPackage" />
         <CallTarget Targets="Deploy" />
         <CallTarget Targets="ResetPackageManifest" />
     </Target>
@@ -67,14 +68,75 @@
 
         <CreateItem Include="@(MyFileWrites);@(Content);" Exclude="
                     *.config;
+                    *.debug;
                     *.targets;
                     _packages\**;
                     bin\*.pdb;
+                    bin\*.xml;
                     obj\**;
                     ">
             <Output TaskParameter="Include" ItemName="DeployFiles"/>
         </CreateItem>
         <Zip Files="@(DeployFiles)" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(ZipName)" />
+    </Target>
+
+    <Target Name="CreateNewInstallPackage">
+        <MakeDir Directories="$(RedistDir)"/>
+        <PropertyGroup>
+            <EscapedMSBuildProjectDirectory>$(MSBuildProjectDirectory.Replace("\","\\"))\\</EscapedMSBuildProjectDirectory>
+        </PropertyGroup>
+        <RegexReplace Input="@(FileWrites)" Expression="$(EscapedMSBuildProjectDirectory)" Replacement="" Count="1">
+            <Output ItemName="NewInstallFileWrites" TaskParameter="Output" />
+        </RegexReplace>
+
+        <CreateItem Include="@(NewInstallFileWrites);@(Content);" Exclude="
+                    *.config;
+                    *.debug;
+                    *.targets;
+                    _packages\**;
+                    bin\*.pdb;
+                    bin\*.xml;
+                    obj\**;
+                    ">
+            <Output TaskParameter="Include" ItemName="NewInstallFiles"/>
+        </CreateItem>
+        <CreateItem Include="
+                    $(MSBuildProjectDirectory)\AppSettings.config;
+                    $(MSBuildProjectDirectory)\ConnectionStrings.config;
+                    $(MSBuildProjectDirectory)\log4net.config;
+                    $(MSBuildProjectDirectory)\SMTPSettings.config;
+                    $(MSBuildProjectDirectory)\Web.config;
+                    $(MSBuildProjectDirectory)\bin\Videre.Core.Widgets.dll;
+                    $(MSBuildProjectDirectory)\scripts\bootstrap-3.2.0\**\*;
+                    $(MSBuildProjectDirectory)\scripts\jquery-1.10.2\**\*;
+                    $(MSBuildProjectDirectory)\scripts\jquery-ui-1.8.18\**\*;
+                    $(MSBuildProjectDirectory)\_packages\bootstrap-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\bootstrap3-typeahead-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\ckeditor-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\cleditor-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\datatables-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\dropzone-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\dynatree-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\font-awesome-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\jquery-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\jquery.easing-.zip;
+                    $(MSBuildProjectDirectory)\_packages\jsrender-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\md5-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\moment-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\prettify-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\valums-file-uploader-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre-docs-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre-sidenav-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre.Core.Layouts.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre.Core.Widgets.zip;
+                    $(MSBuildProjectDirectory)\_packages\Videre.CoreSiteTemplate.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre.FirstTimeUserContent.zip;
+                    $(MSBuildProjectDirectory)\_packages\wysihtml5-*.zip;
+                    ">
+            <Output TaskParameter="Include" ItemName="PackageFiles"/>
+        </CreateItem>
+        <Zip Files="@(NewInstallFiles);@(PackageFiles)" WorkingDirectory="$(MSBuildProjectDirectory)\" ZipFileName="$(RedistDir)\$(Name).NewInstall.zip" />
+        <Copy SourceFiles="$(RedistDir)\$(Name).NewInstall.zip" DestinationFolder="%(DeployDirs.FullPath)\_packages" />
     </Target>
 
     <Target Name="Deploy" Condition="$(DeployDir) != ''">

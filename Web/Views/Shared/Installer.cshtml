@@ -72,8 +72,7 @@
                                     <div id="@Model.GetId("PackagesPanel")" class="panel-collapse collapse in">
                                         <div class="panel-body">
                                             <div class="form-group">
-
-                                                <div class="controls" id="@Model.GetId("Packages")">
+                                                <div class="controls col-md-10" id="@Model.GetId("Packages")">
                                                     @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type != "WebReference" && !IsRequiredPackage(p)).OrderBy(p => p.Name))
                                                     {
                                                         <label class="checkbox" title="@package.Description - @package.Source">
@@ -94,7 +93,7 @@
                                         <div class="panel-body">
                                             <div class="form-group">
 
-                                                <div class="controls" id="@Model.GetId("CorePackages")">
+                                                <div class="controls col-md-10" id="@Model.GetId("CorePackages")">
                                                     @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type != "WebReference" && IsRequiredPackage(p)).OrderBy(p => p.Name))
                                                     {
                                                         <label class="checkbox" title="@package.Description - @package.Source">
@@ -114,7 +113,7 @@
                                     <div id="@Model.GetId("WebReferencesPanel")" class="panel-collapse collapse">
                                         <div class="panel-body">
                                             <div class="form-group">
-                                                <div class="controls" id="@Model.GetId("WebReferencePackages")">
+                                                <div class="controls col-md-10" id="@Model.GetId("WebReferencePackages")">
                                                     @foreach (var package in Videre.Core.Services.Package.GetNewestAvailablePackages().Where(p => p.Type == "WebReference").OrderBy(p => p.Name))
                                                     {
                                                         <label class="checkbox" title="@package.Description - @package.Source">
