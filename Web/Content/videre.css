@@ -258,4 +258,9 @@ a
     -o-transition: all 0.2s ease-in-out;
 }
 
+/*Bootstrap 3.2 workaround for checkbox with text only on left*/
+input[data-controltype="checkbox"] {
+    position: relative!important;
+}
+
 
