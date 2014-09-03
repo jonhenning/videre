@@ -298,7 +298,11 @@ namespace Videre.Core.Services
 
         public static TimeZoneInfo GetUserTimeZone()
         {
-            var user = Account.CurrentUser;
+            return GetUserTimeZone(Account.CurrentUser);
+        }
+
+        public static TimeZoneInfo GetUserTimeZone(Models.User user)
+        {
             if (user != null && !string.IsNullOrEmpty(user.TimeZone))
                 return TimeZoneInfo.FindSystemTimeZoneById(user.TimeZone);
             return null;
@@ -306,7 +310,12 @@ namespace Videre.Core.Services
 
         public static string GetUserTimeZoneName()
         {
-            var zone = GetUserTimeZone();
+            return GetUserTimeZoneName(Account.CurrentUser);
+        }
+        
+        public static string GetUserTimeZoneName(Models.User user)
+        {
+            var zone = GetUserTimeZone(user);
             if (zone != null)
                 return zone.StandardName;
             return "";
