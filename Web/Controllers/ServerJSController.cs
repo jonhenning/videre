@@ -24,8 +24,12 @@ namespace Videre.Web.Controllers
             var script = string.Format("videre.localization.items = {0};",
                 locs.Select(l => new { key = l.Key.Replace(".Client", ""), value = l.Text, ns = "global" }).ToJson());
 
-            //todo: register dateFormats per user or per portal?
-            //var script = string.Format("videre.localization.dateFormats = {datetime: 'm-d-yy H:MM TT', date: 'm-d-yy', time: 'H:MM TT'};",
+            var dateFormat = Services.Account.GetUserDateFormat("date", false);
+            if (dateFormat != null)
+            {
+                //register dateFormats per user
+                script += string.Format("videre.localization.dateFormats = {{datetime: '{0}', date: '{1}', time: '{2}'}};", Services.Account.GetUserDateFormat("datetime", false), dateFormat, Services.Account.GetUserDateFormat("time", false));
+            }
 
             var eTagHash = Convert.ToBase64String(System.Security.Cryptography.MD5.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(script)));
 
