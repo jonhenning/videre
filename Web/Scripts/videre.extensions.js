@@ -157,7 +157,7 @@ Array.prototype.distinct = function(f)
         var key = f(this[i]);
         if (temp[key] == null)
         {
-            ret.push(key);
+            ret.push(this[i]);
             temp[key] = 1;
         }
     }
