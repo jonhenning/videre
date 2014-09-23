@@ -37,7 +37,7 @@
 
     parseDate: function(value, format, zone)
     {
-        var d = moment(value);
+        var d = moment.parseZone(value);
         if (zone)
         {
             var offset = videre.timeZones.getOffset(zone, d);
@@ -183,6 +183,7 @@
             url: videre.resolveUrl(url),
             headers: options.headers,
             processData: false,
+            async: options.async == null ? true : options.async,
             data: videre.serialize(data),
             contentType: options.contentType || 'application/json; charset=utf-8',
             success: function(result) { success(result, ctx); },
@@ -1278,4 +1279,3 @@ if ($.views != null)
     });
 }
 $(window).unload(videre.cleanUp);
-

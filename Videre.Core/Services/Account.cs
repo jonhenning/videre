@@ -9,6 +9,7 @@ using CodeEndeavors.Extensions;
 using StructureMap;
 using System.Configuration;
 using System.Security.Cryptography;
+using System.Globalization;
 
 namespace Videre.Core.Services
 {
@@ -320,6 +321,69 @@ namespace Videre.Core.Services
                 return zone.StandardName;
             return "";
         }
+
+        /// <summary>
+        /// Returns logged in users date format
+        /// </summary>
+        /// <param name="returnDefault">determins if no format specified for user if the defaults are returned</param>
+        /// <returns></returns>
+        public static string GetUserDateFormat(string format, bool returnDefault = true)
+        {
+            return GetUserDateFormat(Services.Account.CurrentUser, format, returnDefault);
+        }
+
+        public static string GetUserDateFormat(Models.User user, string format, bool returnDefault = true)
+        {
+            if (user != null && !string.IsNullOrEmpty(user.Locale))
+            {
+                var culture = new CultureInfo(user.Locale);
+                if (format == "date")
+                    return convertDateFormatToMomentJS(culture.DateTimeFormat.ShortDatePattern);
+                else if (format == "datetime")
+                    return convertDateFormatToMomentJS(culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern);
+                else if (format == "time")
+                    return convertDateFormatToMomentJS(culture.DateTimeFormat.ShortTimePattern);
+                else 
+                    throw new Exception("Unknown Date Format: " + format);
+            }
+            else if (returnDefault)
+            {
+                if (format == "date")
+                    return "M/D/YY";
+                else if (format == "datetime")
+                    return "M/D/YY h:mm A";
+                else if (format == "time")
+                    return "h:mm A";
+                else 
+                    throw new Exception("Unknown Date Format: " + format);
+            }
+            return null;
+        }
+
+        private static string convertDateFormatToMomentJS(string format)
+        {
+            //=======================================================================   
+            // Handle:   
+            //  C#     Moment  Meaning   
+            //  d      D       Day of month (no leading 0)  
+            //  dd     DD      Day of month (leading 0)   
+            //  M      M       Month of year (no leading 0)   
+            //  MM     MM      Month of year (leading 0)   
+            //  yy     Y       Two digit year   
+            //  yyyy   YY      Four digit year 
+            //  tt     A       AM/PM
+            //======================================================================= 
+
+            //not really elegant...   
+            format = format.Replace("dd", "DD");
+            format = format.Replace("d", "D");
+            format = format.Replace("yyyy", "YY");
+            format = format.Replace("yy", "Y");
+            format = format.Replace("tt", "A");
+
+            return format;
+        }
+
 
         public static bool SaveUserProfile(Models.UserProfile userProfile)
         {

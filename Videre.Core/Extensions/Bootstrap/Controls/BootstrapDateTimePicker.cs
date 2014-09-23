@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -97,6 +98,10 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             //if (_model.pickTime)
             //    ctl.Attributes.AddSafe("data-pick-time", "true");
 
+            var dateFormat = Services.Account.GetUserDateFormat(this.Model.dataType, false);
+            if (dateFormat != null)
+                ctl.Attributes.AddSafe("data-format", dateFormat);
+
             if (!string.IsNullOrEmpty(_model.timeZone))
                 ctl.Attributes.AddSafe("data-timezone", _model.timeZone);
 
@@ -108,6 +113,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
             return base.Render(ctl);
         }
+
 
     }
 
