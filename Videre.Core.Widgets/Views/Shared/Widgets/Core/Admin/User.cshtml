@@ -81,6 +81,7 @@
                     <div class="tab-content">
                         <div class="tab-pane active form-horizontal" id="@Model.GetId("GeneralTab")">
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Name.Text", "Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Name").Required(), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserDisplayName.Text", "Display Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("DisplayName"), BootstrapUnits.GridSize.MediumDevice8)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Email.Text", "Email").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Email().DataColumn("Email").Required(), BootstrapUnits.GridSize.MediumDevice8)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Locale.Text", "Locale").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("Locale"), BootstrapUnits.GridSize.MediumDevice3)
                             @if (Authentication.PersistenceProvider != null)
