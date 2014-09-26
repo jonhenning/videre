@@ -16,7 +16,7 @@ namespace Videre.Core.Models
         public string ProviderType { get; set; }
         public List<string> DocumentTypes { get; set; }
 
-        public DateTime? LastGenerated { get; set; }
+        public DateTimeOffset? LastGenerated { get; set; }
         public int? AutoRefreshRate { get; set; }
 
         public Services.ISearchProvider GetService()

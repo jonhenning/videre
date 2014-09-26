@@ -6,6 +6,7 @@
 @model Models.Widget
 
 @{
+    Html.RegisterUserTimeZoneScript();
     Html.RegisterWebReferenceGroup("datatables");
     Html.RegisterControlPresenter(Model, "videre.widgets.admin.search", new Dictionary<string, object>() {
         {"data", Search.GetSearchProviders() }});
@@ -55,7 +56,7 @@
                         </td>
                         <td>{{:Name}}</td>
                         <td>{{:ProviderType}}</td>
-                        <td>{{:~formatDateTime(LastGenerated)}}</td>
+                        <td>{{:~formatDateTime(LastGenerated, null, '@Account.GetUserTimeZoneName()')}}</td>
                         <td>{{:AutoRefreshRate}}</td>
                     </tr>
                 </script>
