@@ -288,9 +288,21 @@ Array.clone = function (a)
 // Array Remove - By John Resig (MIT Licensed) - http://ejohn.org/blog/javascript-array-remove/
 Array.prototype.remove = function(from, to)
 {
-    var rest = this.slice((to || from) + 1 || this.length);
-    this.length = from < 0 ? this.length + from : from;
-    return this.push.apply(this, rest);
+    if (typeof (from) == 'function')
+    {
+        for (var i = 0; i < this.length; i++)
+        {
+            if (from(this[i]))
+                this.remove(i);
+        }
+        return this;
+    }
+    else
+    {
+        var rest = this.slice((to || from) + 1 || this.length);
+        this.length = from < 0 ? this.length + from : from;
+        return this.push.apply(this, rest);
+    }
 };
 
 Array.prototype.swap = function(x, y)
@@ -301,7 +313,7 @@ Array.prototype.swap = function(x, y)
 };
 
 Array.prototype.contains = function (a) { return Array.indexOf(this, a) >= 0; };
-Array.prototype.indexOf = function(item, start) { Array.indexOf(this, item, start); };
+Array.prototype.indexOf = function(item, start) { return Array.indexOf(this, item, start); };
 
 Array.contains = function (a, b) { return Array.indexOf(a, b) >= 0; };
 Array.indexOf = function _indexOf(array, item, start)
