@@ -89,8 +89,13 @@
             <Output ItemName="NewInstallFileWrites" TaskParameter="Output" />
         </RegexReplace>
 
-        <!--copy latest update files to packages folder so they are included in newinstall zip-->
-        <CreateItem Include="$(MSBuildProjectDirectory)\_updates\*.*">
+        <!--copy latest redist files to packages folder so they are included in newinstall zip-->
+        <CreateItem Include="
+                    $(RedistDir)\videre-docs-*.zip;
+                    $(RedistDir)\videre-sidenav-*.zip;
+                    $(RedistDir)\videre.Core.Layouts.zip;
+                    $(RedistDir)\videre.Core.Widgets.zip;
+                    ">
             <Output TaskParameter="Include" ItemName="NewUpdateFiles"/>
         </CreateItem>
         <Copy SourceFiles="@(NewUpdateFiles)" DestinationFolder="$(MSBuildProjectDirectory)\_packages\" />
