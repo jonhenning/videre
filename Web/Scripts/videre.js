@@ -1204,7 +1204,7 @@ if ($.views != null)
             var tempParent = $('<div></div>');
             var dataValue = Object.deepGet(attributes, keyName);
             dataValue = dataValue != null ? dataValue : data.DefaultValue;
-            if (data.Values.length > 0)
+            if (data.Values != null && data.Values.length > 0)
             {
                 ctl = $('<select>').addClass('form-control').attr('data-column', keyName);
 
