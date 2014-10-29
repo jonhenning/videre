@@ -6,6 +6,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Videre.Core.Layouts", "Videre.Core.Layouts\Videre.Core.Layouts.csproj", "{F68C280C-8313-406D-88DC-CD5F27A5520E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{8CCC87E7-C8F9-4412-BAAB-716D0E8019A6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F68C280C-8313-406D-88DC-CD5F27A5520E} = {F68C280C-8313-406D-88DC-CD5F27A5520E}
+		{3966477C-8503-40F9-852E-9908C2890366} = {3966477C-8503-40F9-852E-9908C2890366}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Videre.Core.Widgets", "Videre.Core.Widgets\Videre.Core.Widgets.csproj", "{3966477C-8503-40F9-852E-9908C2890366}"
 EndProject
