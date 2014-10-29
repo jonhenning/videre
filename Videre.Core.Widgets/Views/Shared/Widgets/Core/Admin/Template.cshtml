@@ -30,7 +30,7 @@
     @{Html.RenderPartial("WidgetHeader", Model);}
     @{Html.RenderPartial("WidgetSectionHeader", Model, new ViewDataDictionary(new { SectionHeader = Model.GetText("WidgetTitle.Text", "Template Administration") }));}
 
-    <p>@Html.Raw(Model.GetText("Instructions.Text", "Template administration allows you to create new pages to view along with specifying their layout and widgets.  The general tab allows you to choose the layout, roles, title, and one or more urls to associate with your template.  The layout tabl allows you to drag widgets onto your layout's panes.  Additionally, some widgets like Text/Html provide an editor to put content in when you click the menu and then edit."))</p>
+    <p>@Html.Raw(Model.GetText("Instructions.Text", "Template administration allows you to create new pages to view along with specifying their layout and widgets.  The general tab allows you to choose the layout, roles, title, and one or more urls to associate with your template.  The layout table allows you to drag widgets onto your layout's panes.  Additionally, some widgets like Text/Html provide an editor to put content in when you click the menu and then edit."))</p>
     <div class="row">
         <div class="col-md-3">
             <div class="btn-toolbar" role="toolbar">
