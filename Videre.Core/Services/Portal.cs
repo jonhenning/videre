@@ -315,7 +315,7 @@ namespace Videre.Core.Services
 
         public static bool IsDuplicate(PageTemplate pageTemplate)
         {
-            var templates = GetPageTemplates();
+            var templates = GetPageTemplates(pageTemplate.PortalId);
 
             if (pageTemplate.IsDefault)
                 return templates.Exists(t => t.IsDefault && (t.Authenticated == pageTemplate.Authenticated || t.Authenticated == null || pageTemplate.Authenticated == null) && t.Id != pageTemplate.Id);
