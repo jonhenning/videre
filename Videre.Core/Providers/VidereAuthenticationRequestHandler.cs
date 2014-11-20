@@ -19,7 +19,7 @@ namespace Videre.Core.Providers
         public void Execute(string url, Models.PageTemplate template)
         {
             if (!template.IsAuthorized)
-                HttpContext.Current.Response.Redirect(FormsAuthentication.LoginUrl);
+                HttpContext.Current.Response.Redirect(FormsAuthentication.LoginUrl + "?ReturnUrl=" + HttpUtility.UrlEncode(System.Web.HttpContext.Current.Request.Url.PathAndQuery));
                 //FormsAuthentication.RedirectToLoginPage(); //todo: use web.config for this, or portal setting?
         }
 
