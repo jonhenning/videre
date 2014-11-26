@@ -4,5 +4,19 @@
 	[
 		[ {Name: "Main", DesignerCss: 'col-md-8', DesignerStyle: 'height: 300px;' }, {Name: "Sidebar", DesignerCss: 'col-md-4', DesignerStyle: 'height: 300px;' } ], 
 		[ {Name: "Footer", DesignerStyle: "min-height: 50px", DesignerCss: 'col-md-12'} ]
+	],
+	AttributeDefinitions:
+	[
+		{
+			"LabelKey": "ShowTitle.Text",
+			"LabelText": "Show Title",
+			"Name": "ShowTitle",
+			"GroupName": "Display",
+			"DataType": "boolean",
+			"ControlType": "checkbox",
+			"InputType": "checkbox",
+			"Required": false,
+			"DefaultValue": true
+		}
 	]
 }

@@ -5,6 +5,8 @@
 
 @{
     Html.RegisterStylesheet(UI.LayoutContentPath.PathCombine("SidebarRight/layout.css"), true);
+
+    var showTitle = this.Model.Layout.GetAttribute("ShowTitle", true);
 }
 
 <!DOCTYPE HTML>
@@ -24,9 +26,12 @@
     </head>
     <body>
         <div class="container">
+            @{if (showTitle)
+            {
             <div class="content-header template-header shaded">
                 <h3>@(this.Model != null ? this.Model.Title : "Videre")</h3>
             </div>
+            }}
 			<div class="content" style="min-height: 500px;">	
 				@RenderBody()
                 <div class="container">

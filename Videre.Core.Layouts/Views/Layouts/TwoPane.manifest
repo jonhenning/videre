@@ -5,5 +5,19 @@
 		[ {Name: "Top", DesignerStyle: "min-height: 50px", DesignerCss: 'col-md-12'} ],
 		[ {Name: "Main", DesignerCss: 'col-md-6', DesignerStyle: 'height: 300px;' }, {Name: "Right", DesignerCss: 'col-md-12', DesignerStyle: 'height: 300px;' } ], 
 		[ {Name: "Footer", DesignerStyle: "min-height: 50px", DesignerCss: 'col-md-12'} ]
+	],
+	AttributeDefinitions:
+	[
+		{
+			"LabelKey": "ShowTitle.Text",
+			"LabelText": "Show Title",
+			"Name": "ShowTitle",
+			"GroupName": "Display",
+			"DataType": "boolean",
+			"ControlType": "checkbox",
+			"InputType": "checkbox",
+			"Required": false,
+			"DefaultValue": true
+		}
 	]
 }

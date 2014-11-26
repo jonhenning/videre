@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CodeEndeavors.Extensions;
 using CodeEndeavors.Extensions.Serialization;
 
 namespace Videre.Core.Models
@@ -7,6 +8,7 @@ namespace Videre.Core.Models
     {
         public LayoutTemplate()
         {
+            Attributes = new Dictionary<string, object>();
             Widgets = new List<Widget>();
             //Roles = new List<string>();
             WebReferences = new List<string>();
@@ -87,6 +89,20 @@ namespace Videre.Core.Models
 
         [SerializeIgnore(new string[] {"db", "client"})] 
         public bool IsAuthorized { get { return Services.Account.RoleAuthorized(RoleIds); } }
+
+        public Dictionary<string, object> Attributes { get; set; }
+
+        public T GetAttribute<T>(string key, T defaultValue)
+        {
+            try
+            {
+                return Attributes.GetSetting(key, defaultValue);
+            }
+            catch
+            {
+            }
+            return defaultValue;
+        }
 
     }
 
