@@ -141,9 +141,9 @@ namespace Videre.Core.Extensions
                 if (!IsKeyRegistered(helper, src))
                 {
                     if (defer)
-                        Services.WebReferenceBundler.GetReferenceList(helper, "js").Add(new Models.ReferenceListItem() { Src = GetPath(src), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle });
+                        Services.WebReferenceBundler.GetReferenceList(helper, "js").Add(new Models.ReferenceListItem() { Src = GetPath(src).ToLower(), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle });
                     else
-                        helper.ViewContext.HttpContext.Response.Write(string.Format("<script src=\"{0}\" type=\"text/javascript\" {1}></script>", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
+                        helper.ViewContext.HttpContext.Response.Write(string.Format("<script src=\"{0}\" type=\"text/javascript\" {1}></script>", GetPath(src).ToLower(), GetDataAttributeMarkup(dataAttributes)));
                     RegisterKey(helper, src);
                 }
             //}
@@ -165,9 +165,9 @@ namespace Videre.Core.Extensions
                 if (!IsKeyRegistered(helper, src))
                 {
                     if (defer)
-                        Services.WebReferenceBundler.GetReferenceList(helper, "css").Add(new Models.ReferenceListItem() { Src = GetPath(src), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle });
+                        Services.WebReferenceBundler.GetReferenceList(helper, "css").Add(new Models.ReferenceListItem() { Src = GetPath(src).ToLower(), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle });
                     else
-                        helper.ViewContext.HttpContext.Response.Write(string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
+                        helper.ViewContext.HttpContext.Response.Write(string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", GetPath(src).ToLower(), GetDataAttributeMarkup(dataAttributes)));
                     RegisterKey(helper, src);
                 }
             //}
