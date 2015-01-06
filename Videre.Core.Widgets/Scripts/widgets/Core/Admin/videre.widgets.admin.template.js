@@ -142,6 +142,8 @@ videre.widgets.admin.template = videre.widgets.base.extend(
         var layout = this._layoutDataDict[layoutViewName];
         if (layout != null)
         {
+            this.bindAttributes(layout);
+
             for (var row = 0; row < layout.Panes.length; row++)
             {
                 html += '<div class="row">';
@@ -190,6 +192,18 @@ videre.widgets.admin.template = videre.widgets.base.extend(
 
     },
 
+    bindAttributes: function(layout)
+    {
+        var showAttributes = this._isLayout && layout.AttributeDefinitions != null && layout.AttributeDefinitions.length > 0;
+        this.findControl('li>a[href="#' + this.getId('LayoutAttributeTab') + '"]').toggle(showAttributes);
+        if (showAttributes)
+        {
+            var template = this._selectedTemplate;
+            var ctr = this.getControl('LayoutAttributeList');
+            ctr.html(this.getControl('LayoutAttributeListTemplate').render(layout.AttributeDefinitions.orderBy(function(d) { return d.Label; }), { attributes: template.Attributes }));
+        }
+    },
+
     newTemplate: function()
     {
         this._selectedTemplate = this._isLayout ?
@@ -224,6 +238,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
         if (this._selectedTemplate != null)
         {
             var t = this.persistData(this._selectedTemplate);
+
             //t.Roles = String.isNullOrEmpty(t.Roles) ? [] : t.Roles.split(',');   //todo: hack?
             this.ajax(this._getControllerPath() + 'Save', { template: t }, this._delegates.onTemplateSaveReturn, null, this._templateEdit);
         }
@@ -235,6 +250,14 @@ videre.widgets.admin.template = videre.widgets.base.extend(
         //tempData.Urls = this.getControl('txtUrls').val().split('\n');
         tempData.Widgets = this._getWidgetData();
         //alert(videre.serialize(tempData));
+
+        if (this._isLayout)
+        {
+            var layout = this._layoutDataDict[tempData.LayoutViewName];
+            if (layout.AttributeDefinitions != null && layout.AttributeDefinitions.length > 0)
+                this._base(tempData.Attributes, false, this.getControl('LayoutAttributeList'));
+        }
+
         return tempData;
     },
 

@@ -7,5 +7,6 @@ namespace Videre.Core.Models
     {
         public string Name { get; set; }
         public List<List<LayoutPane>> Panes { get; set; }
+        public List<AttributeDefinition> AttributeDefinitions { get; set; }
     }
 }

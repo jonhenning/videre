@@ -95,6 +95,7 @@
             @(Html.Bootstrap().Tabs(new List<Bootstrap.Controls.BootstrapTab>() 
             { 
                 new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("GeneralTab"), Text = @Model.GetText("General.Text", "General"), Active = true, Icon = "glyphicon glyphicon-cog" },
+                new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("LayoutAttributeTab"), Text = @Model.GetText("Attributes.Text", "Attributes"), Icon = "glyphicon glyphicon-list" },
                 new Bootstrap.Controls.BootstrapTab() { Id = @Model.GetId("LayoutTab"), Text = @Model.GetText("Layout.Text", "Layout"), Icon = "glyphicon glyphicon-tasks" }
             }))
 
@@ -119,6 +120,19 @@
                     @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("WebReferences.Text", "Web References").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().Plugin(Plugin.BootstrapSelect).Options(CoreServices.Web.GetWebReferences().Select(r => new SelectListItem() { Text = r.Name, Value = r.Name } ).ToList()).DataColumn("WebReferences").Multiple(), BootstrapUnits.GridSize.MediumDevice9)
 
                 </div>
+                <div class="form-horizontal tab-pane" id="@Model.GetId("LayoutAttributeTab")">
+                    <div id="@Model.GetId("LayoutAttributeList")" class="form-horizontal">
+                    </div>
+                    <script id="@Model.GetId("LayoutAttributeListTemplate")" type="text/html">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{{:Label}}</label>
+                            <div class="col-md-9" data-type="input">
+                                {{:~bindInputs(#data, ~attributes, null)}}
+                            </div>
+                        </div>
+                    </script>
+                </div>
+
                 <div class="form-horizontal tab-pane" id="@Model.GetId("LayoutTab")">
                     <div class="row">
                         <div class="col-md-3" id="@Model.GetId("WidgetToolbar")" style="margin-bottom: 0;">
