@@ -23,6 +23,8 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
 
     public class BootstrapLabel : BootstrapControlBase<IBootstrapLabel, BootstrapLabelModel>, IBootstrapLabel
     {
+        public BootstrapLabel(HtmlHelper html) : this(html, null, null, null, null)
+        { }
         public BootstrapLabel(HtmlHelper html, string token, string defaultText) : this(html, token, defaultText, null, null)
         { }
         public BootstrapLabel(HtmlHelper html, string token, string defaultText, string forId) : this(html, token, defaultText, forId, null)
