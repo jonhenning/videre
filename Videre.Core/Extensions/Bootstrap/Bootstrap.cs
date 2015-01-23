@@ -55,6 +55,10 @@ namespace Videre.Core.Extensions.Bootstrap
         {
             return new BootstrapLabel(Html, token, text);
         }
+        public IBootstrapLabel Label()
+        {
+            return new BootstrapLabel(Html);
+        }
         public IBootstrapTextBox TextBox(string id = null)
         {
             return new BootstrapTextBox(Html, id);
