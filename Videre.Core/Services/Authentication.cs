@@ -295,7 +295,10 @@ namespace Videre.Core.Services
         //needs to be exactly the same between OAuthLogin and ExternLoginCallback methods    - hacky that the service knows URL
         public static string GetOAuthLoginCallbackUrl(string provider, string returnUrl, bool associate)
         {
-            return CoreServices.Portal.RequestRootUrl.PathCombine(CoreServices.Portal.ResolveUrl(string.Format("~/core/Account/OAuthLogInCallback?provider={0}&returnUrl={1}&associate={2}", System.Web.HttpUtility.UrlEncode(provider), System.Web.HttpUtility.UrlEncode(returnUrl), associate)), "/").ToLower();
+            var dict = new Dictionary<string, object>() { { "provider", provider }, { "returnUrl", returnUrl }, { "associate", associate } };
+            var state = HttpUtility.UrlEncode(dict.ToJson());
+            return CoreServices.Portal.RequestRootUrl.PathCombine(CoreServices.Portal.ResolveUrl(string.Format("~/core/Account/OAuthLogInCallback?state={0}", state)), "/").ToLower();
+            //return CoreServices.Portal.RequestRootUrl.PathCombine(CoreServices.Portal.ResolveUrl(string.Format("~/core/Account/OAuthLogInCallback/?provider={0}&returnUrl={1}&associate={2}", System.Web.HttpUtility.UrlEncode(provider), System.Web.HttpUtility.UrlEncode(returnUrl), associate)), "/").ToLower();
         }
 
         public static bool ProcessOAuthAuthentication(string provider, string returnUrl, bool associate)
@@ -519,12 +522,13 @@ namespace Videre.Core.Services
                     }
                     else
                     {
-                        if (!user.Attributes.ContainsKey(key) || !user.Attributes[key].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
+                        var providerKey = authResult.Provider + "-" + key;
+                        if (!user.Attributes.ContainsKey(providerKey) || !user.Attributes[providerKey].ToString().Equals(authResult.ExtraData[key], StringComparison.InvariantCultureIgnoreCase))
                         {
                             //if it is an element user can edit, then don't overwrite
-                            if (!user.Attributes.ContainsKey(key) || !CoreServices.Account.CustomUserElements.Exists(e => e.Name == key && e.UserCanEdit))
+                            if (!user.Attributes.ContainsKey(providerKey) || !CoreServices.Account.CustomUserElements.Exists(e => e.Name == providerKey && e.UserCanEdit))
                             {
-                                user.Attributes[key] = authResult.ExtraData[key];
+                                user.Attributes[providerKey] = authResult.ExtraData[key];
                                 changes++;
                             }
                         }

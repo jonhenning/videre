@@ -7,6 +7,7 @@ using System.Web.Security;
 using System;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
+using System.Web;
 
 namespace Videre.Core.Widgets.Controllers
 {
@@ -63,17 +64,37 @@ namespace Videre.Core.Widgets.Controllers
                 };
             });
         }
-        
-        public ActionResult OAuthLoginCallback(string provider, string returnUrl, bool associate)
+
+        public ActionResult OAuthLoginCallback(string state)
         {
-            if (CoreServices.Authentication.ProcessOAuthAuthentication(provider, returnUrl, associate))
+            var json = state;
+            if (!json.StartsWith("{"))
+            {
+                var parameters = HttpUtility.ParseQueryString(state);
+                json = parameters["state"];
+            }
+            var stateDict = json.ToObject<Dictionary<string, object>>();
+            var returnUrl = stateDict.GetSetting("returnurl", "");
+            if (CoreServices.Authentication.ProcessOAuthAuthentication(stateDict.GetSetting("provider", ""), returnUrl, stateDict.GetSetting("associate", true)))
             {
                 //todo: FIX THIS!
                 //if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
             }
             throw new Exception("Error in External Login Callback");
+
         }
+
+        //public ActionResult OAuthLoginCallback(string provider, string returnUrl, bool associate)
+        //{
+        //    if (CoreServices.Authentication.ProcessOAuthAuthentication(provider, returnUrl, associate))
+        //    {
+        //        //todo: FIX THIS!
+        //        //if (Url.IsLocalUrl(returnUrl))
+        //        return Redirect(returnUrl);
+        //    }
+        //    throw new Exception("Error in External Login Callback");
+        //}
 
         public ActionResult LogOff()
         {
