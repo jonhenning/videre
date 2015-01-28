@@ -153,6 +153,16 @@ namespace Videre.Core.Widgets
                     },
                     new AttributeDefinition()
                     {
+                        Name = "NavbarRight",
+                        Values = new List<string>() { "Yes", "No" },
+                        DefaultValue = "No",
+                        Required = false,
+                        LabelKey = "NavbarRight.Text",
+                        LabelText = "Navbar Right",
+                        ControlType = "bootstrap-select"
+                    },
+                    new AttributeDefinition()
+                    {
                         Name = "Animate",
                         Values = new List<string>() { "Yes", "No" },
                         DefaultValue = "No",

@@ -23,7 +23,8 @@
     var alwaysOnTop = Model.GetAttribute("AlwaysOnTop", "Yes") == "Yes";
     var showLogo = Model.GetAttribute("ShowLogo", "No") == "Yes";
     var animate = Model.GetAttribute("Animate", "No") == "Yes";
-
+    var navbarRight = Model.GetAttribute("NavbarRight", "No") == "Yes";
+    
     Models.Menu menu = Model.GetContent<Models.Menu>();
     if (menu != null)
     {
@@ -63,7 +64,7 @@
                 }
             </div>
             <div class="collapse navbar-collapse navbar-container">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav @(navbarRight ? "navbar-right" : "")">
                     @menuTemplate(menu.Items, 0, bestMatchUrl)
                     @helper menuTemplate(List<Models.MenuItem> items, int depth, string bestMatchUrl)
 {
