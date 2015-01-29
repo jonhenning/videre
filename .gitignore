@@ -39,6 +39,8 @@ Web/Scripts/**/*
 !Web/Scripts/**/videre*.js
 
 Web/_packages/*
+!Web/_packages/ace-*.zip
+!Web/_packages/ckeditor-*.zip
 !Web/_packages/md5-*.zip
 !Web/_packages/Bootstrap-*.zip
 !Web/_packages/DataTables-*.zip
