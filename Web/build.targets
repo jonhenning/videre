@@ -124,6 +124,7 @@
                     $(MSBuildProjectDirectory)\scripts\jquery-ui-1.8.18\**\*;
                     $(MSBuildProjectDirectory)\_packages\bootstrap-*.zip;
                     $(MSBuildProjectDirectory)\_packages\bootstrap3-typeahead-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\ace-*.zip;
                     $(MSBuildProjectDirectory)\_packages\ckeditor-*.zip;
                     $(MSBuildProjectDirectory)\_packages\cleditor-*.zip;
                     $(MSBuildProjectDirectory)\_packages\datatables-*.zip;
