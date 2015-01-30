@@ -33,7 +33,7 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
     {
         this._base(); //call base
         this._widget.find('a[data-action]').click(videre.createDelegate(this, this._onAdminClick));
-        $('#' + this._containerId).bind("contextmenu", videre.createDelegate(this, this._onContextMenu));
+        $('#' + this._containerId).bind("contextmenu", videre.createDelegate(this, this._onContextMenu)).blur(videre.createDelegate(this, this._onInlineBlur));
         this._widgetModel.Content = videre.deserialize(this._widgetModel.ContentJson);
     },
 
@@ -49,9 +49,16 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
         this._editor.show(this._widgetModel, this._manifest);
     },
 
-    save: function(widget)
+    inlineEdit: function()
     {
-        this.ajax('~/core/Portal/SaveWidget', { templateId: this._templateId, layoutId: this._layoutId, widget: widget }, this._delegates.onSaveReturn, null, this._editor._dialog);    //todo: minihack accessing _dialog
+        var ctl = $('#' + this._containerId);
+        ctl.attr('contenteditable', 'true');
+        ctl.focus();
+    },
+
+    save: function(widget, ctr)
+    {
+        this.ajax('~/core/Portal/SaveWidget', { templateId: this._templateId, layoutId: this._layoutId, widget: widget }, this._delegates.onSaveReturn, null, ctr);    //todo: minihack accessing _dialog
     },
 
     toggleMenu: function()
@@ -59,12 +66,31 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
         this._widget.find('.dropdown-toggle').dropdown('toggle');
     },
 
+    _saveInline: function()
+    {
+        var ctl = $('#' + this._containerId);
+        if (ctl.attr('contenteditable') == 'true')
+        {
+            var clone = videre.jsonClone(this._widgetModel);
+            var html = ctl.html();
+            clone.Content[0].EditText = html;
+            clone.ContentJson = videre.serialize(clone.Content);
+            this.save(clone);
+            ctl.attr('contenteditable', null);
+        }
+    },
+
+    _onInlineBlur: function(e, args)
+    {
+        this._saveInline();
+    },
+
     _onWidgetSave: function(e, args)
     {
         if (args.type == 'Save')
         {
             args.data.ContentJson = videre.serialize(args.data.Content);
-            this.save(args.data);
+            this.save(args.data, this._editor._dialog);
         }
     },
 
@@ -72,7 +98,8 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
     {
         if (e.Data)
         {
-            this._editor.hide();
+            if (this._editor != null)
+                this._editor.hide();
             location.href = location.href;  //reload
         }
     },
@@ -83,6 +110,8 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
         var action = ctl.data('action');
         if (action == 'edit')
             this.edit();
+        if (action == 'inline-edit')
+            this.inlineEdit();
         this.toggleMenu();
     },
 

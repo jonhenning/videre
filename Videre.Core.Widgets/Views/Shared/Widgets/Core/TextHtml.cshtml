@@ -13,7 +13,7 @@
     var canEdit = Security.IsActivityAuthorized("Content", "Administration");
     if (canEdit)
     {
-        Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model);
+        Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model, new ViewDataDictionary {{ "InlineEdit", true }});
     }
     var html = Localization.GetContent(locs, "Content.Text", Model.GetText("ContentMissing.Text", "[Content Missing]"));
     Html.RegisterPrettifyScriptIfNeeded(html);  //todo: do we like this???  or just always load it, or make it configuration in Portal level?

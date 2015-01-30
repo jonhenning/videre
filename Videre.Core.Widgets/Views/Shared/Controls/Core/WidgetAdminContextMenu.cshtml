@@ -26,5 +26,6 @@
     <a class="dropdown-toggle" data-toggle="dropdown" style="padding: 0"></a>
     <ul class="dropdown-menu">
         <li><a data-action="edit"><span class="glyphicon glyphicon-pencil"></span> @editorModel.GetPortalText("Edit.Text", "Edit")</a></li>
+        @if (ViewBag.InlineEdit != null && ViewBag.InlineEdit) { <li><a data-action="inline-edit"><span class="glyphicon glyphicon-pencil"></span> @editorModel.GetPortalText("InlineEdit.Text", "Inline Edit")</a></li>}
     </ul>
 </div>
