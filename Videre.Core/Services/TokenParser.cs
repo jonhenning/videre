@@ -15,14 +15,19 @@ namespace Videre.Core.Services
                 Token = "BASEURL", 
                 TokenRule = (string text, Models.TokenParserRule rule) => 
                 {
-                    var baseUrl = Videre.Core.Services.Portal.ResolveUrl("~/");
-                    var absoluteUrl = Videre.Core.Services.Portal.RequestRootUrl.PathCombine("", "/");
-                    //todo:  regex probably better here!
-                    text = text.Replace(string.Format(" href=\"{0}", baseUrl), " href=\"" + GetTokenText(rule.Token));
-                    text = text.Replace(string.Format(" src=\"{0}", baseUrl), " src=\"" + GetTokenText(rule.Token));
+                    //in case where we are running when package is dropped in _updates folder we cannot perform these rules.  Should be ok as the rules would have already been applied on export.
+                    if (Videre.Core.Services.Portal.IsInRequest)
+                    {
+                        var baseUrl = Videre.Core.Services.Portal.ResolveUrl("~/");
+                        var absoluteUrl = Videre.Core.Services.Portal.RequestRootUrl.PathCombine("", "/");
+                        //todo:  regex probably better here!
+                        text = text.Replace(string.Format(" href=\"{0}", baseUrl), " href=\"" + GetTokenText(rule.Token));
+                        text = text.Replace(string.Format(" src=\"{0}", baseUrl), " src=\"" + GetTokenText(rule.Token));
 
-                    text = text.Replace(string.Format(" href=\"{0}", absoluteUrl), " href=\"" + GetTokenText(rule.Token));
-                    text = text.Replace(string.Format(" src=\"{0}", absoluteUrl), " src=\"" + GetTokenText(rule.Token));
+                        text = text.Replace(string.Format(" href=\"{0}", absoluteUrl), " href=\"" + GetTokenText(rule.Token));
+                        text = text.Replace(string.Format(" src=\"{0}", absoluteUrl), " src=\"" + GetTokenText(rule.Token));
+                    }
+
                     return text;
                 },
                 DetokenRule = (string text, Models.TokenParserRule rule) => 

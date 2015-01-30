@@ -9,7 +9,8 @@
     if (blog != null)
     {
         var blogUrl = Videre.Blog.Widgets.Services.Blog.GetBlogUrl(blog.Id, "");
-        var groupedEntries = blog.Entries.Where(e => e.IsPublished).GroupBy(e => e.PostDate.Value.ToString("MMMM yyyy"));
+        var groupedEntries = blog.Entries.Where(e => e.IsPublished)
+            .GroupBy(e => e.PostDate.Value.ToString("MMMM yyyy"), (key, items) => new { text = key, orderBy = items.First().PostDate.Value.ToString("yyyy-MM-dd"), items = items });
 
        
     <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
@@ -17,11 +18,11 @@
         <h4>@Model.GetText("Archive.Text", "Archive")</h4>
 
         <ul class="list-unstyled">
-            @foreach (var g in groupedEntries.OrderByDescending(g => g.Key))
+            @foreach (var g in groupedEntries.OrderByDescending(g => g.orderBy))
             {
                 <li>
-                    <a href="@blogUrl?date=@g.Key">
-                        @g.Key - (@g.Count())
+                    <a href="@blogUrl?date=@g.text">
+                        @g.text - (@g.items.Count())
                     </a>
                 </li>   
             }
