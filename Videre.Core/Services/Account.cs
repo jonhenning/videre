@@ -406,18 +406,12 @@ namespace Videre.Core.Services
             {
                 if (AccountVerificationMode != "None")
                     IssueAccountVerificationCode(userId);
-                return true;
+
+                //auto-login - assume no must change password, skip verification on this one, 
+                var loginResult = Authentication.Login(userProfile.Name, userProfile.Password1, false, Authentication.PersistenceProvider.Name);
+                return !string.IsNullOrEmpty(loginResult.UserId);
             }
             return false;
-            
-            //todo:  auto login???
-            //if (!string.IsNullOrEmpty(userId))
-            //{
-                //var loginResult = Authentication.Login(userProfile.Name, userProfile.Password1, false, Authentication.PersistenceProvider.Name);
-                //return loginResult.
-                
-            //}
-            //return false;
         }
 
         public static string AccountVerificationMode

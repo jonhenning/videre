@@ -20,7 +20,7 @@
     
     Html.RegisterControlPresenter("videre.widgets.account.userprofile", Model, new { 
         newUser = newUser,
-        afterCreateUrl = !string.IsNullOrEmpty(createAccountUrl) ? createAccountUrl : CoreServices.Authentication.LoginUrl,
+        afterCreateUrl = !string.IsNullOrEmpty(createAccountUrl) ? createAccountUrl : CoreServices.Portal.ResolveUrl("~/"),
         data = userProfile,
         customElements = CoreServices.Account.CustomUserElements,
         authProviders = providers,
