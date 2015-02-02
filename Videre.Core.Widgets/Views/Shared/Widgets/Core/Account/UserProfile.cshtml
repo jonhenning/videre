@@ -8,6 +8,7 @@
 @model Videre.Core.Models.Widget
 
 @{
+    var returnUrl = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) ? Request.QueryString["ReturnUrl"] : CoreServices.Portal.ResolveUrl("~/");
  
     var providers = CoreServices.Authentication.GetExternalAuthenticationProviders().Where(p => p.AllowAssociation).ToList();
     var userProfile = CoreServices.Account.GetUserProfile();
@@ -16,11 +17,20 @@
     {
         userProfile = new UserProfile();   
     }
-    var createAccountUrl = CoreServices.Portal.GetPortalAttribute("Account", "CreateAccountSuccessUrl", "");
+    var afterCreateUrl = CoreServices.Portal.GetPortalAttribute("Account", "CreateAccountSuccessUrl", "");
+
+    if (CoreServices.Account.AccountVerificationMode != "None")
+    {
+        afterCreateUrl = CoreServices.Account.AccountVerificationUrl + "?ReturnUrl=" + HttpUtility.UrlEncode(returnUrl);
+    }
+    else
+    {
+        afterCreateUrl = !string.IsNullOrEmpty(afterCreateUrl) ? afterCreateUrl : returnUrl;
+    }
     
     Html.RegisterControlPresenter("videre.widgets.account.userprofile", Model, new { 
         newUser = newUser,
-        afterCreateUrl = !string.IsNullOrEmpty(createAccountUrl) ? createAccountUrl : CoreServices.Portal.ResolveUrl("~/"),
+        afterCreateUrl = afterCreateUrl,
         data = userProfile,
         customElements = CoreServices.Account.CustomUserElements,
         authProviders = providers,

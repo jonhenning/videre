@@ -12,8 +12,13 @@
 
     var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.AllowLogin).ToList();
     var standardProviders = CoreServices.Authentication.GetStandardAuthenticationProviders().Where(p => p.AllowLogin).ToList();
-    var createAccountUrl = CoreServices.Portal.GetPortalAttribute("Account", "CreateAccountUrl", "");
+    var createAccountUrl = CoreServices.Portal.GetPortalAttribute("Account", "CreateAccountUrl", "~/account/create");
 
+    if (!string.IsNullOrEmpty(returnUrl))
+    {
+        createAccountUrl += "?ReturnUrl=" + HttpUtility.UrlEncode(returnUrl);
+    }
+    
     var showForgotPassword = Model.GetAttribute("ShowForgotPassword", "Yes") == "Yes";
     var showCreate = Model.GetAttribute("ShowCreate", "Yes") == "Yes";
     
