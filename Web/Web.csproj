@@ -136,6 +136,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\InstallerController.cs" />
     <Compile Include="Controllers\ServerJSController.cs" />
     <Compile Include="Controllers\RouteController.cs">
