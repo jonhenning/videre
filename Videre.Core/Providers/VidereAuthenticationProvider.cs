@@ -80,6 +80,25 @@ namespace Videre.Core.Providers
             };
         }
 
+        public Models.UserAuthentication GetUserAuthentication(string userId)
+        {
+            return CoreServices.Repository.Current.GetResourceData<Models.UserAuthentication>("UserAuthentication", u => u.Data.UserId == userId, null);
+        }
+
+        public Models.UserAuthentication SaveAuthentication(Models.UserAuthentication auth, string userId)
+        {
+            var res = CoreServices.Repository.Current.StoreResource("UserAuthentication", null, auth, userId);
+            return auth;
+        }
+
+        public bool DeleteAuthentication(string id, string userId)
+        {
+            var user = CoreServices.Repository.Current.GetResourceById<Models.UserAuthentication>(id);
+            if (user != null)
+                CoreServices.Repository.Current.Delete(user);
+            return user != null;
+        }
+
         private string GeneratePasswordHash(string password, string salt)
         {
             return FormsAuthentication.HashPasswordForStoringInConfigFile(string.Concat(password, salt), "md5");
@@ -115,19 +134,19 @@ namespace Videre.Core.Providers
         }
 
         //this is needed while we still have our migration code in place
-        //private static AccountProviders.IAccountService _accountService;
-        //private static AccountProviders.IAccountService AccountService
-        //{
-        //    get
-        //    {
-        //        if (_accountService == null)
-        //        {
-        //            _accountService = CoreServices.Portal.GetAppSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core").GetInstance<AccountProviders.IAccountService>();
-        //            _accountService.Initialize(CoreServices.Portal.GetAppSetting("AccountServicesConnection", ""));
-        //        }
-        //        return _accountService;
-        //    }
-        //}
+        private static AccountProviders.IAccountService _accountService;
+        private static AccountProviders.IAccountService AccountService
+        {
+            get
+            {
+                if (_accountService == null)
+                {
+                    _accountService = CoreServices.Portal.GetAppSetting("AccountServicesProvider", "Videre.Core.AccountProviders.VidereAccount, Videre.Core").GetInstance<AccountProviders.IAccountService>();
+                    _accountService.Initialize(CoreServices.Portal.GetAppSetting("AccountServicesConnection", ""));
+                }
+                return _accountService;
+            }
+        }
 
         //migrate user password info into own datastore
         //private int migrateToSeparateDataStore()

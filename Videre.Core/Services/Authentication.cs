@@ -153,6 +153,27 @@ namespace Videre.Core.Services
 
         }
 
+        public static Models.UserAuthentication GetUserAuthentication(string userId)
+        {
+            if (PersistenceProvider != null)
+                return PersistenceProvider.GetUserAuthentication(userId);
+            return null;
+        }
+
+        public static Models.UserAuthentication SaveUserAuthentication(Models.UserAuthentication auth, string userId)
+        {
+            if (PersistenceProvider != null)
+                return PersistenceProvider.SaveAuthentication(auth, userId);
+            return null;
+        }
+
+        public static bool DeleteUserAuthentication(string id, string userId)
+        {
+            if (PersistenceProvider != null)
+                return PersistenceProvider.DeleteAuthentication(id, userId);
+            return false;
+        }
+
         private static Providers.IAuthenticationPersistence _authenticationPersistenceProvider;
         public static Providers.IAuthenticationPersistence PersistenceProvider
         {

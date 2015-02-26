@@ -209,6 +209,10 @@ namespace Videre.Core.Services
         public static bool DeleteUser(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? AuditId : userId;
+            var auth = Authentication.PersistenceProvider.GetUserAuthentication(id);
+            if (auth != null)
+                Authentication.DeleteUserAuthentication(auth.Id, userId);
+
             return AccountService.Delete(id, userId);
         }
 
