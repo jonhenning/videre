@@ -44,9 +44,9 @@ namespace Videre.Core.Widgets.ImportExportProviders
                 export.Users.Add(u);
                 export.Roles = export.Roles ?? new List<Models.Role>();
                 export.Roles.AddRange(Services.Account.GetRoles(portalId).Where(r => u.RoleIds.Contains(r.Id)));
-                var auth = Services.Authentication.GetUserAuthentication(u.Id);
-                if (auth != null)
-                    export.UserAuthentications.Add(auth);
+                var auths = Services.Authentication.GetUserAuthentications(u.Id);
+                if (auths != null)
+                    export.UserAuthentications.AddRange(auths);
             }
 
             return export;
@@ -61,7 +61,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
                     ImportExport.SetIdMap<User>(exportUser.Id, Import(portalId, exportUser, idMap), idMap);
 
                 foreach (var exportAuth in export.UserAuthentications)
-                    ImportExport.SetIdMap<UserAuthentication>(exportAuth.Id, Import(portalId, exportAuth, idMap), idMap);
+                    Import(portalId, exportAuth, idMap);
 
                 foreach (var exportUser in export.Users)
                 {
@@ -98,22 +98,26 @@ namespace Videre.Core.Widgets.ImportExportProviders
             return Account.SaveUser(user, userId);
         }
 
-        private string Import(string portalId, Models.UserAuthentication auth, Dictionary<string, string> idMap, string userId = null)
+        private bool Import(string portalId, Models.UserAuthentication auth, Dictionary<string, string> idMap, string userId = null)
         {
-            auth = auth.JsonClone();
+            var clonedAuth = auth.JsonClone();
 
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var existingUserId = ImportExport.GetIdMap<User>(auth.UserId, idMap);
+            var existingUserId = ImportExport.GetIdMap<User>(clonedAuth.UserId, idMap);
 
-            var existing = Authentication.GetUserAuthentication(existingUserId); //not needing portalid since we obtain userauthentication via userId which should be unique across portals
+            var existingAuths = Authentication.GetUserAuthentications(existingUserId); //not needing portalid since we obtain userauthentication via userId which should be unique across portals
             //auth.PortalId = portalId;
-            auth.Id = existing != null ? existing.Id : null;
-            auth.UserId = existingUserId;
 
-            var newAuth = Authentication.SaveUserAuthentication(auth, userId);
-            if (newAuth != null)
-                return newAuth.Id;
-            return null;
+            foreach (var existing in existingAuths)
+            {
+                clonedAuth.Id = existing != null ? existing.Id : null;
+                clonedAuth.UserId = existingUserId;
+
+                var newAuth = Authentication.SaveUserAuthentication(clonedAuth, userId);
+                if (newAuth != null)
+                    ImportExport.SetIdMap<UserAuthentication>(auth.Id, newAuth.Id, idMap);
+            }
+            return true;
         }
 
     }

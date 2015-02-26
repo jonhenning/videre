@@ -28,7 +28,8 @@ namespace Videre.Core.Providers
     {
         string Name { get; }
         AuthenticationResult SaveAuthentication(string userId, string userName, string password);
-        Models.UserAuthentication GetUserAuthentication(string userId); //needed for export
+        //Models.UserAuthentication GetUserAuthentication(string id); //needed for export
+        List<Models.UserAuthentication> GetUserAuthentications(string userId); //needed for export
         Models.UserAuthentication SaveAuthentication(Models.UserAuthentication auth, string userId); //needed for import
         bool DeleteAuthentication(string id, string userId);
         void InitializePersistence(string connection);

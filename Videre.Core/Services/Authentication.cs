@@ -153,10 +153,10 @@ namespace Videre.Core.Services
 
         }
 
-        public static Models.UserAuthentication GetUserAuthentication(string userId)
+        public static List<Models.UserAuthentication> GetUserAuthentications(string userId)
         {
             if (PersistenceProvider != null)
-                return PersistenceProvider.GetUserAuthentication(userId);
+                return PersistenceProvider.GetUserAuthentications(userId);
             return null;
         }
 

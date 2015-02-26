@@ -80,9 +80,9 @@ namespace Videre.Core.Providers
             };
         }
 
-        public Models.UserAuthentication GetUserAuthentication(string userId)
+        public List<Models.UserAuthentication> GetUserAuthentications(string userId)
         {
-            return CoreServices.Repository.Current.GetResourceData<Models.UserAuthentication>("UserAuthentication", u => u.Data.UserId == userId, null);
+            return CoreServices.Repository.Current.GetResources<Models.UserAuthentication>("UserAuthentication", u => u.Data.UserId == userId, false).Select(u => u.Data).ToList();
         }
 
         public Models.UserAuthentication SaveAuthentication(Models.UserAuthentication auth, string userId)
