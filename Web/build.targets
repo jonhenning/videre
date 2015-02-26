@@ -105,6 +105,7 @@
                     *.config;
                     *.debug;
                     *.targets;
+                    package.manifest;
                     _packages\**;
                     bin\*.pdb;
                     bin\*.xml;
