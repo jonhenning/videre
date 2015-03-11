@@ -22,8 +22,7 @@ videre.widgets.admin.role = videre.widgets.base.extend(
 
         this._delegates = {
             onDataReturn: videre.createDelegate(this, this._onDataReturn),
-            onSaveReturn: videre.createDelegate(this, this._onSaveReturn),
-            onActionClicked: videre.createDelegate(this, this._onActionClicked)
+            onSaveReturn: videre.createDelegate(this, this._onSaveReturn)
         };
     },
 
@@ -33,6 +32,7 @@ videre.widgets.admin.role = videre.widgets.base.extend(
         this._dialog = this.getControl('Dialog').modal('hide');
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
         this.getControl('btnNew').click(videre.createDelegate(this, this._onNewClicked));
+        this.getControl('ItemList').click(videre.createDelegate(this, this._onItemListClicked));
         this.bind();
     },
 
@@ -120,10 +120,11 @@ videre.widgets.admin.role = videre.widgets.base.extend(
         }
     },
 
-    _onActionClicked: function(e)
+    _onItemListClicked: function(e)
     {
         var ctl = $(e.target).closest('[data-action]');
-        this._handleAction(ctl.data('action'), ctl.data('id'));
+        if (ctl.data('action') != null)
+            this._handleAction(ctl.data('action'), ctl.closest('tr[data-id]').data('id'));
     },
 
     _onSaveClicked: function(e)
