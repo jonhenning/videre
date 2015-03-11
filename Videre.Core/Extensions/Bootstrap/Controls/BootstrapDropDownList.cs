@@ -36,6 +36,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
     public interface IBootstrapDropDownList : IFluentBootstrapInputControl<IBootstrapDropDownList, BootstrapDropDownListModel>
     {
         IBootstrapDropDownList Options(IEnumerable<SelectListItem> options);
+        IBootstrapDropDownList EmptyItem();
         IBootstrapDropDownList EmptyItem(SelectListItem item);
         IBootstrapDropDownList Plugin(BootstrapDropDownListModel.Plugin plugin);
         IBootstrapDropDownList Plugin(string plugin);
@@ -65,6 +66,12 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         public IBootstrapDropDownList EmptyItem(SelectListItem item)
         {
             _model.emptyItem = item;
+            return this;
+        }
+
+        public IBootstrapDropDownList EmptyItem()
+        {
+            _model.emptyItem = new SelectListItem();
             return this;
         }
 
