@@ -201,6 +201,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
             var template = this._selectedTemplate;
             var ctr = this.getControl('LayoutAttributeList');
             ctr.html(this.getControl('LayoutAttributeListTemplate').render(layout.AttributeDefinitions.orderBy(function(d) { return d.Label; }), { attributes: template.Attributes }));
+            videre.UI.initializeControlTypes(ctr);
         }
     },
 
