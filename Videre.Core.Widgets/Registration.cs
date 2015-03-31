@@ -91,7 +91,15 @@ namespace Videre.Core.Widgets
                         LabelKey = "ShowCreate.Text",
                         LabelText = "Show Create",
                         ControlType = "bootstrap-select"
-                    } 
+                    },
+                    new AttributeDefinition()
+                    {
+                        Name = "RedirectUrl",
+                        DefaultValue = "",
+                        Required = false,
+                        LabelKey = "RedirectUrl.Text",
+                        LabelText = "Redirect Url"
+                    }  
                 }}, 
                 new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "UserProfile", Title = "User Profile", Category = "Account" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "Verify", Title = "Verify Account", Category = "Account" }, 

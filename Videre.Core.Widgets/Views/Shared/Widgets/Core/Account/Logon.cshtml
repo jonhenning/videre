@@ -7,7 +7,11 @@
 @model Widget
 
 @{
-    var returnUrl = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) ? Request.QueryString["ReturnUrl"] : CoreServices.Portal.ResolveUrl("~/");
+    var showForgotPassword = Model.GetAttribute("ShowForgotPassword", "Yes") == "Yes";
+    var showCreate = Model.GetAttribute("ShowCreate", "Yes") == "Yes";
+    var redirectUrl = CoreServices.Portal.ResolveUrl(Model.GetAttribute("RedirectUrl", "~/"));
+    
+    var returnUrl = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) ? Request.QueryString["ReturnUrl"] : redirectUrl;
     Html.RegisterControlPresenter("videre.widgets.account.logon", Model, new { returnUrl = returnUrl, verifyUrl = CoreServices.Account.AccountVerificationUrl });
 
     var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.AllowLogin).ToList();
@@ -17,10 +21,7 @@
     if (!string.IsNullOrEmpty(returnUrl))
     {
         createAccountUrl += "?ReturnUrl=" + HttpUtility.UrlEncode(returnUrl);
-    }
-    
-    var showForgotPassword = Model.GetAttribute("ShowForgotPassword", "Yes") == "Yes";
-    var showCreate = Model.GetAttribute("ShowCreate", "Yes") == "Yes";
+    }    
     
 }
 
