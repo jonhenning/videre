@@ -195,6 +195,7 @@ namespace Videre.Core.Services
 
         public static void RevokeAuthenticationTicket()
         {
+            FormsAuthentication.SignOut();
             FederatedAuthentication.SessionAuthenticationModule.SignOut();
         }
 
