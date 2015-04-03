@@ -115,6 +115,16 @@ namespace Videre.Web
             Services.Authentication.ProcessAuthenticationTicket();
         }
 
+        protected void SessionAuthenticationModule_SessionSecurityTokenReceived(object sender, System.IdentityModel.Services.SessionSecurityTokenReceivedEventArgs e)
+        {
+            var token = Services.Authentication.ProcessAuthenticationTicket(e.SessionToken);
+            if (token != null)
+            {
+                e.ReissueCookie = true;
+                e.SessionToken = token;
+            }
+        }
+
         public void Application_End()
         {
             //http://weblogs.asp.net/scottgu/archive/2005/12/14/433194.aspx

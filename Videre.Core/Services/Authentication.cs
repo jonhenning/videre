@@ -3,7 +3,10 @@ using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IdentityModel.Services;
+using System.IdentityModel.Tokens;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
@@ -80,21 +83,76 @@ namespace Videre.Core.Services
 
         public static void IssueAuthenticationTicket(string identityName, List<string> roles, int days, bool persistant)
         {
-            var ticket = new FormsAuthenticationTicket(1, identityName, DateTime.Now, DateTime.Now.AddDays(days), persistant, String.Join(",", roles));
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
-            cookie.Expires = ticket.Expiration;
-            HttpContext.Current.Response.Cookies.Add(cookie);
+            IssueAuthenticationTicket(identityName, roles, new List<UserClaim>(), days, persistant);
+            //var ticket = new FormsAuthenticationTicket(1, identityName, DateTime.Now, DateTime.Now.AddDays(days), persistant, String.Join(",", roles));
+            //var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
+            //cookie.Expires = ticket.Expiration;
+            //HttpContext.Current.Response.Cookies.Add(cookie);
+        }
+
+        public static void IssueAuthenticationTicket(string identityName, List<string> roles, List<UserClaim> userClaims, int days, bool persistant)
+        {
+            var claims = userClaims.Select(c => new Claim(c.Type, c.Value, null, c.Issuer)).ToList();
+
+            claims.Add(new Claim(ClaimTypes.Name, identityName));
+
+            claims.Add(new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", identityName));
+            claims.Add(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", identityName));
+
+            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
+            var id = new ClaimsIdentity(claims, "Forms");
+            var cp = new ClaimsPrincipal(id);
+            var token = new SessionSecurityToken(cp, TimeSpan.FromMinutes(2));
+
+            token.IsPersistent = persistant;
+            FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(token);
+            System.Threading.Thread.CurrentPrincipal = cp;
         }
 
         public static void ProcessAuthenticationTicket()
         {
             //' Fires upon attempting to authenticate the use
-            if (HttpContext.Current.User != null)
+            //if (HttpContext.Current.User != null)
+            //{
+            //    var identity = (ClaimsIdentity)HttpContext.Current.User.Identity;
+            //    if (HttpContext.Current.User.Identity.IsAuthenticated)
+            //        HttpContext.Current.User = new ClaimsPrincipal(identity);
+            //    //var identity = (FormsIdentity)HttpContext.Current.User.Identity;
+            //    //if (HttpContext.Current.User.Identity.IsAuthenticated)
+            //    //    HttpContext.Current.User = new GenericPrincipal(identity, identity.Ticket.UserData.Split(','));
+            //}
+        }
+
+        //enable sliding expiration
+        public static SessionSecurityToken ProcessAuthenticationTicket(SessionSecurityToken token)
+        {
+            if (token != null)
             {
-                var identity = (FormsIdentity)HttpContext.Current.User.Identity;
-                if (HttpContext.Current.User.Identity.IsAuthenticated)
-                    HttpContext.Current.User = new GenericPrincipal(identity, identity.Ticket.UserData.Split(','));
+                var duration = token.ValidTo.Subtract(token.ValidFrom);
+                if (duration <= TimeSpan.Zero) return null;
+
+                var diff = token.ValidTo.Add(FederatedAuthentication.SessionAuthenticationModule.FederationConfiguration.IdentityConfiguration.MaxClockSkew).Subtract(DateTime.UtcNow);
+                if (diff <= TimeSpan.Zero) return null;
+
+                var halfWay = duration.TotalMinutes / 2;
+                var timeLeft = diff.TotalMinutes;
+                if (timeLeft <= halfWay)
+                {
+                    return
+                        new SessionSecurityToken(
+                            token.ClaimsPrincipal,
+                            token.Context,
+                            DateTime.UtcNow,
+                            DateTime.UtcNow.Add(duration))
+                        {
+                            IsPersistent = token.IsPersistent,
+                            IsReferenceMode = token.IsReferenceMode
+                        };
+                }
             }
+            return null;
+
         }
 
         public static string AuthenticatedUserId
@@ -117,13 +175,14 @@ namespace Videre.Core.Services
                     var user = Portal.GetRequestContextData<Models.AuthenticatedUser>("VidereAuthenticatedUser", null);
                     if (user == null)
                     {
-                        var principal = (GenericPrincipal)HttpContext.Current.User;
-                        var identity = (FormsIdentity)principal.Identity;
-                        //eventually add claims when upgrade to .NET 4.5
+                        var principal = (ClaimsPrincipal)HttpContext.Current.User;
+                        var identity = (ClaimsIdentity)principal.Identity;
                         user = new Models.AuthenticatedUser()
                         {
                             Id = identity.Name,
-                            RoleIds = identity.Ticket.UserData.Split(',').ToList()
+                            Claims = identity.Claims.Select(c => new UserClaim() { Issuer = c.Issuer, Type = c.Type, Value = c.Value }).ToList(),
+                            RoleIds = identity.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList()
+                            //RoleIds = identity.Ticket.UserData.Split(',').ToList()
                         };
                         Portal.SetRequestContextData("VidereAuthenticatedUser", user);
                     }
@@ -136,7 +195,7 @@ namespace Videre.Core.Services
 
         public static void RevokeAuthenticationTicket()
         {
-            FormsAuthentication.SignOut();
+            FederatedAuthentication.SessionAuthenticationModule.SignOut();
         }
 
         public static void RegisterAuthenticationProviders()
@@ -487,7 +546,7 @@ namespace Videre.Core.Services
 
         private static void issueAuthenticationTicket(Models.User user, bool persistant)
         {
-            Authentication.IssueAuthenticationTicket(user.Id, user.RoleIds, 30, persistant); //todo: make expire days configurable?
+            Authentication.IssueAuthenticationTicket(user.Id, user.RoleIds, user.Claims, 30, persistant); //todo: make expire days configurable?
         }
 
         private static void applyAuthenticationResultToUser(AuthenticationResult authResult, Models.User user)
