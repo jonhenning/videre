@@ -103,7 +103,7 @@ namespace Videre.Core.Services
 
             var id = new ClaimsIdentity(claims, "Forms");
             var cp = new ClaimsPrincipal(id);
-            var token = new SessionSecurityToken(cp, TimeSpan.FromMinutes(2));
+            var token = new SessionSecurityToken(cp, FormsAuthentication.Timeout);
 
             token.IsPersistent = persistant;
             FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(token);
