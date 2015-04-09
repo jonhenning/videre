@@ -167,7 +167,7 @@ namespace Videre.Core.Services
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
             if (AccountService is AccountProviders.IClaimsAccountService)
-                return ((AccountProviders.IClaimsAccountService)AccountService).GetByName(name, portalId);
+                return ((AccountProviders.IClaimsAccountService)AccountService).GetByName(portalId, name);
             return AccountService.Get(portalId).Where(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
