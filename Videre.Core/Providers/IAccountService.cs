@@ -25,4 +25,12 @@ namespace Videre.Core.AccountProviders
 
         List<Models.CustomDataElement> CustomUserElements { get; }
     }
+
+    public interface IClaimsAccountService : IAccountService
+    {
+        Models.User GetByName(string portalId, string name);
+        Models.User GetByClaim(string portalId, string issuer, string type, string value);
+        List<Models.UserClaim> GetClaims(string portalId);
+    }
+
 }

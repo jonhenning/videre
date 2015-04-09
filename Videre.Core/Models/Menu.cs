@@ -34,6 +34,7 @@ namespace Videre.Core.Models
         public MenuItem()
         {
             Items = new List<MenuItem>();
+            Claims = new List<UserClaim>();
             //Roles = new List<string>();
         }
 
@@ -77,18 +78,16 @@ namespace Videre.Core.Models
         public bool? Authenticated { get; set; }
         public bool AlignRight { get; set; }
 
+        public List<UserClaim> Claims { get; set; }
+
         //[JsonIgnore]
         [SerializeIgnore("db")] //todo: we need this on client?  ignore "client"
         public bool IsAuthorized
         {
             get
             {
-                if (RoleIds == null || RoleIds.Count == 0 || RoleIds.Exists(r => Services.Account.IsInRole(r)))       //todo: how can we get null roles?
-                {
-                    if (!Authenticated.HasValue || Authenticated.Value == Services.Account.IsAuthenticated) 
-                        return true;
-                }
-                return false;
+                return (Services.Account.RoleOrClaimAuthorized(RoleIds, Claims) &&
+                    (!Authenticated.HasValue || Authenticated == Services.Authentication.IsAuthenticated));
             }
         }
 

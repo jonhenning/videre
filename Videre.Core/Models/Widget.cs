@@ -20,6 +20,7 @@ namespace Videre.Core.Models
             //Roles = new List<string>();
             WebReferences = new List<string>();
             ExcludeRoleIds = new List<string>();
+            Claims = new List<UserClaim>();
         }
 
         public string Id
@@ -87,6 +88,8 @@ namespace Videre.Core.Models
             }
         }
 
+        public List<Models.UserClaim> Claims {get;set;}
+
         public List<string> ExcludeRoleIds { get; set; }
 
         public bool? Authenticated { get; set; }
@@ -98,7 +101,7 @@ namespace Videre.Core.Models
         {
             get
             {
-                return Account.RoleAuthorized(RoleIds) && Account.UserNotInRole(ExcludeRoleIds) &&
+                return Account.RoleOrClaimAuthorized(RoleIds, Claims) && Account.UserNotInRole(ExcludeRoleIds) &&
                     (!Authenticated.HasValue || Authenticated == Authentication.IsAuthenticated);
             }
         }

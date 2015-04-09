@@ -16,6 +16,7 @@ namespace Videre.Core.Models
             Urls = new List<string>();
             //Roles = new List<string>();
             WebReferences = new List<string>();
+            Claims = new List<UserClaim>();
         }
 
         //[JsonIgnore()]
@@ -61,6 +62,9 @@ namespace Videre.Core.Models
                 _roleIds = value;
             }
         }
+
+        public List<UserClaim> Claims { get; set; }
+
         public bool? Authenticated { get; set; }
         public List<string> WebReferences { get; set; }
 
@@ -90,8 +94,8 @@ namespace Videre.Core.Models
         {
             get
             {
-                return Services.Account.RoleAuthorized(RoleIds) &&
-                    (!Authenticated.HasValue || Authenticated == Services.Account.IsAuthenticated);
+                return (Services.Account.RoleOrClaimAuthorized(RoleIds, Claims) &&
+                    (!Authenticated.HasValue || Authenticated == Services.Authentication.IsAuthenticated));
             }
         }
 

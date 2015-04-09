@@ -22,6 +22,16 @@ namespace Videre.Core.Models
             return RoleIds.Contains(roleId);
         }
 
+        public bool HasClaim(UserClaim claim)
+        {
+            return HasClaim(claim.Issuer, claim.Type, claim.Value);
+        }
+        public bool HasClaim(string issuer, string type, string value)
+        {
+            var claims = GetClaims(type, issuer);
+            return claims.Exists(c => c.Value.Equals(value, System.StringComparison.CurrentCultureIgnoreCase) || value == "*");
+        }
+
         public UserClaim GetClaim(string type, string issuer)
         {
             return GetClaims(type, issuer).FirstOrDefault();

@@ -132,6 +132,17 @@ namespace Videre.Core.Extensions.Bootstrap
             return DropDownList(id).Options(items);
         }
 
+        public IBootstrapDropDownList ClaimList(string id = null, List<Models.UserClaim> selectedClaims = null)
+        {
+            selectedClaims = selectedClaims == null ? new List<Models.UserClaim>() : selectedClaims;
+            var items = Services.Account.GetClaims().Select(r => new SelectListItem() { Value = string.Format("{0}:{1}:{2}", r.Issuer, r.Type, r.Value), Text = string.Format("{0}:{1}:{2}", r.Issuer, r.Type, r.Value), 
+                Selected = selectedClaims.Exists(s => s.Issuer.Equals(r.Issuer, StringComparison.CurrentCultureIgnoreCase) && 
+                                                s.Type.Equals(r.Type, StringComparison.CurrentCultureIgnoreCase) && 
+                                                s.Value.Equals(r.Value, StringComparison.CurrentCultureIgnoreCase))}).ToList();
+            this.Html.RegisterWebReferenceGroup("bootstrap-select");
+            return DropDownList(id).Options(items).Append(Button().Icon("glyphicon glyphicon-plus").DataAttribute("action", "addclaim")).ControlType("claims-list");
+        }
+
         public IBootstrapDropDownList AuthorizedList(string id = null)
         {
             var clientControl = Html.ViewData.Model as Videre.Core.Models.IClientControl;

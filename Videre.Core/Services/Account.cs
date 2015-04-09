@@ -91,9 +91,28 @@ namespace Videre.Core.Services
             return inRole;
         }
 
+        public static bool IsInClaim(string issuer, string type, string value)
+        {
+            return IsInClaim(new List<Models.UserClaim>() { new Models.UserClaim() { Issuer = issuer, Type = type, Value = value } });
+        }
+        public static bool IsInClaim(Models.UserClaim claim)
+        {
+            return IsInClaim(new List<Models.UserClaim>() { claim });
+        }
+        public static bool IsInClaim(List<UserClaim> claims, bool throwException = false)
+        {
+            var inClaim = false;
+            if (Authentication.IsAuthenticated)
+                inClaim = claims.Count == 0 || claims.Exists(c => Authentication.AuthenticatedUser.HasClaim(c));
+            if (!inClaim && throwException)
+                throw new Exception(Localization.GetLocalization(LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));
+            return inClaim;
+        }
+
         public static bool IsInRole(string userId, List<string> roleIds)
         {
-            var user = Authentication.AuthenticatedUser; //GetUserById(userId);
+            //var user = Authentication.AuthenticatedUser; //GetUserById(userId);
+            var user = Account.GetUserById(userId);
             if (user != null)
                 return user.RoleIds.Exists(r => roleIds.Contains(r));
             return false;
@@ -135,12 +154,21 @@ namespace Videre.Core.Services
             return AccountService.Get(portalId, statement).FirstOrDefault();
         }
 
+        public static Models.User GetUserByClaim(string issuer, string type, string value, string portalId = null)
+        {
+            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+            if (AccountService is AccountProviders.IClaimsAccountService)
+                return ((AccountProviders.IClaimsAccountService)AccountService).GetByClaim(issuer, type, value, portalId);
+
+            return Get(u => u.Claims.Exists(c => c.Issuer == issuer && c.Type == type && c.Value == value), portalId);
+        }
+
         public static Models.User GetUser(string name, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+            if (AccountService is AccountProviders.IClaimsAccountService)
+                return ((AccountProviders.IClaimsAccountService)AccountService).GetByName(name, portalId);
             return AccountService.Get(portalId).Where(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-            //return Repository.Current.GetResourceData<Models.User>("User", m => m.Data.PortalId == portalId && m.Data.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase), null);
-            //return GetUsers(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && u.PortalId == portalId).SingleOrDefault(); 
         }
 
         public static List<Models.User> GetUsers(string portalId = null)
@@ -219,6 +247,14 @@ namespace Videre.Core.Services
             return AccountService.Delete(id, userId);
         }
 
+        public static bool RoleOrClaimAuthorized(List<string> roleIds, List<UserClaim> claims)
+        {
+            roleIds = roleIds ?? new List<string>();
+            claims = claims ?? new List<UserClaim>();
+            return ((roleIds.Count == 0 && claims.Count == 0) ||
+                (roleIds.Exists(r => Services.Account.IsInRole(r)) || claims.Exists(c => Services.Account.IsInClaim(c))));
+        }
+        
         public static bool RoleAuthorized(List<string> roleIds)
         {
             return (roleIds.Count == 0 || roleIds.Exists(r => Services.Account.IsInRole(r)));
@@ -238,6 +274,15 @@ namespace Videre.Core.Services
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
             return AccountService.GetRoles(portalId);
+        }
+
+        public static List<Models.UserClaim> GetClaims(string portalId = null)
+        {
+            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+            if (AccountService is AccountProviders.IClaimsAccountService)
+                return ((AccountProviders.IClaimsAccountService)AccountService).GetClaims(portalId);
+            else
+                return new List<UserClaim>();
         }
 
         public static Models.Role GetRole(string name, string portalId = null)

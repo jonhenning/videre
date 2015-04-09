@@ -9,7 +9,7 @@ using Videre.Core.Services;
 //todo: change namespace to just Providers
 namespace Videre.Core.AccountProviders
 {
-    public class VidereAccount : IAccountService
+    public class VidereAccount : IClaimsAccountService
     {
         public bool ReadOnly { get { return false ; } }
 
@@ -54,6 +54,16 @@ namespace Videre.Core.AccountProviders
             if (res != null)
                 return res.Data;
             return null;
+        }
+
+        public Models.User GetByName(string portalId, string name)
+        {
+            return Get(portalId, u => u.Name == name).FirstOrDefault();
+        }
+
+        public Models.User GetByClaim(string portalId, string issuer, string type, string value)
+        {
+            return Get(portalId, u => u.Claims.Exists(c => c.Issuer == issuer && c.Type == type && c.Value == value)).FirstOrDefault();
         }
 
         //private static string GeneratePasswordHash(string password, string salt)
@@ -115,6 +125,12 @@ namespace Videre.Core.AccountProviders
             if (Account.Exists(user))
                 throw new Exception(Localization.GetExceptionText("DuplicateResource.Error", "{0} already exists.   Duplicates Not Allowed.", "User"));
         }
+
+        public List<Models.UserClaim> GetClaims(string portalId)
+        {
+            return new List<Models.UserClaim>();
+        }
+
 
     }
 }
