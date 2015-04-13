@@ -17,7 +17,10 @@ namespace Videre.Core.Widgets.ContentProviders
         public string GetJson(List<string> ids, string ignoreType = null)
         {
             var id = ids.Count > 0 ? ids[0] : "";
-            return CoreServices.Menu.GetById(id).ToJson(ignoreType: ignoreType); //hack:  [0]?
+            var menu = CoreServices.Menu.GetById(id);
+            if (menu != null)
+                return menu.ToJson(ignoreType: ignoreType);
+            return null;
         }
 
         public Dictionary<string, string> Import(string portalId, string ns, string json, Dictionary<string, string> idMap)
