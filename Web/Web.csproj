@@ -218,6 +218,7 @@
     </Content>
     <Content Include="AppSettings.config.debug" />
     <None Include="ConnectionStrings.config.debug" />
+    <Content Include="_packages\font-awesome-4.3.0.zip" />
     <Content Include="_packages\Videre.CoreSiteTemplate.zip" />
     <Content Include="_packages\Videre.FirstTimeUserContent.zip" />
     <Content Include="_packages\jsRender-1.0BC15.zip" />
@@ -230,7 +231,6 @@
     <Content Include="Views\Shared\WidgetSectionHeader.cshtml" />
     <Content Include="_packages\jquery-ui-timepicker-1.4.1.zip" />
     <Content Include="_packages\jQuery-1.10.2.zip" />
-    <Content Include="_packages\font-awesome-4.0.3.zip" />
     <Content Include="_packages\DataTables-1.10.0-BS3.zip" />
   </ItemGroup>
   <ItemGroup>
