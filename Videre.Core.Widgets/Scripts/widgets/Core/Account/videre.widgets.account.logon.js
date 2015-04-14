@@ -6,6 +6,10 @@ videre.widgets.account.logon = videre.widgets.base.extend(
     set_returnUrl: function(v) { this._returnUrl = v; },
     get_verifyUrl: function() { return this._verifyUrl; },
     set_verifyUrl: function(v) { this._verifyUrl = v; },
+    get_forceChangePassword: function() { return this._forceChangePassword; },
+    set_forceChangePassword: function(v) { this._forceChangePassword = v; },
+    get_userId: function() { return this._userId; },
+    set_userId: function(v) { this._userId = v; },
 
     //constructor
     init: function()
@@ -16,6 +20,8 @@ videre.widgets.account.logon = videre.widgets.base.extend(
         this._resetDialog = null;
         this._changePasswordDialog = null;
         this._loginResult = null;
+        this._forceChangePassword = false;
+        this._userId = null;
 
         this._delegates = {
             onLoginResult: videre.createDelegate(this, this._onLoginResult),
@@ -35,6 +41,12 @@ videre.widgets.account.logon = videre.widgets.base.extend(
         this.getControl('lnkForgotPassword').click(videre.createDelegate(this, this._onForgotPasswordClick));
         this.getControl('btnSendReset').click(videre.createDelegate(this, this._onSendResetClick));
         this.getControl('btnChangePassword').click(videre.createDelegate(this, this._onChangePasswordClick));
+
+        if (this._forceChangePassword)
+        {
+            this.showChangePasswordDialog();
+            this._loginResult = { UserId: this._userId };
+        }
     },
 
     login: function(provider)

@@ -20,11 +20,11 @@ namespace Videre.Core.Providers
         {
             if (CoreServices.Authentication.IsAuthenticated && CoreServices.Account.AccountVerificationMode == "Enforced")
             {
-                if (!CoreServices.Account.CurrentUser.IsEmailVerified)
+                if (!CoreServices.Authentication.AuthenticatedUser.IsEmailVerified)
                 {
                     var verifyUrl = CoreServices.Account.AccountVerificationUrl;
                     var fullUrl = CoreServices.Portal.ResolveUrl("~/" + url);
-                    if (!string.IsNullOrEmpty(verifyUrl) && fullUrl.IndexOf(verifyUrl) == -1 && fullUrl.IndexOf("admin/portal") == -1)  //allow access to portal to change this setting
+                    if (!string.IsNullOrEmpty(verifyUrl) && fullUrl.IndexOf(verifyUrl, StringComparison.InvariantCultureIgnoreCase) == -1 && fullUrl.IndexOf("admin/portal", StringComparison.InvariantCultureIgnoreCase) == -1)  //allow access to portal to change this setting
                         HttpContext.Current.Response.Redirect(verifyUrl + "?ReturnUrl=" + HttpUtility.UrlEncode(url));
                 }
             }

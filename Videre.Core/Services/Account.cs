@@ -217,7 +217,7 @@ namespace Videre.Core.Services
             {
                 if (Authentication.PersistenceProvider != null)
                 {
-                    var persistenceResult = Authentication.PersistenceProvider.SaveAuthentication(userId, user.Name, password);
+                    var persistenceResult = Authentication.SaveUserAuthentication(userId, user.Name, password);
                     if (!persistenceResult.Success)
                         throw new Exception(persistenceResult.Errors.ToJson());
                     Authentication.AssociateAuthenticationToken(user, persistenceResult.Provider, persistenceResult.ProviderUserId);
@@ -496,6 +496,7 @@ namespace Videre.Core.Services
                     {
                         user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = "Videre Account Verification", Value = DateTime.UtcNow.ToJson() });
                         Account.SaveUser(user);
+                        Authentication.UpdateAuthenticationTicketPrincipal();
                         return true;
                     }
                 }

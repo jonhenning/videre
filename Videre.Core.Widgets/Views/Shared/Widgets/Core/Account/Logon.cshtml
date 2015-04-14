@@ -12,7 +12,9 @@
     var redirectUrl = CoreServices.Portal.ResolveUrl(Model.GetAttribute("RedirectUrl", "~/"));
     
     var returnUrl = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) ? Request.QueryString["ReturnUrl"] : redirectUrl;
-    Html.RegisterControlPresenter("videre.widgets.account.logon", Model, new { returnUrl = returnUrl, verifyUrl = CoreServices.Account.AccountVerificationUrl });
+    var forceChangePassword = Request.QueryString["ForceChangePassword"] != null;
+
+    Html.RegisterControlPresenter("videre.widgets.account.logon", Model, new { returnUrl = returnUrl, verifyUrl = CoreServices.Account.AccountVerificationUrl, forceChangePassword = forceChangePassword, userId = CoreServices.Authentication.AuthenticatedUserId });
 
     var providers = CoreServices.Authentication.GetOAuthAuthenticationProviders().Where(p => p.AllowLogin).ToList();
     var standardProviders = CoreServices.Authentication.GetStandardAuthenticationProviders().Where(p => p.AllowLogin).ToList();

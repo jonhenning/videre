@@ -43,6 +43,7 @@ namespace Videre.Core.Services
         public List<Models.UserClaim> Claims { get; set; }
         public List<string> Roles { get; set; }
         public IDictionary<string, string> ExtraData { get; set; }
+        public DateTimeOffset? LastPasswordChanged { get; set; }
     }
 
     public class AuthenticationResetResult
@@ -92,6 +93,21 @@ namespace Videre.Core.Services
 
         public static void IssueAuthenticationTicket(string identityName, List<string> roles, List<UserClaim> userClaims, int days, bool persistant)
         {
+            var cp = getClaimsPrincipal(identityName, roles, userClaims);
+            var token = new SessionSecurityToken(cp, FormsAuthentication.Timeout);
+
+            token.IsPersistent = persistant;
+            FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(token);
+            System.Threading.Thread.CurrentPrincipal = cp;
+        }
+
+        private static ClaimsPrincipal getClaimsPrincipal(Models.User user)
+        {
+            return getClaimsPrincipal(user.Id, user.RoleIds, user.Claims);
+        }
+
+        private static ClaimsPrincipal getClaimsPrincipal(string identityName, List<string> roles, List<UserClaim> userClaims)
+        {
             var claims = userClaims.Select(c => new Claim(c.Type, c.Value, null, c.Issuer)).ToList();
 
             claims.Add(new Claim(ClaimTypes.Name, identityName));
@@ -102,12 +118,7 @@ namespace Videre.Core.Services
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
             var id = new ClaimsIdentity(claims, "Forms");
-            var cp = new ClaimsPrincipal(id);
-            var token = new SessionSecurityToken(cp, FormsAuthentication.Timeout);
-
-            token.IsPersistent = persistant;
-            FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(token);
-            System.Threading.Thread.CurrentPrincipal = cp;
+            return new ClaimsPrincipal(id);
         }
 
         public static void ProcessAuthenticationTicket()
@@ -122,6 +133,22 @@ namespace Videre.Core.Services
             //    //if (HttpContext.Current.User.Identity.IsAuthenticated)
             //    //    HttpContext.Current.User = new GenericPrincipal(identity, identity.Ticket.UserData.Split(','));
             //}
+        }
+
+        public static void UpdateAuthenticationTicketPrincipal()
+        {
+            if (IsAuthenticated)
+            {
+                SessionSecurityToken token = null;
+                FederatedAuthentication.SessionAuthenticationModule.TryReadSessionTokenFromCookie(out token);
+                var user = Account.GetUserById(AuthenticatedUserId);    //grab updated user
+                FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(
+                    new SessionSecurityToken(getClaimsPrincipal(user), token.Context, token.ValidFrom, token.ValidTo)
+                    {
+                        IsPersistent = token.IsPersistent,
+                        IsReferenceMode = token.IsReferenceMode
+                    });
+            }
         }
 
         //enable sliding expiration
@@ -224,6 +251,18 @@ namespace Videre.Core.Services
         {
             if (PersistenceProvider != null)
                 return PersistenceProvider.SaveAuthentication(auth, userId);
+            return null;
+        }
+
+        public static AuthenticationResult SaveUserAuthentication(string userId, string userName, string password)
+        {
+            if (PersistenceProvider != null)
+            {
+                var result = Authentication.PersistenceProvider.SaveAuthentication(userId, userName, password);
+                if (result.Success)
+                    removeEnforcePasswordChangeClaim(userId);
+                return result;
+            }
             return null;
         }
 
@@ -422,6 +461,7 @@ namespace Videre.Core.Services
                 var user = processAuthenticationResult(authResult, persistant);
                 ret.UserId = user.Id;
                 ret.MustVerify = Account.AccountVerificationMode == "Passive" && !user.IsEmailVerified;  //Enforced will take care of it for us
+                ret.MustChangePassword = userMustChangePassword(authResult);
             }
             else if (SupportsReset)
             {
@@ -436,6 +476,14 @@ namespace Videre.Core.Services
                 }
             }
             return ret;
+        }
+
+        public static int? PasswordExpiresDays
+        {
+            get
+            {
+                return Services.Portal.GetPortalAttribute<int?>("Authentication", "PasswordExpiresDays", null);
+            }
         }
 
         public static AuthenticationResult Authenticate(string userName, string password, string provider)
@@ -539,11 +587,41 @@ namespace Videre.Core.Services
 
             if (user != null)
             {
+                handlePasswordChangeRules(authResult, user);
                 applyAuthenticationResultToUser(authResult, user);
                 issueAuthenticationTicket(user, persistant);
             }
 
             return user;
+        }
+
+        private static void handlePasswordChangeRules(AuthenticationResult authResult, User user)
+        {
+            if (userMustChangePassword(authResult))
+            {
+                if (!user.Claims.Exists(c => c.Issuer == "Videre" && c.Type == "MustChangePassword"))
+                {
+                    user.Claims.Add(new UserClaim() { Issuer = "Videre", Type = "MustChangePassword", Value = "1" });
+                    Account.SaveUser(user);
+                }
+            }
+        }
+
+        private static bool userMustChangePassword(AuthenticationResult authResult)
+        {
+            return (PasswordExpiresDays.HasValue && (authResult.LastPasswordChanged.HasValue == false || authResult.LastPasswordChanged.Value.AddDays(PasswordExpiresDays.Value) < DateTime.UtcNow));
+        }
+
+        private static void removeEnforcePasswordChangeClaim(string userId)
+        {
+            var user = Account.GetUserById(userId);
+            var claim = user.Claims.Where(c => c.Issuer=="Videre" && c.Type == "MustChangePassword").FirstOrDefault();
+            if (claim != null)
+            {
+                user.Claims.Remove(claim);
+                Account.SaveUser(user);
+                UpdateAuthenticationTicketPrincipal();
+            }
         }
 
         private static void issueAuthenticationTicket(Models.User user, bool persistant)

@@ -12,5 +12,6 @@ namespace Videre.Core.Models
         public string Name { get; set; }
         public string PasswordHash { get; set; }
         public string PasswordSalt { get; set; }
+        public DateTimeOffset? UpdateDate { get; set; }
     }
 }

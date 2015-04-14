@@ -49,5 +49,22 @@ namespace Videre.Core.Models
                 return claim.Value.ToType<T>();
             return defaultValue;
         }
+
+        public bool IsEmailVerified
+        {
+            get
+            {
+                return HasClaim("Videre Account Verification", "Account Verified On", "*");
+            }
+        }
+
+        public bool MustChangePassword
+        {
+            get
+            {
+                return HasClaim("Videre", "MustChangePassword", "*");
+            }
+        }
+
     }
 }

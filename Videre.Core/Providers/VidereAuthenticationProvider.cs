@@ -76,7 +76,8 @@ namespace Videre.Core.Providers
                 Provider = Name,
                 //ProviderUserId = user != null ? user.UserId : null,
                 ProviderUserId = user != null ? user.Id : null, //NOT LOGIN ID - TOKEN!
-                UserName = userName
+                UserName = userName,
+                LastPasswordChanged = user != null ? user.UpdateDate : null
             };
         }
 
@@ -121,6 +122,7 @@ namespace Videre.Core.Providers
             {
                 userAuth.PasswordSalt = GenerateSalt();
                 userAuth.PasswordHash = GeneratePasswordHash(password, userAuth.PasswordSalt);
+                userAuth.UpdateDate = DateTime.UtcNow;
             }
             CoreServices.Repository.Current.StoreResource("UserAuthentication", null, userAuth, userId);
 
@@ -129,7 +131,8 @@ namespace Videre.Core.Providers
                 Success = true,
                 UserName = userName,
                 Provider = Name,
-                ProviderUserId = userAuth.Id
+                ProviderUserId = userAuth.Id,
+                LastPasswordChanged = userAuth.UpdateDate
             };
         }
 
