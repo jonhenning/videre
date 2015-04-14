@@ -456,9 +456,10 @@ namespace Videre.Core.Services
         {
             var ret = new LoginResult();
             var authResult = Authenticate(userName, password, provider);
+            CoreModels.User user = null;
             if (authResult.Success)
             {
-                var user = processAuthenticationResult(authResult, persistant);
+                user = processAuthenticationResult(authResult, persistant);
                 ret.UserId = user.Id;
                 ret.MustVerify = Account.AccountVerificationMode == "Passive" && !user.IsEmailVerified;  //Enforced will take care of it for us
                 ret.MustChangePassword = userMustChangePassword(authResult);
@@ -468,13 +469,17 @@ namespace Videre.Core.Services
                 var resetResult = AuthenticationResetProvider.Authenticate(userName, password);
                 if (resetResult.Authenticated)
                 {
-                    var user = Account.GetUser(userName);
+                    user = Account.GetUser(userName);
                     issueAuthenticationTicket(user, true);
                     ret.UserId = user.Id;
                     ret.MustChangePassword = true;
                     ret.MustVerify = Account.AccountVerificationMode == "Passive" && !user.IsEmailVerified;  //Enforced will take care of it for us
                 }
             }
+
+            if (user != null)
+                ret.RedirectUrl = user.Attributes.GetSetting<string>("Login Redirect", null);
+
             return ret;
         }
 
