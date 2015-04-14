@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Videre.Core</id>
+        <version>1.0.0</version>
+        <authors>Code Endeavors Inc.</authors>
+        <owners>Jon Henning</owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Videre CMS Core</description>
+        <dependencies>
+            <dependency id="CodeEndeavors.ResourceManager" version="1.0.8" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="Videre.Core.dll" target="lib\net45\Videre.Core.dll" />
+    </files>
+</package>
