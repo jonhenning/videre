@@ -9,6 +9,7 @@
         <description>Videre CMS Core</description>
         <dependencies>
             <dependency id="CodeEndeavors.ResourceManager" version="1.0.8" />
+            <dependency id="Microsoft.AspNet.Mvc" version="4.0.20710.0" />
         </dependencies>
     </metadata>
     <files>
