@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeEndeavors.Extensions;
+using Videre.Core.Models;
 
 namespace Videre.Core.Services
 {
@@ -65,22 +66,28 @@ namespace Videre.Core.Services
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
             var activity = GetSecureActivity(portalId, area, name);
             if (activity != null)
-                Services.Account.VerifyInRole(activity.RoleIds);
+            {
+                if (!Authorization.IsAuthorized(Authentication.AuthenticatedUser, activity))
+                    throw new Exception(Localization.GetLocalization(LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));
+            }
         }
         public static bool IsActivityAuthorized(string area, string name, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
             var activity = GetSecureActivity(portalId, area, name);
             if (activity != null)
-                return Services.Account.IsInRole(activity.RoleIds, false);
+                return Authorization.IsAuthorized(Authentication.AuthenticatedUser, activity); //Services.Account.IsInRole(activity.RoleIds, false);
             return false;
         }
 
         public static List<Models.SecureActivity> GetAuthorizedSecureActivities(string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+
+            var user = userId == Authentication.AuthenticatedUserId ? (IAuthorizationUser)Authentication.AuthenticatedUser : (IAuthorizationUser)Account.GetUserById(userId);
             var activities = GetSecureActivities(portalId: Portal.CurrentPortalId);
-            return activities.Where(a => Services.Account.IsInRole(userId, a.RoleIds)).ToList();
+
+            return activities.Where(a => Authorization.IsAuthorized(user, a)).ToList();
         }
 
         //public static List<Models.SecureActivity> GetAuthorizedSecureActivities()

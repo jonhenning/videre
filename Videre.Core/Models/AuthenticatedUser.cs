@@ -1,11 +1,12 @@
 ﻿using CodeEndeavors.Extensions;
 using System.Collections.Generic;
 using System.Linq;
+using Videre.Core.Services;
 
 namespace Videre.Core.Models
 {
     //a simple class to wrap what is stored in the principal
-    public class AuthenticatedUser
+    public class AuthenticatedUser : IAuthorizationUser
     {
         public AuthenticatedUser()
         {

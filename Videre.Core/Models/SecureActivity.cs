@@ -1,5 +1,6 @@
 ﻿using CodeEndeavors.Extensions.Serialization;
 using System.Collections.Generic;
+using Videre.Core.Services;
 
 namespace Videre.Core.Models
 {
@@ -10,7 +11,7 @@ namespace Videre.Core.Models
     //    Authenticated = 2
     //}
 
-    public class SecureActivity
+    public class SecureActivity : IAuthorizationEntity
     {
         public SecureActivity()
         {
@@ -55,6 +56,9 @@ namespace Videre.Core.Models
             }
         }
 
+        public List<UserClaim> Claims { get; set; }
+
         public bool? Authenticated { get; set; }
+
     }
 }

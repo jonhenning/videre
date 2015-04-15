@@ -5,10 +5,11 @@ using System.Collections.Generic;
 //using Newtonsoft.Json;
 using CodeEndeavors.Extensions;
 using CodeEndeavors.Extensions.Serialization;
+using Videre.Core.Services;
 
 namespace Videre.Core.Models
 {
-    public class User
+    public class User : IAuthorizationUser
     {
         public User()
         {

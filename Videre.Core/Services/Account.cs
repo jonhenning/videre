@@ -91,6 +91,15 @@ namespace Videre.Core.Services
             return inRole;
         }
 
+        public static bool IsInRole(string userId, List<string> roleIds)
+        {
+            //var user = Authentication.AuthenticatedUser; //GetUserById(userId);
+            var user = Account.GetUserById(userId);
+            if (user != null)
+                return user.RoleIds.Exists(r => roleIds.Contains(r));
+            return false;
+        }
+
         public static bool IsInClaim(string issuer, string type, string value)
         {
             return IsInClaim(new List<Models.UserClaim>() { new Models.UserClaim() { Issuer = issuer, Type = type, Value = value } });
@@ -107,15 +116,6 @@ namespace Videre.Core.Services
             if (!inClaim && throwException)
                 throw new Exception(Localization.GetLocalization(LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));
             return inClaim;
-        }
-
-        public static bool IsInRole(string userId, List<string> roleIds)
-        {
-            //var user = Authentication.AuthenticatedUser; //GetUserById(userId);
-            var user = Account.GetUserById(userId);
-            if (user != null)
-                return user.RoleIds.Exists(r => roleIds.Contains(r));
-            return false;
         }
 
         public static Models.User CurrentUser
