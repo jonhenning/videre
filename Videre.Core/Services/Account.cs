@@ -124,16 +124,9 @@ namespace Videre.Core.Services
             {
                 if (Authentication.IsAuthenticated)
                 {
-                    var user = Portal.GetRequestContextData<Models.User>("VidereCurrentUser", null);
+                    var user = GetUserById(Authentication.AuthenticatedUserId, true);
                     if (user == null)
-                    {
-                        //todo: this could be expensive to do a lookup to the database each time!
-                        user = GetUserById(Authentication.AuthenticatedUserId, true);
-                        if (user == null)
-                            Core.Services.Authentication.RevokeAuthenticationTicket();
-                        else 
-                            Portal.SetRequestContextData("VidereCurrentUser", user);
-                    }
+                        Core.Services.Authentication.RevokeAuthenticationTicket();
                     return user;
                 }
                 return null;
@@ -142,7 +135,12 @@ namespace Videre.Core.Services
 
         public static Models.User GetUserById(string id, bool clone = false)
         {
-            var user = AccountService.GetById(id);
+            var user = Portal.GetRequestContextData<Models.User>("VidereUserRequestCache-" + id, null);
+            if (user == null)
+            {
+                user = AccountService.GetById(id);  //todo: this could be expensive to do a lookup to the database each time!
+                Portal.SetRequestContextData("VidereUserRequestCache-" + id, user);
+            }
             if (clone)
                 return user.JsonClone();
             return user;
