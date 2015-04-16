@@ -15,7 +15,9 @@ namespace Videre.Core.Models
     {
         public SecureActivity()
         {
-            //Roles = new List<string>();
+            //RoleIds = new List<string>();
+            ExcludeRoleIds = new List<string>();
+            Claims = new List<UserClaim>();
         }
 
         public string Id { get; set; }
@@ -57,6 +59,8 @@ namespace Videre.Core.Models
         }
 
         public List<UserClaim> Claims { get; set; }
+        //public List<string> RoleIds { get; set; }
+        public List<string> ExcludeRoleIds { get; set; }
 
         public bool? Authenticated { get; set; }
 

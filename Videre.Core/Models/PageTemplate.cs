@@ -4,19 +4,21 @@ using CodeEndeavors.Extensions.Serialization;
 using Videre.Core.Extensions;
 using CodeEndeavors.Extensions;
 using System;
+using Videre.Core.Services;
 //using Newtonsoft.Json;
 
 namespace Videre.Core.Models
 {
-    public class PageTemplate 
+    public class PageTemplate : IAuthorizationEntity
     {
         public PageTemplate()
         {
             Widgets = new List<Widget>();
             Urls = new List<string>();
-            //Roles = new List<string>();
-            WebReferences = new List<string>();
+            //RoleIds = new List<string>();
+            ExcludeRoleIds = new List<string>();
             Claims = new List<UserClaim>();
+            WebReferences = new List<string>();
         }
 
         //[JsonIgnore()]
@@ -30,6 +32,7 @@ namespace Videre.Core.Models
         public string ThemeName { get; set; }
         public List<string> Urls { get; set; }
         public string PortalId { get; set; }
+
         private List<string> _roles = new List<string>();
         [System.Obsolete("Use RoleIds")]
         [SerializeIgnore(new string[] { "client" })]
@@ -64,6 +67,8 @@ namespace Videre.Core.Models
         }
 
         public List<UserClaim> Claims { get; set; }
+        //public List<string> RoleIds { get; set; }
+        public List<string> ExcludeRoleIds { get; set; }
 
         public bool? Authenticated { get; set; }
         public List<string> WebReferences { get; set; }
@@ -90,14 +95,7 @@ namespace Videre.Core.Models
 
         //[JsonIgnore]
         [SerializeIgnore("db")] //todo: we need this on client?
-        public bool IsAuthorized
-        {
-            get
-            {
-                return (Services.Account.RoleOrClaimAuthorized(RoleIds, Claims) &&
-                    (!Authenticated.HasValue || Authenticated == Services.Authentication.IsAuthenticated));
-            }
-        }
+        public bool IsAuthorized { get { return Authorization.IsAuthorized(this); } }
 
         [SerializeIgnore(new string[] { "db", "client" })]
         public Models.LayoutTemplate Layout

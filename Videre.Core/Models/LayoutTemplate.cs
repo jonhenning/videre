@@ -1,16 +1,19 @@
 ﻿using System.Collections.Generic;
 using CodeEndeavors.Extensions;
 using CodeEndeavors.Extensions.Serialization;
+using Videre.Core.Services;
 
 namespace Videre.Core.Models
 {
-    public class LayoutTemplate 
+    public class LayoutTemplate : IAuthorizationEntity
     {
         public LayoutTemplate()
         {
             Attributes = new Dictionary<string, object>();
             Widgets = new List<Widget>();
-            //Roles = new List<string>();
+            //RoleIds = new List<string>();
+            ExcludeRoleIds = new List<string>();
+            Claims = new List<UserClaim>();
             WebReferences = new List<string>();
         }
         private string _layoutViewName = null;
@@ -30,7 +33,14 @@ namespace Videre.Core.Models
         }
         public string ThemeName { get; set; }
         public List<Widget> Widgets { get; set; }
+
+        public bool? Authenticated { get; set; }
+        public List<UserClaim> Claims { get; set; }
+        //public List<string> RoleIds { get; set; }
+        public List<string> ExcludeRoleIds { get; set; }
+
         private List<string> _roles = new List<string>();
+
         [System.Obsolete("Use RoleIds")]
         [SerializeIgnore(new string[] { "client" })]
         public List<string> Roles
@@ -62,6 +72,7 @@ namespace Videre.Core.Models
                 _roleIds = value;
             }
         }
+
         public string PortalId { get; set; }
         public List<string> WebReferences { get; set; }
 
@@ -87,8 +98,8 @@ namespace Videre.Core.Models
             return dict;
         }
 
-        [SerializeIgnore(new string[] {"db", "client"})] 
-        public bool IsAuthorized { get { return Services.Account.RoleAuthorized(RoleIds); } }
+        [SerializeIgnore(new string[] {"db", "client"})]
+        public bool IsAuthorized { get { return Authorization.IsAuthorized(this); } }
 
         public Dictionary<string, object> Attributes { get; set; }
 

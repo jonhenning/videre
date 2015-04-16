@@ -51,36 +51,43 @@ namespace Videre.Core.Services
         public static string CurrentIdentityName { get { return Authentication.AuthenticatedUserId; } }
         public static string AuditId { get { return Authentication.AuthenticatedUserId; } }
 
+        [Obsolete]
         public static void VerifyInRole(string roleId)
         {
             IsInRole(new List<string>() { roleId }, true);
         }
 
+        [Obsolete]
         public static void VerifyInRole(List<string> roleIds)
         {
             IsInRole(roleIds, true);
         }
 
+        [Obsolete]
         public static bool IsInRole(string userId, string roleId)
         {
             return IsInRole(userId, new List<string>() { roleId });
         }
 
+        [Obsolete]
         public static bool IsInRole(string roleId, bool throwException = false)
         {
             return IsInRole(new List<string>() { roleId }, throwException);
         }
 
+        [Obsolete]
         public static bool IsInRoleNames(string userId, List<string> roleNames)
         {
             return IsInRole(userId, GetRoles().Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList());
         }
 
+        [Obsolete]
         public static bool IsInRoleNames(List<string> roleNames, bool throwException = false)
         {
             return IsInRole(GetRoles().Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList(), throwException);
         }
 
+        [Obsolete]
         public static bool IsInRole(List<string> roleIds, bool throwException = false)
         {
             var inRole = false;
@@ -91,6 +98,7 @@ namespace Videre.Core.Services
             return inRole;
         }
 
+        [Obsolete]
         public static bool IsInRole(string userId, List<string> roleIds)
         {
             //var user = Authentication.AuthenticatedUser; //GetUserById(userId);
@@ -100,14 +108,19 @@ namespace Videre.Core.Services
             return false;
         }
 
+        [Obsolete]
         public static bool IsInClaim(string issuer, string type, string value)
         {
             return IsInClaim(new List<Models.UserClaim>() { new Models.UserClaim() { Issuer = issuer, Type = type, Value = value } });
         }
+
+        [Obsolete]
         public static bool IsInClaim(Models.UserClaim claim)
         {
             return IsInClaim(new List<Models.UserClaim>() { claim });
         }
+
+        [Obsolete]
         public static bool IsInClaim(List<UserClaim> claims, bool throwException = false)
         {
             var inClaim = false;
@@ -116,6 +129,18 @@ namespace Videre.Core.Services
             if (!inClaim && throwException)
                 throw new Exception(Localization.GetLocalization(LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));
             return inClaim;
+        }
+
+        [Obsolete]
+        public static bool RoleAuthorized(List<string> roleIds)
+        {
+            return (roleIds.Count == 0 || roleIds.Exists(r => Services.Account.IsInRole(r)));
+        }
+
+        [Obsolete]
+        public static bool UserNotInRole(List<string> roleIds)
+        {
+            return (roleIds.Count == 0 || !roleIds.Exists(r => Services.Account.IsInRole(r)));
         }
 
         public static Models.User CurrentUser
@@ -245,24 +270,14 @@ namespace Videre.Core.Services
             return AccountService.Delete(id, userId);
         }
 
-        public static bool RoleOrClaimAuthorized(List<string> roleIds, List<UserClaim> claims)
-        {
-            roleIds = roleIds ?? new List<string>();
-            claims = claims ?? new List<UserClaim>();
-            return ((roleIds.Count == 0 && claims.Count == 0) ||
-                (roleIds.Exists(r => Services.Account.IsInRole(r)) || claims.Exists(c => Services.Account.IsInClaim(c))));
-        }
+        //public static bool RoleOrClaimAuthorized(List<string> roleIds, List<UserClaim> claims)
+        //{
+        //    roleIds = roleIds ?? new List<string>();
+        //    claims = claims ?? new List<UserClaim>();
+        //    return ((roleIds.Count == 0 && claims.Count == 0) ||
+        //        (roleIds.Exists(r => Services.Account.IsInRole(r)) || claims.Exists(c => Services.Account.IsInClaim(c))));
+        //}
         
-        public static bool RoleAuthorized(List<string> roleIds)
-        {
-            return (roleIds.Count == 0 || roleIds.Exists(r => Services.Account.IsInRole(r)));
-        }
-
-        public static bool UserNotInRole(List<string> roleIds)
-        {
-            return (roleIds.Count == 0 || !roleIds.Exists(r => Services.Account.IsInRole(r)));
-        }
-
         public static Models.Role GetRoleById(string id)
         {
             return AccountService.GetRoleById(id);

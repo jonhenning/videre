@@ -133,7 +133,7 @@
                     $(MSBuildProjectDirectory)\_packages\dynatree-*.zip;
                     $(MSBuildProjectDirectory)\_packages\font-awesome-*.zip;
                     $(MSBuildProjectDirectory)\_packages\jquery-*.zip;
-                    $(MSBuildProjectDirectory)\_packages\jquery.easing-.zip;
+                    $(MSBuildProjectDirectory)\_packages\jquery.easing-*.zip;
                     $(MSBuildProjectDirectory)\_packages\jsrender-*.zip;
                     $(MSBuildProjectDirectory)\_packages\md5-*.zip;
                     $(MSBuildProjectDirectory)\_packages\moment-*.zip;

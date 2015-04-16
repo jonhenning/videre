@@ -9,7 +9,7 @@ using Videre.Core.Services;
 
 namespace Videre.Core.Models
 {
-    public class Widget : IClientControl
+    public class Widget : IClientControl, IAuthorizationEntity
     {
         private string _id;
 
@@ -97,14 +97,7 @@ namespace Videre.Core.Models
         public List<string> WebReferences { get; set; }
 
         [SerializeIgnore("db")]
-        public bool IsAuthorized
-        {
-            get
-            {
-                return Account.RoleOrClaimAuthorized(RoleIds, Claims) && Account.UserNotInRole(ExcludeRoleIds) &&
-                    (!Authenticated.HasValue || Authenticated == Authentication.IsAuthenticated);
-            }
-        }
+        public bool IsAuthorized { get { return Authorization.IsAuthorized(this); } }
 
         public Dictionary<string, object> Attributes { get; set; }
 

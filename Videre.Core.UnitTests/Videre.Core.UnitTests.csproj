@@ -63,6 +63,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Authorization.cs" />
     <Compile Include="TokenParser.cs" />
     <Compile Include="RouteParser.cs" />
   </ItemGroup>

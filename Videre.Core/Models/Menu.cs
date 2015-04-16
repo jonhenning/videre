@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CodeEndeavors.Extensions.Serialization;
+using Videre.Core.Services;
 //using Newtonsoft.Json;
 
 namespace Videre.Core.Models 
@@ -29,13 +30,14 @@ namespace Videre.Core.Models
         public List<MenuItem> Items { get; set; }
     }
 
-    public class MenuItem
+    public class MenuItem : IAuthorizationEntity
     {
         public MenuItem()
         {
             Items = new List<MenuItem>();
             Claims = new List<UserClaim>();
-            //Roles = new List<string>();
+            RoleIds = new List<string>();
+            ExcludeRoleIds = new List<string>();
         }
 
         public string Text { get; set; }    //TODO: LOCALIZE!
@@ -43,54 +45,49 @@ namespace Videre.Core.Models
         public List<MenuItem> Items { get; set; }
         public string TemplateId { get; set; }  //??? - think its for eventual mapping to template, regardless of its url...
         public string Url { get; set; }
-        private List<string> _roles = new List<string>();
-        [System.Obsolete("Use RoleIds")]
-        [SerializeIgnore(new string[] { "client" })]
-        public List<string> Roles
-        {
-            get
-            {
-                return _roles;
-            }
-            set
-            {
-                _roles = value;
-            }
-        }
+        //private List<string> _roles = new List<string>();
+        //[System.Obsolete("Use RoleIds")]
+        //[SerializeIgnore(new string[] { "client" })]
+        //public List<string> Roles
+        //{
+        //    get
+        //    {
+        //        return _roles;
+        //    }
+        //    set
+        //    {
+        //        _roles = value;
+        //    }
+        //}
 
-        private List<string> _roleIds = new List<string>();
-        public List<string> RoleIds
-        {
-            get
-            {
-                if (_roles != null && _roles.Count > 0)
-                {
-                    _roleIds.AddRange(_roles);
-                    _roles.Clear();
-                }
-                return _roleIds;
-            }
-            set
-            {
-                _roleIds = value;
-            }
-        }
+        //private List<string> _roleIds = new List<string>();
+        //public List<string> RoleIds
+        //{
+        //    get
+        //    {
+        //        if (_roles != null && _roles.Count > 0)
+        //        {
+        //            _roleIds.AddRange(_roles);
+        //            _roles.Clear();
+        //        }
+        //        return _roleIds;
+        //    }
+        //    set
+        //    {
+        //        _roleIds = value;
+        //    }
+        //}
+
+        public List<UserClaim> Claims { get; set; }
+        public List<string> RoleIds { get; set; }
+        public List<string> ExcludeRoleIds { get; set; }
+
         public bool? Authenticated { get; set; }
         public bool AlignRight { get; set; }
 
-        public List<UserClaim> Claims { get; set; }
-
         //[JsonIgnore]
         [SerializeIgnore("db")] //todo: we need this on client?  ignore "client"
-        public bool IsAuthorized
-        {
-            get
-            {
-                return (Services.Account.RoleOrClaimAuthorized(RoleIds, Claims) &&
-                    (!Authenticated.HasValue || Authenticated == Services.Authentication.IsAuthenticated));
-            }
-        }
-
+        public bool IsAuthorized { get { return Authorization.IsAuthorized(this); } }
     }
 
 }

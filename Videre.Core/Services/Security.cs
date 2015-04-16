@@ -84,7 +84,7 @@ namespace Videre.Core.Services
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
 
-            var user = userId == Authentication.AuthenticatedUserId ? (IAuthorizationUser)Authentication.AuthenticatedUser : (IAuthorizationUser)Account.GetUserById(userId);
+            var user = Authorization.GetAuthorizationUser(userId);
             var activities = GetSecureActivities(portalId: Portal.CurrentPortalId);
 
             return activities.Where(a => Authorization.IsAuthorized(user, a)).ToList();
