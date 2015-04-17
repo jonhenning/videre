@@ -90,6 +90,7 @@
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ConfirmPassword.Text", "Confirm Password").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Password("txtPassword2").DataColumn("Password").MustMatch("txtPassword").DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
                             }
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Roles.Text", "Roles").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().RoleList().Plugin(Plugin.BootstrapSelect).Multiple().DataColumn("RoleIds"), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Claims.Text", "Claims").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().ClaimList().DataColumn("Claims").Multiple().Plugin(Plugin.BootstrapSelect).StyleAttribute("width", "329px"), BootstrapUnits.GridSize.MediumDevice8)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("TimeZone.Text", "Time Zone").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().DropDownList().DataColumn("TimeZone").Options(TimeZoneInfo.GetSystemTimeZones().Select(t => new SelectListItem() { Value = t.StandardName, Text = t.DisplayName }).ToList()), BootstrapUnits.GridSize.MediumDevice8)
                         </div>
                         @{

@@ -117,9 +117,9 @@ namespace Videre.Core.Widgets.Controllers
                 CoreServices.Security.VerifyActivityAuthorized("Account", "Administration");
 
                 //claims are not sent to client.  We need to get them and apply
-                var dbUser = CoreServices.Account.GetUserById(user.Id);
-                if (dbUser != null)
-                    user.Claims = dbUser.Claims;
+                //var dbUser = CoreServices.Account.GetUserById(user.Id);
+                //if (dbUser != null)
+                //    user.Claims = dbUser.Claims;
 
                 r.Data = !string.IsNullOrEmpty(CoreServices.Account.SaveUser(user));
             });

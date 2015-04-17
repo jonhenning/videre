@@ -108,7 +108,7 @@ namespace Videre.Core.Models
         public Dictionary<string, object> Attributes { get; set; }
 
         private List<Models.UserClaim> _claims = new List<Models.UserClaim>();
-        [SerializeIgnore(new string[] { "client" })]    
+        //[SerializeIgnore(new string[] { "client" })]    
         public List<Models.UserClaim> Claims
         {
             get
