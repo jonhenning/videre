@@ -36,9 +36,17 @@ namespace Videre.Core.Widgets.ImportExportProviders
             portalId = string.IsNullOrEmpty(portalId) ? Services.Portal.CurrentPortalId : portalId;
             export = export ?? Services.ImportExport.GetPortalExport(portalId);
             export.Menus = export.Menus ?? new List<Models.Menu>();
-            var r = Services.Menu.GetById(id);
-            if (r != null)
-                export.Menus.Add(r);
+
+            var menu = Services.Menu.GetById(id);
+            if (menu != null)
+            {
+                export.Menus.Add(menu);
+
+                export.Roles = export.Roles ?? new List<Models.Role>();
+                var allRoleIds = menu.Items.Descendants(i => i.Items).SelectMany(i => i.RoleIds != null ? i.RoleIds : new List<string>()).ToList();
+                export.Roles.AddRange(Services.Account.GetRoles(portalId).Where(r => allRoleIds.Contains(r.Id)));
+                export.Roles = export.Roles.Distinct().ToList();    //remove duplicates - quick and dirty way
+            }
             return export;
         }
 

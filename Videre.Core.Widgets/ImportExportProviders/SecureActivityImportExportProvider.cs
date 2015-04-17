@@ -43,6 +43,7 @@ namespace Videre.Core.Widgets.ImportExportProviders
 
                 export.Roles = export.Roles ?? new List<Models.Role>();
                 export.Roles.AddRange(Services.Account.GetRoles(portalId).Where(r => a.RoleIds.Contains(r.Id)));
+                export.Roles = export.Roles.Distinct().ToList();    //remove duplicates - quick and dirty way
             }
 
             return export;
