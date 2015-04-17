@@ -30,6 +30,7 @@
                         <th>@Model.GetText("Area.Text", "Area")</th>
                         <th>@Model.GetText("Name.Text", "Name")</th>
                         <th>@Model.GetText("Roles.Text", "Roles")</th>
+                        <th>@Model.GetText("Claims.Text", "Claims")</th>
                     </tr>
                 </thead>
                 <tbody id="@Model.GetId("ItemList")"></tbody>
@@ -50,6 +51,17 @@
                                 {{:#ctx.roleDataDict[#data] != null ? #ctx.roleDataDict[#data].Name : null}}
                             </li>
                         {{/for}}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="list-unstyled">
+                        {{if Claims != null}}
+                            {{for Claims}}
+                                <li>
+                                    {{:#data.Issuer + ':' + #data.Type + ':' + #data.Value}}
+                                </li>
+                            {{/for}}
+                        {{/if}}
                         </ul>
                     </td>
                 </tr>
