@@ -72,13 +72,13 @@ namespace Videre.Core.Widgets.ImportExportProviders
                         var claim = user.GetClaim("AuthenticationToken", "Videre");
                         if (claim != null)
                             claim.Value = ImportExport.GetIdMap<UserAuthentication>(claim.Value, idMap);
-                        else
+                        else if (export.UserAuthentications != null)
                         {
                             var userAuth = export.UserAuthentications.Where(a => a.UserId == exportUser.Id).FirstOrDefault();
                             if (userAuth != null)
                                 user.Claims.Add(new UserClaim() { Type = "AuthenticationToken", Issuer = "Videre", Value = ImportExport.GetIdMap<UserAuthentication>(userAuth.Id, idMap) });  
-                            else
-                                throw new Exception("User import failed.  No UserAuthentication found");
+                            //else
+                            //    throw new Exception("User import failed.  No UserAuthentication found");
                         }
                     }
                     Account.SaveUser(user);
