@@ -257,6 +257,15 @@ namespace Videre.Core.Widgets.Controllers
                 r.Data = !string.IsNullOrEmpty(Services.Package.SaveExportJob(job));
             });
         }
+
+        public JsonResult<bool> DeleteExportJob(string id)
+        {
+            return API.Execute<bool>(r =>
+            {
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                r.Data = Services.Package.DeleteExportJob(id);
+            });
+        }
         
         [ValidateInput(false)]
         public FileContentResult DownloadJobPackage(string jobData)
