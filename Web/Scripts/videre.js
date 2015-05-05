@@ -186,8 +186,8 @@
             async: options.async == null ? true : options.async,
             data: videre.serialize(data),
             contentType: options.contentType || 'application/json; charset=utf-8',
-            success: function(result) { success(result, ctx); },
-            error: function(request) { error(request, ctx); }
+            success: function(result) { if (success != null) success(result, ctx); },
+            error: function(request) { if (error != null) error(request, ctx); }
         });
     },
 
