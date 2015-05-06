@@ -6,7 +6,7 @@ namespace Videre.Core.Services
 {
     public class Mail
     {
-        public static bool Send(string from, string recipients, string subject, string body, bool isBodyHtml = true, List<LinkedResource> linkedResources = null)
+        public static bool Send(string from, string recipients, string subject, string body, bool isBodyHtml = true, List<LinkedResource> linkedResources = null, List<Attachment> attachments = null)
         {
             var client = new SmtpClient();  //read from configuration
 
@@ -34,8 +34,19 @@ namespace Videre.Core.Services
                 msg.AlternateViews.Add(view); 
             }
 
+            if (attachments != null)
+            {
+                foreach (var a in attachments)
+                    msg.Attachments.Add(a);
+            }
+
             client.Send(msg);
             return true;
+        }
+
+        public static bool Send(string from, string recipients, string subject, string body, bool isBodyHtml = true, List<LinkedResource> linkedResources = null)
+        {
+            return Send(from, recipients, subject, body, isBodyHtml, linkedResources, null);
         }
 
         public static bool Send(string from, string recipients, string templateName, string subjectTemplateText, string bodyTemplateText, Dictionary<string, object> tokens, bool isBodyHtml = true, List<LinkedResource> linkedResources = null)
