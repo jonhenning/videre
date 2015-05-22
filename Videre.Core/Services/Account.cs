@@ -389,7 +389,7 @@ namespace Videre.Core.Services
         {
             var zone = GetUserTimeZone(user);
             if (zone != null)
-                return zone.StandardName;
+                return zone.Id; //using Id for Name
             return "";
         }
 
