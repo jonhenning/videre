@@ -286,7 +286,13 @@ namespace Videre.Core.Services
         public static List<Models.Role> GetRoles(string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return AccountService.GetRoles(portalId);
+            var roles = Portal.GetRequestContextData<List<Models.Role>>("PortalRoles-" + portalId, null);
+            if (roles == null)
+            {
+                roles = AccountService.GetRoles(portalId);
+                Portal.SetRequestContextData("PortalRoles-" + portalId, roles);
+            }
+            return roles;
         }
 
         public static List<Models.UserClaim> GetClaims(string portalId = null)
@@ -383,7 +389,7 @@ namespace Videre.Core.Services
         {
             var zone = GetUserTimeZone(user);
             if (zone != null)
-                return zone.StandardName;
+                return zone.Id; //using Id for Name
             return "";
         }
 

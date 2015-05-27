@@ -62,7 +62,7 @@ namespace Videre.Core.Services
 
         public static Models.Layout GetLayout(string name)
         {
-            return GetLayouts().Where(t => t.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
+            return GetLayouts().Where(t => t.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
         public static List<Models.Layout> GetLayouts()
@@ -75,7 +75,7 @@ namespace Videre.Core.Services
 
         public static Models.Theme GetTheme(string name)
         {
-            return GetThemes().Where(t => t.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
+            return GetThemes().Where(t => t.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
         public static List<Models.Theme> GetThemes()

@@ -173,6 +173,8 @@ namespace Videre.Core.Services
                     count++;
                 }
             }
+            if (count > 0)
+                Portal.SetRequestContextData<List<Models.Role>>("PortalRoles-" + roles.Select(r => r.PortalId).FirstOrDefault(), null); //clear request context for roles as we just saved a new one
             return count;
         }
 

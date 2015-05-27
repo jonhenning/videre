@@ -195,7 +195,7 @@ namespace Videre.Core.Extensions
         {
             var tz = Account.GetUserTimeZone();
             if (tz != null)
-                helper.RegisterTimeZoneScript(tz.StandardName);
+                helper.RegisterTimeZoneScript(tz.Id);
         }
 
         public static void RegisterTimeZoneScript(this HtmlHelper helper, string timeZone)

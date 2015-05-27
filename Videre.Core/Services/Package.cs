@@ -372,6 +372,16 @@ namespace Videre.Core.Services
             var res = Repository.Current.StoreResource("ImportExportContentJob", null, job, userId);
             return res.Id;
         }
+
+        public static bool DeleteExportJob(string id, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var res = Repository.Current.GetResourceById<Models.ImportExportContentJob>(id);
+            if (res != null)
+                Repository.Current.Delete(res);
+            return res != null;
+        }
+
         public static void Validate(Models.ImportExportContentJob job)
         {
             if (string.IsNullOrEmpty(job.PortalId) || string.IsNullOrEmpty(job.Name))

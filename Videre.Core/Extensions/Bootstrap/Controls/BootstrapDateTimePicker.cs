@@ -68,7 +68,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         public IBootstrapDateTimePicker UserTimeZone()
         {
             var tz = Services.Account.GetUserTimeZone();
-            var name = tz != null ? tz.StandardName : System.TimeZone.CurrentTimeZone.StandardName; //todo: need something... use server's i guess
+            var name = tz != null ? tz.Id : System.TimeZone.CurrentTimeZone.StandardName; //todo: need something... use server's i guess
             this._html.RegisterTimeZoneScript(name);
             return TimeZone(name);
         }
