@@ -183,7 +183,7 @@ videre.widgets.admin.file = videre.widgets.base.extend(
             this._data = result.Data.select(function(d)
             {
                 d.treeKey = d.Url;
-                d.imageUrl = (d.MimeType.indexOf('image/') > -1 ? videre.resolveUrl('~/Core/f/' + d.Url) : videre.resolveUrl('~/content/images/document.png'));
+                d.imageUrl = (d.MimeType.indexOf('image/') > -1 ? videre.resolveUrl('~/Core/f/' + d.RenderUrl) : videre.resolveUrl('~/content/images/document.png'));
                 return d; 
             });
             this._treeData = videre.tree.getTreeData('root', this._data, function(d) { return d.treeKey; });

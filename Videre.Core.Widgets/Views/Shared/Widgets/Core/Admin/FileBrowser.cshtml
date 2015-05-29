@@ -65,7 +65,7 @@
                                 <div class="col-xs-3">
                                         {{if !isFolder}}
                                             <a class="thumbnail" data-id="{{:Id}}" data-action="select">
-                                                <img src="@Url.Content("~/Core/f/"){{:Url}}" title="{{:Url}}" class="img-responsive" />
+                                                <img src="@Url.Content("~/Core/f/"){{:RenderUrl}}" title="{{:Url}}" class="img-responsive" />
                                             </a>
                                         {{/if}}
                                         {{if isFolder}}

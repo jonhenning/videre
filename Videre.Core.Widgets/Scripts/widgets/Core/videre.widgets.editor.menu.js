@@ -69,7 +69,6 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
                         self._widgetData.Content = self._newMenuData;
                         self.bindMenus();
                         self._handleMenuChanged();
-                        self._newMenuDialog.modal('hide');
                         return true;
                     }
                 }
