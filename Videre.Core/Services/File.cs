@@ -23,7 +23,7 @@ namespace Videre.Core.Services
 
         public static Models.File Get(string portalId, string url)
         {
-            var fileResource = Repository.Current.GetResources<Models.File>("File", f => f.Data.PortalId == portalId && f.Data.Url == url).SingleOrDefault();
+            var fileResource = Repository.Current.GetResources<Models.File>("File", f => f.Data.PortalId == portalId && (f.Data.Url == url || f.Data.RenderUrl == url)).SingleOrDefault();
             if (fileResource != null)
                 return fileResource.Data; //.ToModel();
             return null;
