@@ -248,6 +248,8 @@ namespace Videre.Core.Services
                 else
                     throw new Exception("Cannot persist password if no authentication persistence provider enabled");
             }
+            Portal.SetRequestContextData<Models.User>("VidereUserRequestCache-" + userId, null);    //clear record from context 
+
             return userId;
         }
 
@@ -389,7 +391,7 @@ namespace Videre.Core.Services
         {
             var zone = GetUserTimeZone(user);
             if (zone != null)
-                return zone.StandardName;
+                return zone.Id; //using Id for Name
             return "";
         }
 

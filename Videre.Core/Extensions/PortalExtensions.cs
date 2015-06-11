@@ -124,6 +124,16 @@ namespace Videre.Core.Extensions
             RenderSubWidget(helper, widget, view, attributes.AnonymousToDictionary(), separateNamespace);
         }
 
+        public static string RenderControl(this HtmlHelper helper, string path, string name, object viewData = null, bool separateNamespace = true)
+        {
+            var control = new Models.Control(path);
+            if (separateNamespace)
+                control.ClientId = Portal.NextClientId();
+            //it would be nice if the ViewDataDictionary accepted anonymous objects
+            helper.RenderPartial("Controls/" + path.PathCombine(name, "/"), control, new ViewDataDictionary(viewData.ToJson().ToObject<ViewDataDictionary>()));
+            return control.ClientId;
+        }
+
         public static void RenderWidgetEditor(this HtmlHelper helper, WidgetManifest manifest)
         {
             helper.RegisterScript("~/scripts/widgets/videre.widgets.editor.base.js", true);
@@ -185,7 +195,7 @@ namespace Videre.Core.Extensions
         {
             var tz = Account.GetUserTimeZone();
             if (tz != null)
-                helper.RegisterTimeZoneScript(tz.StandardName);
+                helper.RegisterTimeZoneScript(tz.Id);
         }
 
         public static void RegisterTimeZoneScript(this HtmlHelper helper, string timeZone)
