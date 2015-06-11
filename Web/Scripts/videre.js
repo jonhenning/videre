@@ -32,7 +32,8 @@
 
     deserialize: function(data)
     {
-        return JSON.parse(data);
+        //return JSON.parse(data);
+        return $.parseJSON(data);   //have jquery attempt to use browser's native implementation
     },
 
     parseDate: function(value, format, zone)
@@ -424,18 +425,22 @@ videre.UI = {
 
     setControlValue: function(ctl, val)
     {
-        val = val != null ? val.toString() : '';
-        //var tagName = ctl.prop('tagName').toLowerCase();
-        //if (tagName == 'label' || tagName == 'span' || tagName == 'div' || tagName == 'p')  //todo:  better way to detect to set html or val?
-        if (!ctl.is(':input'))
-            ctl.text(val);
+        var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+        if (controlType != null && controlType.set != null)
+            controlType.set(ctl, val);
         else
         {
-            var type = (ctl.prop('type') || '').toLowerCase();
-            if (type == 'checkbox' || type == 'radio')
-                ctl.prop('checked', !String.isNullOrEmpty(val) && val.toLowerCase() != 'false');
+            val = val != null ? val.toString() : '';
+            if (!ctl.is(':input'))
+                ctl.text(val);
             else
-                ctl.val(val);
+            {
+                var type = (ctl.prop('type') || '').toLowerCase();
+                if (type == 'checkbox' || type == 'radio')
+                    ctl.prop('checked', !String.isNullOrEmpty(val) && val.toLowerCase() != 'false');
+                else
+                    ctl.val(val);
+            }
         }
     },
 
