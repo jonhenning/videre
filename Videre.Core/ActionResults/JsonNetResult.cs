@@ -18,6 +18,7 @@ namespace Videre.Core.ActionResults
         public JsonNetResult()
         {
             SerializerSettings = new JsonSerializerSettings();
+            SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         }
 
         public override void ExecuteResult(ControllerContext context)
