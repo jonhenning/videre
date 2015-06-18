@@ -352,14 +352,14 @@ videre.UI = {
             var val = Object.deepGet(data, ctl.data('column'));
             var controlType = videre.UI._controlTypes[ctl.data('controltype')];
             if (controlType != null && controlType.set != null)
-                controlType.set(ctl, val);
+                controlType.set(ctl, val, data);    //
             else
             {
-                var dataType = videre.UI._dataTypes[ctl.data('datatype')];
-                if (dataType != null && dataType.set != null)
-                    dataType.set(ctl, val);
-                else
-                    videre.UI.setControlValue(ctl, val);
+                //var dataType = videre.UI._dataTypes[ctl.data('datatype')];
+                //if (dataType != null && dataType.set != null)
+                //    dataType.set(ctl, val);
+                //else
+                    videre.UI.setControlValue(ctl, val, data);
             }
         });
     },
@@ -423,11 +423,15 @@ videre.UI = {
         }
     },
 
-    setControlValue: function(ctl, val)
+    setControlValue: function(ctl, val, data)
     {
+        var dataType = videre.UI._dataTypes[ctl.data('datatype')];
+        if (dataType != null && dataType.get != null)
+            val = dataType.get(val);
+
         var controlType = videre.UI._controlTypes[ctl.data('controltype')];
         if (controlType != null && controlType.set != null)
-            controlType.set(ctl, val);
+            controlType.set(ctl, val, data);
         else
         {
             val = val != null ? val.toString() : '';
@@ -492,10 +496,14 @@ videre.UI = {
         'datetime':
         {
             isValid: function(val) { return moment(val, videre.localization.dateFormats.datetime).isValid(); },
-            set: function(ctl, val)
+            //set: function(ctl, val) //obsolete
+            //{
+            //    var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.datetime, ctl.data('timezone')) : '';
+            //    videre.UI.setControlValue(ctl, text);
+            //},
+            get: function(val)
             {
-                var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.datetime, ctl.data('timezone')) : '';
-                videre.UI.setControlValue(ctl, text);
+                return val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.datetime, ctl.data('timezone')) : '';
             }
         },
 
@@ -507,21 +515,30 @@ videre.UI = {
         'date':
         {
             isValid: function(val) { return moment(val, videre.localization.dateFormats.date).isValid(); },
-            set: function(ctl, val)
+            //set: function(ctl, val) //obsolete
+            //{
+            //    var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.date, ctl.data('timezone')) : '';
+            //    videre.UI.setControlValue(ctl, text);
+            //},
+            get: function(val)
             {
-                var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.date, ctl.data('timezone')) : '';
-                videre.UI.setControlValue(ctl, text);
+                return val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.date, ctl.data('timezone')) : '';
             }
         },
 
         'money':
         {
             isValid: function(val) { return !isNaN(val); },
-            set: function(ctl, val)
+            //set: function(ctl, val) //obsolete
+            //{
+            //    var precision = ctl.data('precision') != null ? ctl.data('precision') : 2;
+            //    var text = (val != null ? val : 0).toFixed(precision);
+            //    videre.UI.setControlValue(ctl, text);
+            //},
+            get: function(val)
             {
                 var precision = ctl.data('precision') != null ? ctl.data('precision') : 2;
-                var text = (val != null ? val : 0).toFixed(precision);
-                videre.UI.setControlValue(ctl, text);
+                return (val != null ? val : 0).toFixed(precision);
             }
         }
 
