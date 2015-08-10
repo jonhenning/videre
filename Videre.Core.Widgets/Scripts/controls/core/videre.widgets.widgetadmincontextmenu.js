@@ -111,7 +111,7 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
         if (action == 'editwidget')
             this.edit(true);
         if (action == 'edit')
-            this.edit();
+            this.edit(false);
         if (action == 'inline-edit')
             this.inlineEdit();
         this.toggleMenu();
