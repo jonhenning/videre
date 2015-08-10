@@ -15,7 +15,8 @@
 }
 
 @{
-    var canEdit = Security.IsActivityAuthorized("Content", "Administration");
+    var contentAdmin = Security.IsActivityAuthorized("Content", "Administration");
+    var editor = contentAdmin || Videre.Core.Services.Authorization.IsAuthorized(Authentication.AuthenticatedUser, Model.EditClaims);
 
     var searchUrl = Videre.Core.Services.Portal.CurrentPortal.GetAttribute("Core", "SearchUrl", "~/search");
     var showSearch = Model.GetAttribute("ShowSearch", "No") == "Yes";
@@ -39,9 +40,9 @@
             Html.RegisterControlPresenter(Model, "videre.widgets.search");
         }
 
-        if (canEdit)
+        if (editor)
         {
-            Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model);
+            Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model, new ViewDataDictionary { { "ContentAdmin", contentAdmin } });
         }
     <div id="@Model.GetId("Widget")" class="navbar @(inverseColors ? "navbar-inverse" : "navbar-default") @(alwaysOnTop ? "navbar-fixed-top" : "") @(animate ? "videre-navbar-animate" : "") @Model.Css" style="@Model.Style" role="navigation">
         <div class="container">

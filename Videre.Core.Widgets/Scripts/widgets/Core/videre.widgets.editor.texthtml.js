@@ -12,7 +12,7 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
         this._sharedContentDict = null;
         this._linkCountDict = null;
         this._newShareDialog = null;
-        this._newContent = null; 
+        this._newContent = null;
 
         this._delegates = {
             onDataReceived: videre.createDelegate(this, this._onDataReceived),
@@ -32,10 +32,9 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
 
     },
 
-    show: function(widget, manifest)
+    show: function(widget, manifest, contentAdmin)
     {
-        this._base(widget, manifest);
-
+        this._base(widget, manifest, contentAdmin);
         this._newContent = { Id: '', Key: 'Content.Text', Namespace: '', Text: '', EditText: '', Locale: '', EffectiveDate: null, ExpirationDate: null };
         if (widget.Content == null)
             widget.Content = [];
@@ -100,13 +99,22 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
         if (content.Namespace != null && content.Namespace.indexOf('__') == 0)  //non-shared content has namespace of __widgetId - don't show user this as its ugly.  It will get re-applied on server
             content.Namespace = '';
 
-        this.getControl('ddlLink').val(this._sharedContentDict[content.Namespace] != null ? this._widgetData.Content[0].Namespace : '');
+        this.findControl('.videre-tabs').toggle(this._contentAdmin);
+        this.findControl('.tab-pane').removeClass('active');
+        if (this._contentAdmin)
+        {
+            this.getControl('ddlLink').val(this._sharedContentDict[content.Namespace] != null ? this._widgetData.Content[0].Namespace : '');
+            this.getControl('lblLinkCount').html(String.format("({0})", this._linkCountDict[content.Id] != null ? this._linkCountDict[content.Id].length : '0'));
+            this.bindData(content, this.getControl('GeneralTab'));
+            this.getControl('WidgetTab').addClass('active');
+        }
+        else
+        {
+            this.getControl('MarkupTab').addClass('active');
+        }
 
-        this.getControl('lblLinkCount').html(String.format("({0})", this._linkCountDict[content.Id] != null ? this._linkCountDict[content.Id].length : '0'));
-
-        this.bindData(content, this.getControl('GeneralTab'));
         this.bindData(content, this.getControl('ContentProperties'));
-        this.bindData(content, this.getControl('ContentProperties'));
+        
         //this._editor.bind(content);
     },
 
@@ -131,7 +139,9 @@ videre.widgets.editor.texthtml = videre.widgets.editor.base.extend(
     save: function()
     {
         //persist before calling base
-        this.persistData(this._widgetData.Content[0], false, this.getControl('GeneralTab'));
+        if (this._contentAdmin)
+            this.persistData(this._widgetData.Content[0], false, this.getControl('GeneralTab'));
+
         this.persistData(this._widgetData.Content[0], false, this.getControl('ContentProperties'));
         //this._editor.persist();
         this._base();

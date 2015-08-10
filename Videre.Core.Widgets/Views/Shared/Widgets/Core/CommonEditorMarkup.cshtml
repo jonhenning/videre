@@ -23,8 +23,11 @@
     @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ExcludeRoles.Text", "Exclude Roles").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
         Html.Bootstrap().RoleList().Plugin(Plugin.BootstrapSelect).Multiple().DataColumn("ExcludeRoleIds"), BootstrapUnits.GridSize.MediumDevice9)
 
-    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Claims.Text", "Claims").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Claims.Text", "Claims").GridSize(BootstrapUnits.GridSize.MediumDevice3),
         Html.Bootstrap().ClaimList().DataColumn("Claims").Multiple().Plugin(Plugin.BootstrapSelect).StyleAttribute("width", "379px"), BootstrapUnits.GridSize.MediumDevice9)
+
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("EditClaims.Text", "Edit Claims").GridSize(BootstrapUnits.GridSize.MediumDevice3),
+        Html.Bootstrap().ClaimList().DataColumn("EditClaims").Multiple().Plugin(Plugin.BootstrapSelect).StyleAttribute("width", "379px"), BootstrapUnits.GridSize.MediumDevice9)
 
     @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Authentication.Text", "Authentication").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
         Html.Bootstrap().AuthorizedList().Plugin(Plugin.BootstrapSelect).DataColumn("Authenticated"), BootstrapUnits.GridSize.MediumDevice9)

@@ -38,9 +38,11 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         this.getControl('txtIcon').change(videre.createDelegate(this, this._onIconChanged));
     },
 
-    show: function(widget, manifest)
+    show: function(widget, manifest, contentAdmin)
     {
-        this._base(widget, manifest);
+        if (contentAdmin == null)
+            contentAdmin = true;
+        this._base(widget, manifest, contentAdmin);
         this.reset();
 
         this._newMenuData = widget.Content != null && String.isNullOrEmpty(widget.Content.Id) ? widget.Content : null; //store reference to original menu data (really only for new menu that was appended to list)
@@ -88,8 +90,19 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
     bind: function()
     {
-        this.bindMenus();
-        this.bindData(this._widgetData.Content, this.getControl('GeneralTab'));
+        this.findControl('.videre-tabs').toggle(this._contentAdmin);
+        this.findControl('.tab-pane').removeClass('active');
+        if (this._contentAdmin)
+        {
+            this.bindMenus();
+            this.bindData(this._widgetData.Content, this.getControl('GeneralTab'));
+            this.getControl('WidgetTab').addClass('active');
+        }
+        else
+        {
+            this.getControl('MenuTab').removeClass('fade').addClass('active');
+        }
+
         this.bindMenu();
     },
 
@@ -189,8 +202,11 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
         if (this._dirty)
             this.applyItem();
 
-        this.persistData(this._widgetData.Content, false, this.getControl('GeneralTab'));
-        this._widgetData.Content.Name = $('option:selected', this.getControl('ddlName')).text();   //todo:  have ability to persist text using attributes??
+        if (this._contentAdmin)
+        {
+            this.persistData(this._widgetData.Content, false, this.getControl('GeneralTab'));
+            this._widgetData.Content.Name = $('option:selected', this.getControl('ddlName')).text();   //todo:  have ability to persist text using attributes??
+        }
 
         this._base();
         //this.reset();

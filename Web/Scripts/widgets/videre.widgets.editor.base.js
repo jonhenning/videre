@@ -11,6 +11,7 @@ videre.widgets.editor.base = videre.widgets.base.extend(
         this._manifestData = null;
         this._dialog = null;
         this._dirty = false;
+        this._contentAdmin = false;
 
         this._baseEditorDelegates = {
             onItemBind: videre.createDelegate(this, this._onItemBind),
@@ -26,10 +27,11 @@ videre.widgets.editor.base = videre.widgets.base.extend(
         this._widget.find('[data-column]').change(videre.createDelegate(this, this._onDataChange));
     },
 
-    show: function(widget, manifest)
+    show: function(widget, manifest, contentAdmin)
     {
         this._widgetData = widget;
         this._manifestData = manifest;
+        this._contentAdmin = contentAdmin;
         this.bindData(this._widgetData, this.getControl('CommonProperties'));
         this.bindAttributes();
         this._dialog.modal('show');

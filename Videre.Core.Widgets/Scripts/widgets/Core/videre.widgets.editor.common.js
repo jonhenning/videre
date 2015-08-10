@@ -14,9 +14,9 @@ videre.widgets.editor.common = videre.widgets.editor.base.extend(
         this._base(); //call base
     },
 
-    show: function(widget, manifest)
+    show: function(widget, manifest, contentAdmin)
     {
-        this._base(widget, manifest); //call base
+        this._base(widget, manifest, contentAdmin); //call base
     },
 
     validate: function ()

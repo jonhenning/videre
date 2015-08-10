@@ -115,7 +115,16 @@ namespace Videre.Core.Widgets.Controllers
         {
             return API.Execute<bool>(r =>
             {
-                CoreServices.Security.VerifyActivityAuthorized("Content", "Administration");
+                
+                if (!CoreServices.Security.IsActivityAuthorized("Content", "Administration"))
+                {
+                    var persistedWidget = CoreServices.Widget.GetWidgetById(widget.Id);
+                    if (!Authorization.IsAuthorized(Authentication.AuthenticatedUser, persistedWidget.EditClaims))
+                        CoreServices.Security.VerifyActivityAuthorized("Content", "Administration");    //throw exception
+                    //only allow content to be modified
+                    persistedWidget.ContentJson = widget.ContentJson;
+                    widget = persistedWidget;
+                }
 
                 //Unfortnuately, we cannot just save content.  Widgets are persisted on the template and their properties (Css, Style, etc.) may have changed.  We need to re-save the template  //widget.Manifest.GetContentProvider().Save(widget.ContentJson);
                 var pageTemplate = CoreServices.Portal.GetPageTemplateById(templateId);

@@ -9,11 +9,11 @@
     //var ns = ViewBag.Template.Id + "/" + Model.Id;
     var locs = Model.GetContent<List<Models.Localization>>();
     locs.AddRange(Model.GetContent<List<Models.Localization>>());  //todo: hack?
-
-    var canEdit = Security.IsActivityAuthorized("Content", "Administration");
-    if (canEdit)
+    var contentAdmin = Security.IsActivityAuthorized("Content", "Administration");
+    var editor = contentAdmin || Videre.Core.Services.Authorization.IsAuthorized(Authentication.AuthenticatedUser, Model.EditClaims);
+    if (editor)
     {
-        Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model, new ViewDataDictionary {{ "InlineEdit", true }});
+        Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model, new ViewDataDictionary { { "InlineEdit", editor}, { "ContentAdmin", contentAdmin } });
     }
     var html = Localization.GetContent(locs, "Content.Text", Model.GetText("ContentMissing.Text", "[Content Missing]"));
     Html.RegisterPrettifyScriptIfNeeded(html);  //todo: do we like this???  or just always load it, or make it configuration in Portal level?

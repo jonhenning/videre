@@ -18,7 +18,8 @@
     Html.RegisterWebReferenceGroup("font-awesome");
     Html.RegisterWebReferenceGroup("videre-sidenav");
 
-    var canEdit = Security.IsActivityAuthorized("Content", "Administration");
+    var contentAdmin = Security.IsActivityAuthorized("Content", "Administration");
+    var editor = contentAdmin || Videre.Core.Services.Authorization.IsAuthorized(Authentication.AuthenticatedUser, Model.EditClaims);
 
 //var searchUrl = Videre.Core.Services.Portal.CurrentPortal.GetAttribute("Core", "SearchUrl", "~/search");
 //var showSearch = Model.GetAttribute("ShowSearch", "No") == "Yes";
@@ -38,10 +39,10 @@ if (menu != null)
     //{
     //    Html.RegisterControlPresenter(Model, "videre.widgets.search");
     //}
-    
-    if (canEdit)
+
+    if (editor)
     {
-        Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model);
+        Html.RenderPartial("Controls/Core/WidgetAdminContextMenu", Model, new ViewDataDictionary { { "ContentAdmin", contentAdmin } });
     }
 
     var fixedCss = position.Equals("Fixed Left", StringComparison.InvariantCultureIgnoreCase) ? "fixed fixed-left" : 

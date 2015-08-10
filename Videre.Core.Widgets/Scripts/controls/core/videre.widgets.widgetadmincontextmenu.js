@@ -37,7 +37,7 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
         this._widgetModel.Content = videre.deserialize(this._widgetModel.ContentJson);
     },
 
-    edit: function()
+    edit: function(editWidget)
     {
         if (this._editor == null)
         {
@@ -45,8 +45,8 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
             this._editor = videre.widgets.findFirstByType(editorType);
             this._editor.add_onCustomEvent(this._delegates.onWidgetSave);
         }
-        
-        this._editor.show(this._widgetModel, this._manifest);
+
+        this._editor.show(this._widgetModel, this._manifest, editWidget);
     },
 
     inlineEdit: function()
@@ -108,6 +108,8 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
     {
         var ctl = $(e.target).closest('[data-action]');
         var action = ctl.data('action');
+        if (action == 'editwidget')
+            this.edit(true);
         if (action == 'edit')
             this.edit();
         if (action == 'inline-edit')
