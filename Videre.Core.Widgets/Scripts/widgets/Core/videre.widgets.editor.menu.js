@@ -40,8 +40,6 @@ videre.widgets.editor.menu = videre.widgets.editor.base.extend(
 
     show: function(widget, manifest, contentAdmin)
     {
-        if (contentAdmin == null)
-            contentAdmin = true;
         this._base(widget, manifest, contentAdmin);
         this.reset();
 

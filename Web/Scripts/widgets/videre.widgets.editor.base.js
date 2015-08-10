@@ -29,6 +29,8 @@ videre.widgets.editor.base = videre.widgets.base.extend(
 
     show: function(widget, manifest, contentAdmin)
     {
+        if (contentAdmin == null)
+            contentAdmin = true;
         this._widgetData = widget;
         this._manifestData = manifest;
         this._contentAdmin = contentAdmin;
