@@ -1196,6 +1196,28 @@ videre.timeZones =
 videre.localization = {
     items: [],
     dateFormats: { datetime: 'M/D/YY h:mm A', date: 'M/D/YY', time: 'h:mm A' }, //switching to moment - { datetime: 'm/d/yy h:MM TT', date: 'm/d/yy', time: 'h:MM TT' },
+    locale: null,
+    setLocale: function(locale)
+    {
+        videre.localization.locale = locale;
+        if (moment != null)
+            moment.locale(locale);
+        else
+            alert('moment not found!');
+    },
+    getLocaleFormat: function(format)
+    {
+        if (videre.localization.locale != null)
+        {
+            if (format == 'time')
+                return 'LT';
+            else if (format == 'date')
+                return 'L'; //or l
+            else if (format == 'datetime')
+                return 'L LT';
+        }
+        return null;
+    },
     getText: function(ns, key, defaultValue)
     {
         if (defaultValue == null)

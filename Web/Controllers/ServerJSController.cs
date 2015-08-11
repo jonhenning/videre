@@ -31,6 +31,9 @@ namespace Videre.Web.Controllers
                 script += string.Format("videre.localization.dateFormats = {{datetime: '{0}', date: '{1}', time: '{2}'}};", Services.Account.GetUserDateFormat("datetime", false), dateFormat, Services.Account.GetUserDateFormat("time", false));
             }
 
+            if (Services.Account.CurrentUser != null && !string.IsNullOrEmpty(Services.Account.CurrentUser.Locale))
+                script += string.Format("videre.localization.setLocale('{0}');", Services.Account.CurrentUser.Locale);
+
             var eTagHash = Convert.ToBase64String(System.Security.Cryptography.MD5.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(script)));
 
             return new JavaScriptResult()
