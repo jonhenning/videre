@@ -171,8 +171,31 @@ namespace Videre.Core.Services
             var ret = new List<Models.PortalExport>();
             var entries = zipFileName.GetZipFileList(e => e.EndsWith(".json", StringComparison.InvariantCultureIgnoreCase)).ToList();
             foreach (var entry in entries)
-                ret.Add(zipFileName.GetZipEntryContents(entry).ToObject<Models.PortalExport>());
+            {
+                var export = zipFileName.GetZipEntryContents(entry).ToObject<Models.PortalExport>();
+                if (isValidExport(export))
+                    ret.Add(export);
+            }
             return ret;
+        }
+
+        public static void ExtractNonContentJsonFiles(string zipFileName)
+        {
+            var rootDir = Portal.ResolvePath("~/");
+            var entries = zipFileName.GetZipFileList(e => e.EndsWith(".json", StringComparison.InvariantCultureIgnoreCase)).ToList();
+            foreach (var entry in entries)
+            {
+                var export = zipFileName.GetZipEntryContents(entry).ToObject<Models.PortalExport>();
+                if (!isValidExport(export))
+                {
+                    zipFileName.ExtractEntry(entry, rootDir);
+                }
+            }
+        }
+
+        private static bool isValidExport(Models.PortalExport export)
+        {
+            return export != null && export.Portal != null && !string.IsNullOrEmpty(export.Portal.Id);
         }
 
         public static int ApplyPackageContent(string zipFileName, string portalId)
@@ -185,12 +208,7 @@ namespace Videre.Core.Services
                 Services.ImportExport.Import(portalExport, portalId);
                 count++;
             }
-            //var entries = zipFileName.GetZipFileList(e => e.EndsWith(".json", StringComparison.InvariantCultureIgnoreCase)).ToList();
-            //foreach (var entry in entries)
-            //{
-            //    zipFileName.ExtractEntry(entry, Update.UpdateDir);
-            //    count++;
-            //}
+
             return count;
         }
 
@@ -217,6 +235,8 @@ namespace Videre.Core.Services
                             //todo:  deferred package content apply or right now?  
                             //ideally manifest will have the registration assembly listed and we can register right away then instantly apply
                             ApplyPackageContent(packageFileName, portalId);
+
+                            ExtractNonContentJsonFiles(packageFileName);    //we want to allow json files to be extracted, just ignore the ones that are package content
 
                             if (removeFile)
                                 System.IO.File.Delete(file.FullName);
