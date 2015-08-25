@@ -23,7 +23,7 @@ namespace Videre.Core.Services
                 //}
 
                 //http://www.regular-expressions.info/email.html
-                var regex = new Regex(@"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+                var regex = new Regex(@"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", RegexOptions.IgnoreCase);
                 var valid = regex.IsMatch(value);
                 if (!valid && throwException)
                     throw new Exception(Localization.GetExceptionText("Invalid.Error", "{0} is invalid.", "Email"));
