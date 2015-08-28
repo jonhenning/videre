@@ -60,6 +60,7 @@ namespace Videre.Core.Widgets
             updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "PersistenceProvider", DefaultValue = CoreServices.Authentication.PersistenceProvider != null ? (CoreServices.Authentication.PersistenceProvider.GetType().Name + ", " + CoreServices.Authentication.PersistenceProvider.GetType().Assembly.GetName().Name) : "", Required = false, LabelKey = "AuthenticationPersistenceProvider.Text", LabelText = "Authentication Persistence Provider", TooltipKey = "PersistenceProviderTooltip.Text", TooltipText = "Provider used to store user authentication credentials.  It is configured in the app.config", ReadOnly = true });
 
             updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "PasswordExpiresDays", DefaultValue = null, DataType = "number", Required = false, LabelKey = "PasswordExpiresDays.Text", LabelText = "Password Expires (days)", TooltipKey = "PasswordExpiresDaysTooltip.Text", TooltipText = "Days until password expires (leave blank for no expiration)" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "EnableImpersonation", Values = new List<string>() { "Yes", "No" }, DefaultValue = "No", Required = false, LabelKey = "EnableImpersonation.Text", LabelText = "Enable Impersonation" });
 
             //unregister widgets that moved to subwidgets
             var manifest = CoreServices.Widget.GetWidgetManifest("Core/Admin/PackageAdmin");
@@ -105,6 +106,7 @@ namespace Videre.Core.Widgets
                 }}, 
                 new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "UserProfile", Title = "User Profile", Category = "Account" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "Verify", Title = "Verify Account", Category = "Account" }, 
+                new CoreModels.WidgetManifest() { Path = "Core/Account", Name = "ImpersonateUser", Title = "Impersonate User", Category = "Account" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Localization", Title = "Localization Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "Template", Title = "Template Admin", Category = "Admin" }, 
                 new CoreModels.WidgetManifest() { Path = "Core/Admin", Name = "WidgetManifest", Title = "Widget Manifest Admin", Category = "Admin" }, 
@@ -228,6 +230,7 @@ namespace Videre.Core.Widgets
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "File", Name = "Upload", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Account", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Account", Name = "Impersonation", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Content", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Comment", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Search", Name = "Upload", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }

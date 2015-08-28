@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\controls\core\Comments\videre.controls.comments.js" />
+    <Content Include="Scripts\widgets\core\account\videre.widgets.account.impersonateuser.js" />
     <Content Include="Scripts\widgets\core\account\videre.widgets.account.verify.js" />
     <Content Include="Scripts\widgets\core\account\videre.widgets.account.logon.js" />
   </ItemGroup>
@@ -225,6 +226,7 @@
     <Content Include="Views\Shared\Widgets\Core\Admin\ServerEnvironment.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Account\Verify.cshtml" />
     <Content Include="Views\Shared\Widgets\Core\Admin\PackageExportJob.cshtml" />
+    <Content Include="Views\Shared\Widgets\Core\Account\ImpersonateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Videre.Core\Videre.Core.csproj">

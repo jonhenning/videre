@@ -141,7 +141,7 @@ namespace Videre.Core.Services
             {
                 SessionSecurityToken token = null;
                 FederatedAuthentication.SessionAuthenticationModule.TryReadSessionTokenFromCookie(out token);
-                var user = Account.GetUserById(AuthenticatedUserId);    //grab updated user
+                var user = Account.GetUserById(NonImpersonatedAuthenticatedUser.Id);    //grab updated user
                 FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(
                     new SessionSecurityToken(getClaimsPrincipal(user), token.Context, token.ValidFrom, token.ValidTo)
                     {
@@ -192,8 +192,39 @@ namespace Videre.Core.Services
             }
         }
 
-
         public static Models.AuthenticatedUser AuthenticatedUser
+        {
+            get
+            {
+                var user = NonImpersonatedAuthenticatedUser;
+                if (user != null)   
+                {
+                    var newId = impersonatedUserId;
+                    if (!string.IsNullOrEmpty(newId))
+                    {
+                        var impersonatedUser = Portal.GetRequestContextData<Models.AuthenticatedUser>("VidereImpersonatedUserRequestCache-" + newId, null);
+                        if (impersonatedUser == null)
+                        {
+                            var lookupUser = CoreServices.Account.GetUserById(newId);
+                            if (lookupUser != null)
+                            {
+                                impersonatedUser = new Models.AuthenticatedUser()
+                                {
+                                    Id = lookupUser.Id,
+                                    Claims = lookupUser.Claims.Select(c => new UserClaim() { Issuer = c.Issuer, Type = c.Type, Value = c.Value }).ToList(),
+                                    RoleIds = lookupUser.RoleIds
+                                };
+                                Portal.SetRequestContextData("VidereImpersonatedUserRequestCache-" + newId, impersonatedUser);
+                            }
+                        }
+                        return impersonatedUser;
+                    }
+                }
+                return user;
+            }
+        }
+
+        public static Models.AuthenticatedUser NonImpersonatedAuthenticatedUser
         {
             get
             {
@@ -211,12 +242,76 @@ namespace Videre.Core.Services
                             RoleIds = identity.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList()
                             //RoleIds = identity.Ticket.UserData.Split(',').ToList()
                         };
+
                         Portal.SetRequestContextData("VidereAuthenticatedUser", user);
                     }
                     return user;
 
                 }
                 return null;
+            }
+        }
+
+        public static bool IsAuthenticatedImpersonated
+        {
+            get { return !string.IsNullOrEmpty(impersonatedUserId); }
+        }
+
+        public static bool UserCanImpersonate
+        {
+            get
+            {
+                if (Services.Portal.GetPortalAttribute("Authentication", "EnableImpersonation", "No") == "Yes")
+                {
+                    var activity = Security.GetSecureActivity(Portal.CurrentPortalId, "Account", "Impersonation");
+                    if (activity != null)
+                        return Authorization.IsAuthorized(Authentication.NonImpersonatedAuthenticatedUser, activity);   //Must use non-impersonated user to verify this
+                }
+                return false;
+            }
+        }
+
+        public static bool ImpersonateUser(string userName)
+        {
+            if (UserCanImpersonate)
+            {
+                var user = Account.GetUser(userName);
+                if (user != null)
+                {
+                    impersonatedUserId = user.Id;
+                    return true;
+                }
+                else if (string.IsNullOrEmpty(userName))
+                {
+                    impersonatedUserId = null;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static string impersonatedUserId
+        {
+            get
+            {
+                if (UserCanImpersonate)
+                {
+                    var cookie = HttpContext.Current.Request.Cookies["impersonateId"];
+                    if (cookie != null)
+                        return cookie.Value;
+                }
+                return null;
+            }
+            set
+            {
+                if (UserCanImpersonate)
+                {
+                    var cookie = new HttpCookie("impersonateId", value);
+                    cookie.HttpOnly = true; //no need for client to see this - regardless its still protected by secureactivity
+                    if (string.IsNullOrEmpty(value))
+                        cookie.Expires = DateTime.Now.AddDays(-1);
+                    HttpContext.Current.Response.AppendCookie(cookie);
+                }
             }
         }
 

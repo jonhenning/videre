@@ -256,6 +256,18 @@ namespace Videre.Core.Widgets.Controllers
 
         }
 
+        public JsonResult<bool> Impersonate(string userName)
+        {
+            return API.Execute<bool>(r =>
+            {
+                if (!Authentication.UserCanImpersonate)
+                    throw new Exception(Localization.GetLocalization(CoreModels.LocalizationType.Exception, "AccessDenied.Error", "Access Denied.", "Core"));
+                r.Data = Authentication.ImpersonateUser(userName);
+                if (!r.Data)
+                    r.AddError(Localization.GetLocalization(CoreModels.LocalizationType.Exception, "UserNotFound.Text", "User Not Found", "Core"));
+            });
+        }
+
 
     }
 }

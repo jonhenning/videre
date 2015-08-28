@@ -1,0 +1,46 @@
+@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Videre.Core.Models;
+@using System.Web.Mvc.Html;
+@using CoreServices = Videre.Core.Services;
+
+@model Widget
+
+@{
+    var user = CoreServices.Account.CurrentUser;
+    if (user != null && CoreServices.Authentication.UserCanImpersonate)
+    {
+        var loggedInUser = CoreServices.Account.GetUserById(CoreServices.Authentication.NonImpersonatedAuthenticatedUser.Id);
+
+        Html.RegisterControlPresenter("videre.widgets.account.impersonateuser", Model, new { });
+        
+<div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
+    
+    @Html.Bootstrap().AnchorButton("btnChange").Css("glyphicon glyphicon-user").ToolTip("ImpersonateUser.Text", "Impersonate User").Text(" ")
+
+    <div id="@Model.GetId("Dialog")" data-target="#@Model.GetId("Dialog")" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    @Model.GetText("ImpersonateUser.Text", "Impersonate User")
+                </div>
+                <div class="modal-body">
+                    @{Html.RenderPartial("WidgetHeader", Model);}
+                    <div class="form-horizontal">
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("LoggedInUser.Text", "Logged In User").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Label().Css("form-control-static").Text(loggedInUser.Name), BootstrapUnits.GridSize.MediumDevice8)
+                        @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("ImpersonateUser.Text", "Impersonate User").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox().DataColumn("ImpersonateUser").Val(user.Name), BootstrapUnits.GridSize.MediumDevice8)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @Html.Bootstrap().Button("btnReset").Text("Reset.Text", "Reset")
+                    @Html.Bootstrap().Button("btnImpersonate").ButtonStyle(BootstrapUnits.ButtonStyle.Primary).Text("Impersonate.Text", "Impersonate")
+                    @Html.Bootstrap().Button().Text("Cancel.Text", "Cancel", true).DataAttribute("dismiss", "modal")
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+}
+}
