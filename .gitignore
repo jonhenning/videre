@@ -46,6 +46,7 @@ Web/_packages/*
 !Web/_packages/DataTables-*.zip
 !Web/_packages/dynatree-*.zip
 !Web/_packages/moment-*.zip
+!Web/_packages/summernote-*.zip
 !Web/_packages/font-awesome-*.zip
 !Web/_packages/jQuery-1.*.zip
 !Web/_packages/jQuery-ui-*.zip

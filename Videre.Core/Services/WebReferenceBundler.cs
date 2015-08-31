@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -54,6 +55,20 @@ namespace Videre.Core.Services
                 InputType = "checkbox",
                 ControlType = "checkbox"
             });
+
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition()
+            {
+                GroupName = "Web References",
+                Name = "VersionScripts",
+                DefaultValue = false,
+                Required = false,
+                LabelKey = "VersionScripts.Text",
+                LabelText = "Version Scripts",
+                DataType = "boolean",
+                InputType = "checkbox",
+                ControlType = "checkbox"
+            });
+
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();
         }
@@ -75,7 +90,15 @@ namespace Videre.Core.Services
         {
             get
             {
-                return Services.Portal.GetPortalSetting("Web References", "EnableBundleOptimizations", true);
+                return Services.Portal.GetPortalSetting("Web References", "EnableBundleOptimizations", false);
+            }
+        }
+
+        public static bool VersionScripts
+        {
+            get
+            {
+                return Services.Portal.GetPortalSetting("Web References", "VersionScripts", false);
             }
         }
 
@@ -90,7 +113,7 @@ namespace Videre.Core.Services
             else
             {
                 foreach (var item in listItems)
-                    sb.AppendLine(string.Format("<script src=\"{0}\" type=\"text/javascript\" {1}></script>", item.Src, HtmlExtensions.GetDataAttributeMarkup(item.DataAttributes)));
+                    sb.AppendLine(string.Format("<script src=\"{0}\" type=\"text/javascript\" {1}></script>", getVersionedReference(item.Src), HtmlExtensions.GetDataAttributeMarkup(item.DataAttributes)));
             }
             SetMarkupListRendered(helper, "js");
 
@@ -118,6 +141,25 @@ namespace Videre.Core.Services
             return sb.ToString();
         }
 
+        //todo: use cache or just static var...
+        private static ConcurrentDictionary<string, string> _referenceVersion = new ConcurrentDictionary<string, string>();
+        private static string getVersionedReference(string src)
+        {
+            if (!VersionScripts)
+                return src;
+
+            if (!_referenceVersion.ContainsKey(src))
+            {
+                var path = System.Web.Hosting.HostingEnvironment.MapPath(src);
+                var version = "0";
+                if (System.IO.File.Exists(path))
+                    version = new FileInfo(System.Web.Hosting.HostingEnvironment.MapPath(src)).LastWriteTime.ToString("yyyyMMddhhmmss");
+                _referenceVersion[src] = version;
+            }
+            return src + "?v=" + _referenceVersion[src];
+
+        }
+
         public static string GenerateUnrenderedStylesheetMarkup(HtmlHelper helper)
         {
             var sb = new System.Text.StringBuilder();
@@ -128,7 +170,7 @@ namespace Videre.Core.Services
             else
             {
                 foreach (var item in listItems)
-                    sb.AppendLine(string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", item.Src, HtmlExtensions.GetDataAttributeMarkup(item.DataAttributes)));
+                    sb.AppendLine(string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", getVersionedReference(item.Src), HtmlExtensions.GetDataAttributeMarkup(item.DataAttributes)));
             }
 
             SetMarkupListRendered(helper, "css");
