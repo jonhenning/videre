@@ -48,7 +48,7 @@ namespace Videre.Core.Services
 
         public static bool IsAuthorized(IAuthorizationUser user, List<UserClaim> claims)
         {
-            return claims.Exists(ec => user.Claims.Exists(uc => claimMatches(uc, ec)));
+            return user != null && claims.Exists(ec => user.Claims.Exists(uc => claimMatches(uc, ec)));
         }
 
         private static bool IsAuthorized(bool userAuthenticated, List<string> userRoleIds, List<UserClaim> userClaims, bool? entityAuthenticated, List<string> entityRoleIds, List<string> entityExcludeRoleIds, List<UserClaim> entityClaims)
