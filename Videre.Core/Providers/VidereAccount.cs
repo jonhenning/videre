@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -124,6 +125,13 @@ namespace Videre.Core.AccountProviders
                 throw new Exception(Localization.GetExceptionText("InvalidResource.Error", "{0} is invalid.", "User"));
             if (Account.Exists(user))
                 throw new Exception(Localization.GetExceptionText("DuplicateResource.Error", "{0} already exists.   Duplicates Not Allowed.", "User"));
+
+            if (!string.IsNullOrEmpty(user.Locale))
+            {
+                if (!CultureInfo.GetCultures(CultureTypes.AllCultures).Any(culture => culture.Name.Equals(user.Locale, StringComparison.InvariantCultureIgnoreCase)))
+                    throw new Exception(Localization.GetExceptionText("InvalidLocaleCode.Error", "Invalid locale code."));
+            }
+
         }
 
         public List<Models.UserClaim> GetClaims(string portalId)

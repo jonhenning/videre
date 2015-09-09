@@ -593,6 +593,13 @@ namespace Videre.Core.Services
         {
             if (userProfile.Password1 != userProfile.Password2)
                 throw new Exception(Localization.GetExceptionText("InvalidChangePassword.Error", "Passwords don't match."));
+
+            if (!string.IsNullOrEmpty(userProfile.Locale))
+            {
+                if (!CultureInfo.GetCultures(CultureTypes.AllCultures).Any(culture => culture.Name.Equals(userProfile.Locale, StringComparison.InvariantCultureIgnoreCase)))
+                    throw new Exception(Localization.GetExceptionText("InvalidLocaleCode.Error", "Invalid locale code."));
+            }
+
         }
 
     }
