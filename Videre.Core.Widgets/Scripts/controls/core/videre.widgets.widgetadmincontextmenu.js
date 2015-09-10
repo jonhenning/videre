@@ -119,6 +119,8 @@ videre.widgets.widgetadmincontextmenu = videre.widgets.base.extend(
 
     _onContextMenu: function(e)
     {
+        if (this._widget.parent().prop('tagName').toLowerCase() != 'body')
+            this._widget.appendTo($(document.body));
         this._widget.css({ top: e.pageY, left: e.pageX });
         this.toggleMenu();
         return false;
