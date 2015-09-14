@@ -59,7 +59,7 @@ namespace Videre.Core.AccountProviders
 
         public Models.User GetByName(string portalId, string name)
         {
-            return Get(portalId, u => u.Name == name).FirstOrDefault();
+            return Get(portalId, u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
         public Models.User GetByClaim(string portalId, string issuer, string type, string value)

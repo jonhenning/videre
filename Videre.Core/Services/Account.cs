@@ -229,6 +229,13 @@ namespace Videre.Core.Services
                 }
             }
 
+            if (userNameChanged)
+            {
+                var existing = GetUser(user.Name);
+                if (existing != null)
+                    throw new Exception("Username already exists");
+            }
+
             var userId = AccountService.Save(user, editUserId);
             user.Id = userId;
 
@@ -471,6 +478,10 @@ namespace Videre.Core.Services
         public static bool CreateAccount(Models.UserProfile userProfile)
         {
             Validate(userProfile);
+
+            var existing = GetUser(userProfile.Name);
+            if (existing != null)
+                throw new Exception("Username already exists");
 
             var user = new User();
             userProfile.ApplyProfileToUser(user);
