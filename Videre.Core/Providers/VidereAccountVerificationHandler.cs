@@ -18,9 +18,10 @@ namespace Videre.Core.Providers
 
         public void Execute(string url, Models.PageTemplate template)
         {
-            if (CoreServices.Authentication.IsAuthenticated && CoreServices.Account.AccountVerificationMode == "Enforced")
+            if (CoreServices.Authentication.IsAuthenticated)
             {
-                if (!CoreServices.Authentication.AuthenticatedUser.IsEmailVerified)
+                if ((CoreServices.Account.AccountVerificationMode == "Enforced" && !CoreServices.Authentication.AuthenticatedUser.IsEmailVerified) 
+                    || (CoreServices.Account.UserRequiresTwoPhaseVerification() && !CoreServices.Account.UserBrowserIsVerified()))
                 {
                     var verifyUrl = CoreServices.Account.AccountVerificationUrl;
                     var fullUrl = CoreServices.Portal.ResolveUrl("~/" + url);

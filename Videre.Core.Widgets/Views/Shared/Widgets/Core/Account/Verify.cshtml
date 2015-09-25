@@ -9,14 +9,20 @@
 @{
 
     var returnUrl = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) ? Request.QueryString["ReturnUrl"] : CoreServices.Portal.ResolveUrl("~/");
+    if (string.IsNullOrEmpty(returnUrl))
+    {
+        returnUrl = CoreServices.Portal.ResolveUrl("~/");
+    }
     var code = !string.IsNullOrEmpty(Request.QueryString["code"]) ? Request.QueryString["code"] : "";
+
+    var twoPhase = (CoreServices.Account.UserRequiresTwoPhaseVerification() && !CoreServices.Account.UserBrowserIsVerified());
     
     Html.RegisterControlPresenter("videre.widgets.account.verify", Model, new { returnUrl = returnUrl });
 
 if (CoreServices.Authentication.IsAuthenticated)
 {
     var user = CoreServices.Account.CurrentUser;
-    if (!user.IsEmailVerified)
+    if (!user.IsEmailVerified || twoPhase)
     {
     <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         @{Html.RenderPartial("WidgetHeader", Model);}
@@ -29,7 +35,11 @@ if (CoreServices.Authentication.IsAuthenticated)
                     {<div class="panel-heading">@Model.GetText("VerifyAccount.Text", "Verify Account")</div>}
                     <div class="panel-body">
                         <div class="form-horizontal videre-form videre-form-condensed">
-                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("VerificationCode.Text", "Verification Code").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtCode").Required().Val(code).DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice8)
+                            @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("VerificationCode.Text", "Verification Code").GridSize(BootstrapUnits.GridSize.MediumDevice6), Html.Bootstrap().TextBox("txtCode").Required().Val(code).DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
+                            @if (twoPhase)
+                            { 
+                                @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("TrustComputer.Text", "Trust Computer").GridSize(BootstrapUnits.GridSize.MediumDevice6), Html.Bootstrap().CheckBox("chkTrust").ToolTip("TrustComputerTooltip.Text", "If you want to trust this computer to no longer require a validation code, check this box."), BootstrapUnits.GridSize.MediumDevice6)
+                            }
                         </div>
                         <div class="videre-form-actions">
                             @Html.Bootstrap().Button("btnResendCode").Text("ResendCode.Text", "Resend Code", true)

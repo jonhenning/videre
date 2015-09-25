@@ -35,7 +35,22 @@ namespace Videre.Core.Services
         {
             get
             {
-                return AccountService.CustomUserElements;
+                var elements = AccountService.CustomUserElements;
+
+                if (Services.Portal.GetPortalAttribute("Authentication", "EnableTwoPhaseAuthentication", "No") == "Yes")
+                {
+                    //this seems a bit hacky to accomplish this here like this
+                    if (!elements.Exists(e => e.Name == "Enable Two-Phase Authentication"))
+                    {
+                        elements.Add(new CustomDataElement()
+                            {
+                                Name = "Enable Two-Phase Authentication",
+                                DataType = typeof(Boolean),
+                                UserCanEdit = true
+                            });
+                    }
+                }
+                return elements;
             }
         }
 
@@ -222,7 +237,7 @@ namespace Videre.Core.Services
             if (!string.IsNullOrEmpty(user.Id))
             {
                 var existingUser = AccountService.GetById(user.Id);
-                if (existingUser != null )
+                if (existingUser != null)
                 {
                     emailChanged = existingUser.Email != user.Email;
                     userNameChanged = existingUser.Name != user.Name;
@@ -286,7 +301,7 @@ namespace Videre.Core.Services
         //    return ((roleIds.Count == 0 && claims.Count == 0) ||
         //        (roleIds.Exists(r => Services.Account.IsInRole(r)) || claims.Exists(c => Services.Account.IsInClaim(c))));
         //}
-        
+
         public static Models.Role GetRoleById(string id)
         {
             return AccountService.GetRoleById(id);
@@ -393,7 +408,7 @@ namespace Videre.Core.Services
         {
             return GetUserTimeZoneName(Account.CurrentUser);
         }
-        
+
         public static string GetUserTimeZoneName(Models.User user)
         {
             var zone = GetUserTimeZone(user);
@@ -423,7 +438,7 @@ namespace Videre.Core.Services
                     return convertDateFormatToMomentJS(culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern);
                 else if (format == "time")
                     return convertDateFormatToMomentJS(culture.DateTimeFormat.ShortTimePattern);
-                else 
+                else
                     throw new Exception("Unknown Date Format: " + format);
             }
             else if (returnDefault)
@@ -434,7 +449,7 @@ namespace Videre.Core.Services
                     return "M/D/YY h:mm A";
                 else if (format == "time")
                     return "h:mm A";
-                else 
+                else
                     throw new Exception("Unknown Date Format: " + format);
             }
             return null;
@@ -519,23 +534,33 @@ namespace Videre.Core.Services
 
         public static bool VerifyAccount(string userId, string verificationCode)
         {
+            return VerifyAccount(userId, verificationCode, false);
+        }
+
+        public static bool VerifyAccount(string userId, string verificationCode, bool trust)
+        {
             var user = GetUserById(userId);
+            var ret = false;
             if (user != null)
             {
-                if (!user.IsEmailVerified)
+                if (user.GetClaimValue("Account Verification Code", "Videre Account Verification", "") == verificationCode)
                 {
-                    if (user.GetClaimValue("Account Verification Code", "Videre Account Verification", "") == verificationCode)
-                    {
-                        user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = "Videre Account Verification", Value = DateTime.UtcNow.ToJson() });
-                        Account.SaveUser(user);
-                        Authentication.UpdateAuthenticationTicketPrincipal();
-                        return true;
-                    }
+                    user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = "Videre Account Verification", Value = DateTime.UtcNow.ToJson() });
+
+                    if (UserRequiresTwoPhaseVerification() && !UserBrowserIsVerified())
+                        MarkUserBrowserVerified(trust);
+
+                    var claim = user.GetClaim("Account Verification Code", "Videre Account Verification");
+                    if (claim != null)
+                        user.Claims.Remove(claim);
+
+                    Account.SaveUser(user);
+                    Authentication.UpdateAuthenticationTicketPrincipal();
+                    ret = true;
                 }
-                else
-                    return true;    //already verified
             }
-            return false;
+
+            return ret;
         }
 
         //allow for admin verification
@@ -552,6 +577,19 @@ namespace Videre.Core.Services
                 return true;
             }
             return false;
+        }
+
+        public static void MarkUserBrowserVerified(bool trust, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Authentication.AuthenticatedUserId : userId;
+            var cookie = new HttpCookie("browserverification-" + userId, userId);
+            cookie.HttpOnly = true;
+            if (trust)
+                cookie.Expires = DateTime.Now.AddDays(ConfigurationManager.AppSettings.GetSetting("UserBrowserVerificationDays", 30));
+            else
+                cookie.Expires = DateTime.MinValue; //session cookie
+
+            HttpContext.Current.Response.AppendCookie(cookie);
         }
 
         public static bool RemoveAccountVerification(string userId)
@@ -583,6 +621,24 @@ namespace Videre.Core.Services
             }
             sendVerificationCode(user, claim.Value);
             return true;
+        }
+
+        public static bool UserRequiresTwoPhaseVerification(string id = null)
+        {
+            id = string.IsNullOrEmpty(id) ? Authentication.AuthenticatedUserId : id;
+            var user = GetUserById(id);
+            if (user != null)
+            {
+                var enabled = user.Attributes.GetSetting("Enable Two-Phase Authentication", false);
+                return enabled && !UserBrowserIsVerified(id);
+            }
+            return false;
+        }
+
+        public static bool UserBrowserIsVerified(string userId = null)
+        {
+            var cookie = HttpContext.Current.Request.Cookies["browserverification-" + userId];
+            return cookie != null && cookie.Value == userId;    //todo:  value should be something simple like userId or move complicated like a hash of the userAgent???
         }
 
         private static void sendVerificationCode(Models.User user, string code)

@@ -218,11 +218,11 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
-        public JsonResult<bool> VerifyAccount(string code)
+        public JsonResult<bool> VerifyAccount(string code, bool? trust)
         {
             return API.Execute<bool>(r =>
             {
-                r.Data = Account.VerifyAccount(Authentication.AuthenticatedUserId, code);
+                r.Data = Account.VerifyAccount(Authentication.AuthenticatedUserId, code, trust ?? false);
                 if (r.Data == false)
                     r.AddMessage(Localization.GetPortalText("AccountVerificationFailed.Text", "Account Verification Failed"));
             });

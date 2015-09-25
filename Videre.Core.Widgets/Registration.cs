@@ -61,6 +61,7 @@ namespace Videre.Core.Widgets
 
             updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "PasswordExpiresDays", DefaultValue = null, DataType = "number", Required = false, LabelKey = "PasswordExpiresDays.Text", LabelText = "Password Expires (days)", TooltipKey = "PasswordExpiresDaysTooltip.Text", TooltipText = "Days until password expires (leave blank for no expiration)" });
             updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "EnableImpersonation", Values = new List<string>() { "Yes", "No" }, DefaultValue = "No", Required = false, LabelKey = "EnableImpersonation.Text", LabelText = "Enable Impersonation" });
+            updates += CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Authentication", Name = "EnableTwoPhaseAuthentication", Values = new List<string>() { "Yes", "No" }, DefaultValue = "No", Required = false, LabelKey = "EnableTwoPhaseAuthentication.Text", LabelText = "Enable Two-Phase Authentication" });
 
             //unregister widgets that moved to subwidgets
             var manifest = CoreServices.Widget.GetWidgetManifest("Core/Admin/PackageAdmin");
