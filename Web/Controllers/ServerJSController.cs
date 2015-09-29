@@ -33,7 +33,7 @@ namespace Videre.Web.Controllers
 
             var numberFormat = Services.Account.GetUserNumberFormat();
             if (numberFormat != null)
-                script += string.Format("videre.localization.numberFormat = {0}", numberFormat.ToJson());
+                script += string.Format("videre.localization.numberFormat = {0};", numberFormat.ToJson());
 
             if (Services.Account.CurrentUser != null && !string.IsNullOrEmpty(Services.Account.CurrentUser.Locale))
                 script += string.Format("videre.localization.setLocale('{0}');", Services.Account.CurrentUser.Locale);

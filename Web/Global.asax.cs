@@ -34,13 +34,15 @@ namespace Videre.Web
             routes.MapRoute(
                 "ServerJS", // Route name
                 "ServerJS/{action}/{key}", // URL with parameters
-                new { controller = "ServerJS", action = "", key = UrlParameter.Optional }
+                new { controller = "ServerJS", action = "", key = UrlParameter.Optional },
+                namespaces: new string[] { "Videre.Web.Controllers" }
             );
 
             routes.MapRoute(
                 "Installer", // Route name
                 "Installer/{action}/{key}", // URL with parameters
-                new { controller = "Installer", action = "", key = UrlParameter.Optional }
+                new { controller = "Installer", action = "", key = UrlParameter.Optional },
+                namespaces: new string[] { "Videre.Web.Controllers" }
             );
 
             //the route controller is the "catch all"
