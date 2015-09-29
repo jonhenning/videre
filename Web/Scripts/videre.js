@@ -503,7 +503,7 @@ videre.UI = {
             //},
             get: function(val)
             {
-                return val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.datetime, ctl.data('timezone')) : '';
+                return val != null ? videre.parseDate(val, videre.localization.dateFormats.datetime, videre.localization.dateFormats.zone) : '';
             }
         },
 
@@ -522,7 +522,7 @@ videre.UI = {
             //},
             get: function(val)
             {
-                return val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.date, ctl.data('timezone')) : '';
+                return val != null ? videre.parseDate(val, videre.localization.dateFormats.date, videre.localization.dateFormats.zone) : '';
             }
         },
 
@@ -537,7 +537,7 @@ videre.UI = {
             //},
             get: function(val)
             {
-                var precision = ctl.data('precision') != null ? ctl.data('precision') : 2;
+                var precision = videre.localization.numberFormat.CurrencyDecimalDigits;//ctl.data('precision') != null ? ctl.data('precision') : 2;
                 return (val != null ? val : 0).toFixed(precision);
             }
         }
@@ -1196,6 +1196,7 @@ videre.timeZones =
 videre.localization = {
     items: [],
     dateFormats: { datetime: 'M/D/YY h:mm A', date: 'M/D/YY', time: 'h:mm A' }, //switching to moment - { datetime: 'm/d/yy h:MM TT', date: 'm/d/yy', time: 'h:MM TT' },
+    numberFormat: { CurrencyDecimalDigits: 2, CurrencyDecimalSeparator: '.', CurrencyGroupSeparator: ',', CurrencySymbol: '$' },
     locale: null,
     setLocale: function(locale)
     {

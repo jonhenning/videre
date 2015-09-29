@@ -28,8 +28,12 @@ namespace Videre.Web.Controllers
             if (dateFormat != null)
             {
                 //register dateFormats per user
-                script += string.Format("videre.localization.dateFormats = {{datetime: '{0}', date: '{1}', time: '{2}'}};", Services.Account.GetUserDateFormat("datetime", false), dateFormat, Services.Account.GetUserDateFormat("time", false));
+                script += string.Format("videre.localization.dateFormats = {{datetime: '{0}', date: '{1}', time: '{2}', zone: '{3}'}};", Services.Account.GetUserDateFormat("datetime", false), dateFormat, Services.Account.GetUserDateFormat("time", false), Services.Account.GetUserTimeZone());
             }
+
+            var numberFormat = Services.Account.GetUserNumberFormat();
+            if (numberFormat != null)
+                script += string.Format("videre.localization.numberFormat = {0}", numberFormat.ToJson());
 
             if (Services.Account.CurrentUser != null && !string.IsNullOrEmpty(Services.Account.CurrentUser.Locale))
                 script += string.Format("videre.localization.setLocale('{0}');", Services.Account.CurrentUser.Locale);

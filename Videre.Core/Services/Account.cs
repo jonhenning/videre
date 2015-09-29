@@ -417,6 +417,37 @@ namespace Videre.Core.Services
             return "";
         }
 
+        public static Models.NumberFormat GetUserNumberFormat()
+        {
+            return GetUserNumberFormat(Services.Account.CurrentUser);
+        }
+        public static Models.NumberFormat GetUserNumberFormat(Models.User user, bool returnDefault = true)
+        {
+            if (user != null && !string.IsNullOrEmpty(user.Locale))
+            {
+                var culture = new CultureInfo(user.Locale);
+                return new Models.NumberFormat()
+                {
+                    CurrencyDecimalDigits = culture.NumberFormat.CurrencyDecimalDigits,
+                    CurrencyDecimalSeparator = culture.NumberFormat.CurrencyDecimalSeparator,
+                    CurrencyGroupSeparator = culture.NumberFormat.CurrencyGroupSeparator,
+                    CurrencySymbol = culture.NumberFormat.CurrencySymbol
+                };
+            }
+            else if (returnDefault)
+            {
+                var culture = new CultureInfo("en-US");
+                return new Models.NumberFormat()
+                {
+                    CurrencyDecimalDigits = culture.NumberFormat.CurrencyDecimalDigits,
+                    CurrencyDecimalSeparator = culture.NumberFormat.CurrencyDecimalSeparator,
+                    CurrencyGroupSeparator = culture.NumberFormat.CurrencyGroupSeparator,
+                    CurrencySymbol = culture.NumberFormat.CurrencySymbol
+                };
+            }
+            return null;
+        }
+
         /// <summary>
         /// Returns logged in users date format
         /// </summary>
