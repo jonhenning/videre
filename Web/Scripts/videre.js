@@ -404,7 +404,7 @@ videre.UI = {
         {
             var dataType = this._dataTypes[ctl.data('datatype')];
             if (dataType != null && dataType.get != null)
-                return dataType.get(ctl);
+                return dataType.get(ctl.val(), ctl.data());
             else
             {
                 //var tagName = ctl.prop('tagName').toLowerCase();
@@ -427,7 +427,7 @@ videre.UI = {
     {
         var dataType = videre.UI._dataTypes[ctl.data('datatype')];
         if (dataType != null && dataType.get != null)
-            val = dataType.get(val);
+            val = dataType.get(val, ctl.data());
 
         var controlType = videre.UI._controlTypes[ctl.data('controltype')];
         if (controlType != null && controlType.set != null)
@@ -455,19 +455,19 @@ videre.UI = {
             return null;
         if (item.ctl.attr('required') && String.isNullOrEmpty(item.ctl.val()))
             return { id: uniqueId + 'Required', text: String.format(videre.localization.getText('global', 'RequiredField'), item.labelText), isError: true };
-        if (item.ctl.data('datatype') != null && !videre.UI.validDataType(item.ctl.data('datatype'), item.ctl.val()))
+        if (item.ctl.data('datatype') != null && !videre.UI.validDataType(item.ctl.data('datatype'), item.ctl.val(), item.ctl.data()))
             return { id: uniqueId + 'DataTypeInvalid', text: String.format(videre.localization.getText('global', 'DataTypeInvalid'), item.labelText, item.ctl.data('datatype')), isError: true };
         if (item.ctl.data('match') != null && item.ctl.val() != $('#' + item.ctl.data('match')).val())
             return { id: uniqueId + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
     },
 
-    validDataType: function(type, val)
+    validDataType: function(type, val, options)
     {
         if (!String.isNullOrEmpty(val))
         {
             var item = this._dataTypes[type];
             if (item != null)
-                return item.isValid != null ? item.isValid(val) : true; // always valid if not otherwise specified
+                return item.isValid != null ? item.isValid(val, options) : true; // always valid if not otherwise specified
             else
                 alert('Invalid data type: ' + type); //todo: what to do?
         }
@@ -495,15 +495,21 @@ videre.UI = {
 
         'datetime':
         {
-            isValid: function(val) { return moment(val, videre.localization.dateFormats.datetime).isValid(); },
+            isValid: function(val, options)
+            {
+                var format = options != null && options.format != null ? options.format : videre.localization.dateFormats.datetime;
+                return moment(val, format).isValid();
+            },
             //set: function(ctl, val) //obsolete
             //{
             //    var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.datetime, ctl.data('timezone')) : '';
             //    videre.UI.setControlValue(ctl, text);
             //},
-            get: function(val)
+            get: function(val, options)
             {
-                return val != null ? videre.parseDate(val, videre.localization.dateFormats.datetime, videre.localization.dateFormats.zone) : '';
+                var format = options != null && options.format != null ? options.format : videre.localization.dateFormats.datetime;
+                var zone = options != null && options.zone != null ? options.zone : videre.localization.dateFormats.zone;
+                return val != null ? videre.parseDate(val, format, zone) : '';
             }
         },
 
@@ -514,15 +520,21 @@ videre.UI = {
 
         'date':
         {
-            isValid: function(val) { return moment(val, videre.localization.dateFormats.date).isValid(); },
+            isValid: function(val, options)
+            {
+                var format = options != null && options.format != null ? options.format : videre.localization.dateFormats.date;
+                return moment(val, format).isValid();
+            },
             //set: function(ctl, val) //obsolete
             //{
             //    var text = val != null ? videre.parseDate(val, ctl.data('format') != null ? ctl.data('format') : videre.localization.dateFormats.date, ctl.data('timezone')) : '';
             //    videre.UI.setControlValue(ctl, text);
             //},
-            get: function(val)
+            get: function(val, options)
             {
-                return val != null ? videre.parseDate(val, videre.localization.dateFormats.date, videre.localization.dateFormats.zone) : '';
+                var format = options != null && options.format != null ? options.format : videre.localization.dateFormats.date;
+                var zone = options != null && options.zone != null ? options.zone : videre.localization.dateFormats.zone;
+                return val != null ? videre.parseDate(val, format, zone) : '';
             }
         },
 
@@ -535,10 +547,10 @@ videre.UI = {
             //    var text = (val != null ? val : 0).toFixed(precision);
             //    videre.UI.setControlValue(ctl, text);
             //},
-            get: function(val)
+            get: function(val, options)
             {
-                var precision = videre.localization.numberFormat.CurrencyDecimalDigits;//ctl.data('precision') != null ? ctl.data('precision') : 2;
-                return (val != null ? val : 0).toFixed(precision);
+                var precision = options != null && options.precision != null ? options.precision : videre.localization.numberFormat.CurrencyDecimalDigits;//ctl.data('precision') != null ? ctl.data('precision') : 2;
+                return Number(val != null ? val : 0).toFixed(precision);
             }
         }
 
