@@ -302,7 +302,7 @@ videre.UI = {
         });
         $.each(buttons, function(idx, btn)
         {
-            $(String.format('<a class="btn {0}">{1}{2}</a>', btn.css, btn.icon != null ? String.format('<i class="{0}"></i> ', btn.icon) : '', btn.text))
+            $(String.format('<a class="btn btn-default {0}">{1}{2}</a>', btn.css, btn.icon != null ? String.format('<i class="{0}"></i> ', btn.icon) : '', btn.text))
                 .click(function(e)
                 {
                     var data = {};
