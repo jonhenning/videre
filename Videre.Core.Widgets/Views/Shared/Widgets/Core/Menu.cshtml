@@ -74,7 +74,7 @@
                     var css = bestMatchUrl.Equals(item.Url, StringComparison.InvariantCultureIgnoreCase) ? "active" : "";
                     if (item.Items.Count == 0)
                     {
-                        <li class="@css"><a href="@GetUrl(item.Url)">@iconTemplate(item)@item.Text</a></li>
+                        <li class="@css"><a href="@GetUrl(item.Url)" @(!string.IsNullOrEmpty(item.Target) ? "target=\"" + item.Target + "\"": "")>@iconTemplate(item)@item.Text</a></li>
                     }
                     else
                     {

@@ -45,6 +45,7 @@ namespace Videre.Core.Models
         public List<MenuItem> Items { get; set; }
         public string TemplateId { get; set; }  //??? - think its for eventual mapping to template, regardless of its url...
         public string Url { get; set; }
+        public string Target { get; set; }
         //private List<string> _roles = new List<string>();
         //[System.Obsolete("Use RoleIds")]
         //[SerializeIgnore(new string[] { "client" })]
