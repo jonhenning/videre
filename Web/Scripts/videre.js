@@ -291,7 +291,7 @@ videre.UI = {
         description = description || '';
         inputs = inputs || [];
         var dlg = $(String.format('<div id="{0}" data-target="{0}" class="modal fade" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>{1}</div><div class="modal-body">{2}<div class="form-horizontal"></div></div><div class="modal-footer"></div></div></div></div>',
-            id, title, description)).appendTo($("body")).modal('show');
+            id, title, description)).appendTo($("body")).modal('show').on('hidden.bs.modal', function() { dlg.remove(); });
 
         var body = dlg.find('.form-horizontal');
         var footer = dlg.find('.modal-footer');
@@ -312,7 +312,7 @@ videre.UI = {
                         data[ctl.data('column')] = ctl.val();
                     });
                     if ((btn.handler == null || btn.handler(data)) && btn.close)
-                        dlg.modal('hide').on('hidden', function() { dlg.remove(); });
+                        dlg.modal('hide');
                 }).appendTo(footer);
         });
         return dlg;
