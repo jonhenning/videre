@@ -39,6 +39,27 @@
     parseDate: function(value, format, zone)
     {
         var d = moment.parseZone(value);
+
+        if (!d.isValid())
+        {
+            //allow dates to be entered without separators
+            var lformat = moment.localeData().longDateFormat('L');
+            var separator = lformat.indexOf('/') > -1 ? '/' : '-';
+            var parts = lformat.split(separator);
+            if (parts.length > 0 && value.length == parts.join('').length)  //only apply this if exact match...
+            {
+                var newVal = '';
+                var last = 0;
+                $.each(parts, function(idx, part)
+                {
+                    newVal += (idx > 0 ? separator : '') + value.substring(last, last + part.length);
+                    last += part.length;
+                });
+                if (moment(newVal).isValid())
+                    d = moment.parseZone(newVal);
+            }
+        }
+
         if (zone)
         {
             var offset = videre.timeZones.getOffset(zone, d);
@@ -50,49 +71,10 @@
                 d = d.zone(zoneOffset);
             }
         }
+
         if (format)
             return d.format(format);
         return d;
-
-        //json2.net - reviver
-        //var a, d;
-
-        //var type = videre.typename(value);
-        //if (type == 'string')
-        //{
-        //    a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:([\+-])(\d{2})\:(\d{2}))?Z?$/.exec(value);
-        //    if (a)
-        //    {
-        //        var utcMilliseconds = dateOnly ? new Date(+a[1], +a[2] - 1, +a[3]) : Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
-
-        //        d = new Date(utcMilliseconds);
-
-        //        if (!String.isNullOrEmpty(a[7]) && dateOnly != true)
-        //        {
-        //            offset = (a[8] * 60) + parseInt(a[9], 10);
-        //            offset *= ((a[7] == '-') ? -1 : 1);
-        //            d.setTime(d.getTime() - offset * 60 * 1000);
-        //        }
-
-        //        if (format)
-        //            return d.format(format);
-        //        return d;
-        //    }
-        //    a = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-        //    if (a)
-        //    {
-        //        d = new Date(+a[1], +a[2] - 1, +a[3]);
-        //        if (format)
-        //            return d.format(format);
-        //        return d;
-        //    }
-        //}
-        //else if (type == 'date')  //if already a date just check for formatting
-        //{
-        //    if (format)
-        //        return value.format(format);
-        //}
-        //return value;
     },
 
     jsonClone: function(data)
