@@ -55,8 +55,8 @@
                     newVal += (idx > 0 ? separator : '') + value.substring(last, last + part.length);
                     last += part.length;
                 });
-                if (moment(newVal).isValid())
-                    d = moment.parseZone(newVal);
+                if (moment(newVal, lformat).isValid())
+                    d = moment.parseZone(newVal, lformat);
             }
         }
 
