@@ -430,6 +430,15 @@ videre.UI = {
         }
     },
 
+    setControlEnabled: function(ctl, enabled)
+    {
+        var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+        if (controlType != null && controlType.enable != null)
+            controlType.enable(ctl, enabled);
+        else 
+            ctl.attr("disabled", enabled ? null : "disabled");
+    },
+
     validateCtl: function(item)
     {
         var uniqueId = !String.isNullOrEmpty(item.ctl.attr('id')) ? item.ctl.attr('id') : item.ctl.data('column');
