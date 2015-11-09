@@ -464,11 +464,11 @@ namespace Videre.Core.Services
             {
                 var culture = new CultureInfo(user.Locale);
                 if (format == "date")
-                    return convertDateFormatToMomentJS(culture.DateTimeFormat.ShortDatePattern);
+                    return "L"; //convertDateFormatToMomentJS(culture.DateTimeFormat.ShortDatePattern);
                 else if (format == "datetime")
-                    return convertDateFormatToMomentJS(culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern);
+                    return "L " + convertDateFormatToMomentJS(culture.DateTimeFormat.ShortTimePattern); //"L LT";//convertDateFormatToMomentJS(culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern);
                 else if (format == "time")
-                    return convertDateFormatToMomentJS(culture.DateTimeFormat.ShortTimePattern);
+                    return convertDateFormatToMomentJS(culture.DateTimeFormat.ShortTimePattern); //"LT";//convertDateFormatToMomentJS(culture.DateTimeFormat.ShortTimePattern);
                 else
                     throw new Exception("Unknown Date Format: " + format);
             }
