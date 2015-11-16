@@ -321,7 +321,10 @@ videre.UI = {
         for (var name in videre.UI._controlTypes)
         {
             if (videre.UI._controlTypes[name].init != null)
+            {
                 videre.UI._controlTypes[name].init(ctr);
+                ctr.attr('data-controltype', name);
+            }
         }
     },
 
@@ -450,6 +453,8 @@ videre.UI = {
             return { id: uniqueId + 'DataTypeInvalid', text: String.format(videre.localization.getText('global', 'DataTypeInvalid'), item.labelText, item.ctl.data('datatype')), isError: true };
         if (item.ctl.data('match') != null && item.ctl.val() != $('#' + item.ctl.data('match')).val())
             return { id: uniqueId + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
+        if (item.ctl.data('controltype') != null && !videre.UI.validateControlType(item.ctl.data('controltype'), item.ctl))
+            return { id: uniqueId + 'ControlTypeInvalid', text: String.format(videre.localization.getText('global', 'ControlTypeInvalid'), item.labelText, item.ctl.data('controltype')), isError: true };
     },
 
     validDataType: function(type, val, options)
@@ -462,6 +467,16 @@ videre.UI = {
             else
                 alert('Invalid data type: ' + type); //todo: what to do?
         }
+        return true;
+    },
+
+    validateControlType: function(type, ctl)
+    {
+        var item = videre.UI._controlTypes[type];
+        if (item != null)
+            return item.isValid != null ? item.isValid(ctl) : true; // always valid if not otherwise specified
+        else
+            alert('Invalid control type: ' + type); //todo: what to do?
         return true;
     },
 
@@ -1115,7 +1130,7 @@ videre.widgets.base = videre.Class.extend(
     _getValidationCtls: function(ctr)
     {
         var ret = [];
-        var ctls = ctr.find('[required="required"],[data-datatype],[data-match]');
+        var ctls = ctr.find('[required="required"],[data-datatype],[data-match],[data-controltype]');
         ctls.each(function(idx, element)
         {
             var item = videre.UI.getFormGroup($(element));
