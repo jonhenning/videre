@@ -454,7 +454,9 @@ videre.UI = {
         if (item.ctl.data('match') != null && item.ctl.val() != $('#' + item.ctl.data('match')).val())
             return { id: uniqueId + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
         if (item.ctl.data('controltype') != null && !videre.UI.validateControlType(item.ctl.data('controltype'), item.ctl))
-            return { id: uniqueId + 'ControlTypeInvalid', text: String.format(videre.localization.getText('global', 'ControlTypeInvalid'), item.labelText, item.ctl.data('controltype')), isError: true };
+        {
+            return { id: uniqueId + 'ControlTypeInvalid', text: item.ctl.attr('data-custom-error') != null ? item.ctl.attr('data-custom-error') : String.format(videre.localization.getText('global', 'ControlTypeInvalid'), item.labelText, item.ctl.data('controltype')), isError: true };
+        }
     },
 
     validDataType: function(type, val, options)
