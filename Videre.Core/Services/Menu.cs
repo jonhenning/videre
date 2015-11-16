@@ -39,17 +39,25 @@ namespace Videre.Core.Services
             else
                 menu.Id = null;
             menu.PortalId = portalId;
-            ImportSubMenuItems(menu.Items, idMap);
+            ImportSubMenuItems(menu.Items, idMap, existing != null ? existing.Items : new List<MenuItem>());
 
             return Save(menu, userId);
         }
 
-        private static void ImportSubMenuItems(List<Models.MenuItem> items, Dictionary<string, string> idMap)
+        private static void ImportSubMenuItems(List<Models.MenuItem> items, Dictionary<string, string> idMap, List<Models.MenuItem> existingItems)
         {
             foreach (var subItem in items)
             {
+                var existingItem = existingItems.Where(i => i.Text == subItem.Text).FirstOrDefault();
                 subItem.RoleIds = Security.GetNewRoleIds(subItem.RoleIds, idMap);
-                ImportSubMenuItems(subItem.Items, idMap);
+                ImportSubMenuItems(subItem.Items, idMap, existingItem != null ? existingItem.Items : new List<MenuItem>());
+            }
+
+            //allow existing items to stay...  no need for recursion here as we get it all by adding its parent.
+            foreach (var existingItem in existingItems)
+            {
+                if (!items.Exists(i => i.Text == existingItem.Text))
+                    items.Add(existingItem);
             }
         }
 
