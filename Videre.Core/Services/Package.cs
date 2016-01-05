@@ -205,8 +205,11 @@ namespace Videre.Core.Services
             var content = GetPackageContent(zipFileName);
             foreach (var portalExport in content)
             {
-                Services.ImportExport.Import(portalExport, portalId);
-                count++;
+                if (Package.AddAppliedImportHash(new System.IO.FileInfo(zipFileName).Name, Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"))))
+                {
+                    Services.ImportExport.Import(portalExport, portalId);
+                    count++;
+                }
             }
 
             return count;
@@ -257,7 +260,10 @@ namespace Videre.Core.Services
                         {
                             Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
                             var portalExport = file.FullName.GetFileJSONObject<Models.PortalExport>(false);
-                            Services.ImportExport.Import(portalExport, portalId);
+                            if (Package.AddAppliedImportHash(file.Name, Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"))))
+                            {
+                                Services.ImportExport.Import(portalExport, portalId);
+                            }
                             if (removeFile)
                                 System.IO.File.Delete(file.FullName);
                             return true;
@@ -429,6 +435,33 @@ namespace Videre.Core.Services
             return res != null;
         }
 
+        public static string GetJsonHash(string json)
+        {
+            var hash = System.Security.Cryptography.MD5.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(json));
+            return Convert.ToBase64String(hash, 0, hash.Length);
+        }
+
+        public static List<Models.ImportHash> GetAppliedImportHashes(string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            return Repository.Current.GetResources<Models.ImportHash>().Select(h => h.Data).ToList();
+        }
+
+        public static bool AddAppliedImportHash(string name, string hash, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var importHash = new Models.ImportHash() { Name = name };
+            var existing = GetAppliedImportHashes().Where(h => h.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (existing != null)
+                importHash = existing;
+            if (importHash.Hash != hash)
+            {
+                importHash.Hash = hash;
+                Repository.Current.StoreResource("ImportHash", null, importHash, userId);
+                return true;
+            }
+            return false;
+        }
 
     }
 }

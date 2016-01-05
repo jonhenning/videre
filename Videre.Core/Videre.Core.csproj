@@ -181,6 +181,7 @@
     <Compile Include="Models\BundleList.cs" />
     <Compile Include="Models\AuthenticatedUser.cs" />
     <Compile Include="Models\ImportExportContentJob.cs" />
+    <Compile Include="Models\ImportHash.cs" />
     <Compile Include="Models\NumberFormat.cs" />
     <Compile Include="Models\UserAuthentication.cs" />
     <Compile Include="Models\UserClaim.cs" />

@@ -216,8 +216,13 @@ namespace Videre.Core.Widgets.Controllers
                             json = reader.ReadToEnd();
                         }
                         var portalExport = json.ToObject<Models.PortalExport>();
-                        Services.ImportExport.Import(portalExport, Portal.CurrentPortalId);
-                        r.AddMessage(Localization.GetPortalText("DataImportMessage.Text", "Data has been imported successfully.  You may need to refresh your page to see changes."));
+                        if (Package.AddAppliedImportHash(fileName, Package.GetJsonHash(json)))
+                        {
+                            Services.ImportExport.Import(portalExport, Portal.CurrentPortalId);
+                            r.AddMessage(Localization.GetPortalText("DataImportMessage.Text", "Data has been imported successfully.  You may need to refresh your page to see changes."));
+                        }
+                        else
+                            r.AddMessage(Localization.GetPortalText("DataAlreadyImportedMessage.Text", "Data has already been imported.  No action applied."));
                     }
                     else if (ext.Equals("zip", StringComparison.InvariantCultureIgnoreCase))
                     {
