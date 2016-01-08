@@ -596,14 +596,13 @@ videre.UI.registerControlType('list',
 videre.UI.registerControlType('checkbox',
     {
         get: function(ctl) { return ctl.is(':checked'); },
-        set: function(ctl, val, isMarkup)  //todo: this is a bit messy
+        set: function(ctl, val)  //todo: this is a bit messy
         {
             if (videre.typename(val) == 'string')
                 val = eval(val);
-            if (isMarkup)   //if rendering html to markup, prop will not work
-                ctl.attr('checked', val);
-            else
-                ctl.prop('checked', val);
+
+            ctl.attr('checked', val);   //if rendering html to markup, prop will not work
+            ctl.prop('checked', val);
         },
         init: function(ctl) { }
     });
@@ -1286,7 +1285,7 @@ if ($.views != null)
                 var controlType = videre.UI._controlTypes[ctl.data('controltype')];
                 if (controlType != null && controlType.set != null)
                 {
-                    controlType.set(ctl, dataValue, true);
+                    controlType.set(ctl, dataValue);
                     dataValue = ctl.val();
                 }
                 else
@@ -1309,7 +1308,7 @@ if ($.views != null)
                     var controlType = videre.UI._controlTypes[ctl.data('controltype')];
                     if (controlType != null && controlType.set != null)
                     {
-                        controlType.set(ctl, dataValue, true);
+                        controlType.set(ctl, dataValue);
                         dataValue = ctl.val();
                     }
 
