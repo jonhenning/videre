@@ -205,9 +205,11 @@ namespace Videre.Core.Services
             var content = GetPackageContent(zipFileName);
             foreach (var portalExport in content)
             {
-                if (Package.AddAppliedImportHash(new System.IO.FileInfo(zipFileName).Name, Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"))))
+                var hash = Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"));
+                if (!Package.ImportHashExists(new System.IO.FileInfo(zipFileName).Name, hash))
                 {
                     Services.ImportExport.Import(portalExport, portalId);
+                    Package.AddAppliedImportHash(new System.IO.FileInfo(zipFileName).Name, hash);
                     count++;
                 }
             }
@@ -260,9 +262,11 @@ namespace Videre.Core.Services
                         {
                             Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
                             var portalExport = file.FullName.GetFileJSONObject<Models.PortalExport>(false);
-                            if (Package.AddAppliedImportHash(file.Name, Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"))))
+                            var hash = Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"));
+                            if (!Package.ImportHashExists(file.Name, hash))
                             {
                                 Services.ImportExport.Import(portalExport, portalId);
+                                Package.AddAppliedImportHash(file.Name, hash);
                             }
                             if (removeFile)
                                 System.IO.File.Delete(file.FullName);
@@ -461,6 +465,12 @@ namespace Videre.Core.Services
                 return true;
             }
             return false;
+        }
+
+        public static bool ImportHashExists(string name, string hash)
+        {
+            var existing = GetAppliedImportHashes().Where(h => h.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            return (existing != null && existing.Hash == hash);
         }
 
     }

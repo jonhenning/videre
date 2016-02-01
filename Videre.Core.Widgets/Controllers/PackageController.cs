@@ -216,10 +216,12 @@ namespace Videre.Core.Widgets.Controllers
                             json = reader.ReadToEnd();
                         }
                         var portalExport = json.ToObject<Models.PortalExport>();
-                        if (Package.AddAppliedImportHash(fileName, Package.GetJsonHash(json)))
+                        var hash = Package.GetJsonHash(json);
+                        if (!Package.ImportHashExists(fileName, hash))
                         {
                             Services.ImportExport.Import(portalExport, Portal.CurrentPortalId);
                             r.AddMessage(Localization.GetPortalText("DataImportMessage.Text", "Data has been imported successfully.  You may need to refresh your page to see changes."));
+                            Package.AddAppliedImportHash(fileName, hash);
                         }
                         else
                             r.AddMessage(Localization.GetPortalText("DataAlreadyImportedMessage.Text", "Data has already been imported.  No action applied."));
