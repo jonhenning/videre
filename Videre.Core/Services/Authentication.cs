@@ -1,5 +1,4 @@
 ﻿using CodeEndeavors.Extensions;
-using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -323,16 +322,10 @@ namespace Videre.Core.Services
 
         public static void RegisterAuthenticationProviders()
         {
-            ObjectFactory.Configure(x =>
-                x.Scan(scan =>
-                {
-                    scan.AssembliesFromApplicationBaseDirectory();
-                    scan.AddAllTypesOf<IAuthenticationProvider>();
-                }));
-            _authenticationProviders = ObjectFactory.GetAllInstances<IAuthenticationProvider>().ToList();
+            _authenticationProviders = ReflectionExtensions.GetAllInstances<IAuthenticationProvider>();
+
             foreach (var provider in _authenticationProviders)
                 provider.Register();
-
         }
 
         public static List<Models.UserAuthentication> GetUserAuthentications(string userId)
@@ -389,15 +382,7 @@ namespace Videre.Core.Services
         public static List<IAuthenticationPersistence> GetAuthenticationPersistenceProviders()
         {
             if (_authenticationPersistenceProviders == null)
-            {
-                ObjectFactory.Configure(x =>
-                    x.Scan(scan =>
-                    {
-                        scan.AssembliesFromApplicationBaseDirectory();
-                        scan.AddAllTypesOf<IAuthenticationPersistence>();
-                    }));
-                _authenticationPersistenceProviders = ObjectFactory.GetAllInstances<IAuthenticationPersistence>().ToList();
-            }
+                _authenticationPersistenceProviders = ReflectionExtensions.GetAllInstances<IAuthenticationPersistence>();
 
             return _authenticationPersistenceProviders;
         }
@@ -624,13 +609,8 @@ namespace Videre.Core.Services
 
         public static void RegisterAuthenticationResetProviders()
         {
-            ObjectFactory.Configure(x =>
-                x.Scan(scan =>
-                {
-                    scan.AssembliesFromApplicationBaseDirectory();
-                    scan.AddAllTypesOf<IAuthenticationResetProvider>();
-                }));
-            _authenticationResetProviders = ObjectFactory.GetAllInstances<IAuthenticationResetProvider>().ToList();
+            _authenticationResetProviders = ReflectionExtensions.GetAllInstances<IAuthenticationResetProvider>();
+
             foreach (var provider in _authenticationResetProviders)
                 provider.Register();
 
@@ -644,7 +624,6 @@ namespace Videre.Core.Services
 
             if (AuthenticationResetProvider != null)
                 AuthenticationResetProvider.InitializePersistence(Portal.GetAppSetting("AuthenticationResetConnection", ""));
-
         }
 
         public static List<IAuthenticationResetProvider> GetAuthenticationResetProviders()

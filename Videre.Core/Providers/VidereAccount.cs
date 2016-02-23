@@ -27,7 +27,7 @@ namespace Videre.Core.AccountProviders
         public List<Models.User> Get(string portalId)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return Repository.Current.GetResources<Models.User>("User", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
+            return Repository.GetResources<Models.User>("User", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
         }
 
         public List<Models.User> Get(string portalId, Func<Models.User, bool> statement)
@@ -37,21 +37,21 @@ namespace Videre.Core.AccountProviders
 
         public string Save(Models.User user, string userId)
         {
-            var res = Repository.Current.StoreResource("User", null, user, userId);
+            var res = Repository.StoreResource("User", null, user, userId);
             return res.Id;
         }
 
         public bool Delete(string id, string userId)
         {
-            var user = Repository.Current.GetResourceById<Models.User>(id);
+            var user = Repository.GetResourceById<Models.User>(id);
             if (user != null)
-                Repository.Current.Delete(user);
+                Repository.Delete(user);
             return user != null;
         }
 
         public Models.User GetById(string id)
         {
-            var res = Repository.Current.GetResourceById<Models.User>(id);
+            var res = Repository.GetResourceById<Models.User>(id);
             if (res != null)
                 return res.Data;
             return null;
@@ -82,7 +82,7 @@ namespace Videre.Core.AccountProviders
 
         public Models.Role GetRoleById(string id)
         {
-            var res = Repository.Current.GetResourceById<Models.Role>(id);
+            var res = Repository.GetResourceById<Models.Role>(id);
             if (res != null)
                 return res.Data;
             return null;
@@ -90,24 +90,24 @@ namespace Videre.Core.AccountProviders
 
         public List<Models.Role> GetRoles(string portalId)
         {
-            return Repository.Current.GetResources<Models.Role>("Role", m => m.Data.PortalId == portalId, false).Select(f => f.Data).OrderBy(i => i.Name).ToList();
+            return Repository.GetResources<Models.Role>("Role", m => m.Data.PortalId == portalId, false).Select(f => f.Data).OrderBy(i => i.Name).ToList();
         }
 
         public string SaveRole(Models.Role role, string userId)
         {
-            var res = Repository.Current.StoreResource("Role", null, role, userId);
+            var res = Repository.StoreResource("Role", null, role, userId);
             return res.Id;
         }
 
         public bool DeleteRole(string id, string userId)
         {
-            var role = Repository.Current.GetResourceById<Models.Role>(id);
+            var role = Repository.GetResourceById<Models.Role>(id);
             if (role != null)
             {
                 if (role.Data.Name == "admin")
                     throw new Exception(Localization.GetExceptionText("CannotChangeCoreData.Error", "{0} is part of the core data structure, it is not allowed to be altered.", "admin"));
 
-                Repository.Current.Delete(role);
+                Repository.Delete(role);
             }
             return role != null;
         }

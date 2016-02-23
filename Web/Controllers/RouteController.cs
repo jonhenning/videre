@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Videre.Core.Services;
 using System.Web.Security;
 using Videre.Core.Providers;
-using StructureMap;
+using CodeEndeavors.Extensions;
 //using CodeEndeavors.Extensions;
 //using Videre.Core.Extensions;
 //using System.Diagnostics;
@@ -49,17 +49,8 @@ namespace Videre.Web.Controllers
             get
             {
                 if (_requestHandlers == null)
-                {
-                    ObjectFactory.Configure(x =>
-                        x.Scan(scan =>
-                        {
-                            scan.AssembliesFromApplicationBaseDirectory();
-                            scan.AddAllTypesOf<IRequestHandler>();
-                        }));
-                    _requestHandlers = ObjectFactory.GetAllInstances<IRequestHandler>().ToList();
-                }
+                    _requestHandlers = ReflectionExtensions.GetAllInstances<IRequestHandler>();
                 return _requestHandlers;
-
             }
         }
 

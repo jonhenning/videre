@@ -7,7 +7,6 @@ using System.Web;
 using System.Web.Caching;
 using CodeEndeavors.Extensions;
 //using ICSharpCode.SharpZipLib.Zip;
-using StructureMap;
 using System.Web.Mvc;
 using CoreServices = Videre.Core.Services;
 using PaniciSoftware.FastTemplate.Common;
@@ -89,7 +88,7 @@ namespace Videre.Core.Services
 
                 }
             }
-            //Repository.Current.SaveChanges();
+            //Repository.SaveChanges();
             return count;
         }
 
@@ -386,16 +385,7 @@ namespace Videre.Core.Services
 
         public static void RegisterWidgets()
         {
-            //var widgetRegistrations = ObjectFactory.Model.PluginTypes.Where(x => typeof(Models.IWidgetRegistration).IsAssignableFrom(x.PluginType));
-
-            ObjectFactory.Configure(x =>
-                x.Scan(scan =>
-                {
-                    //scan.Assembly(assemblyName);
-                    scan.AssembliesFromApplicationBaseDirectory();
-                    scan.AddAllTypesOf<Models.IWidgetRegistration>();
-                }));
-            var widgetRegistrations = ObjectFactory.GetAllInstances<Models.IWidgetRegistration>();
+            var widgetRegistrations = ReflectionExtensions.GetAllInstances<Models.IWidgetRegistration>();
 
             var updates = 0;
             foreach (var registration in widgetRegistrations)
@@ -412,30 +402,15 @@ namespace Videre.Core.Services
 
         public static void RegisterImportExportProviders()
         {
-            ObjectFactory.Configure(x =>
-                x.Scan(scan =>
-                {
-                    scan.AssembliesFromApplicationBaseDirectory();
-                    scan.AddAllTypesOf<ImportExportProviders.IImportExportProvider>();
-                }));
-            var providers = ObjectFactory.GetAllInstances<ImportExportProviders.IImportExportProvider>();
+            var providers = ReflectionExtensions.GetAllInstances<ImportExportProviders.IImportExportProvider>();
+
             foreach (var provider in providers)
                 Services.ImportExport.RegisterProvider(provider);
-
         }
 
         public static int RegisterPortals(bool persist = true)
         {
-            //var widgetRegistrations = ObjectFactory.Model.PluginTypes.Where(x => typeof(Models.IWidgetRegistration).IsAssignableFrom(x.PluginType));
-
-            ObjectFactory.Configure(x =>
-                x.Scan(scan =>
-                {
-                    //scan.Assembly(assemblyName);
-                    scan.AssembliesFromApplicationBaseDirectory();
-                    scan.AddAllTypesOf<Models.IWidgetRegistration>();
-                }));
-            var widgetRegistrations = ObjectFactory.GetAllInstances<Models.IWidgetRegistration>();
+            var widgetRegistrations = ReflectionExtensions.GetAllInstances<Models.IWidgetRegistration>();
 
             var updates = 0;
             var portals = Services.Portal.GetPortals();
@@ -455,19 +430,19 @@ namespace Videre.Core.Services
         //nuclear option!
         public static void ResetAllPortals()
         {           
-            Repository.Current.DeleteAll<Models.PageTemplate>("PageTemplate");
-            Repository.Current.DeleteAll<Models.LayoutTemplate>("LayoutTemplate");
-            Repository.Current.DeleteAll<Models.Menu>("Menu");
-            Repository.Current.DeleteAll<Models.Package>("Package");
-            Repository.Current.DeleteAll<Models.Localization>("Localization");
-            Repository.Current.DeleteAll<Models.Portal>("Portal");
-            Repository.Current.DeleteAll<Models.Role>("Role");
-            Repository.Current.DeleteAll<Models.SearchProvider>("SearchProvider");
-            Repository.Current.DeleteAll<Models.SecureActivity>("SecureActivity");
-            Repository.Current.DeleteAll<Models.User>("User");
-            Repository.Current.DeleteAll<Models.WebReference>("WebReference");
-            Repository.Current.DeleteAll<Models.WidgetManifest>("WidgetManifest");
-            CoreServices.Repository.Current.PendingUpdates = 0;
+            Repository.DeleteAll<Models.PageTemplate>("PageTemplate");
+            Repository.DeleteAll<Models.LayoutTemplate>("LayoutTemplate");
+            Repository.DeleteAll<Models.Menu>("Menu");
+            Repository.DeleteAll<Models.Package>("Package");
+            Repository.DeleteAll<Models.Localization>("Localization");
+            Repository.DeleteAll<Models.Portal>("Portal");
+            Repository.DeleteAll<Models.Role>("Role");
+            Repository.DeleteAll<Models.SearchProvider>("SearchProvider");
+            Repository.DeleteAll<Models.SecureActivity>("SecureActivity");
+            Repository.DeleteAll<Models.User>("User");
+            Repository.DeleteAll<Models.WebReference>("WebReference");
+            Repository.DeleteAll<Models.WidgetManifest>("WidgetManifest");
+            CoreServices.Repository.PendingUpdates = 0;
 
         }
     }

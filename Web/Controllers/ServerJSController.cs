@@ -17,7 +17,7 @@ namespace Videre.Web.Controllers
             Services.Localization.GetPortalText("ControlTypeInvalid.Client", "{0} is not a valid {1}");
             Services.Localization.GetPortalText("ValuesMustMatch.Client", "{0} requires a matching value");
             Services.Localization.GetPortalText("None.Client", "(None)");
-            if (Services.Repository.Current.PendingUpdates > 0)
+            if (Services.Repository.PendingUpdates > 0)
                 Services.Repository.SaveChanges();
 
             var locs = Services.Localization.GetLocalizations(Core.Models.LocalizationType.Portal, l => l.Key.EndsWith(".Client"));

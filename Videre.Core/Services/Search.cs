@@ -6,7 +6,6 @@ using System.Web;
 using System.Web.Security;
 using Videre.Core.Models;
 using CodeEndeavors.Extensions;
-using StructureMap;
 using System.Configuration;
 using System.Collections.Concurrent;
 using System.IO;
@@ -153,7 +152,7 @@ namespace Videre.Core.Services
 
         public static List<Models.SearchProvider> GetSearchProviders()
         {
-            return Repository.Current.GetResources<Models.SearchProvider>("SearchProvider").Select(m => m.Data).OrderBy(i => i.Name).ToList();
+            return Repository.GetResources<Models.SearchProvider>("SearchProvider").Select(m => m.Data).OrderBy(i => i.Name).ToList();
         }
         public static Models.SearchProvider GetSearchProvider(string name)
         {
@@ -175,7 +174,7 @@ namespace Videre.Core.Services
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             if (!IsDuplicate(provider))
             {
-                var res = Repository.Current.StoreResource("SearchProvider", null, provider, userId);
+                var res = Repository.StoreResource("SearchProvider", null, provider, userId);
                 return res.Id;
             }
             else
@@ -196,9 +195,9 @@ namespace Videre.Core.Services
         public static bool DeleteSearchProvider(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<Models.SearchProvider>(id);
+            var res = Repository.GetResourceById<Models.SearchProvider>(id);
             if (res != null)
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             return res != null;
         }
 

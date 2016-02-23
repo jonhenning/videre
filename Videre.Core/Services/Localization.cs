@@ -13,7 +13,7 @@ namespace Videre.Core.Services
     {
         public static Models.Localization GetById(string id)
         {
-            var res = Repository.Current.GetResourceById<Models.Localization>(id);
+            var res = Repository.GetResourceById<Models.Localization>(id);
             if (res != null)
                 return res.Data;
             return null;
@@ -24,7 +24,7 @@ namespace Videre.Core.Services
             var locs = new List<Models.Localization>();
             foreach (var id in ids)
             {
-                var res = Repository.Current.GetResourceById<Models.Localization>(id);
+                var res = Repository.GetResourceById<Models.Localization>(id);
                 if (res != null)
                     locs.Add(res.Data);
             }
@@ -33,17 +33,17 @@ namespace Videre.Core.Services
 
         public static List<Models.Localization> Get(string portalId)
         {
-            return Repository.Current.GetResources<Models.Localization>().Select(l => l.Data).Where(l => l.PortalId == portalId).ToList();
+            return Repository.GetResources<Models.Localization>().Select(l => l.Data).Where(l => l.PortalId == portalId).ToList();
         }
 
         public static List<Models.Localization> Get(LocalizationType type, string portalId, string ns)
         {
-            return Repository.Current.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId && l.Data.Namespace.IndexOf(ns) == 0).Select(l => l.Data).ToList();
+            return Repository.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId && l.Data.Namespace.IndexOf(ns) == 0).Select(l => l.Data).ToList();
         }
 
         public static Models.Localization Get(string portalId, LocalizationType type, string ns, string key, string locale)
         {
-            return Repository.Current.GetResources<Models.Localization>(type.ToString(), l => 
+            return Repository.GetResources<Models.Localization>(type.ToString(), l => 
                 l.Data.PortalId == portalId && 
                 l.Data.Namespace == ns && 
                 l.Data.Key == key && 
@@ -53,7 +53,7 @@ namespace Videre.Core.Services
         
         public static List<Models.Localization> Get(LocalizationType type, string portalId)
         {
-            return Repository.Current.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId).Select(l => l.Data).ToList();
+            return Repository.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId).Select(l => l.Data).ToList();
         }
 
         //since currently part of content provider, place in service 
@@ -77,7 +77,7 @@ namespace Videre.Core.Services
             localization.PortalId = string.IsNullOrEmpty(localization.PortalId) ? Services.Portal.CurrentPortalId : localization.PortalId;
             if (!IsDuplicate(localization))
             {
-                var res = Repository.Current.StoreResource(localization.Type.ToString(), localization.Key, localization, userId);
+                var res = Repository.StoreResource(localization.Type.ToString(), localization.Key, localization, userId);
                 return res.Id;
             }
             else
@@ -87,7 +87,7 @@ namespace Videre.Core.Services
         //make sure you treat like a single instance... no expiring, etc.
         private static bool IsDuplicate(Models.Localization localization)
         {
-            var items = Repository.Current.GetResources<Models.Localization>(localization.Type.ToString(), localization.Key,
+            var items = Repository.GetResources<Models.Localization>(localization.Type.ToString(), localization.Key,
                 l => l.Data.Locale == localization.Locale && l.Data.PortalId == localization.PortalId && l.Data.Namespace == localization.Namespace);
             return items.Exists(l => l.Id != localization.Id);
                 //    ).Exists(l => l.Id != localization.Id);
@@ -97,9 +97,9 @@ namespace Videre.Core.Services
         public static bool Delete(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var localization = Repository.Current.GetResourceById<Models.Localization>(id);
+            var localization = Repository.GetResourceById<Models.Localization>(id);
             if (localization != null)
-                Repository.Current.Delete(localization);
+                Repository.Delete(localization);
             return localization != null;
         }
 
@@ -137,7 +137,7 @@ namespace Videre.Core.Services
                 portalId = string.IsNullOrEmpty(portalId) ? Services.Portal.CurrentPortalId : portalId;
                 var text = defaultText;
 
-                var loc = Repository.Current.GetResourceData<Models.Localization>(type.ToString(), key, GetLocalizationQueries(portalId, ns, locale), null);
+                var loc = Repository.GetResourceData<Models.Localization>(type.ToString(), key, GetLocalizationQueries(portalId, ns, locale), null);
                 if (loc == null && create)
                     Services.Localization.Save(new Models.Localization() { Type = type, Key = key, Namespace = ns, Locale = null, PortalId = portalId, Text = defaultText }, Services.Account.AuditId);
                 else
@@ -173,7 +173,7 @@ namespace Videre.Core.Services
                 return matches[0].DisplayText;
             return defaultValue;
             
-            //var content = Repository.Current.Get(Content.Select(c => c.ToResource()).ToList(), GetLocalizationQueries(CurrentUserLocale), true);
+            //var content = Repository.Get(Content.Select(c => c.ToResource()).ToList(), GetLocalizationQueries(CurrentUserLocale), true);
             //if (content.Count > 0)
             //    return content[0].Data;
             //return DefaultValue;
@@ -184,8 +184,8 @@ namespace Videre.Core.Services
             portalId = string.IsNullOrEmpty(portalId) ? Services.Portal.CurrentPortalId : portalId; 
             //var locs = Get(type, portalId).Where(query);
             var queries = GetLocalizationQueries(portalId, portalId, CurrentUserLocale); //GetLocalizationQueries(CurrentUserLocale);
-            var resourceLocs = Repository.Current.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId && l.Data.Key.EndsWith(".Client"));
-            return Repository.Current.GetResources<Models.Localization>(resourceLocs, queries, true).Select(r => r.Data).ToList();
+            var resourceLocs = Repository.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId && l.Data.Key.EndsWith(".Client"));
+            return Repository.GetResources<Models.Localization>(resourceLocs, queries, true).Select(r => r.Data).ToList();
             //return queries.GetMatches(locs, true);
         }
 

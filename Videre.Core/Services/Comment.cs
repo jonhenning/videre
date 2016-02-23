@@ -90,7 +90,7 @@ namespace Videre.Core.Services
 
         public static Models.CommentContainer GetById(string id)
         {
-            var res = Repository.Current.GetResourceById<Models.CommentContainer>(id);
+            var res = Repository.GetResourceById<Models.CommentContainer>(id);
             if (res != null)
                 return res.Data;
             return null;
@@ -99,13 +99,13 @@ namespace Videre.Core.Services
         public static List<Models.CommentContainer> Get(string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return Repository.Current.GetResources<Models.CommentContainer>("CommentContainer", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
+            return Repository.GetResources<Models.CommentContainer>("CommentContainer", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
         }
 
         public static Models.CommentContainer Get(string containerType, string containerId, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return Repository.Current.GetResourceData<Models.CommentContainer>("CommentContainer", m => m.Data.PortalId == portalId && m.Data.ContainerType == containerType && m.Data.ContainerId == containerId, null);
+            return Repository.GetResourceData<Models.CommentContainer>("CommentContainer", m => m.Data.PortalId == portalId && m.Data.ContainerType == containerType && m.Data.ContainerId == containerId, null);
         }
 
         public static string Import<T>(string portalId, Models.CommentContainer container, Dictionary<string, string> idMap, string userId = null)
@@ -126,7 +126,7 @@ namespace Videre.Core.Services
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             container.PortalId = string.IsNullOrEmpty(container.PortalId) ? Services.Portal.CurrentPortalId : container.PortalId;
             Validate(container);
-            var res = Repository.Current.StoreResource("CommentContainer", null, container, userId);
+            var res = Repository.StoreResource("CommentContainer", null, container, userId);
             return res.Id;
         }
 
@@ -155,9 +155,9 @@ namespace Videre.Core.Services
         public static bool Delete(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var container = Repository.Current.GetResourceById<Models.CommentContainer>(id);
+            var container = Repository.GetResourceById<Models.CommentContainer>(id);
             if (container != null)
-                Repository.Current.Delete(container);
+                Repository.Delete(container);
             return container != null;
         }
 

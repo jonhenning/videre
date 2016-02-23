@@ -29,11 +29,11 @@ namespace Videre.Core.Providers
         public void InitializePersistence(string connection)
         {
             var oldTicketDate = DateTime.UtcNow.AddDays(-30);
-            var oldTickets = CoreServices.Repository.Current.GetResources<Models.AuthenticationResetTicket>("AuthenticationResetTicket", t => t.Data.IssuedDate < oldTicketDate || t.Data.FulfilledDate.HasValue);
+            var oldTickets = CoreServices.Repository.GetResources<Models.AuthenticationResetTicket>("AuthenticationResetTicket", t => t.Data.IssuedDate < oldTicketDate || t.Data.FulfilledDate.HasValue);
             foreach (var ticket in oldTickets)
-                CoreServices.Repository.Current.Delete(ticket);
+                CoreServices.Repository.Delete(ticket);
             if (oldTickets.Count > 0)
-                CoreServices.Repository.Current.SaveChanges();
+                CoreServices.Repository.SaveChanges();
         }
 
         public Services.AuthenticationResetResult Authenticate(string userName, string password)
@@ -48,7 +48,7 @@ namespace Videre.Core.Providers
                     if (ret.Ticket.PasswordHash == GeneratePasswordHash(password))
                     {
                         ret.Ticket.FulfilledDate = DateTime.UtcNow;
-                        CoreServices.Repository.Current.StoreResource("AuthenticationResetTicket", null, ret.Ticket, user.Id);
+                        CoreServices.Repository.StoreResource("AuthenticationResetTicket", null, ret.Ticket, user.Id);
                         ret.Authenticated = true;
                     }
                 }
@@ -73,7 +73,7 @@ namespace Videre.Core.Providers
                 if (ret.Ticket != null) //expire old ticket - generate new one - (can't reuse as we can't determine password from hash)
                 {
                     ret.Ticket.ExpirationDate = DateTime.MinValue;
-                    CoreServices.Repository.Current.StoreResource("AuthenticationResetTicket", null, ret.Ticket, userId);
+                    CoreServices.Repository.StoreResource("AuthenticationResetTicket", null, ret.Ticket, userId);
                 }
 
                 var password = GeneratePassword();
@@ -85,7 +85,7 @@ namespace Videre.Core.Providers
                     ExpirationDate = now.AddHours(CoreServices.Portal.GetPortalAttribute("Authentication", "ResetTicketHours", 3)),
                     PasswordHash = GeneratePasswordHash(password)
                 };
-                CoreServices.Repository.Current.StoreResource("AuthenticationResetTicket", null, ret.Ticket, userId);
+                CoreServices.Repository.StoreResource("AuthenticationResetTicket", null, ret.Ticket, userId);
 
                 SendResetEmail(user, password, ret.Ticket);
 
@@ -99,7 +99,7 @@ namespace Videre.Core.Providers
 
         private Models.AuthenticationResetTicket GetOutstandingTicket(string userId)
         {
-            return CoreServices.Repository.Current.GetResourceData<Models.AuthenticationResetTicket>("AuthenticationResetTicket", u => u.Data.UserId == userId && u.Data.IssuedDate < DateTime.UtcNow && u.Data.ExpirationDate > DateTime.UtcNow && !u.Data.FulfilledDate.HasValue, null);
+            return CoreServices.Repository.GetResourceData<Models.AuthenticationResetTicket>("AuthenticationResetTicket", u => u.Data.UserId == userId && u.Data.IssuedDate < DateTime.UtcNow && u.Data.ExpirationDate > DateTime.UtcNow && !u.Data.FulfilledDate.HasValue, null);
         }
 
         private void SendResetEmail(CoreModels.User user, string password, CoreModels.AuthenticationResetTicket ticket)

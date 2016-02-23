@@ -18,25 +18,25 @@ namespace Videre.Core.Services
         public static List<Models.File> Get(string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return Repository.Current.GetResources<Models.File>("File", f => f.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
+            return Repository.GetResources<Models.File>("File", f => f.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
         }
 
         public static Models.File Get(string portalId, string url)
         {
-            var fileResource = Repository.Current.GetResources<Models.File>("File", f => f.Data.PortalId == portalId && (f.Data.Url == url || f.Data.RenderUrl == url)).SingleOrDefault();
+            var fileResource = Repository.GetResources<Models.File>("File", f => f.Data.PortalId == portalId && (f.Data.Url == url || f.Data.RenderUrl == url)).SingleOrDefault();
             if (fileResource != null)
                 return fileResource.Data; //.ToModel();
             return null;
-            //return Repository.Current.Get<Models.File>("File", f => f.PortalId == PortalId && f.Urls.Contains(Url), null);
+            //return Repository.Get<Models.File>("File", f => f.PortalId == PortalId && f.Urls.Contains(Url), null);
         }
 
         public static Models.File GetById(string id)
         {
-            var fileResource = Repository.Current.GetResourceById<Models.File>(id);
+            var fileResource = Repository.GetResourceById<Models.File>(id);
             if (fileResource != null)
                 return fileResource.Data; //.ToModel();
             return null;
-            //return Repository.Current.Get<Models.File>("File", f => f.PortalId == PortalId && f.Urls.Contains(Url), null);
+            //return Repository.Get<Models.File>("File", f => f.PortalId == PortalId && f.Urls.Contains(Url), null);
         }
 
         public static string Save(Models.File file, string userId = null)
@@ -44,7 +44,7 @@ namespace Videre.Core.Services
             file.PortalId = string.IsNullOrEmpty(file.PortalId) ? Portal.CurrentPortalId : file.PortalId;
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             Validate(file);
-            var res = Repository.Current.StoreResource("File", null, file, userId);
+            var res = Repository.StoreResource("File", null, file, userId);
             return res.Id;
         }
 
@@ -72,9 +72,9 @@ namespace Videre.Core.Services
         public static bool Delete(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var file = Repository.Current.GetResourceById<Models.File>(id);
+            var file = Repository.GetResourceById<Models.File>(id);
             if (file != null)
-                Repository.Current.Delete(file);
+                Repository.Delete(file);
             return file != null;
         }
 

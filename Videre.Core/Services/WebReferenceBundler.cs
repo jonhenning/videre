@@ -1,5 +1,4 @@
-﻿using StructureMap;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +9,7 @@ using Videre.Core.Extensions;
 using Videre.Core.Providers;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
+using CodeEndeavors.Extensions;
 
 namespace Videre.Core.Services
 {
@@ -19,13 +19,8 @@ namespace Videre.Core.Services
 
         public static void RegisterWebReferenceBundlers()
         {
-            ObjectFactory.Configure(x =>
-                x.Scan(scan =>
-                {
-                    scan.AssembliesFromApplicationBaseDirectory();
-                    scan.AddAllTypesOf<IWebReferenceBundleProvider>();
-                }));
-            _webReferenceBundleProviders = ObjectFactory.GetAllInstances<IWebReferenceBundleProvider>().ToList();
+            _webReferenceBundleProviders = ReflectionExtensions.GetAllInstances<IWebReferenceBundleProvider>();
+
             foreach (var provider in _webReferenceBundleProviders)
                 provider.Register();
 

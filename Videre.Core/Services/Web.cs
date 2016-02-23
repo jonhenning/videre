@@ -21,7 +21,7 @@ namespace Videre.Core.Services
         public static List<Models.WebReference> GetWebReferences(string portalId = null)    
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return Repository.Current.GetResources<Models.WebReference>("WebReference").Select(m => m.Data).Where(r => r.PortalId.Equals(portalId, StringComparison.InvariantCultureIgnoreCase)).OrderBy(r => r.Group).ToList();
+            return Repository.GetResources<Models.WebReference>("WebReference").Select(m => m.Data).Where(r => r.PortalId.Equals(portalId, StringComparison.InvariantCultureIgnoreCase)).OrderBy(r => r.Group).ToList();
         }
         public static Models.WebReference GetWebReference(string portalId, string name)
         {
@@ -37,7 +37,7 @@ namespace Videre.Core.Services
             webReference.PortalId = string.IsNullOrEmpty(webReference.PortalId) ? Portal.CurrentPortalId : webReference.PortalId;
 
             Validate(webReference);
-            var res = Repository.Current.StoreResource("WebReference", null, webReference, userId);
+            var res = Repository.StoreResource("WebReference", null, webReference, userId);
             return res.Id;
         }
         public static void Validate(Models.WebReference webReference)
@@ -62,9 +62,9 @@ namespace Videre.Core.Services
         public static bool DeleteWebReference(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<Models.WebReference>(id);
+            var res = Repository.GetResourceById<Models.WebReference>(id);
             if (res != null)
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             return res != null;
         }
 

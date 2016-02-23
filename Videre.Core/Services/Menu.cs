@@ -12,7 +12,7 @@ namespace Videre.Core.Services
     {
         public static Models.Menu GetById(string id)
         {
-            var res = Repository.Current.GetResourceById<Models.Menu>(id);
+            var res = Repository.GetResourceById<Models.Menu>(id);
             if (res != null)
                 return res.Data;
             return null;
@@ -21,12 +21,12 @@ namespace Videre.Core.Services
         public static List<Models.Menu> Get(string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return Repository.Current.GetResources<Models.Menu>("Menu", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
+            return Repository.GetResources<Models.Menu>("Menu", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
         }
 
         public static Models.Menu Get(string portalId, string name)
         {
-            return Repository.Current.GetResourceData<Models.Menu>("Menu", m => m.Data.PortalId == portalId && m.Data.Name == name, null);
+            return Repository.GetResourceData<Models.Menu>("Menu", m => m.Data.PortalId == portalId && m.Data.Name == name, null);
         }
 
         //since currently part of content provider, place in service 
@@ -66,7 +66,7 @@ namespace Videre.Core.Services
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             menu.PortalId = string.IsNullOrEmpty(menu.PortalId) ? Services.Portal.CurrentPortalId : menu.PortalId;
             Validate(menu);
-            var res = Repository.Current.StoreResource("Menu", null, menu, userId);
+            var res = Repository.StoreResource("Menu", null, menu, userId);
             return res.Id;
         }
 
@@ -95,9 +95,9 @@ namespace Videre.Core.Services
         public static bool Delete(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var menu = Repository.Current.GetResourceById<Models.Menu>(id);
+            var menu = Repository.GetResourceById<Models.Menu>(id);
             if (menu != null)
-                Repository.Current.Delete(menu);
+                Repository.Delete(menu);
             return menu != null;
         }
 

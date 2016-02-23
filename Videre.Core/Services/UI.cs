@@ -69,7 +69,7 @@ namespace Videre.Core.Services
         {
             var layouts = new List<Models.Layout>();
             foreach (var file in Directory.GetFiles(Portal.ResolvePath(LayoutPath), "*.manifest"))
-                layouts.Add(file.GetFileJSONObject<Models.Layout>(true));
+                layouts.Add(Caching.GetFileJSONObject<Models.Layout>(file));
             return layouts;
         }
 
@@ -85,7 +85,7 @@ namespace Videre.Core.Services
             if (!Directory.Exists(themeDir))
                 Directory.CreateDirectory(themeDir);
             foreach (var file in Directory.GetFiles(themeDir, "*.manifest"))
-                themes.Add(file.GetFileJSONObject<Models.Theme>(true));
+                themes.Add(Caching.GetFileJSONObject<Models.Theme>(file));
             return themes;
         }
 

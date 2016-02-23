@@ -261,7 +261,7 @@ namespace Videre.Core.Services
                     case ".json":
                         {
                             Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
-                            var portalExport = file.FullName.GetFileJSONObject<Models.PortalExport>(false);
+                            var portalExport = file.FullName.GetFileContents().ToObject<Models.PortalExport>();
                             var hash = Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"));
                             if (!Package.ImportHashExists(file.Name, hash))
                             {
@@ -326,7 +326,7 @@ namespace Videre.Core.Services
 
         public static List<Models.Package> GetInstalledPackages()
         {
-            return Repository.Current.GetResources<Models.Package>("Package").Select(m => m.Data).OrderBy(i => i.Name).ToList();
+            return Repository.GetResources<Models.Package>("Package").Select(m => m.Data).OrderBy(i => i.Name).ToList();
         }
         public static Models.Package GetInstalledPackage(string name)
         {
@@ -348,7 +348,7 @@ namespace Videre.Core.Services
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             if (!IsDuplicate(package))
             {
-                var res = Repository.Current.StoreResource("Package", null, package, userId);
+                var res = Repository.StoreResource("Package", null, package, userId);
                 return res.Id;
             }
             else
@@ -369,11 +369,11 @@ namespace Videre.Core.Services
         public static bool DeletePackage(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<Models.Package>(id);
+            var res = Repository.GetResourceById<Models.Package>(id);
             if (res != null)
             {
                 //throw new Exception("NOT IMPLEMENTED YET!");
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             }
             return res != null;
         }
@@ -382,7 +382,7 @@ namespace Videre.Core.Services
         public static List<Models.ImportExportContentJob> GetExportJobs(string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-            return Repository.Current.GetResources<Models.ImportExportContentJob>("ImportExportContentJob").Select(m => m.Data).Where(a =>
+            return Repository.GetResources<Models.ImportExportContentJob>("ImportExportContentJob").Select(m => m.Data).Where(a =>
                 (string.IsNullOrEmpty(portalId) || a.PortalId == portalId) 
                 ).OrderBy(a => a.Name).ToList();
         }
@@ -399,16 +399,16 @@ namespace Videre.Core.Services
             //if (string.IsNullOrEmpty(job.Name))
                 job.Name = job.Package.Name;
             Validate(job);
-            var res = Repository.Current.StoreResource("ImportExportContentJob", null, job, userId);
+            var res = Repository.StoreResource("ImportExportContentJob", null, job, userId);
             return res.Id;
         }
 
         public static bool DeleteExportJob(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<Models.ImportExportContentJob>(id);
+            var res = Repository.GetResourceById<Models.ImportExportContentJob>(id);
             if (res != null)
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             return res != null;
         }
 
@@ -433,9 +433,9 @@ namespace Videre.Core.Services
         public static bool DeleteSecureActivity(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<Models.ImportExportContentJob>(id);
+            var res = Repository.GetResourceById<Models.ImportExportContentJob>(id);
             if (res != null)
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             return res != null;
         }
 
@@ -448,7 +448,7 @@ namespace Videre.Core.Services
         public static List<Models.ImportHash> GetAppliedImportHashes(string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            return Repository.Current.GetResources<Models.ImportHash>().Select(h => h.Data).ToList();
+            return Repository.GetResources<Models.ImportHash>().Select(h => h.Data).ToList();
         }
 
         public static bool AddAppliedImportHash(string name, string hash, string userId = null)
@@ -461,7 +461,7 @@ namespace Videre.Core.Services
             if (importHash.Hash != hash)
             {
                 importHash.Hash = hash;
-                Repository.Current.StoreResource("ImportHash", null, importHash, userId);
+                Repository.StoreResource("ImportHash", null, importHash, userId);
                 return true;
             }
             return false;

@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
-using CodeEndeavors.Cache;
 using CodeEndeavors.Extensions;
 using CodeEndeavors.ResourceManager.DomainObjects;
 using CodeEndeavors.ResourceManager.Extensions;
@@ -25,7 +24,7 @@ namespace Videre.Core.Services
             {
                 if (_attributeDefinitions == null)
                 {
-                    var definitions = Repository.Current.GetResources<AttributeDefinition>("AttributeDefinition").Select(a => a.Data).GroupBy(a => a.GroupName).ToDictionary(a => a.Key, a => a.ToList());
+                    var definitions = Repository.GetResources<AttributeDefinition>("AttributeDefinition").Select(a => a.Data).GroupBy(a => a.GroupName).ToDictionary(a => a.Key, a => a.ToList());
                     if (definitions != null)
                         _attributeDefinitions = definitions.ToJson().ToObject<ConcurrentDictionary<string, List<AttributeDefinition>>>();
                     if (_attributeDefinitions == null)
@@ -43,7 +42,7 @@ namespace Videre.Core.Services
             {
                 try
                 {
-                    return HttpContext.Current != null && HttpContext.Current.Request != null;
+                    return HttpContext.Current != null && HttpContext.Current.Handler != null && HttpContext.Current.Request != null;
                 }
                 catch (Exception) //todo: why would this occur?
                 {
@@ -96,8 +95,10 @@ namespace Videre.Core.Services
         {
             get
             {
+
                 //TODO: cache this beyond current request
-                return CacheState.PullRequestCache("CurrentPortal", delegate
+                //return CacheState.PullRequestCache("CurrentPortal", delegate
+                return Caching.GetRequestCacheEntry("CurrentPortal", () =>
                 {
                     var portals = GetPortals();
                     string bestMatch = ""; 
@@ -167,7 +168,7 @@ namespace Videre.Core.Services
         public static List<PageTemplate> GetPageTemplates(string portalId = null)
         {
             portalId = portalId.CoalesceString(CurrentPortalId);
-            return Repository.Current.GetResources<PageTemplate>("Template", t => t.Data.PortalId == portalId)
+            return Repository.GetResources<PageTemplate>("Template", t => t.Data.PortalId == portalId)
                 .Select(t => t.Data)
                 .OrderBy(t => t.Urls.FirstOrDefault())
                 .ToList();
@@ -175,7 +176,7 @@ namespace Videre.Core.Services
 
         public static PageTemplate GetPageTemplateById(string id)
         {
-            var res = Repository.Current.GetResourceById<PageTemplate>(id);
+            var res = Repository.GetResourceById<PageTemplate>(id);
             return res != null ? res.Data : null;
         }
 
@@ -195,7 +196,7 @@ namespace Videre.Core.Services
         {
             portalId = string.IsNullOrEmpty(portalId) ? CurrentPortalId : portalId;
 
-            var templates = Repository.Current.GetResources<PageTemplate>("Template", t => t.Data.PortalId == portalId).Select(t => t.Data);
+            var templates = Repository.GetResources<PageTemplate>("Template", t => t.Data.PortalId == portalId).Select(t => t.Data);
             if (!string.IsNullOrEmpty(url))
             {
                 var bestMatch = RouteParser.GetBestMatchedUrl(url, templates.SelectMany(t => t.Urls));
@@ -274,7 +275,7 @@ namespace Videre.Core.Services
                     foreach (var widget in missing)
                         widget.RemoveContent();
                 }
-                Repository.Current.StoreResource("Template", null, pageTemplate, userId);
+                Repository.StoreResource("Template", null, pageTemplate, userId);
 
                 foreach (var widget in pageTemplate.Widgets)
                 {
@@ -284,7 +285,7 @@ namespace Videre.Core.Services
                 }
 
                 //after contentIds assigned, need to save them!
-                var res = Repository.Current.StoreResource("Template", null, pageTemplate, userId);
+                var res = Repository.StoreResource("Template", null, pageTemplate, userId);
                 return res.Id;
             }
             throw new Exception(string.Format(
@@ -295,12 +296,12 @@ namespace Videre.Core.Services
         public static bool DeletePageTemplate(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<PageTemplate>(id);
+            var res = Repository.GetResourceById<PageTemplate>(id);
             if (res != null)
             {
                 //foreach (var widget in res.Data.Widgets)
                 //    widget.DeleteContent();
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             }
             return res != null;
         }
@@ -330,18 +331,18 @@ namespace Videre.Core.Services
         public static List<LayoutTemplate> GetLayoutTemplates(string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? CurrentPortalId : portalId;
-            return Repository.Current.GetResources<LayoutTemplate>("LayoutTemplate", t => t.Data.PortalId == portalId, false).Select(t => t.Data).OrderBy(t => t.LayoutName).ToList();
+            return Repository.GetResources<LayoutTemplate>("LayoutTemplate", t => t.Data.PortalId == portalId, false).Select(t => t.Data).OrderBy(t => t.LayoutName).ToList();
         }
 
         public static LayoutTemplate GetLayoutTemplateById(string id)
         {
-            var res = Repository.Current.GetResourceById<LayoutTemplate>(id);
+            var res = Repository.GetResourceById<LayoutTemplate>(id);
             return res != null ? res.Data : null;
         }
 
         public static LayoutTemplate GetLayoutTemplate(string portalId, string layoutName)
         {
-            var template = Repository.Current.GetResources<LayoutTemplate>("LayoutTemplate", t => t.Data.PortalId == portalId && t.Data.LayoutName == layoutName, true).SingleOrDefault();
+            var template = Repository.GetResources<LayoutTemplate>("LayoutTemplate", t => t.Data.PortalId == portalId && t.Data.LayoutName == layoutName, true).SingleOrDefault();
             return template != null ? template.Data : null;
         }
 
@@ -361,7 +362,7 @@ namespace Videre.Core.Services
                         widget.RemoveContent();
                 }
 
-                Repository.Current.StoreResource("LayoutTemplate", null, template, userId);
+                Repository.StoreResource("LayoutTemplate", null, template, userId);
                 foreach (var widget in template.Widgets)
                 {
                     //widget.TemplateId = Template.Id;    //is this a hack?
@@ -370,7 +371,7 @@ namespace Videre.Core.Services
                         widget.SaveContentJson(widget.ContentJson);
                 }
                 //after contentIds assigned, need to save them!
-                var res = Repository.Current.StoreResource("LayoutTemplate", null, template, userId);
+                var res = Repository.StoreResource("LayoutTemplate", null, template, userId);
                 return res.Id;
             }
             throw new Exception( string.Format(
@@ -381,12 +382,12 @@ namespace Videre.Core.Services
         public static bool DeleteLayoutTemplate(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<LayoutTemplate>(id);
+            var res = Repository.GetResourceById<LayoutTemplate>(id);
             if (res != null)
             {
                 //foreach (var widget in res.Data.Widgets)
                 //    widget.DeleteContent();
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             }
             return res != null;
         }
@@ -404,7 +405,7 @@ namespace Videre.Core.Services
 
         public static List<Models.Portal> GetPortals()
         {
-            return Repository.Current.GetResources<Models.Portal>("Portal").Select(m => m.Data).ToList();
+            return Repository.GetResources<Models.Portal>("Portal").Select(m => m.Data).ToList();
         }
 
         public static Models.Portal GetPortalById(string id)
@@ -433,7 +434,7 @@ namespace Videre.Core.Services
                     foreach (var p in portals.Where(p => p.Default))
                     {
                         p.Default = false;
-                        Repository.Current.StoreResource("Portal", null, p, userId);
+                        Repository.StoreResource("Portal", null, p, userId);
                     }
                 }
                 else if (!portals.Exists(p => p.Default && p.Id != portal.Id))
@@ -442,7 +443,7 @@ namespace Videre.Core.Services
                             Localization.GetLocalization(LocalizationType.Exception, "DefaultPortalRequired.Error",
                                 "At least one portal must be marked as the default.", "Core"), "Portal"));
 
-                Repository.Current.StoreResource("Portal", null, portal, userId);
+                Repository.StoreResource("Portal", null, portal, userId);
             }
             else
                 throw new Exception(
@@ -468,9 +469,9 @@ namespace Videre.Core.Services
         public static bool DeletePortal(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<Models.Portal>(id);
+            var res = Repository.GetResourceById<Models.Portal>(id);
             if (res != null)
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             return res != null;
         }
 
@@ -495,15 +496,18 @@ namespace Videre.Core.Services
                 AttributeDefinitions[attribute.GroupName].Add(attribute);
                 changed = true;
             }
-            else if (def.ToJson() != attribute.ToJson())
+            else 
             {
-                attribute.Id = AttributeDefinitions[attribute.GroupName][AttributeDefinitions[attribute.GroupName].IndexOf(def)].Id;
-                AttributeDefinitions[attribute.GroupName][AttributeDefinitions[attribute.GroupName].IndexOf(def)] = attribute;
-                changed = true;
+                attribute.Id = def.Id;
+                if (def.ToJson() != attribute.ToJson())
+                {
+                    AttributeDefinitions[attribute.GroupName][AttributeDefinitions[attribute.GroupName].IndexOf(def)] = attribute;
+                    changed = true;
+                }
             }
 
             if (changed)
-                Repository.Current.StoreResource("AttributeDefinition", null, attribute, Account.AuditId);
+                Repository.StoreResource("AttributeDefinition", null, attribute, Account.AuditId);
             return changed;
         }
 
@@ -515,10 +519,10 @@ namespace Videre.Core.Services
                 if (def != null)
                 {
                     AttributeDefinitions[groupName].Remove(def);
-                    var res = Repository.Current.GetResourceById<Models.SecureActivity>(def.Id);
+                    var res = Repository.GetResourceById<Models.SecureActivity>(def.Id);
                     if (res != null)
                     {
-                        Repository.Current.Delete(res);
+                        Repository.Delete(res);
                         return true;
                     }
                 }

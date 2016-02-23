@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C9342683-1B86-4CE8-B461-4502682CBA29}"
 	ProjectSection(SolutionItems) = preProject
@@ -47,7 +47,6 @@ Global
 		{3966477C-8503-40F9-852E-9908C2890366}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3966477C-8503-40F9-852E-9908C2890366}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CEB4DBF9-E295-4BD1-871A-8E13116010D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CEB4DBF9-E295-4BD1-871A-8E13116010D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEB4DBF9-E295-4BD1-871A-8E13116010D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution

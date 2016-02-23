@@ -42,7 +42,7 @@ namespace Videre.Core.Services
 
         public static List<Models.WidgetManifest> GetWidgetManifests()
         {
-            return Repository.Current.GetResources<Models.WidgetManifest>("WidgetManifest")
+            return Repository.GetResources<Models.WidgetManifest>("WidgetManifest")
                 .Select(m => m.Data)
                 .OrderBy(i => i.Name)
                 .ToList();
@@ -63,7 +63,7 @@ namespace Videre.Core.Services
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             if (!IsDuplicate(manifest))
             {
-                var res = Repository.Current.StoreResource("WidgetManifest", null, manifest, userId);
+                var res = Repository.StoreResource("WidgetManifest", null, manifest, userId);
                 return res.Id;
             }
             throw new Exception(string.Format(
@@ -88,7 +88,7 @@ namespace Videre.Core.Services
         public static bool DeleteManifest(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<WidgetManifest>(id);
+            var res = Repository.GetResourceById<WidgetManifest>(id);
             if (res != null)
             {
                 // remove from all templates first!
@@ -107,7 +107,7 @@ namespace Videre.Core.Services
                     Portal.Save(t);
                 });
 
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             }
             return res != null;
         }

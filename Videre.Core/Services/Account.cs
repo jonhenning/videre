@@ -6,7 +6,6 @@ using System.Web;
 using System.Web.Security;
 using Videre.Core.Models;
 using CodeEndeavors.Extensions;
-using StructureMap;
 using System.Configuration;
 using System.Security.Cryptography;
 using System.Globalization;

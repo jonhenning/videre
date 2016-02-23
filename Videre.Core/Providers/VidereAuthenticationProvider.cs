@@ -65,7 +65,7 @@ namespace Videre.Core.Providers
 
         public Services.AuthenticationResult Login(string userName, string password)
         {
-            var user = CoreServices.Repository.Current.GetResourceData<Models.UserAuthentication>("UserAuthentication", u => u.Data.Name == userName, null);
+            var user = CoreServices.Repository.GetResourceData<Models.UserAuthentication>("UserAuthentication", u => u.Data.Name == userName, null);
 
             if (user != null && user.PasswordHash != GeneratePasswordHash(password, user.PasswordSalt))
                 user = null;
@@ -83,20 +83,20 @@ namespace Videre.Core.Providers
 
         public List<Models.UserAuthentication> GetUserAuthentications(string userId)
         {
-            return CoreServices.Repository.Current.GetResources<Models.UserAuthentication>("UserAuthentication", u => u.Data.UserId == userId, false).Select(u => u.Data).ToList();
+            return CoreServices.Repository.GetResources<Models.UserAuthentication>("UserAuthentication", u => u.Data.UserId == userId, false).Select(u => u.Data).ToList();
         }
 
         public Models.UserAuthentication SaveAuthentication(Models.UserAuthentication auth, string userId)
         {
-            var res = CoreServices.Repository.Current.StoreResource("UserAuthentication", null, auth, userId);
+            var res = CoreServices.Repository.StoreResource("UserAuthentication", null, auth, userId);
             return auth;
         }
 
         public bool DeleteAuthentication(string id, string userId)
         {
-            var user = CoreServices.Repository.Current.GetResourceById<Models.UserAuthentication>(id);
+            var user = CoreServices.Repository.GetResourceById<Models.UserAuthentication>(id);
             if (user != null)
-                CoreServices.Repository.Current.Delete(user);
+                CoreServices.Repository.Delete(user);
             return user != null;
         }
 
@@ -115,8 +115,8 @@ namespace Videre.Core.Providers
 
         public CoreServices.AuthenticationResult SaveAuthentication(string userId, string userName, string password)
         {
-            //var result = CoreServices.Repository.Current.GetResourceById<Models.UserAuthentication>(id);
-            var userAuth = CoreServices.Repository.Current.GetResourceData<Models.UserAuthentication>("UserAuthentication", a => a.Data.UserId == userId, new Models.UserAuthentication() { UserId = userId });
+            //var result = CoreServices.Repository.GetResourceById<Models.UserAuthentication>(id);
+            var userAuth = CoreServices.Repository.GetResourceData<Models.UserAuthentication>("UserAuthentication", a => a.Data.UserId == userId, new Models.UserAuthentication() { UserId = userId });
             userAuth.Name = userName;
             if (!string.IsNullOrEmpty(password))    //may just be changing username
             {
@@ -124,7 +124,7 @@ namespace Videre.Core.Providers
                 userAuth.PasswordHash = GeneratePasswordHash(password, userAuth.PasswordSalt);
                 userAuth.UpdateDate = DateTime.UtcNow;
             }
-            CoreServices.Repository.Current.StoreResource("UserAuthentication", null, userAuth, userId);
+            CoreServices.Repository.StoreResource("UserAuthentication", null, userAuth, userId);
 
             return new CoreServices.AuthenticationResult()
             {
@@ -161,7 +161,7 @@ namespace Videre.Core.Providers
         //        foreach (var user in users)
         //        {
         //            var auth = new Models.UserAuthentication() { UserId = user.Id, Name = user.Name, PasswordHash = user.PasswordHash, PasswordSalt = user.PasswordSalt };
-        //            CoreServices.Repository.Current.StoreResource("UserAuthentication", null, auth, user.Id);
+        //            CoreServices.Repository.StoreResource("UserAuthentication", null, auth, user.Id);
 
         //            //reset
         //            user.PasswordSalt = null;

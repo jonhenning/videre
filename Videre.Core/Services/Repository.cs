@@ -7,6 +7,7 @@ using System.Web;
 using System.Configuration;
 using CodeEndeavors.Extensions;
 using System.Runtime.Remoting.Messaging;
+using CodeEndeavors.ResourceManager.DomainObjects;
 
 namespace Videre.Core.Services
 {
@@ -20,7 +21,6 @@ namespace Videre.Core.Services
             return CallContext.GetData(key) as T;
         }
 
-
         public static void SetContextData(string key, object data)
         {
             if (HttpContext.Current != null)
@@ -29,12 +29,80 @@ namespace Videre.Core.Services
                 CallContext.SetData(key, data);
         }
 
+        public static int PendingUpdates { 
+            get 
+            { 
+                return current.PendingUpdates; 
+            } 
+            set
+            {
+                current.PendingUpdates = value;
+            }
+        }
+
         public static bool IsOpen
         {
             get { return GetContextData<ResourceRepository>("CurrentResourceRepository") != null; } 
         }
 
-        public static ResourceRepository Current
+        //todo: add HttpRequest caching on these calls?
+
+        public static List<Resource<T>> GetResources<T>()
+        {
+            return current.GetResources<T>();
+        }
+
+        public static List<Resource<T>> GetResources<T>(string type, string key = null)
+        {
+            return current.GetResources<T>(type, key);
+        }
+
+        public static List<Resource<T>> GetResources<T>(string type, Func<Resource<T>, dynamic> statement, bool bestMatch = false)
+        {
+            return current.GetResources<T>(type, statement, bestMatch);
+        }
+
+        public static List<Resource<T>> GetResources<T>(string type, string key, Func<Resource<T>, dynamic> statement, bool bestMatch = true)
+        {
+            return current.GetResources<T>(type, key, statement, bestMatch);
+        }
+
+        public static List<Resource<T>> GetResources<T>(List<Resource<T>> resources, List<Query<Resource<T>>> queries, bool bestMatch = true)
+        {
+            return current.GetResources<T>(resources, queries, bestMatch);
+        }
+
+        public static T GetResourceData<T>(string type, string key, List<Query<Resource<T>>> queries, T defaultValue)
+        {
+            return current.GetResourceData<T>(type, key, queries, defaultValue);
+        }
+
+        public static T GetResourceData<T>(string type, Func<Resource<T>, dynamic> statement, T defaultValue)
+        {
+            return current.GetResourceData<T>(type, statement, defaultValue);
+        }
+
+        public static Resource<T> GetResourceById<T>(string id)
+        {
+            return current.GetResourceById<T>(id);
+        }
+
+        public static Resource<T> StoreResource<T>(string type, string key, T data, string userId)
+        {
+            return current.StoreResource<T>(type, key, data, userId);
+        }
+
+        public static void Delete<T>(Resource<T> resource)
+        {
+            current.Delete<T>(resource);
+        }
+
+        public static void DeleteAll<T>(string type)
+        {
+            current.DeleteAll<T>(type);
+        }
+
+        private static ResourceRepository current
         {
             get
             {
@@ -52,8 +120,17 @@ namespace Videre.Core.Services
                 }
                 else
                     repo = GetContextData<ResourceRepository>("CurrentResourceRepository");
-                    //repo = HttpContext.Current.Items["CurrentResourceRepository"] as ResourceRepository;
+                //repo = HttpContext.Current.Items["CurrentResourceRepository"] as ResourceRepository;
                 return repo;
+            }
+        }
+
+        [Obsolete("Do not use directly, methods are provided as statics in Services.Repository")]
+        public static ResourceRepository Current
+        {
+            get
+            {
+                return current;
             }
         }
 
@@ -63,15 +140,15 @@ namespace Videre.Core.Services
             if (IsOpen)
             {
                 //Services.Logging.Logger.Debug("Disposing Repository...");
-                if (Current.PendingUpdates > 0) //todo:  auto save here?
+                if (current.PendingUpdates > 0) //todo:  auto save here?
                 {
                     lock (_lock)
                     {
-                        Services.Logging.Logger.DebugFormat("Persisting {0} changes to repository", Current.PendingUpdates);
-                        Current.SaveChanges();
+                        Services.Logging.Logger.DebugFormat("Persisting {0} changes to repository", current.PendingUpdates);
+                        current.SaveChanges();
                     }
                 }
-                Current.Dispose();
+                current.Dispose();
             }
         }
 
@@ -87,7 +164,7 @@ namespace Videre.Core.Services
 
         public static void SaveChanges()
         {
-            Current.SaveChanges();
+            current.SaveChanges();
         }
 
 

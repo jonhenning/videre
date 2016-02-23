@@ -10,7 +10,7 @@ namespace Videre.Core.Services
     {
         public static List<Models.SecureActivity> GetSecureActivities(string area = null, string portalId = null)
         {
-            return Repository.Current.GetResources<Models.SecureActivity>("SecureActivity").Select(m => m.Data).Where(a => 
+            return Repository.GetResources<Models.SecureActivity>("SecureActivity").Select(m => m.Data).Where(a => 
                 (string.IsNullOrEmpty(portalId) || a.PortalId == portalId) && 
                 (string.IsNullOrEmpty(area) || a.Area.Equals(area, StringComparison.InvariantCultureIgnoreCase)) 
                 ).OrderBy(a => a.Area).ThenBy(a => a.Name).ToList();
@@ -29,7 +29,7 @@ namespace Videre.Core.Services
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             Validate(activity);
-            var res = Repository.Current.StoreResource("SecureActivity", null, activity, userId);
+            var res = Repository.StoreResource("SecureActivity", null, activity, userId);
             return res.Id;
         }
         public static void Validate(Models.SecureActivity activity)
@@ -52,9 +52,9 @@ namespace Videre.Core.Services
         public static bool DeleteSecureActivity(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
-            var res = Repository.Current.GetResourceById<Models.SecureActivity>(id);
+            var res = Repository.GetResourceById<Models.SecureActivity>(id);
             if (res != null)
-                Repository.Current.Delete(res);
+                Repository.Delete(res);
             return res != null;
         }
 
