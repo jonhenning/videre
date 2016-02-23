@@ -84,7 +84,7 @@ namespace Videre.Blog.Widgets
             var updates = 0;
             updates += CoreServices.Update.Register(new List<CoreModels.SecureActivity>()
             {
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Blog", Name = "Administration", Roles = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Blog", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }
             });
             return updates;        
         }

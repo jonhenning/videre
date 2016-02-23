@@ -11,7 +11,7 @@ namespace Videre.Blog.Widgets.Services
     {
         public static Models.Blog GetById(string id)
         {
-            var res = CoreServices.Repository.Current.GetResourceById<Models.Blog>(id);
+            var res = CoreServices.Repository.GetResourceById<Models.Blog>(id);
             if (res != null)
                 return res.Data;
             return null;
@@ -20,14 +20,14 @@ namespace Videre.Blog.Widgets.Services
         public static List<Models.Blog> Get(string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? CoreServices.Portal.CurrentPortalId : portalId;
-            var blogs = CoreServices.Repository.Current.GetResources<Models.Blog>("Blog", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
+            var blogs = CoreServices.Repository.GetResources<Models.Blog>("Blog", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
             return blogs;
         }
 
         public static Models.Blog GetByName(string name, string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? CoreServices.Portal.CurrentPortalId : portalId;
-            var blog = CoreServices.Repository.Current.GetResourceData<Models.Blog>("Blog", m => m.Data.PortalId == portalId && m.Data.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase), null);
+            var blog = CoreServices.Repository.GetResourceData<Models.Blog>("Blog", m => m.Data.PortalId == portalId && m.Data.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase), null);
             return blog;
         }
 
@@ -46,17 +46,17 @@ namespace Videre.Blog.Widgets.Services
 
         public static string Save(Models.Blog blog, string userId = null)
         {
-            userId = string.IsNullOrEmpty(userId) ? CoreServices.Account.CurrentIdentityName : userId;
+            userId = string.IsNullOrEmpty(userId) ? CoreServices.Authentication.AuthenticatedUserId : userId;
             blog.PortalId = string.IsNullOrEmpty(blog.PortalId) ? CoreServices.Portal.CurrentPortalId : blog.PortalId;
             Validate(blog);
             TokenizeEntries(blog);
-            var res = CoreServices.Repository.Current.StoreResource("Blog", null, blog, userId);
+            var res = CoreServices.Repository.StoreResource("Blog", null, blog, userId);
             return res.Id;
         }
 
         public static Models.BlogEntry SaveEntry(string blogId, Models.BlogEntry entry, string userId = null)
         {
-            userId = string.IsNullOrEmpty(userId) ? CoreServices.Account.CurrentIdentityName : userId;
+            userId = string.IsNullOrEmpty(userId) ? CoreServices.Authentication.AuthenticatedUserId : userId;
             var blog = Services.Blog.GetById(blogId);
             Validate(blog, entry);
 
@@ -79,7 +79,7 @@ namespace Videre.Blog.Widgets.Services
 
         public static bool DeleteEntry(string blogId, string entryId, string userId = null)
         {
-            userId = string.IsNullOrEmpty(userId) ? CoreServices.Account.CurrentIdentityName : userId;
+            userId = string.IsNullOrEmpty(userId) ? CoreServices.Authentication.AuthenticatedUserId : userId;
             var blog = Services.Blog.GetById(blogId);
 
             var index = blog.Entries.FindIndex(e => e.Id == entryId);
@@ -114,10 +114,10 @@ namespace Videre.Blog.Widgets.Services
 
         public static bool Delete(string id, string userId = null)
         {
-            userId = string.IsNullOrEmpty(userId) ? CoreServices.Account.CurrentIdentityName : userId;
-            var blog = CoreServices.Repository.Current.GetResourceById<Models.Blog>(id);
+            userId = string.IsNullOrEmpty(userId) ? CoreServices.Authentication.AuthenticatedUserId : userId;
+            var blog = CoreServices.Repository.GetResourceById<Models.Blog>(id);
             if (blog != null)
-                CoreServices.Repository.Current.Delete(blog);
+                CoreServices.Repository.Delete(blog);
             return blog != null;
         }
 
