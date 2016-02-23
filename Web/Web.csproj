@@ -70,8 +70,8 @@
       <HintPath>..\..\..\OpenSource\DistributedCache\redist\CodeEndeavors.Distributed.Cache.Client.Redis.dll</HintPath>
     </Reference>
     <Reference Include="CodeEndeavors.Extensions, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\OpenSource\Extensions\redist\CodeEndeavors.Extensions.dll</HintPath>
+      <HintPath>..\packages\CodeEndeavors.Extensions.2.0.5\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.6\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
