@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Videre.Carousel.Widgets", "Videre.Carousel.Widgets\Videre.Carousel.Widgets.csproj", "{66E4B6DA-D4F8-4834-8595-631B6E5F46AE}"
 EndProject
 Global

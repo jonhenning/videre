@@ -14,7 +14,7 @@ namespace Videre.Carousel.Widgets.Services
     {
         public static Models.Carousel GetById(string id)
         {
-            var res = CoreServices.Repository.Current.GetResourceById<Models.Carousel>(id);
+            var res = CoreServices.Repository.GetResourceById<Models.Carousel>(id);
             if (res != null)
                 return res.Data;
             return null;
@@ -22,12 +22,12 @@ namespace Videre.Carousel.Widgets.Services
         
         public static List<Models.Carousel> Get(string portalId)
         {
-            return CoreServices.Repository.Current.GetResources<Models.Carousel>("Carousel", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
+            return CoreServices.Repository.GetResources<Models.Carousel>("Carousel", m => m.Data.PortalId == portalId, false).Select(f => f.Data).ToList();
         }
 
         public static Models.Carousel Get(string portalId, string name)
         {
-            return CoreServices.Repository.Current.GetResourceData<Models.Carousel>("Carousel", m => m.Data.PortalId == portalId && m.Data.Name == name, null);
+            return CoreServices.Repository.GetResourceData<Models.Carousel>("Carousel", m => m.Data.PortalId == portalId && m.Data.Name == name, null);
         }
 
         public static string Import(string portalId, Models.Carousel carousel, string userId = null)
@@ -44,10 +44,10 @@ namespace Videre.Carousel.Widgets.Services
 
         public static string Save(Models.Carousel carousel, string userId = null)
         {
-            userId = string.IsNullOrEmpty(userId) ? CoreServices.Account.CurrentIdentityName : userId;
+            userId = string.IsNullOrEmpty(userId) ? CoreServices.Authentication.AuthenticatedUserId : userId;
             carousel.PortalId = string.IsNullOrEmpty(carousel.PortalId) ? CoreServices.Portal.CurrentPortalId : carousel.PortalId;
             Validate(carousel);
-            var res = CoreServices.Repository.Current.StoreResource("Carousel", null, carousel, userId);
+            var res = CoreServices.Repository.StoreResource("Carousel", null, carousel, userId);
             return res.Id;
         }
 
@@ -67,10 +67,10 @@ namespace Videre.Carousel.Widgets.Services
 
         public static bool Delete(string id, string userId = null)
         {
-            userId = string.IsNullOrEmpty(userId) ? CoreServices.Account.CurrentIdentityName : userId;
-            var Carousel = CoreServices.Repository.Current.GetResourceById<Models.Carousel>(id);
+            userId = string.IsNullOrEmpty(userId) ? CoreServices.Authentication.AuthenticatedUserId : userId;
+            var Carousel = CoreServices.Repository.GetResourceById<Models.Carousel>(id);
             if (Carousel != null)
-                CoreServices.Repository.Current.Delete(Carousel);
+                CoreServices.Repository.Delete(Carousel);
             return Carousel != null;
         }
 
