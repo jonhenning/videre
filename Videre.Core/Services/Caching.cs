@@ -15,11 +15,6 @@ namespace Videre.Core.Services
         {
             if (!_initialized)
             {
-                CacheClient.Service.LogLevel = CacheClient.Service.LoggingLevel.Minimal;
-                CacheClient.Service.OnLoggingMessage += (message) =>
-                {
-                    System.Diagnostics.Debug.WriteLine("LOG: " + message);
-                };
                 CacheClient.Service.RegisterCache("VidereRequestCache", "{cacheType: 'CodeEndeavors.Distributed.Cache.Client.Web.HttpRequestCache'}");
                 CacheClient.Service.RegisterCache("VidereFileCache", "{cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'}");
                 _initialized = true;

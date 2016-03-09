@@ -63,7 +63,14 @@ namespace Videre.Web
             {
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
+                CodeEndeavors.ResourceManager.Logging.LogLevel = CodeEndeavors.ResourceManager.Logging.LoggingLevel.Verbose;
+                CodeEndeavors.ResourceManager.Logging.OnLoggingMessage += (message) => { Services.Logging.Logger.Info("ResourceManager: " + message); };
+
+                CodeEndeavors.Distributed.Cache.Client.Logging.LogLevel = CodeEndeavors.Distributed.Cache.Client.Logging.LoggingLevel.Verbose;
+                CodeEndeavors.Distributed.Cache.Client.Logging.OnLoggingMessage += (message) => { Services.Logging.Logger.Info("Cache: " + message); };
+
                 Services.Logging.Logger.Debug("Application_Start");
+
                 Services.Update.WatchForUpdates();
                 Services.CacheTimer.Register();
                 Services.Search.RegisterForAutoUpdate();

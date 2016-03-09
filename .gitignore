@@ -3,7 +3,8 @@ bin
 obj
 lib/*.zip
 lib/Videre.Core.dll
-redist
+redist/*.zip
+redist/*.dll
 app_data
 *.user
 *.pdb
