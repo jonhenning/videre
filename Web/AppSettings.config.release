@@ -1,0 +1,10 @@
+﻿<appSettings>
+    <add key="webpages:Version" value="2.0.0.0"/>
+    <add key="RepositoryConnection" value="{ type:'File', resourceDir:'~/App_Data/FileDb', auditHistorySize: 10, useFileMonitor: true, cacheConnection: {cacheName: 'RepositoryCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache' } }"/>
+    <!--<add key="RepositoryConnection" value="{ type:'File', resourceDir:'~/App_Data/FileDb', useFileMonitor: false, cacheConnection: {cacheName: 'RepositoryCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.Redis.RedisCache', 'server': '127.0.0.1'} }"/>-->
+    <!--<add key="RepositoryConnection" value="{ type:'CodeEndeavors.ResourceManager.SQLServer.SQLRepository', auditHistorySize: 10, dataConnection: 'Data Source=(local);Initial Catalog=Videre.ResourceManager;Persist Security Info=True;User ID=resourcemanager;Password=password', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }"/>-->
+    <!--<add key="RepositoryConnection" value="{ type:'CodeEndeavors.Services.ResourceManager.Client.Repository', auditHistorySize: 10, url: 'http://dev.servicehost.com', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }"/>-->
+    <add key="FileDir" value="~/App_Data/FileRepo"/>
+    <add key="EnableRouteDebug" value="false"/>
+    <add key="aspnet:MaxJsonDeserializerMembers" value="10000" />
+</appSettings>

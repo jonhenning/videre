@@ -1,0 +1,14 @@
+﻿<smtp deliveryMethod="SpecifiedPickupDirectory">
+    <!--<smtp from="yourusername@gmail.com" deliveryMethod="Network">
+    <network
+        defaultCredentials="false"
+        host="smtp.gmail.com"
+        port="587"
+        password="stR0ngPassW0rd"
+        userName="yourusername@gmail.com"
+        enableSsl="false"
+                    />
+    -->
+    <!--This is just for temporary development - can see emails in videre\web\_outgoingEmails folder without need for setting up custom SMTP server-->
+    <specifiedPickupDirectory pickupDirectoryLocation="~/_outgoingMail"/>
+</smtp>
