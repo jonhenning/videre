@@ -233,8 +233,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="AppSettings.config.debug" />
-    <None Include="AppSettings.config.release" />
-    <None Include="ConnectionStrings.config.release" />
     <None Include="ConnectionStrings.config.debug" />
     <Content Include="_packages\font-awesome-4.3.0.zip" />
     <Content Include="_packages\Videre.CoreSiteTemplate.zip" />
@@ -256,8 +254,6 @@
     <Content Include="Content\themes\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\themes\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\themes\fonts\glyphicons-halflings-regular.woff" />
-    <None Include="log4net.config.release" />
-    <None Include="SMTPSettings.config.release" />
     <None Include="SMTPSettings.config.debug" />
     <None Include="log4net.config.debug" />
   </ItemGroup>
