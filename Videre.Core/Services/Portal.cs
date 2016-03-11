@@ -293,6 +293,49 @@ namespace Videre.Core.Services
                     "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template"));
         }
 
+        public static int RegisterPageTemplate(string title, string url, string layoutName, string widgetPaneName, string widgetManifestFullName)
+        {
+            var layout = GetLayoutTemplate(CurrentPortalId, layoutName);
+            if (layout == null)
+                throw new Exception("Layout not found: " + layoutName);
+            var manifest = Widget.GetWidgetManifest(widgetManifestFullName);
+            if (manifest == null)
+                throw new Exception("Widget Manifest not found: " + widgetManifestFullName);
+
+            var newTemplate = new PageTemplate()
+            {
+                Title = title,
+                Urls = new List<string>() { url },
+                LayoutId = layout.Id,
+                Widgets = new List<Models.Widget>()
+                {
+                    new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName }
+                }};
+
+            return RegisterPageTemplate(newTemplate);
+        }
+
+        public static int RegisterPageTemplate(Models.PageTemplate template)
+        {
+            var updated = false;
+            var saveTemplate = Portal.GetPageTemplate(template.Urls.FirstOrDefault());
+            if (saveTemplate == null)
+            {
+                saveTemplate = template;
+                updated = true;
+            }
+            else
+                updated = saveTemplate.Merge(template);
+
+            if (updated)
+            {
+                Portal.Save(saveTemplate);
+                return 1;
+            }
+            return 0;
+        }
+
+
         public static bool DeletePageTemplate(string id, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;

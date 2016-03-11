@@ -139,6 +139,39 @@ namespace Videre.Core.Models
                 widget.SaveContentJson(widget.ContentJson);
         }
 
+        public bool Merge(PageTemplate from)
+        {
+            var updated = false;
+            if (this.Title != from.Title)
+            {
+                this.Title = from.Title;
+                updated = true;
+            }
+            if (this.LayoutId != from.LayoutId)
+            {
+                this.LayoutId = from.LayoutId;
+                updated = true;
+            }
+            foreach (var url in from.Urls)
+            {
+                if (!this.Urls.Contains(url))
+                {
+                    this.Urls.Add(url);
+                    updated = true;
+                }
+            }
+            foreach (var widget in from.Widgets)
+            {
+                if (!this.Widgets.Exists(w => w.PaneName == widget.PaneName && w.ManifestId == widget.ManifestId))
+                {
+                    this.Widgets.Add(widget);
+                    updated = true;
+                }
+            }
+            return updated;
+        }
+
+
         //[SerializeIgnore(new string[] { "db" })]  
         //public string UrlId   //todo: kind of a hack as we don't want to "corrupt" global cached instance... so use context...  should we place this somewhere else... widget needs access
         //{
