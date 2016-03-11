@@ -61,6 +61,39 @@ namespace Videre.Core.Services
             }
         }
 
+        public static int AddMenuItem(string menuName, Models.MenuItem newItem, int? position = null)
+        {
+            var menu = Menu.Get(Portal.CurrentPortalId, menuName);
+            if (menu == null)
+            {
+                menu = new Models.Menu() { Name = menuName, Items = new List<Models.MenuItem>() { newItem } };
+                Menu.Save(menu);
+                return 1;
+            }
+            else
+                return AddMenuItem(menu, menu.Items, newItem, position);
+        }
+        public static int AddMenuItem(Models.Menu menu, List<Models.MenuItem> parentItems, Models.MenuItem newItem, int? position = null)
+        {
+            var item = parentItems.Where(i => i.Text.Equals(newItem.Text, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (item == null)
+            {
+                if (position.HasValue && parentItems.Count > position)
+                    parentItems.Insert(position.Value, newItem);
+                else
+                    parentItems.Add(newItem);
+                Menu.Save(menu);
+                return 1;
+            }
+            else   //item existed, so make sure all children also exist
+            {
+                var updates = 0;
+                foreach (var childNewItem in newItem.Items)
+                    updates += AddMenuItem(menu, item.Items, childNewItem);
+                return updates;
+            }
+        }
+
         public static string Save(Models.Menu menu, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
