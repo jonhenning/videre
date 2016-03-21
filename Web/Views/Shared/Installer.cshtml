@@ -6,7 +6,10 @@
     //Html.RegisterStylesheet(string.Format("~/Content/Layouts/General.css"), true);
 
     Html.RegisterControlPresenter(Model, "videre.widgets.installer");
+    var hasPersistenceProvider = CoreServices.Authentication.PersistenceProvider != null;
     
+    var standardProviders = CoreServices.Authentication.GetStandardAuthenticationProviders();//.Where(p => p.AllowLogin).ToList();
+
 }
 
 @functions
@@ -48,6 +51,11 @@
                         </div>
                         <div class="panel-body">
                             <div id="@Model.GetId("AdminUser")" class="form-horizontal">
+                                @if (!hasPersistenceProvider && standardProviders.Count > 1)
+                                {
+                                    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("AuthenticateAgainst.Text", "Authenticate Against").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().DropDownList("ddlAuthenticationAgainst").Required()
+                                        .Options(standardProviders.Select(p => new SelectListItem() { Text = p.Name, Value = p.Name })), BootstrapUnits.GridSize.MediumDevice6)
+                                }
 
                                 @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("UserName.Text", "User Name").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().TextBox("txtUserName").DataColumn("Name").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)
                                 @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Email.Text", "Email").GridSize(BootstrapUnits.GridSize.MediumDevice4), Html.Bootstrap().Email("txtEmail").DataColumn("Email").Required().DisableAutoComplete(), BootstrapUnits.GridSize.MediumDevice6)

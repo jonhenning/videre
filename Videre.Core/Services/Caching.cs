@@ -27,6 +27,12 @@ namespace Videre.Core.Services
             return CacheClient.Service.GetCacheEntry("VidereRequestCache", cacheKey, lookupFunc);
         }
 
+        public static bool RemoveRequestCacheEntry(string cacheKey)
+        {
+            Initialize();
+            return CacheClient.Service.RemoveCacheEntry("VidereRequestCache", cacheKey);
+        }
+
         public static T GetFileJSONObject<T>(string fileName)
         {
             return CacheClient.Service.GetCacheEntry<T>("VidereFileCache", fileName, () =>

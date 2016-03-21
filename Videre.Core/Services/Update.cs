@@ -186,7 +186,7 @@ namespace Videre.Core.Services
             var count = 0;
             foreach (var user in users)
             {
-                if (!Account.Exists(user))
+                if (!Account.Exists(user) || !string.IsNullOrEmpty(user.Id))    //allowing user to be created by login, this is an update then
                 {
                     Logging.Logger.InfoFormat("Registering user: {0}", user.Name);
                     Account.SaveUser(user, Account.AuditId);
@@ -302,7 +302,7 @@ namespace Videre.Core.Services
         }
 
         //todo: allowing passing in of objects, but currently using very little of them
-        public static string InstallPortal(Core.Models.User adminUser, Core.Models.Portal portal)
+        public static string InstallPortal(Core.Models.User adminUser, Core.Models.Portal portal, string authenticationProvider)
         {
             try
             {
@@ -314,6 +314,9 @@ namespace Videre.Core.Services
                 var portalId = Core.Services.Portal.GetPortal(portal.Name).Id; //Core.Services.Portal.CurrentPortalId;
                 var updates = 0;
 
+                if (CoreServices.Portal.CurrentPortal == null)
+                    Caching.RemoveRequestCacheEntry("CurrentPortal");
+
                 //portal Init
                 updates += Core.Services.Update.Register(new List<Core.Models.Role>()
                 {
@@ -324,20 +327,38 @@ namespace Videre.Core.Services
                 var newAdminUser = new Core.Models.User() { PortalId = portalId, Name = adminUser.Name, Email = adminUser.Email, Password = adminUser.Password, RoleIds = new List<string>() { Core.Services.Update.GetAdminRoleId(portalId) } };
                 if (Authentication.PersistenceProvider == null) //user must exist in authentication and we need to add the admin role to it.
                 {
-                    var userAuthenticated = false;
-                    //todo:  try each one?   seems a bit much, but user is not able to configure them yet...
-                    foreach (var provider in Authentication.GetStandardAuthenticationProviders())
+                    if (!string.IsNullOrEmpty(authenticationProvider))
                     {
-                        var result = Authentication.Authenticate(adminUser.Name, adminUser.Password, provider.Name);
-                        if (result.Success)
+                        CoreServices.Portal.CurrentPortal.Attributes["Authentication." + authenticationProvider + "-Options"] = new Newtonsoft.Json.Linq.JArray() { "Allow Creation", "Allow Login" };
+                        CoreServices.Portal.Save(CoreServices.Portal.CurrentPortal);
+
+                        var loginResult = Authentication.Login(adminUser.Name, adminUser.Password, false, authenticationProvider);
+                        if (!string.IsNullOrEmpty(loginResult.UserId))
                         {
-                            newAdminUser.Password = null; //password handled by outside provider
-                            userAuthenticated = true;
-                            break;
+                            newAdminUser = CoreServices.Account.GetUserById(loginResult.UserId);    //need to re-get user as it now has claims (AuthenticationToken)
+                            newAdminUser.RoleIds = new List<string>() { Core.Services.Update.GetAdminRoleId(portalId) };
+                            CoreServices.Authentication.RevokeAuthenticationTicket();   //don't remain authenticated as we wouldn't have admin rights.
                         }
+                        else
+                            throw new Exception("Invalid Login for user.  User must already exist in one of the standard login providers.");
                     }
-                    if (!userAuthenticated)
-                        throw new Exception("Invalid Login for user.  User must already exist in one of the standard login providers.");
+                    else
+                    {
+                        var userAuthenticated = false;
+                        //todo:  try each one?   seems a bit much, but user is not able to configure them yet...
+                        foreach (var provider in Authentication.GetStandardAuthenticationProviders())
+                        {
+                            var result = Authentication.Authenticate(adminUser.Name, adminUser.Password, provider.Name);
+                            if (result.Success)
+                            {
+                                newAdminUser.Password = null; //password handled by outside provider
+                                userAuthenticated = true;
+                                break;
+                            }
+                        }
+                        if (!userAuthenticated)
+                            throw new Exception("Invalid Login for user.  User must already exist in one of the standard login providers.");
+                    }
                 }
                 updates += Core.Services.Update.Register(new List<Core.Models.User>() { newAdminUser });
 

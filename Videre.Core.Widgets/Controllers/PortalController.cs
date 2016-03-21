@@ -19,7 +19,7 @@ namespace Videre.Core.Widgets.Controllers
             return API.Execute<dynamic>(r =>
             {
                 Security.VerifyActivityAuthorized("Portal", "Administration");
-                var portalId = Core.Services.Update.InstallPortal(adminUser, portal);
+                var portalId = Core.Services.Update.InstallPortal(adminUser, portal, null);
 
                 foreach (var package in packages)
                     Package.InstallAvailablePackage(package, portalId: portalId);

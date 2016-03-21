@@ -15,7 +15,7 @@ namespace Videre.Web.Controllers
     public class InstallerController : Controller
     {
 
-        public JsonResult<dynamic> Install(Core.Models.User adminUser, Core.Models.Portal portal, List<string> packages)
+        public JsonResult<dynamic> Install(Core.Models.User adminUser, Core.Models.Portal portal, List<string> packages, string authenticationProvider)
         {
             return API.Execute<dynamic>(r =>
             {
@@ -30,7 +30,7 @@ namespace Videre.Web.Controllers
                     foreach (var package in packagesToInstall.Where(p => p.Type == "Account Provider"))
                         Package.InstallAvailablePackage(package.Name, package.Version, null);
 
-                    var portalId = Core.Services.Update.InstallPortal(adminUser, portal);
+                    var portalId = Core.Services.Update.InstallPortal(adminUser, portal, authenticationProvider);
 
                     foreach (var package in packagesToInstall.Where(p => p.Type != "Account Provider"))
                         Package.InstallAvailablePackage(package.Name, package.Version, portalId);

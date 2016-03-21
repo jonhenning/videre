@@ -474,7 +474,7 @@ namespace Videre.Core.Services
                 var portals = GetPortals();
                 if (portal.Default)
                 {
-                    foreach (var p in portals.Where(p => p.Default))
+                    foreach (var p in portals.Where(p => p.Default && p.Id != portal.Id))
                     {
                         p.Default = false;
                         Repository.StoreResource("Portal", null, p, userId);
