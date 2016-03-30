@@ -88,6 +88,21 @@ namespace Videre.Core.Services
             else   //item existed, so make sure all children also exist
             {
                 var updates = 0;
+
+                //allow the following overrides
+                if (item.Icon != newItem.Icon)
+                {
+                    item.Icon = newItem.Icon;
+                    updates++;
+                }
+                if (item.Url != newItem.Url)
+                {
+                    item.Url = newItem.Url;
+                    updates++;
+                }
+                if (updates > 0)
+                    Menu.Save(menu);
+
                 foreach (var childNewItem in newItem.Items)
                     updates += AddMenuItem(menu, item.Items, childNewItem);
                 return updates;
