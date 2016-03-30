@@ -115,6 +115,39 @@ namespace Videre.Core.Models
             return defaultValue;
         }
 
+        public bool Merge(LayoutTemplate from)
+        {
+            var updated = false;
+            if (this.LayoutViewName != from.LayoutViewName)
+            {
+                this.LayoutViewName = from.LayoutViewName;
+                updated = true;
+            }
+            if (this.ThemeName != from.ThemeName)
+            {
+                this.ThemeName = from.ThemeName;
+                updated = true;
+            }
+
+            //todo: should we allow merging of roles, claims and authenticated?
+            if (this.Authenticated != from.Authenticated)
+            {
+                this.Authenticated = from.Authenticated;
+                updated = true;
+            }
+
+            foreach (var widget in from.Widgets)
+            {
+                if (!this.Widgets.Exists(w => w.PaneName == widget.PaneName && w.ManifestId == widget.ManifestId))
+                {
+                    this.Widgets.Add(widget);
+                    updated = true;
+                }
+            }
+            return updated;
+        }
+
+
     }
 
 }

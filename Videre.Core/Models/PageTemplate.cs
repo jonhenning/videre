@@ -152,6 +152,14 @@ namespace Videre.Core.Models
                 this.LayoutId = from.LayoutId;
                 updated = true;
             }
+
+            //todo: should we allow merging of roles, claims and authenticated?
+            if (this.Authenticated != from.Authenticated)
+            {
+                this.Authenticated = from.Authenticated;
+                updated = true;
+            }
+
             foreach (var url in from.Urls)
             {
                 if (!this.Urls.Contains(url))
@@ -160,6 +168,7 @@ namespace Videre.Core.Models
                     updated = true;
                 }
             }
+           
             foreach (var widget in from.Widgets)
             {
                 if (!this.Widgets.Exists(w => w.PaneName == widget.PaneName && w.ManifestId == widget.ManifestId))

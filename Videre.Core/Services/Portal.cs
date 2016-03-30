@@ -293,7 +293,7 @@ namespace Videre.Core.Services
                     "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template"));
         }
 
-        public static int RegisterPageTemplate(string title, string url, string layoutName, string widgetPaneName, string widgetManifestFullName)
+        public static int RegisterPageTemplate(string title, string url, string layoutName, string widgetPaneName, string widgetManifestFullName, bool? authenticated = null)
         {
             var layout = GetLayoutTemplate(CurrentPortalId, layoutName);
             if (layout == null)
@@ -307,6 +307,7 @@ namespace Videre.Core.Services
                 Title = title,
                 Urls = new List<string>() { url },
                 LayoutId = layout.Id,
+                Authenticated = authenticated,
                 Widgets = new List<Models.Widget>()
                 {
                     new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName }
@@ -383,11 +384,18 @@ namespace Videre.Core.Services
             return res != null ? res.Data : null;
         }
 
+        public static LayoutTemplate GetLayoutTemplate(string layoutName)
+        {
+            var template = Repository.GetResources<LayoutTemplate>("LayoutTemplate", t => t.Data.PortalId == CurrentPortalId && t.Data.LayoutName == layoutName, true).SingleOrDefault();
+            return template != null ? template.Data : null;
+        }
+
         public static LayoutTemplate GetLayoutTemplate(string portalId, string layoutName)
         {
             var template = Repository.GetResources<LayoutTemplate>("LayoutTemplate", t => t.Data.PortalId == portalId && t.Data.LayoutName == layoutName, true).SingleOrDefault();
             return template != null ? template.Data : null;
         }
+
 
         public static string Save(LayoutTemplate template, string userId = null)
         {
@@ -420,6 +428,46 @@ namespace Videre.Core.Services
             throw new Exception( string.Format(
                 Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
                 "{0} already exists.   Duplicates Not Allowed.", "Core"), "LayoutTemplate"));
+        }
+
+        public static int RegisterLayoutTemplate(string layoutName, string layoutViewName, string themeName, string widgetPaneName, string widgetManifestFullName)
+        {
+            var manifest = Widget.GetWidgetManifest(widgetManifestFullName);
+            if (manifest == null)
+                throw new Exception("Widget Manifest not found: " + widgetManifestFullName);
+
+            var newTemplate = new LayoutTemplate()
+            {
+                LayoutName = layoutName,
+                LayoutViewName = layoutViewName,
+                ThemeName = themeName,
+                Widgets = new List<Models.Widget>()
+                {
+                    new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName }
+                }
+            };
+
+            return RegisterLayoutTemplate(newTemplate);
+        }
+
+        public static int RegisterLayoutTemplate(Models.LayoutTemplate template)
+        {
+            var updated = false;
+            var saveTemplate = Portal.GetLayoutTemplate(template.LayoutName);
+            if (saveTemplate == null)
+            {
+                saveTemplate = template;
+                updated = true;
+            }
+            else
+                updated = saveTemplate.Merge(template);
+
+            if (updated)
+            {
+                Portal.Save(saveTemplate);
+                return 1;
+            }
+            return 0;
         }
 
         public static bool DeleteLayoutTemplate(string id, string userId = null)
