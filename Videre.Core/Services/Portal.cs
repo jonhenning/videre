@@ -293,12 +293,12 @@ namespace Videre.Core.Services
                     "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template"));
         }
 
-        public static Models.Widget GetWidgetForTemplate(string widgetPaneName, string widgetManifestFullName)
+        public static Models.Widget GetWidgetForTemplate(string widgetPaneName, string widgetManifestFullName, List<string> contentIds = null)
         {
             var manifest = Widget.GetWidgetManifest(widgetManifestFullName);
             if (manifest == null)
                 throw new Exception("Widget Manifest not found: " + widgetManifestFullName);
-            return new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName };
+            return new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName, ContentIds = contentIds != null ? contentIds : new List<string>() };
         }
 
         public static int RegisterPageTemplate(string title, string url, string layoutName, string widgetPaneName, string widgetManifestFullName, bool? authenticated = null)
