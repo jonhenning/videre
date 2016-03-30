@@ -293,14 +293,19 @@ namespace Videre.Core.Services
                     "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template"));
         }
 
+        public static Models.Widget GetWidgetForTemplate(string widgetPaneName, string widgetManifestFullName)
+        {
+            var manifest = Widget.GetWidgetManifest(widgetManifestFullName);
+            if (manifest == null)
+                throw new Exception("Widget Manifest not found: " + widgetManifestFullName);
+            return new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName };
+        }
+
         public static int RegisterPageTemplate(string title, string url, string layoutName, string widgetPaneName, string widgetManifestFullName, bool? authenticated = null)
         {
             var layout = GetLayoutTemplate(CurrentPortalId, layoutName);
             if (layout == null)
                 throw new Exception("Layout not found: " + layoutName);
-            var manifest = Widget.GetWidgetManifest(widgetManifestFullName);
-            if (manifest == null)
-                throw new Exception("Widget Manifest not found: " + widgetManifestFullName);
 
             var newTemplate = new PageTemplate()
             {
@@ -310,13 +315,21 @@ namespace Videre.Core.Services
                 Authenticated = authenticated,
                 Widgets = new List<Models.Widget>()
                 {
-                    new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName }
+                    GetWidgetForTemplate(widgetPaneName, widgetManifestFullName)
                 }};
 
             return RegisterPageTemplate(newTemplate);
         }
 
-        public static int RegisterPageTemplate(string title, string url, string layoutName, Dictionary<string, string> paneWidgetFulleNameDict, bool? authenticated)
+        //public static int RegisterPageTemplate(string title, string url, string layoutName, Dictionary<string, string> paneWidgetFulleNameDict, bool? authenticated)
+        //{
+        //    return RegisterPageTemplate(title, url, layoutName, paneWidgetFulleNameDict.Keys.Select(widgetPaneName =>
+        //        {
+        //            return GetWidgetForTemplate(widgetPaneName, paneWidgetFulleNameDict[widgetPaneName]);
+        //        }).ToList(), authenticated);
+        //}
+
+        public static int RegisterPageTemplate(string title, string url, string layoutName, List<Models.Widget> widgets, bool? authenticated)
         {
             var layout = GetLayoutTemplate(CurrentPortalId, layoutName);
             if (layout == null)
@@ -328,17 +341,9 @@ namespace Videre.Core.Services
                 Urls = new List<string>() { url },
                 LayoutId = layout.Id,
                 Authenticated = authenticated,
-                Widgets = paneWidgetFulleNameDict.Keys.Select(widgetPaneName =>
-                {
-                    var manifest = Widget.GetWidgetManifest(paneWidgetFulleNameDict[widgetPaneName]);
-                    if (manifest == null)
-                        throw new Exception("Widget Manifest not found: " + paneWidgetFulleNameDict[widgetPaneName]);
-                    return new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName };
-                }).ToList()
+                Widgets = widgets
             };
-
             return RegisterPageTemplate(newTemplate);
-
         }
 
         public static int RegisterPageTemplate(Models.PageTemplate template)
@@ -457,10 +462,6 @@ namespace Videre.Core.Services
 
         public static int RegisterLayoutTemplate(string layoutName, string layoutViewName, string themeName, string widgetPaneName, string widgetManifestFullName)
         {
-            var manifest = Widget.GetWidgetManifest(widgetManifestFullName);
-            if (manifest == null)
-                throw new Exception("Widget Manifest not found: " + widgetManifestFullName);
-
             var newTemplate = new LayoutTemplate()
             {
                 LayoutName = layoutName,
@@ -468,27 +469,29 @@ namespace Videre.Core.Services
                 ThemeName = themeName,
                 Widgets = new List<Models.Widget>()
                 {
-                    new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName }
+                    GetWidgetForTemplate(widgetPaneName, widgetManifestFullName)
                 }
             };
 
             return RegisterLayoutTemplate(newTemplate);
         }
 
-        public static int RegisterLayoutTemplate(string layoutName, string layoutViewName, string themeName, Dictionary<string, string> paneWidgetFulleNameDict)
+        //public static int RegisterLayoutTemplate(string layoutName, string layoutViewName, string themeName, Dictionary<string, string> paneWidgetFulleNameDict)
+        //{
+        //    return RegisterLayoutTemplate(layoutViewName, layoutViewName, themeName, paneWidgetFulleNameDict.Keys.Select(widgetPaneName =>
+        //            {
+        //                return GetWidgetForTemplate(widgetPaneName, paneWidgetFulleNameDict[widgetPaneName]);
+        //            }).ToList());
+        //}
+
+        public static int RegisterLayoutTemplate(string layoutName, string layoutViewName, string themeName, List<Models.Widget> widgets)
         {
             var newTemplate = new LayoutTemplate()
             {
                 LayoutName = layoutName,
                 LayoutViewName = layoutViewName,
                 ThemeName = themeName,
-                Widgets = paneWidgetFulleNameDict.Keys.Select(widgetPaneName => 
-                    {
-                        var manifest = Widget.GetWidgetManifest(paneWidgetFulleNameDict[widgetPaneName]);
-                        if (manifest == null)
-                            throw new Exception("Widget Manifest not found: " + paneWidgetFulleNameDict[widgetPaneName]);
-                        return new Models.Widget() { ManifestId = manifest.Id, PaneName = widgetPaneName };
-                    }).ToList()
+                Widgets = widgets
             };
             return RegisterLayoutTemplate(newTemplate);
         }

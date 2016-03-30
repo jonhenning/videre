@@ -94,6 +94,20 @@ namespace Videre.Core.Services
             }
         }
 
+        public static string RegisterMenu(string name, string text, string userId = null)
+        {
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+            var menu = Get(Portal.CurrentPortalId, name);
+            if (menu == null)
+                menu = new Models.Menu()
+                {
+                    Name = name,
+                    PortalId = Portal.CurrentPortalId
+                };
+            menu.Text = text;
+            return Save(menu, userId);
+        }
+
         public static string Save(Models.Menu menu, string userId = null)
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
