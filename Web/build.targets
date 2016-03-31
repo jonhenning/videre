@@ -10,12 +10,16 @@
         <RedistDir>$(RootDir)\redist</RedistDir>
         <CommonLibDir>$(RootDir)\lib</CommonLibDir>
         <DeployDir>$(RootDir)\Web</DeployDir>
+        <ProvisioningDir></ProvisioningDir>
         <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
         <CopyConfigEnvironment>debug</CopyConfigEnvironment>
         <ConfigDir>$(ProjectDir)</ConfigDir>
     </PropertyGroup>
     <ItemGroup>
         <DeployDirs Include="$(DeployDir)" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProvisioningDirs Include="$(ProvisioningDir)" />
     </ItemGroup>
 
     <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
@@ -155,6 +159,8 @@
 
     <Target Name="Deploy" Condition="$(DeployDir) != ''">
         <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="%(DeployDirs.FullPath)\_updates" />
+        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="%(ProvisioningDirs.FullPath)" Condition="$(ProvisioningDir) != ''" />
+        <Copy SourceFiles="$(RedistDir)\$(Name).NewInstall.zip" DestinationFolder="%(ProvisioningDirs.FullPath)" Condition="$(ProvisioningDir) != ''" />
     </Target>
 
 </Project>

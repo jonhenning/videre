@@ -10,11 +10,15 @@
         <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
         <RedistDir>$(RootDir)\redist</RedistDir>
         <DeployDir>$(RootDir)\Web</DeployDir>
+        <ProvisioningDir></ProvisioningDir>
         <CommonLibDir>$(RootDir)\lib</CommonLibDir>
         <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
     </PropertyGroup>
     <ItemGroup>
         <DeployDirs Include="$(DeployDir)" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProvisioningDirs Include="$(ProvisioningDir)" />
     </ItemGroup>
     <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets')"/>
 
@@ -58,6 +62,7 @@
         <!--<MakeDir Directories="$(DeployDir)\_updates"/>
         <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(DeployDir)\_updates" />
         <Copy SourceFiles="$(RedistDir)\$(Name).zip" DestinationFolder="$(DeployDir)\_packages" />-->
+        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="%(ProvisioningDirs.FullPath)" Condition="$(ProvisioningDir) != ''" />
     </Target>
 
 </Project>
