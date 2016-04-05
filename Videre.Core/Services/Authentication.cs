@@ -759,6 +759,14 @@ namespace Videre.Core.Services
                             changes++;
                         }
                     }
+                    else if (key.Equals("timezone", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (string.IsNullOrEmpty(user.TimeZone))
+                        {
+                            user.TimeZone = authResult.ExtraData[key];
+                            changes++;
+                        }
+                    }
                     else
                     {
                         var providerKey = authResult.Provider + "-" + key;
