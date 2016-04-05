@@ -11,28 +11,50 @@ namespace Videre.Core.Services
 {
     public class ImportExport
     {
-        private static ConcurrentDictionary<string, IImportExportProvider> _importExportProviders = new ConcurrentDictionary<string, IImportExportProvider>();
+        private static ConcurrentDictionary<string, IImportExportProvider> _importExportProviders = null; //new ConcurrentDictionary<string, IImportExportProvider>();
+
+
+        public static ConcurrentDictionary<string, IImportExportProvider> importExportProviders
+        {
+            get
+            {
+                if (_importExportProviders == null)
+                {
+                    _importExportProviders = new ConcurrentDictionary<string, IImportExportProvider>();
+                    var providers = ReflectionExtensions.GetAllInstances<ImportExportProviders.IImportExportProvider>();
+
+                    Logging.Logger.InfoFormat("Found {0} import/export providers - {1}", providers.Count, providers.ToJson());
+                    foreach (var provider in providers)
+                        _importExportProviders[provider.Name] = provider;
+                    Logging.Logger.DebugFormat("Registered import/export providers: {0} ({1})", providers.Count, providers.ToJson());
+                }
+                return _importExportProviders;
+            }
+
+        }
 
         public static void RegisterProvider(IImportExportProvider provider)
         {
-            _importExportProviders[provider.Name] = provider;
+            importExportProviders[provider.Name] = provider;
         }
 
         public static IImportExportProvider GetProvider(string name)
         {
-            if (_importExportProviders.ContainsKey(name))
-                return _importExportProviders[name];
+            if (importExportProviders.ContainsKey(name))
+                return importExportProviders[name];
 
             throw new Exception(string.Format("Import Export Provider Type {0} not registered", name));
         }
 
         public static List<string> GetRegisteredProviders()
         {
-            return _importExportProviders.Values.Select(p => p.Name).OrderBy(p => p).ToList();
+            return importExportProviders.Values.Select(p => p.Name).OrderBy(p => p).ToList();
         }
 
         public static bool Import(PortalExport export, string portalId)
         {
+            Logging.Logger.DebugFormat("Import: PortalExport");
+
             var idMap = new Dictionary<string, string>();
 
             var portal = Portal.GetPortalById(portalId);
@@ -68,7 +90,10 @@ namespace Videre.Core.Services
             SetIdMap<Models.Portal>(portal.Id, export.Portal.Id, idMap);
 
             var finishedProviders = new List<string>();
-            foreach (var providerName in GetRegisteredProviders())
+            var providers = GetRegisteredProviders();
+            Logging.Logger.DebugFormat("Registered import/export providers: {0} ({1})", providers.Count, providers.ToJson());
+
+            foreach (var providerName in providers)
                 Import(providerName, export, idMap, portal.Id, finishedProviders);
 
             return true;

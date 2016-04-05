@@ -398,7 +398,7 @@ namespace Videre.Core.Services
             //    Services.Update.RegisterWidgets();
             //}
             Services.Update.RegisterWidgets();
-            Services.Update.RegisterImportExportProviders();
+            //Services.Update.RegisterImportExportProviders();
             Services.Authentication.RegisterAuthenticationProviders();
             Services.Authentication.RegisterAuthenticationResetProviders();
             Services.WebReferenceBundler.RegisterWebReferenceBundlers();
@@ -421,12 +421,16 @@ namespace Videre.Core.Services
 
         }
 
+        [Obsolete()]
         public static void RegisterImportExportProviders()
         {
-            var providers = ReflectionExtensions.GetAllInstances<ImportExportProviders.IImportExportProvider>();
+            //var providers = ReflectionExtensions.GetAllInstances<ImportExportProviders.IImportExportProvider>();
 
-            foreach (var provider in providers)
-                Services.ImportExport.RegisterProvider(provider);
+            //Logging.Logger.InfoFormat("Found {0} import/export providers - {1}", providers.Count, providers.ToJson());
+            //foreach (var provider in providers)
+            //    Services.ImportExport.RegisterProvider(provider);
+            //Logging.Logger.DebugFormat("Registered import/export providers: {0} ({1})", providers.Count, providers.ToJson());
+
         }
 
         public static int RegisterPortals(bool persist = true)

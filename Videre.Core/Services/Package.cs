@@ -203,6 +203,9 @@ namespace Videre.Core.Services
             var count = 0;
             
             var content = GetPackageContent(zipFileName);
+
+            Logging.Logger.InfoFormat("Getting content for file: {0}", zipFileName);
+
             foreach (var portalExport in content)
             {
                 var hash = Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"));
@@ -212,6 +215,8 @@ namespace Videre.Core.Services
                     Package.AddAppliedImportHash(new System.IO.FileInfo(zipFileName).Name, hash);
                     count++;
                 }
+                else
+                    Logging.Logger.InfoFormat("Hash exists for content: {0} ({1})", hash);
             }
 
             return count;
