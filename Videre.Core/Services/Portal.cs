@@ -303,33 +303,20 @@ namespace Videre.Core.Services
 
         public static int RegisterPageTemplate(string title, string url, string layoutName, string widgetPaneName, string widgetManifestFullName, bool? authenticated = null)
         {
-            var layout = GetLayoutTemplate(CurrentPortalId, layoutName);
-            if (layout == null)
-                throw new Exception("Layout not found: " + layoutName);
-
-            var newTemplate = new PageTemplate()
-            {
-                Title = title,
-                Urls = new List<string>() { url },
-                LayoutId = layout.Id,
-                Authenticated = authenticated,
-                Widgets = new List<Models.Widget>()
-                {
-                    GetWidgetForTemplate(widgetPaneName, widgetManifestFullName)
-                }};
-
-            return RegisterPageTemplate(newTemplate);
+            return RegisterPageTemplate(title, new List<string>() { url }, layoutName, widgetPaneName, widgetManifestFullName, authenticated);
+        }
+        public static int RegisterPageTemplate(string title, List<string> urls, string layoutName, string widgetPaneName, string widgetManifestFullName, bool? authenticated = null)
+        {
+            var widgets = new List<Models.Widget>() { GetWidgetForTemplate(widgetPaneName, widgetManifestFullName) };
+            return RegisterPageTemplate(title, urls, layoutName, widgets, authenticated);
         }
 
-        //public static int RegisterPageTemplate(string title, string url, string layoutName, Dictionary<string, string> paneWidgetFulleNameDict, bool? authenticated)
-        //{
-        //    return RegisterPageTemplate(title, url, layoutName, paneWidgetFulleNameDict.Keys.Select(widgetPaneName =>
-        //        {
-        //            return GetWidgetForTemplate(widgetPaneName, paneWidgetFulleNameDict[widgetPaneName]);
-        //        }).ToList(), authenticated);
-        //}
-
         public static int RegisterPageTemplate(string title, string url, string layoutName, List<Models.Widget> widgets, bool? authenticated)
+        {
+            return RegisterPageTemplate(title, new List<string>() { url }, layoutName, widgets, authenticated);
+        }
+
+        public static int RegisterPageTemplate(string title, List<string> urls, string layoutName, List<Models.Widget> widgets, bool? authenticated)
         {
             var layout = GetLayoutTemplate(CurrentPortalId, layoutName);
             if (layout == null)
@@ -338,7 +325,7 @@ namespace Videre.Core.Services
             var newTemplate = new PageTemplate()
             {
                 Title = title,
-                Urls = new List<string>() { url },
+                Urls = urls,
                 LayoutId = layout.Id,
                 Authenticated = authenticated,
                 Widgets = widgets
