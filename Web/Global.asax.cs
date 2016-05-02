@@ -87,16 +87,21 @@ namespace Videre.Web
             }
             catch (Exception ex)
             {
-                Application["ApplicationStartError"] = ex;  //set application state notifying that we failed...  will notify every request (BeginRequest) that our site is not running
-                Services.Logging.Logger.Error("Application_Start", ex);
+                Services.Portal.RegisterFailedStartup(ex);
+                //Application["ApplicationStartError"] = ex;  //set application state notifying that we failed...  will notify every request (BeginRequest) that our site is not running
+                //Services.Logging.Logger.Error("Application_Start", ex);
                 //HttpRuntime.UnloadAppDomain();
             }
         }
 
         public void Application_BeginRequest(object sender, EventArgs e)
         {
-            if (Application["ApplicationStartError"] != null)
-                showErrorPage("[Application_Start]", " ", (Exception)Application["ApplicationStartError"]);
+            //if (Application["ApplicationStartError"] != null)
+            if (Services.Portal.StartupFailed)
+            {
+                showErrorPage("[Application_Start]", " ", Services.Portal.ApplicationStartupException);
+                Services.Portal.HandleFailedStartup();
+            }
         }
 
         private void showErrorPage(string controllerName, string actionName, Exception exception)

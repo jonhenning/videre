@@ -125,9 +125,10 @@ namespace Videre.Core.Services
 
         public static string GetPortalText(string key, string defaultValue)
         {
-            return Services.Localization.GetLocalization(LocalizationType.Portal, key, defaultValue, Services.Portal.CurrentPortalId, portalId: Services.Portal.CurrentPortalId);
+            if (!Portal.StartupFailed)
+                return Services.Localization.GetLocalization(LocalizationType.Portal, key, defaultValue, Services.Portal.CurrentPortalId, portalId: Services.Portal.CurrentPortalId);
+            return defaultValue;
         }
-
 
         public static string GetLocalization(LocalizationType type, string key, string defaultText, string ns, string locale = null, string portalId = null, bool create = true)
         {

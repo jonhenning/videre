@@ -36,6 +36,28 @@ namespace Videre.Core.Services
 
         public static object clientIdLock = new object();
 
+
+        private static DateTimeOffset? _startupFailTime;
+        public static Exception ApplicationStartupException {get;set;}
+        public static bool StartupFailed { get { return ApplicationStartupException != null; } } 
+        public static void RegisterFailedStartup(Exception ex)
+        {
+            if (ApplicationStartupException == null)
+            {
+                _startupFailTime = DateTimeOffset.Now;
+                ApplicationStartupException = ex;
+                Services.Logging.Logger.Error("HandleStartupFailed", ex);
+            }
+        }
+
+        public static void HandleFailedStartup()
+        {
+            if (_startupFailTime.HasValue && DateTimeOffset.Now.Subtract(_startupFailTime.Value).TotalSeconds > 5)
+            {
+                HttpRuntime.UnloadAppDomain();
+            }
+        }
+
         public static bool IsInRequest
         {
             get
