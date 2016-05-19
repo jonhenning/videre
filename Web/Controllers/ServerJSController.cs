@@ -22,7 +22,7 @@ namespace Videre.Web.Controllers
 
             var locs = Services.Localization.GetLocalizations(Core.Models.LocalizationType.Portal, l => l.Key.EndsWith(".Client"));
 
-            var script = string.Format("videre.localization.items = {0};",
+            var script = string.Format("videre.localization.items.addRange({0});",
                 locs.Select(l => new { key = l.Key.Replace(".Client", ""), value = l.Text, ns = "global" }).ToJson());
 
             var dateFormat = Services.Account.GetUserDateFormat("date", false);

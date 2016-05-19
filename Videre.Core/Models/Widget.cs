@@ -137,6 +137,19 @@ namespace Videre.Core.Models
             return Services.Localization.GetLocalization(LocalizationType.Widget, key, defaultValue, Manifest.FullName);
         }
 
+        public void RegisterClientLocalization(HtmlHelper helper, string key, string defaultValue)
+        {
+            RegisterClientLocalizations(helper, new Dictionary<string, string>() { { key, defaultValue } });
+        }
+
+        public void RegisterClientLocalizations(HtmlHelper helper, Dictionary<string, string> localizations)
+        {
+            var translations = new Dictionary<string, string>();
+            foreach (var key in localizations.Keys)
+                translations[key] = GetText(key, localizations[key]);
+            helper.RegisterClientLocalizations(Manifest.FullName, localizations);
+        }
+
         public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null, bool preserveObjectReferences = false)
         {
             properties = properties ?? new Dictionary<string, object>();
@@ -149,6 +162,7 @@ namespace Videre.Core.Models
             properties["id"] = ClientId;
             properties["ns"] = ClientId;
             properties["wid"] = Id;
+            properties["mns"] = Manifest.FullName;
             //properties["user"] = Services.Account.GetClientUser();
 
             helper.RegisterDocumentReadyScript(

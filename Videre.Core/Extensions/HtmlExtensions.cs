@@ -134,6 +134,38 @@ namespace Videre.Core.Extensions
             }
             //}
         }
+
+        public static void RegisterClientLocalizations(this HtmlHelper helper, string ns, Dictionary<string, string> localizations)
+        {
+            var scriptKey = "RegisteredClientLocalizations";
+            var registeredLocalizations = helper.GetContextItem<ConcurrentDictionary<string, ConcurrentDictionary<string, string>>>(scriptKey);
+
+            if (!registeredLocalizations.ContainsKey(ns))
+                registeredLocalizations[ns] = new ConcurrentDictionary<string, string>();
+            foreach (var key in localizations.Keys)
+                registeredLocalizations[ns][key] = localizations[key];
+
+            var script = string.Format("videre.localization.items.addRange({0});", generateLocalizationItems(registeredLocalizations));
+            var clientLocalization = Services.WebReferenceBundler.GetReferenceList(helper, "documentreadyjs").Where(r => r.Src == "clientLocalization").FirstOrDefault();
+            if (clientLocalization != null)
+                clientLocalization.Text = script;
+            else
+                RegisterDocumentReadyScript(helper, scriptKey, script);
+
+        }
+
+        private static string generateLocalizationItems(ConcurrentDictionary<string, ConcurrentDictionary<string, string>> localizations)
+        {
+            var list = new List<object>();
+            foreach (var ns in localizations.Keys)  //merge dictionaries
+            {
+                foreach (var key in localizations[ns].Keys)
+                    list.Add(new {ns = ns, key = key, value = localizations[ns][key]});
+            }
+            return list.ToJson();
+        }
+
+
         public static void RegisterScript(this HtmlHelper helper, string src, bool defer = true, Dictionary<string, string> dataAttributes = null, bool excludeFromBundle = false)
         {
             //lock (_lockObj)

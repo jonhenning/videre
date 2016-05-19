@@ -173,9 +173,13 @@ namespace Videre.Core.Extensions
             properties["id"] = model.ClientId; //todo: not necessary now... same as ns?
             properties["ns"] = model.ClientId;
 
-            var widget = model as Widget;
-            if (widget != null)
-                properties["wid"] = widget.Id;
+            //not necessary since widget register will take care
+            //var widget = model as Widget;
+            //if (widget != null)
+            //{
+            //    properties["wid"] = widget.Id;
+            //    properties["mns"] = widget.Manifest.FullName;
+            //}
 
             //Properties["user"] = Services.Account.GetClientUser();
             //var ser = new System.Web.Script.Serialization.JavaScriptSerializer();   //no binders for date conversions...

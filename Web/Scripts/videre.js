@@ -794,6 +794,8 @@ videre.widgets.base = videre.Class.extend(
     set_id: function(v) { this._id = v; },
     get_ns: function() { return this._ns; },
     set_ns: function(v) { this._ns = v; },
+    get_mns: function() { return this._mns; },
+    set_mns: function(v) { this._mns = v; },
     get_events: function() { return this._eventHandlerList; },
     get_childWidgets: function() { return this._childWidgets; },
 
@@ -809,6 +811,7 @@ videre.widgets.base = videre.Class.extend(
         this._id = null;
         this._wid = null;
         this._ns = '';
+        this._mns = '';
         this._controls = {};
         this._childWidgets = {};
         this._eventHandlerList = new videre.UI.eventHandlerList();
@@ -1082,6 +1085,11 @@ videre.widgets.base = videre.Class.extend(
         this._messages = [];
         this.refreshMsgs(parent);
         this._getValidationCtls(parent != null ? parent : this._widget).forEach(function(item) { item.group.removeClass('has-error'); });
+    },
+
+    getText: function(key, defaultValue)
+    {
+        return videre.localization.getText(this._mns, key, defaultValue);
     },
 
     //events
