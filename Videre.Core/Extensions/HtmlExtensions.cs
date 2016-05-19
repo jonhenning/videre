@@ -146,7 +146,7 @@ namespace Videre.Core.Extensions
                 registeredLocalizations[ns][key] = localizations[key];
 
             var script = string.Format("videre.localization.items.addRange({0});", generateLocalizationItems(registeredLocalizations));
-            var clientLocalization = Services.WebReferenceBundler.GetReferenceList(helper, "documentreadyjs").Where(r => r.Src == "clientLocalization").FirstOrDefault();
+            var clientLocalization = Services.WebReferenceBundler.GetReferenceList(helper, "documentreadyjs").Where(r => r.Src == scriptKey).FirstOrDefault();
             if (clientLocalization != null)
                 clientLocalization.Text = script;
             else
