@@ -63,10 +63,12 @@ namespace Videre.Web
             {
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-                CodeEndeavors.ResourceManager.Logging.LogLevel = CodeEndeavors.ResourceManager.Logging.LoggingLevel.Verbose;
+                var logLevel = Services.Portal.GetAppSetting("LogLevel", 1);
+
+                CodeEndeavors.ResourceManager.Logging.LogLevel = (CodeEndeavors.ResourceManager.Logging.LoggingLevel)logLevel;
                 CodeEndeavors.ResourceManager.Logging.OnLoggingMessage += (message) => { Services.Logging.Logger.Info("ResourceManager: " + message); };
 
-                CodeEndeavors.Distributed.Cache.Client.Logging.LogLevel = CodeEndeavors.Distributed.Cache.Client.Logging.LoggingLevel.Verbose;
+                CodeEndeavors.Distributed.Cache.Client.Logging.LogLevel = (CodeEndeavors.Distributed.Cache.Client.Logging.LoggingLevel)logLevel;
                 CodeEndeavors.Distributed.Cache.Client.Logging.OnLoggingMessage += (message) => { Services.Logging.Logger.Info("Cache: " + message); };
 
                 Services.Logging.Logger.Debug("Application_Start");
