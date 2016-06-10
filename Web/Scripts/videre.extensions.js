@@ -442,7 +442,7 @@ Array.indexOf = function _indexOf(array, item, start)
         extensions = new arrayExt([]);
         for (var f in extensions)
         {
-            if (f != '_array' && Array.prototype[f] == null)    //don't override an existing prototype
+            if (f != '_array')// && Array.prototype[f] == null)    //don't override an existing prototype
                 Array.prototype[f] = extensions[f];
         }
 
