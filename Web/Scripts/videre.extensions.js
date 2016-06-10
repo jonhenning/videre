@@ -379,6 +379,16 @@ Array.indexOf = function _indexOf(array, item, start)
             }
             return values;
         },
+        getValues: function()
+        {
+            var values = [];
+            for (var key in this._getArray())
+            {
+                if (typeof (this._getArray()[key]) != 'function')   //todo: better way?
+                    values.push(this._getArray()[key]);
+            }
+            return values;
+        },
         forEach: function(f)
         {
             for (var i = 0; i < this._getArray().length; i++)

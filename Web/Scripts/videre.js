@@ -766,7 +766,7 @@ videre.widgets = {
     {
         var t = eval(type);
         if (t != null)
-            return videre.widgets.registeredWidgets.values().where(function(c) { return c instanceof t; });
+            return videre.widgets.registeredWidgets.getValues().where(function(c) { return c instanceof t; });
         return [];
     },
 
