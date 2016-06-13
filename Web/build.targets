@@ -160,7 +160,37 @@
     <Target Name="Deploy" Condition="$(DeployDir) != ''">
         <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="%(DeployDirs.FullPath)\_updates" />
         <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="%(ProvisioningDirs.FullPath)" Condition="$(ProvisioningDir) != ''" />
-        <Copy SourceFiles="$(RedistDir)\$(Name).NewInstall.zip" DestinationFolder="%(ProvisioningDirs.FullPath)" Condition="$(ProvisioningDir) != ''" />
+
+        <CreateItem Include="
+                    $(RedistDir)\$(Name).NewInstall.zip;
+                    $(MSBuildProjectDirectory)\_packages\bootstrap-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\bootstrap3-typeahead-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\ace-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\ckeditor-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\cleditor-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\datatables-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\dropzone-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\dynatree-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\font-awesome-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\jquery-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\jquery.easing-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\jsrender-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\md5-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\moment-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\prettify-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\valums-file-uploader-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre-docs-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre-sidenav-*.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre.Core.Layouts.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre.Core.Widgets.zip;
+                    $(MSBuildProjectDirectory)\_packages\Videre.CoreSiteTemplate.zip;
+                    $(MSBuildProjectDirectory)\_packages\videre.FirstTimeUserContent.zip;
+                    $(MSBuildProjectDirectory)\_packages\wysihtml5-*.zip;
+                    ">
+            <Output TaskParameter="Include" ItemName="ProvisioningFiles"/>
+        </CreateItem>
+
+        <Copy SourceFiles="@(ProvisioningFiles)" DestinationFolder="%(ProvisioningDirs.FullPath)" Condition="$(ProvisioningDir) != ''" />
     </Target>
 
 </Project>
