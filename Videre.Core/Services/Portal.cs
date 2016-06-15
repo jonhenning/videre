@@ -211,7 +211,7 @@ namespace Videre.Core.Services
         {
             portalId = string.IsNullOrEmpty(portalId) ? CurrentPortalId : portalId;
             var templates = GetPageTemplates(portalId);
-            return templates.Where(t2 => ((string.IsNullOrEmpty(url) && t2.Urls.Count == 0) || t2.Urls.Contains(url)) && t2.PortalId == portalId).ToList();
+            return templates.Where(t2 => ((string.IsNullOrEmpty(url) && t2.IsDefault) || t2.Urls.Contains(url)) && t2.PortalId == portalId).ToList();
         }
 
         public static PageTemplate GetMatchedTemplate(string url, string portalId = null)
@@ -234,7 +234,7 @@ namespace Videre.Core.Services
                 }
             }
             CurrentUrl = string.Empty;
-            return getBestOfMultipleMatched(templates.Where(t => t.Urls.Count == 0)); //grab default template
+            return getBestOfMultipleMatched(templates.Where(t => t.IsDefault)); //grab default template
         }
 
         private static PageTemplate getBestOfMultipleMatched(IEnumerable<PageTemplate> templates)

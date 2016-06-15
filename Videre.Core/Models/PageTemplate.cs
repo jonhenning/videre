@@ -89,7 +89,7 @@ namespace Videre.Core.Models
         {
             get
             {
-                return Urls.Count == 0 || Urls.Contains("");
+                return Urls.Count == 0 || Urls.Contains("") || Urls.Contains("[default]");
             }
         }
 
