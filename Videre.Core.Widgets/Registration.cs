@@ -234,7 +234,8 @@ namespace Videre.Core.Widgets
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Account", Name = "Impersonation", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Content", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
                 new CoreModels.SecureActivity() { PortalId = portalId, Area = "Comment", Name = "Administration", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
-                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Search", Name = "Upload", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Search", Name = "Upload", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} },
+                new CoreModels.SecureActivity() { PortalId = portalId, Area = "Profiler", Name = "Glimpse", RoleIds = new List<string>() {CoreServices.Update.GetAdminRoleId(portalId)} }
             });
 
             updates += CoreServices.Update.Register(Services.Web.GetDefaultWebReferences(portalId));
