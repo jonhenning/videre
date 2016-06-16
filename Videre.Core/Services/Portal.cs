@@ -221,7 +221,7 @@ namespace Videre.Core.Services
             var templates = Repository.GetResources<PageTemplate>("Template", t => t.Data.PortalId == portalId).Select(t => t.Data);
             if (!string.IsNullOrEmpty(url))
             {
-                var bestMatch = RouteParser.GetBestMatchedUrl(url, templates.SelectMany(t => t.Urls));
+                var bestMatch = RouteParser.GetBestMatchedUrl(url, templates.SelectMany(t => t.Urls.Where(u => u != "[default]")));
                 if (!string.IsNullOrEmpty(bestMatch))
                 {
                     if (IsInRequest)
