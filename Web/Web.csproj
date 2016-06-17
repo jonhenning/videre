@@ -185,7 +185,6 @@
     <Compile Include="Controllers\RouteController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Profiler\GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
