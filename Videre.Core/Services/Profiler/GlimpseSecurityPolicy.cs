@@ -1,7 +1,7 @@
 using Glimpse.AspNet.Extensions;
 using Glimpse.Core.Extensibility;
 
-namespace Videre.Web.Profiler
+namespace Videre.Core.Services.Profiler
 {
     public class GlimpseSecurityPolicy:IRuntimePolicy
     {

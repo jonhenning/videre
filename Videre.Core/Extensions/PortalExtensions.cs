@@ -47,15 +47,18 @@ namespace Videre.Core.Extensions
             {
                 if (!defer)
                 {
-                    widget.ClientId = Portal.NextClientId();
-                    try
+                    using (Videre.Core.Services.Profiler.Timeline.Capture("Rendering Widget: " + widget.Manifest.Name))
                     {
-                        helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
-                        helper.RegisterWebReferences(widget.WebReferences);
-                    }
-                    catch (Exception ex)
-                    {
-                        helper.RenderPartial("Widgets/Core/Error", widget, new ViewDataDictionary {{"Exception", ex}});
+                        widget.ClientId = Portal.NextClientId();
+                        try
+                        {
+                            helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
+                            helper.RegisterWebReferences(widget.WebReferences);
+                        }
+                        catch (Exception ex)
+                        {
+                            helper.RenderPartial("Widgets/Core/Error", widget, new ViewDataDictionary { { "Exception", ex } });
+                        }
                     }
                 }
                 else
@@ -126,12 +129,15 @@ namespace Videre.Core.Extensions
 
         public static string RenderControl(this HtmlHelper helper, string path, string name, object viewData = null, bool separateNamespace = true)
         {
-            var control = new Models.Control(path);
-            if (separateNamespace)
-                control.ClientId = Portal.NextClientId();
-            //it would be nice if the ViewDataDictionary accepted anonymous objects
-            helper.RenderPartial("Controls/" + path.PathCombine(name, "/"), control, new ViewDataDictionary(viewData.ToJson().ToObject<ViewDataDictionary>()));
-            return control.ClientId;
+            using (Videre.Core.Services.Profiler.Timeline.Capture("Rendering Control: " + name))
+            {
+                var control = new Models.Control(path);
+                if (separateNamespace)
+                    control.ClientId = Portal.NextClientId();
+                //it would be nice if the ViewDataDictionary accepted anonymous objects
+                helper.RenderPartial("Controls/" + path.PathCombine(name, "/"), control, new ViewDataDictionary(viewData.ToJson().ToObject<ViewDataDictionary>()));
+                return control.ClientId;
+            }
         }
 
         public static void RenderWidgetEditor(this HtmlHelper helper, WidgetManifest manifest)
