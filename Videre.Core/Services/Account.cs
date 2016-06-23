@@ -178,10 +178,11 @@ namespace Videre.Core.Services
             if (user == null)
             {
                 user = AccountService.GetById(id);  //todo: this could be expensive to do a lookup to the database each time!
+
+                if (clone)  //we are ok with cloning only once inside requestcache...  
+                    user = user.JsonClone();
                 Portal.SetRequestContextData("VidereUserRequestCache-" + id, user);
             }
-            if (clone)
-                return user.JsonClone();
             return user;
         }
 
