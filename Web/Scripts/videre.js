@@ -908,6 +908,7 @@ videre.widgets.base = videre.Class.extend(
             onFail,
             {
                 onSuccess: onSuccess,
+                onFail: onFail,
                 parent: parent,
                 ctx: ctx
             },
@@ -974,6 +975,8 @@ videre.widgets.base = videre.Class.extend(
             if (ctx.onSuccess != null)
                 ctx.onSuccess(result, ctx.ctx);
         }
+        else if (ctx.onFail != null)
+            ctx.onFail(result, ctx.ctx);
         this.addMsgs(result.Messages, ctx.parent);
     },
 
