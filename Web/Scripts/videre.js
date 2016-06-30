@@ -976,7 +976,7 @@ videre.widgets.base = videre.Class.extend(
                 ctx.onSuccess(result, ctx.ctx);
         }
         else if (ctx.onFail != null)
-            ctx.onFail(result, ctx.ctx);
+            ctx.onFail(result, ctx);
         this.addMsgs(result.Messages, ctx.parent);
     },
 
