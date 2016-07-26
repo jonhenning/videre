@@ -38,6 +38,7 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
         IBootstrapDateTimePicker Plugin(string plugin);
         IBootstrapDateTimePicker TimeZone(string timeZone);
         IBootstrapDateTimePicker UserTimeZone();
+        IBootstrapDateTimePicker UtcTimeZone();
         //IBootstrapDateTimePicker PickDate(bool pickDate);
         //IBootstrapDateTimePicker PickTime(bool pickTime);
     }
@@ -72,6 +73,14 @@ namespace Videre.Core.Extensions.Bootstrap.Controls
             this._html.RegisterTimeZoneScript(name);
             return TimeZone(name);
         }
+
+        public IBootstrapDateTimePicker UtcTimeZone()
+        {
+            var name = TimeZoneInfo.Utc.StandardName;
+            this._html.RegisterTimeZoneScript(name);
+            return TimeZone(name);
+        }
+        
         //public IBootstrapDateTimePicker PickDate(bool pickDate)
         //{
         //    this._model.pickDate = pickDate;
