@@ -411,7 +411,7 @@ videre.UI = {
     setControlValue: function(ctl, val, data)
     {
         var dataType = videre.UI._dataTypes[ctl.data('datatype')];
-        if (dataType != null && dataType.get != null)
+        if (dataType != null && dataType.get != null && ctl.data('datatype') != 'datetime') //cannot lose timezone (or reset it).  
             val = dataType.get(val, ctl.data());
 
         var controlType = videre.UI._controlTypes[ctl.data('controltype')];
