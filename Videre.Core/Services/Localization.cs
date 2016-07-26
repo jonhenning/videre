@@ -141,7 +141,7 @@ namespace Videre.Core.Services
                 var loc = Repository.GetResourceData<Models.Localization>(type.ToString(), key, GetLocalizationQueries(portalId, ns, locale), null);
                 if (loc == null && create)
                     Services.Localization.Save(new Models.Localization() { Type = type, Key = key, Namespace = ns, Locale = null, PortalId = portalId, Text = defaultText }, Services.Account.AuditId);
-                else
+                else if (loc != null)
                     text = loc.Text;
 
                 return text;

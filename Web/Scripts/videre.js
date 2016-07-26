@@ -893,8 +893,6 @@ videre.widgets.base = videre.Class.extend(
     {
         this.clearMsgs(parent);
         this.lock(parent);
-        if (onFail == null)
-            onFail = this._baseDelegates.onAjaxFail;
 
         var defaultOptions =
         {
@@ -905,7 +903,7 @@ videre.widgets.base = videre.Class.extend(
             url,
             params,
             this._baseDelegates.onAjaxSuccess,
-            onFail,
+            this._baseDelegates.onAjaxFail,
             {
                 onSuccess: onSuccess,
                 onFail: onFail,
