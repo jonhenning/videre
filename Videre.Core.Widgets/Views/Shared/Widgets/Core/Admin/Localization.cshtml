@@ -22,8 +22,11 @@
     <div class="row">
         <div class="col-md-3">
             <div class="btn-toolbar" role="toolbar">
+                @Html.Bootstrap().DropDownList("ddlFilterType").InputSize(BootstrapUnits.InputSize.Small).Css("form-control").Options(Enum.GetNames(typeof(Models.LocalizationType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.LocalizationType>()).ToString(), Text = t }).ToList())
                 <div class="btn-group">
-                    @Html.Bootstrap().DropDownList("ddlFilterType").InputSize(BootstrapUnits.InputSize.Small).Css("form-control").Options(Enum.GetNames(typeof(Models.LocalizationType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.LocalizationType>()).ToString(), Text = t }).ToList()).Append(Html.Bootstrap().Button("btnNew").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewEntry.Text", "New Entry", true).Icon("glyphicon glyphicon-plus"))
+                    @Html.Bootstrap().Button("btnNew").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("NewEntry.Text", "New Entry", true).Icon("glyphicon glyphicon-plus")
+                    @Html.Bootstrap().Button("btnDownload").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("Download.Text", "Download", true).Icon("glyphicon glyphicon-download-alt")
+                    @Html.Bootstrap().Upload("btnUpload").ButtonSize(BootstrapUnits.ButtonSize.Small).Text("Upload.Text", "Upload").Icon("glyphicon glyphicon-upload")
                 </div>
             </div>
             <div id="@Model.GetId("Tree")" style="overflow: auto; height: 500px; padding:0; margin:0;" class="col-md-12"></div>
@@ -44,8 +47,8 @@
                 <tr>
                     <td>
                         <div class="btn-group">
-                        @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
-                        @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                            @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "edit").Icon("glyphicon glyphicon-pencil").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
+                            @Html.Bootstrap().Button().DataAttribute("id", "{{:Id}}").DataAttribute("action", "delete").Icon("glyphicon glyphicon-trash").ButtonSize(BootstrapUnits.ButtonSize.ExtraSmall)
                         </div>
                     </td>
                     <td>{{:Locale}}</td>
@@ -67,7 +70,7 @@
                         <div class="form-horizontal">
                             @*@Html.DropDownControlGroup(Model, "ddlPortal", "Portal.Text", "Portal", "PortalId", Videre.Core.Services.Portal.GetPortals().Select(p => new SelectListItem() { Value = p.Id, Text = p.Name }))*@
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Type.Text", "Type").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().DropDownList().DataColumn("Type").Options(Enum.GetNames(typeof(Models.LocalizationType)).Select(t => new SelectListItem() { Value = ((int)t.ToType<Models.LocalizationType>()).ToString(), Text = t }).ToList()), BootstrapUnits.GridSize.MediumDevice4)
-                            
+
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Locale.Text", "Locale").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Locale"), BootstrapUnits.GridSize.MediumDevice4)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Namespace.Text", "Namespace").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Namespace").Required(), BootstrapUnits.GridSize.MediumDevice9)
                             @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("Key.Text", "Key").GridSize(BootstrapUnits.GridSize.MediumDevice3), Html.Bootstrap().TextBox().DataColumn("Key").Required(), BootstrapUnits.GridSize.MediumDevice9)

@@ -40,7 +40,19 @@ videre.widgets.admin.localization = videre.widgets.base.extend(
         this._dialog = this.getControl('Dialog').modal('hide');
         this.getControl('btnNew').click(videre.createDelegate(this, this._onNewClicked));
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
+        this.getControl('btnDownload').click(videre.createDelegate(this, this._onDownloadClicked));
         this.getControl('ddlFilterType').change(videre.createDelegate(this, this._onTypeChanged));
+
+        var uploader = new qq.FileUploaderBasic({
+            button: this.getControl('btnUpload')[0],
+            params: {},
+            action: videre.resolveUrl('~/core/Localization/ApplyLanguagePack'),
+            onSubmit: videre.createDelegate(this, this._onFileSubmit),
+            onComplete: videre.createDelegate(this, this._onFileUploadReturn),
+            showMessage: videre.createDelegate(this, this._onFileMessage),
+            debug: true
+        });
+
 
         this.refresh();
     },
@@ -117,11 +129,17 @@ videre.widgets.admin.localization = videre.widgets.base.extend(
         }
     },
 
+    download: function()
+    {
+        var type = videre.UI.getControlValue(this.getControl('ddlFilterType'));
+        videre.download('~/core/Localization/GenerateLanguagePackFile', { type: type });
+    },
+
     deleteItem: function(id)
     {
         //if (confirm('Are you sure you wish to remove this entry?'))
         var self = this;
-        videre.UI.confirm('Delete Entry', 'Are you sure you wish to remove this entry?', function ()
+        videre.UI.confirm('Delete Entry', 'Are you sure you wish to remove this entry?', function()
         {
             self.ajax('~/core/Localization/Delete', { id: id }, self._delegates.onSaveReturn);
         });
@@ -180,10 +198,37 @@ videre.widgets.admin.localization = videre.widgets.base.extend(
         this.save();
     },
 
+    _onDownloadClicked: function(e)
+    {
+        this.download();
+    },
+
     _onTypeChanged: function(e)
     {
         this.refresh();
+    },
+
+    _onFileSubmit: function(id, fileName)
+    {
+        this.lock();
+    },
+
+    _onFileUploadReturn: function(id, fileName, result)
+    {
+        this.unlock();
+        if (!result.HasError)
+        {
+            this.refresh();
+        }
+        this.addMsgs(result.Messages);
+    },
+
+    _onFileMessage: function(message)
+    {
+        this.addMsg('FileMessage', message, true);   //todo: test!
+        this.refresh();
     }
+
 
 });
 

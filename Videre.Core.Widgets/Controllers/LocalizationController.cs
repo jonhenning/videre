@@ -8,6 +8,8 @@ using Videre.Core.Services;
 using CodeEndeavors.Extensions;
 using CoreModels = Videre.Core.Models;
 using CoreServices = Videre.Core.Services;
+using Videre.Core.Models;
+using System.IO;
 
 namespace Videre.Core.Widgets.Controllers
 {
@@ -15,14 +17,16 @@ namespace Videre.Core.Widgets.Controllers
     {
         public JsonResult<List<CoreModels.Localization>> Get(string Type)
         {
-            return API.Execute<List<CoreModels.Localization>>(r => {
-                r.Data = CoreServices.Localization.Get(Type.ToObject<CoreModels.LocalizationType>(), CoreServices.Portal.CurrentPortalId); 
+            return API.Execute<List<CoreModels.Localization>>(r =>
+            {
+                r.Data = CoreServices.Localization.Get(Type.ToObject<CoreModels.LocalizationType>(), CoreServices.Portal.CurrentPortalId);
             });
         }
 
         public JsonResult<bool> Save(CoreModels.Localization Localization)
         {
-            return API.Execute<bool>(r => {
+            return API.Execute<bool>(r =>
+            {
                 CoreServices.Security.VerifyActivityAuthorized("Localization", "Administration");
                 r.Data = CoreServices.Localization.Save(Localization) != null;
             });
@@ -66,6 +70,32 @@ namespace Videre.Core.Widgets.Controllers
                 r.Data = new { localizations = localizations, idCounts = dict };
             });
         }
+
+        public FileStreamResult GenerateLanguagePackFile(string type)  //LocalizationType type
+        {
+            var localizationType = type.ToObject<LocalizationType>();
+            var bytes = Services.Localization.GenerateLanguagePackFile(localizationType);
+            var result = new FileStreamResult(new MemoryStream(bytes), "text/csv");
+            result.FileDownloadName = localizationType.ToString() + "-LanguagePack.csv";
+            return result;
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult<dynamic> ApplyLanguagePack(string qqfile)
+        {
+            return API.Execute<dynamic>(r =>
+            {
+                r.ContentType = "text/html";
+                var data = new StreamReader(Request.InputStream).ReadToEnd();
+                var recordsProcessed = Services.Localization.ApplyLanguagePackFile(data);
+
+                if (recordsProcessed.HasValue)
+                    r.AddMessage(string.Format(Services.Localization.GetPortalText("ApplyLanguagePack.Text", "Successfully applied {0} localizations"), recordsProcessed.Value));
+                else
+                    r.AddMessage(Services.Localization.GetPortalText("ApplyLanguagePackFailed.Text", "Failed applying localizations"));
+            }, false);
+        }
+
 
     }
 }

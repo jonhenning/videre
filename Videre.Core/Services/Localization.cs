@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeEndeavors.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,8 @@ using DomainObjects = CodeEndeavors.ResourceManager.DomainObjects;
 using Videre.Core.Models;
 using CodeEndeavors.ResourceManager.Extensions;
 using System.Web;
+using CodeEndeavors.ResourceManager.DomainObjects;
+using System.IO;
 
 namespace Videre.Core.Services
 {
@@ -43,14 +46,14 @@ namespace Videre.Core.Services
 
         public static Models.Localization Get(string portalId, LocalizationType type, string ns, string key, string locale)
         {
-            return Repository.GetResources<Models.Localization>(type.ToString(), l => 
-                l.Data.PortalId == portalId && 
-                l.Data.Namespace == ns && 
-                l.Data.Key == key && 
-                ((string.IsNullOrEmpty(l.Data.Locale) && string.IsNullOrEmpty(locale) ) || (l.Data.Locale == locale ))
-                ).Select(l => l.Data).SingleOrDefault();
+            return Repository.GetResources<Models.Localization>(type.ToString(), l =>
+                l.Data.PortalId == portalId &&
+                l.Data.Namespace == ns &&
+                l.Data.Key == key &&
+                ((string.IsNullOrEmpty(l.Data.Locale) && string.IsNullOrEmpty(locale)) || (l.Data.Locale == locale))
+                ).Select(l => l.Data).FirstOrDefault();
         }
-        
+
         public static List<Models.Localization> Get(LocalizationType type, string portalId)
         {
             return Repository.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId).Select(l => l.Data).ToList();
@@ -69,6 +72,46 @@ namespace Videre.Core.Services
             localization.PortalId = portalId;
             localization.Id = existing != null ? existing.Id : null;
             return Save(localization, userId);
+        }
+
+        public static int Import(string portalId, List<Models.Localization> localizations, string userId = null)
+        {
+            int updated = 0;
+            userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
+
+            var existingLocalizations = Localization.Get(portalId);
+
+            foreach (var localization in localizations)
+            {
+                if (localization.Type == LocalizationType.Portal)
+                    localization.Namespace = portalId;   //type portal uses portalid as namespace
+
+                var existing = existingLocalizations.Where(l =>
+                    l.PortalId == portalId &&
+                    l.Namespace == localization.Namespace &&
+                    l.Key == localization.Key &&
+                    ((string.IsNullOrEmpty(l.Locale) && string.IsNullOrEmpty(localization.Locale)) || l.Locale == localization.Locale)).FirstOrDefault();
+
+                localization.PortalId = portalId;
+                localization.Id = existing != null ? existing.Id : null;
+                if (existing == null || existing.Text != localization.Text)
+                {
+                    if (string.IsNullOrEmpty(localization.Text))
+                    {
+                        if (existing != null)
+                        {
+                            Delete(existing.Id, userId);
+                            updated++;
+                        }
+                    }
+                    else
+                    {
+                        Save(localization, userId);
+                        updated++;
+                    }
+                }
+            }
+            return updated;
         }
 
         public static string Save(Models.Localization localization, string userId = null)
@@ -90,8 +133,6 @@ namespace Videre.Core.Services
             var items = Repository.GetResources<Models.Localization>(localization.Type.ToString(), localization.Key,
                 l => l.Data.Locale == localization.Locale && l.Data.PortalId == localization.PortalId && l.Data.Namespace == localization.Namespace);
             return items.Exists(l => l.Id != localization.Id);
-                //    ).Exists(l => l.Id != localization.Id);
-                    //&& l.Data.Type != LocalizationType.WidgetContent).Exists(l => l.Id != localization.Id);
         }
 
         public static bool Delete(string id, string userId = null)
@@ -173,21 +214,31 @@ namespace Videre.Core.Services
             if (matches.Count > 0)
                 return matches[0].DisplayText;
             return defaultValue;
-            
+
             //var content = Repository.Get(Content.Select(c => c.ToResource()).ToList(), GetLocalizationQueries(CurrentUserLocale), true);
             //if (content.Count > 0)
             //    return content[0].Data;
             //return DefaultValue;
         }
 
-        public static List<Models.Localization> GetLocalizations(LocalizationType type, Func<Models.Localization, bool> query, string portalId = null)
+        public static List<Models.Localization> GetLocalizations(LocalizationType type, string portalId = null)
         {
-            portalId = string.IsNullOrEmpty(portalId) ? Services.Portal.CurrentPortalId : portalId; 
+            return GetLocalizations(type, null, portalId);
+        }
+        public static List<Models.Localization> GetLocalizations(LocalizationType type, Func<Resource<Models.Localization>, bool> query, string portalId = null)
+        {
+            portalId = string.IsNullOrEmpty(portalId) ? Services.Portal.CurrentPortalId : portalId;
             //var locs = Get(type, portalId).Where(query);
             var queries = GetLocalizationQueries(portalId, portalId, CurrentUserLocale); //GetLocalizationQueries(CurrentUserLocale);
-            var resourceLocs = Repository.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId && l.Data.Key.EndsWith(".Client"));
+
+            //combine lambdas
+            Func<Resource<Models.Localization>, bool> portalQuery = (l => l.Data.PortalId == portalId);
+            Func<Resource<Models.Localization>, dynamic> combinedQuery = l => portalQuery(l);
+            if (query != null)
+                combinedQuery = (l => query(l) && portalQuery(l));
+
+            var resourceLocs = Repository.GetResources<Models.Localization>(type.ToString(), combinedQuery);
             return Repository.GetResources<Models.Localization>(resourceLocs, queries, true).Select(r => r.Data).ToList();
-            //return queries.GetMatches(locs, true);
         }
 
         public static string CurrentUserLocale
@@ -208,6 +259,128 @@ namespace Videre.Core.Services
                     locale = Services.Account.CurrentUser.Locale;
                 return locale;
             }
+        }
+
+        public static byte[] GenerateLanguagePackFile(LocalizationType type, string portalId = null)
+        {
+            portalId = string.IsNullOrEmpty(portalId) ? Services.Portal.CurrentPortalId : portalId;
+            var localizations = Repository.GetResources<Models.Localization>(type.ToString(), l => l.Data.PortalId == portalId).Select(l => l.Data).ToList();
+            var locales = localizations.Select(l => l.Locale).Distinct();
+            var locHierarchy = localizations.Where(l => l.Namespace != null).GroupBy(l => l.Namespace).ToDictionary(l => l.Key, l => l.GroupBy(l2 => l2.Key).ToDictionary(l3 => l3.Key));
+
+            using (var tw = new StringWriter())
+            {
+                //resorting to tab separated output due to the fact that Microsoft still doesn't support UTF8 directly (quite unbelievable)... - https://excel.uservoice.com/forums/304921-excel-for-windows-desktop-application/suggestions/10006149-support-saving-csv-in-utf-8-encoding
+                var csv = new CsvHelper.CsvWriter(tw, new CsvHelper.Configuration.CsvConfiguration() { Encoding = Encoding.UTF8 });
+                csv.WriteField(type.ToString());
+                csv.NextRecord();
+                csv.WriteField("Namespace");
+                csv.WriteField("Code");
+
+                foreach (var locale in locales)
+                    csv.WriteField(locale);
+                csv.NextRecord();
+                foreach (var ns in locHierarchy.Keys)
+                {
+                    foreach (var key in locHierarchy[ns].Keys)
+                    {
+                        csv.WriteField(ns);
+                        csv.WriteField(key);
+                        var locs = locHierarchy[ns][key];
+                        foreach (var locale in locales)
+                        {
+                            var loc = locs.Where(l => l.Locale == locale).FirstOrDefault();
+                            if (loc != null)
+                                csv.WriteField(loc.Text);
+                            else
+                                csv.WriteField("");
+                        }
+                        csv.NextRecord();
+                    }
+                }
+                //return System.Text.Encoding.UTF8.GetBytes(tw.ToString());
+                return Encoding.UTF8.GetPreamble().Concat(System.Text.Encoding.UTF8.GetBytes(tw.ToString())).ToArray();//http://stackoverflow.com/questions/4414088/how-to-getbytes-in-c-sharp-with-utf8-encoding-with-bom/4414118#4414118
+            }
+
+        }
+
+        public static int? ApplyLanguagePackFile(string data, string portalId = null)
+        {
+            portalId = string.IsNullOrEmpty(portalId) ? Services.Portal.CurrentPortalId : portalId;
+            int? processedRows = null;
+
+            using (var tr = new StringReader(data))
+            {
+                var delimiter = ",";
+                //hack to determine if using tab delimiter.
+                var rows = data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                if (rows.Length > 1 && rows[1].IndexOf('\t') > -1)
+                    delimiter = "\t";
+
+                var csv = new CsvHelper.CsvReader(tr, new CsvHelper.Configuration.CsvConfiguration() { Encoding = Encoding.UTF8, HasHeaderRecord = false, Delimiter = delimiter });
+                if (csv.Read())
+                {
+                    var type = (LocalizationType)Enum.Parse(typeof(LocalizationType), csv.GetField<string>(0));
+                    if (csv.Read())
+                    {
+                        var locales = new List<string>();
+                        var col = 2;
+                        string locale;
+                        while (csv.TryGetField<string>(col, out locale))
+                        {
+                            locales.Add(locale);
+                            col++;
+                        }
+
+                        if (locales.Count == 0)
+                            throw new Exception(Localization.GetExceptionText("InvalidFile.Error", "Invalid File.  {0}", "Locales Missing"));
+
+                        var localizations = new List<Models.Localization>();
+
+                        while (csv.Read())
+                        {
+                            string translation;
+                            for (var i = 0; i < locales.Count; i++)
+                            {
+                                if (csv.TryGetField<string>(i + 2, out translation))
+                                {
+                                    locale = String.IsNullOrEmpty(locales[i]) ? null : locales[i];
+                                    var ns = type == LocalizationType.Portal ? portalId : csv.GetField<string>(0); //namespace is sometimes PortalId - in those cases we need to override this!!!!
+                                    var key = csv.GetField<string>(1);
+                                    var localization = new Models.Localization()
+                                    {
+                                        PortalId = portalId,
+                                        Type = type,
+                                        Namespace = ns,
+                                        Key = key,
+                                        Locale = locale,
+                                        Text = translation
+                                    };
+
+                                    localizations.Add(localization);
+                                }
+                            }
+                        }
+                        processedRows = Import(portalId, localizations);
+                    }
+                    else
+                        throw new Exception(Localization.GetExceptionText("InvalidFile.Error", "Invalid File.  {0}", "Locales Missing"));
+                }
+            }
+            return processedRows;
+        }
+
+        private static string escapeCsvText(string text)
+        {
+            if (text.Contains("\""))
+                text = String.Format("\"{0}\"", text.Replace("\"", "\"\""));
+            if (text.Contains(","))
+                text = String.Format("\"{0}\"", text);
+
+            if (text.Contains(System.Environment.NewLine))
+                text = String.Format("\"{0}\"", text);
+
+            return text;
         }
 
     }
