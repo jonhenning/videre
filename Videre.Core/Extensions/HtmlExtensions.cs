@@ -129,8 +129,8 @@ namespace Videre.Core.Extensions
                 else
                 {
                     Services.WebReferenceBundler.GetReferenceList(helper, "documentreadyjs").Add(new Models.ReferenceListItem() { Src = key, Text = script });
-                    RegisterKey(helper, key);
                 }
+                RegisterKey(helper, key);
             }
             //}
         }
