@@ -323,7 +323,7 @@ videre.UI = {
             if (videre.UI._controlTypes[name].init != null)
             {
                 videre.UI._controlTypes[name].init(ctr);
-                ctr.attr('data-controltype', name);
+                //ctr.attr('data-controltype', name);
             }
         }
     },
