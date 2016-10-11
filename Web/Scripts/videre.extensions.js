@@ -82,7 +82,11 @@ Object.deepSet = function(o, s, v)
     {
         n = a.shift();
         if (o != null && n in o)
+        {
+            if (o[n] == null)
+                o[n] = {};
             o = o[n];
+        }
         else
         {
             o[n] = {};
