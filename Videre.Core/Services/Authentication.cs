@@ -657,6 +657,12 @@ namespace Videre.Core.Services
                         Name = authResult.UserName,
                         PortalId = Portal.CurrentPortalId
                     };
+
+                    if (authResult.ExtraData != null && authResult.ExtraData.ContainsKey("Email"))
+                        user.Email = authResult.ExtraData["Email"];
+                    if (string.IsNullOrEmpty(user.Email))
+                        Logging.Logger.Error("Authentication Provider is not providing Email in ExtraData.  This can lead to a scenario where a user is saved with a NULL email address and if the next user update that updates the email fails, it will cause all subsequent account creations to fail due to duplicate (NULL) emails.  Please update your provider to return \"Email\" in ExtraData.");
+
                     user.Id = Account.SaveUser(user); //must save before we associate
                     Authentication.AssociateAuthenticationToken(user, authResult.Provider, authResult.ProviderUserId);
                 }
