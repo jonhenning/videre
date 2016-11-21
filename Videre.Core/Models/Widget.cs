@@ -147,7 +147,7 @@ namespace Videre.Core.Models
             var translations = new Dictionary<string, string>();
             foreach (var key in localizations.Keys)
                 translations[key] = GetText(key, localizations[key]);
-            helper.RegisterClientLocalizations(Manifest.FullName, localizations);
+            helper.RegisterClientLocalizations(Manifest.FullName, translations);
         }
 
         public bool Register(HtmlHelper helper, string clientType, string instanceName, Dictionary<string, object> properties = null, bool preserveObjectReferences = false)
