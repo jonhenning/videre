@@ -63,36 +63,36 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=1.0.19.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.19\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
+    <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=1.0.20.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.20\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.Extensions, Version=2.0.10.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodeEndeavors.Extensions.2.0.10\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.36.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.36\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.38.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.38\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.File, Version=2.0.36.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.File.2.0.36\lib\net45\CodeEndeavors.ResourceManager.File.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.File, Version=2.0.38.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.File.2.0.38\lib\net45\CodeEndeavors.ResourceManager.File.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.ServiceHost, Version=2.0.36.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.ServiceHost.2.0.36\lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.ServiceHost, Version=2.0.38.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.ServiceHost.2.0.38\lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.SQLServer, Version=2.0.36.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.0.36\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.SQLServer, Version=2.0.38.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.0.38\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.0.50.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.0.50\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=1.0.23.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Services.ResourceManager.ClientX.1.0.23\lib\net45\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
+    <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Services.ResourceManager.ClientX.1.0.25\lib\net45\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
