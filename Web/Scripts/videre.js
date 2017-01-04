@@ -344,7 +344,7 @@ videre.UI = {
                 //if (dataType != null && dataType.set != null)
                 //    dataType.set(ctl, val);
                 //else
-                    videre.UI.setControlValue(ctl, val, data);
+                videre.UI.setControlValue(ctl, val, data);
             }
         });
     },
@@ -438,7 +438,7 @@ videre.UI = {
         var controlType = videre.UI._controlTypes[ctl.data('controltype')];
         if (controlType != null && controlType.enable != null)
             controlType.enable(ctl, enabled);
-        else 
+        else
             ctl.attr("disabled", enabled ? null : "disabled");
     },
 
@@ -944,10 +944,14 @@ videre.widgets.base = videre.Class.extend(
             if (error != null)
             {
                 item.group.addClass('has-error');
+                item.group.attr('data-error-message', error.text);
                 errors.push(error);
             }
             else
+            {
                 item.group.removeClass('has-error');
+                item.group.attr('data-error-message', null);
+            }
         });
         this.addMsgs(errors, messageCtr);
         return errors.length == 0;
