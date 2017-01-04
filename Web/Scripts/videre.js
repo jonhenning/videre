@@ -1088,7 +1088,7 @@ videre.widgets.base = videre.Class.extend(
     {
         this._messages = [];
         this.refreshMsgs(parent);
-        this._getValidationCtls(parent != null ? parent : this._widget).forEach(function(item) { item.group.removeClass('has-error'); });
+        this._getValidationCtls(parent != null ? parent : this._widget).forEach(function(item) { item.group.removeClass('has-error'); item.group.attr('data-error-message', null); });
     },
 
     getText: function(key, defaultValue)
