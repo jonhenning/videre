@@ -85,7 +85,7 @@
     //http://joncom.be/code/realtypeof/
     typename: function(v)
     {
-        if (typeof(v) == 'object')
+        if (typeof (v) == 'object')
         {
             if (v === null) return 'null';
             if (v.constructor == (new Array).constructor) return 'array';
@@ -93,7 +93,7 @@
             if (v.constructor == (new RegExp).constructor) return 'regex';
             return 'object';
         }
-        return typeof(v);
+        return typeof (v);
     },
 
     log: function(msg)
@@ -445,6 +445,9 @@ videre.UI = {
     validateCtl: function(item)
     {
         var uniqueId = !String.isNullOrEmpty(item.ctl.attr('id')) ? item.ctl.attr('id') : item.ctl.data('column');
+        if (item.ctl.data('controltype') != null && !videre.UI.validateControlType(item.ctl.data('controltype'), item.ctl))
+            return { id: uniqueId + 'ControlTypeInvalid', text: item.ctl.attr('data-custom-error') != null ? item.ctl.attr('data-custom-error') : String.format(videre.localization.getText('global', 'ControlTypeInvalid'), item.labelText, item.ctl.data('controltype')), isError: true };
+
         if (item.ctl.data('dependencymatch') == false)  //if dependent control and it is not matched (shown) it is valid!
             return null;
         if (item.ctl.attr('required') && String.isNullOrEmpty(videre.UI.getControlValue(item.ctl)))
@@ -453,10 +456,6 @@ videre.UI = {
             return { id: uniqueId + 'DataTypeInvalid', text: String.format(videre.localization.getText('global', 'DataTypeInvalid'), item.labelText, item.ctl.data('datatype')), isError: true };
         if (item.ctl.data('match') != null && item.ctl.val() != $('#' + item.ctl.data('match')).val())
             return { id: uniqueId + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
-        if (item.ctl.data('controltype') != null && !videre.UI.validateControlType(item.ctl.data('controltype'), item.ctl))
-        {
-            return { id: uniqueId + 'ControlTypeInvalid', text: item.ctl.attr('data-custom-error') != null ? item.ctl.attr('data-custom-error') : String.format(videre.localization.getText('global', 'ControlTypeInvalid'), item.labelText, item.ctl.data('controltype')), isError: true };
-        }
     },
 
     validDataType: function(type, val, options)
