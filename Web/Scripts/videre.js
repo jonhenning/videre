@@ -382,6 +382,9 @@ videre.UI = {
 
     getControlValue: function(ctl)
     {
+        if (ctl.length > 1)
+            ctl = ctl.first();
+
         var controlType = videre.UI._controlTypes[ctl.data('controltype')];
         if (controlType != null && controlType.get != null)
             return controlType.get(ctl);
