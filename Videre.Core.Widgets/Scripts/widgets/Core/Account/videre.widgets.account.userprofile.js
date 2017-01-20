@@ -45,6 +45,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
 
     _onLoad: function(src, args)
     {
+        var self = this;
         this._base(); //call base
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
         this.getControl('AssociatedAuthCtr').toggle(!this._newUser).find('[data-authprovider]').click(videre.createDelegate(this, this._onUnassocateProviderClicked));
@@ -57,7 +58,7 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
         if (typeof moment != 'undefined' && moment.locales != null)  //if moment defined and supports locales method (v2.12+) swap out text box for dropdown
         {
             var ddl = $('<select data-column="Locale" class="form-control"></select>');
-            var locales = moment.locales();
+            var locales = moment.locales().orderBy(function(d) { return self._localeNameDict[d] != null ? self._localeNameDict[d] : d; });
             for (var i = 0; i < locales.length; i++)
             {
                 var name = locales[i];
