@@ -450,6 +450,8 @@ videre.UI = {
         var uniqueId = !String.isNullOrEmpty(item.ctl.attr('id')) ? item.ctl.attr('id') : item.ctl.data('column');
         if (item.ctl.data('controltype') != null && !videre.UI.validateControlType(item.ctl.data('controltype'), item.ctl))
             return { id: uniqueId + 'ControlTypeInvalid', text: item.ctl.attr('data-custom-error') != null ? item.ctl.attr('data-custom-error') : String.format(videre.localization.getText('global', 'ControlTypeInvalid'), item.labelText, item.ctl.data('controltype')), isError: true };
+        else if (item.ctl.attr('data-custom-error') != null)
+            return { id: uniqueId + 'CustomeError', text: item.ctl.attr('data-custom-error'), isError: true };
 
         if (item.ctl.data('dependencymatch') == false)  //if dependent control and it is not matched (shown) it is valid!
             return null;
