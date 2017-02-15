@@ -100,6 +100,19 @@ namespace Videre.Core.Services
                     item.Url = newItem.Url;
                     updates++;
                 }
+
+                if (newItem.Claims != null)
+                {
+                    foreach (var claim in newItem.Claims)
+                    {
+                        if (!item.Claims.Exists(c => c.Issuer == claim.Issuer && c.Type == claim.Type && c.Value == claim.Value))
+                        {
+                            item.Claims.Add(claim);
+                            updates++;
+                        }
+                    }
+                }
+
                 if (updates > 0)
                     Menu.Save(menu);
 
