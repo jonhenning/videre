@@ -36,10 +36,16 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
             onAssociateReturn: videre.createDelegate(this, this._onAssociateReturn),
             onDisassociateReturn: videre.createDelegate(this, this._onDisassociateReturn)
         };
+
+        //from console window at https://momentjs.com/ run this to generate...  hacky, but effective ;)
+        //var s = ''; $.each($('.locales div'), function(idx, ctl) { s += '"' + $(ctl).attr('data-locale') + '": "' + $(ctl).text().trim().replace(/[\n\r]+/g, '') + '",'; }); console.log('{' + s + '}');
+        this._localeNameDict = { "af": "Afrikaans", "sq": "Albanian", "ar": "Arabic", "ar-dz": "Arabic (Algeria)", "ar-ly": "Arabic (Lybia)", "ar-ma": "Arabic (Morocco)", "ar-sa": "Arabic (Saudi Arabia)", "ar-tn": "Arabic (Tunisia)", "hy-am": "Armenian", "az": "Azerbaijani", "eu": "Basque", "be": "Belarusian", "bn": "Bengali", "bs": "Bosnian", "br": "Breton", "bg": "Bulgarian", "my": "Burmese", "km": "Cambodian", "ca": "Catalan", "tzm": "Central Atlas Tamazight", "tzm-latn": "Central Atlas Tamazight Latin", "zh-cn": "Chinese (China)", "zh-hk": "Chinese (Hong Kong)", "zh-tw": "Chinese (Taiwan)", "cv": "Chuvash", "hr": "Croatian", "cs": "Czech", "da": "Danish", "nl": "Dutch", "nl-be": "Dutch (Belgium)", "en-au": "English (Australia)", "en-ca": "English (Canada)", "en-ie": "English (Ireland)", "en-nz": "English (New Zealand)", "en-gb": "English (United Kingdom)", "en": "English (United States)", "eo": "Esperanto", "et": "Estonian", "fo": "Faroese", "fi": "Finnish", "fr": "French", "fr-ca": "French (Canada)", "fr-ch": "French (Switzerland)", "fy": "Frisian", "gl": "Galician", "ka": "Georgian", "de": "German", "de-at": "German (Austria)", "el": "Greek", "he": "Hebrew", "hi": "Hindi", "hu": "Hungarian", "is": "Icelandic", "id": "Indonesian", "it": "Italian", "ja": "Japanese", "jv": "Javanese", "kk": "Kazakh", "tlh": "Klingon", "ko": "Korean", "ky": "Kyrgyz", "lo": "Lao", "lv": "Latvian", "lt": "Lithuanian", "lb": "Luxembourgish", "mk": "Macedonian", "ms-my": "Malay", "ms": "Malay", "ml": "Malayalam", "dv": "Maldivian", "mi": "Maori", "mr": "Marathi", "me": "Montenegrin", "ne": "Nepalese", "se": "Northern Sami", "nb": "Norwegian Bokmål", "nn": "Nynorsk", "fa": "Persian", "pl": "Polish", "pt": "Portuguese", "pt-br": "Portuguese (Brazil)", "x-pseudo": "Pseudo", "pa-in": "Punjabi (India)", "ro": "Romanian", "ru": "Russian", "gd": "Scottish Gaelic", "sr": "Serbian", "sr-cyrl": "Serbian Cyrillic", "si": "Sinhalese", "sk": "Slovak", "sl": "Slovenian", "es": "Spanish", "es-do": "Spanish (Dominican Republic)", "sw": "Swahili", "sv": "Swedish", "tl-ph": "Tagalog (Philippines)", "tzl": "Talossan", "ta": "Tamil", "te": "Telugu", "tet": "Tetun Dili (East Timor)", "th": "Thai", "bo": "Tibetan", "tr": "Turkish", "uk": "Ukrainian", "uz": "Uzbek", "vi": "Vietnamese", "cy": "Welsh", "yo": "Yoruba Nigeria", "ss": "siSwati" };
+
     },
 
     _onLoad: function(src, args)
     {
+        var self = this;
         this._base(); //call base
         this.getControl('btnSave').click(videre.createDelegate(this, this._onSaveClicked));
         this.getControl('AssociatedAuthCtr').toggle(!this._newUser).find('[data-authprovider]').click(videre.createDelegate(this, this._onUnassocateProviderClicked));
@@ -48,6 +54,20 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
 
         this._externalLoginDialog = this.getControl('ExternalLoginDialog').modal('hide');
         this.getControl('btnExternalLogin').click(videre.createDelegate(this, this._onExternalLoginClicked));
+
+        if (typeof moment != 'undefined' && moment.locales != null)  //if moment defined and supports locales method (v2.12+) swap out text box for dropdown
+        {
+            var ddl = $('<select data-column="Locale" class="form-control"></select>');
+            var locales = moment.locales().orderBy(function(d) { return self._localeNameDict[d] != null ? self._localeNameDict[d] : d; });
+            for (var i = 0; i < locales.length; i++)
+            {
+                var name = locales[i];
+                if (this._localeNameDict[locales[i]] != null)
+                    name = this._localeNameDict[locales[i]] + ' [' + locales[i] + ']';
+                ddl.append($('<option></option>').text(name).attr('value', locales[i]));
+            }
+            this.findControl('[data-column="Locale"]').replaceWith(ddl);
+        }
 
         this.bind();
 
@@ -61,6 +81,9 @@ videre.widgets.account.userprofile = videre.widgets.base.extend(
     bind: function()
     {
         var self = this;
+        if (this._data.Locale != null)
+            this._data.Locale = this._data.Locale.toLowerCase();
+
         this.bindData(this._data, this.getControl('StandardElementsCtr'));
         if (this._hasCustomAttributes)
         {
