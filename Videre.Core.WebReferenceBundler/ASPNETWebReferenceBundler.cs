@@ -19,11 +19,16 @@ namespace Videre.Core.WebReferenceBundler
                 {
                     var hash = String.Join("~", list.Items.Select(i => i.Src)).GetHashCode();
                     var src = "~/Scripts/_" + hash;
-                    var bundle = new ScriptBundle(src).Include(list.Items.Select(i => "~/" + i.Src).ToArray());
+                    Bundle bundle = null;
+
+                    if (enableOptimizations)
+                        bundle = new ScriptBundle(src).Include(list.Items.Select(i => "~/" + i.Src).ToArray());
+                    else
+                        bundle = new Bundle(src).Include(list.Items.Select(i => "~/" + i.Src).ToArray());
 
                     bundle.Orderer = new PassthruBundleOrderer();
                     BundleTable.Bundles.Add(bundle);
-                    BundleTable.EnableOptimizations = enableOptimizations;
+                    BundleTable.EnableOptimizations = true; // enableOptimizations;
                     sb.AppendLine(System.Web.Optimization.Scripts.Render(src).ToHtmlString());
                 }
                 else
