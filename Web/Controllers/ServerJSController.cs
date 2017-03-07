@@ -29,7 +29,9 @@ namespace Videre.Web.Controllers
             if (dateFormat != null)
             {
                 //register dateFormats per user
-                script += string.Format("videre.localization.dateFormats = {{datetime: '{0}', date: '{1}', time: '{2}', zone: '{3}'}};", Services.Account.GetUserDateFormat("datetime", false), dateFormat, Services.Account.GetUserDateFormat("time", false), Services.Account.GetUserTimeZone());
+                var zone = Services.Account.GetUserTimeZone();
+                string zoneName = zone != null ? zone.StandardName : null;
+                script += string.Format("videre.localization.dateFormats = {{datetime: '{0}', date: '{1}', time: '{2}', zone: '{3}', zonename: '{4}'}};", Services.Account.GetUserDateFormat("datetime", false), dateFormat, Services.Account.GetUserDateFormat("time", false), Services.Account.GetUserTimeZone(), zoneName);
             }
 
             var numberFormat = Services.Account.GetUserNumberFormat();

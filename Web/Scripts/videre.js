@@ -85,7 +85,7 @@
     //http://joncom.be/code/realtypeof/
     typename: function(v)
     {
-        if (typeof(v) == 'object')
+        if (typeof (v) == 'object')
         {
             if (v === null) return 'null';
             if (v.constructor == (new Array).constructor) return 'array';
@@ -93,7 +93,7 @@
             if (v.constructor == (new RegExp).constructor) return 'regex';
             return 'object';
         }
-        return typeof(v);
+        return typeof (v);
     },
 
     log: function(msg)
@@ -344,7 +344,7 @@ videre.UI = {
                 //if (dataType != null && dataType.set != null)
                 //    dataType.set(ctl, val);
                 //else
-                    videre.UI.setControlValue(ctl, val, data);
+                videre.UI.setControlValue(ctl, val, data);
             }
         });
     },
@@ -382,6 +382,9 @@ videre.UI = {
 
     getControlValue: function(ctl)
     {
+        if (ctl.length > 1)
+            ctl = ctl.first();
+
         var controlType = videre.UI._controlTypes[ctl.data('controltype')];
         if (controlType != null && controlType.get != null)
             return controlType.get(ctl);
@@ -411,7 +414,7 @@ videre.UI = {
     setControlValue: function(ctl, val, data)
     {
         var dataType = videre.UI._dataTypes[ctl.data('datatype')];
-        if (dataType != null && dataType.get != null && ctl.data('datatype') != 'datetime') //cannot lose timezone (or reset it).  
+        if (dataType != null && dataType.get != null && ctl.data('datatype') != 'datetime' && ctl.data('datatype') != 'date') //cannot lose timezone (or reset it).  
             val = dataType.get(val, ctl.data());
 
         var controlType = videre.UI._controlTypes[ctl.data('controltype')];
@@ -438,13 +441,18 @@ videre.UI = {
         var controlType = videre.UI._controlTypes[ctl.data('controltype')];
         if (controlType != null && controlType.enable != null)
             controlType.enable(ctl, enabled);
-        else 
+        else
             ctl.attr("disabled", enabled ? null : "disabled");
     },
 
     validateCtl: function(item)
     {
         var uniqueId = !String.isNullOrEmpty(item.ctl.attr('id')) ? item.ctl.attr('id') : item.ctl.data('column');
+        if (item.ctl.data('controltype') != null && !videre.UI.validateControlType(item.ctl.data('controltype'), item.ctl))
+            return { id: uniqueId + 'ControlTypeInvalid', text: item.ctl.attr('data-custom-error') != null ? item.ctl.attr('data-custom-error') : String.format(videre.localization.getText('global', 'ControlTypeInvalid'), item.labelText, item.ctl.data('controltype')), isError: true };
+        else if (item.ctl.attr('data-custom-error') != null)
+            return { id: uniqueId + 'CustomeError', text: item.ctl.attr('data-custom-error'), isError: true };
+
         if (item.ctl.data('dependencymatch') == false)  //if dependent control and it is not matched (shown) it is valid!
             return null;
         if (item.ctl.attr('required') && String.isNullOrEmpty(videre.UI.getControlValue(item.ctl)))
@@ -453,10 +461,6 @@ videre.UI = {
             return { id: uniqueId + 'DataTypeInvalid', text: String.format(videre.localization.getText('global', 'DataTypeInvalid'), item.labelText, item.ctl.data('datatype')), isError: true };
         if (item.ctl.data('match') != null && item.ctl.val() != $('#' + item.ctl.data('match')).val())
             return { id: uniqueId + 'ValuesMustMatch', text: String.format(videre.localization.getText('global', 'ValuesMustMatch'), item.labelText), isError: true };
-        if (item.ctl.data('controltype') != null && !videre.UI.validateControlType(item.ctl.data('controltype'), item.ctl))
-        {
-            return { id: uniqueId + 'ControlTypeInvalid', text: item.ctl.attr('data-custom-error') != null ? item.ctl.attr('data-custom-error') : String.format(videre.localization.getText('global', 'ControlTypeInvalid'), item.labelText, item.ctl.data('controltype')), isError: true };
-        }
     },
 
     validDataType: function(type, val, options)
@@ -944,10 +948,14 @@ videre.widgets.base = videre.Class.extend(
             if (error != null)
             {
                 item.group.addClass('has-error');
+                item.group.attr('data-error-message', error.text);
                 errors.push(error);
             }
             else
+            {
                 item.group.removeClass('has-error');
+                item.group.attr('data-error-message', null);
+            }
         });
         this.addMsgs(errors, messageCtr);
         return errors.length == 0;
@@ -1085,7 +1093,7 @@ videre.widgets.base = videre.Class.extend(
     {
         this._messages = [];
         this.refreshMsgs(parent);
-        this._getValidationCtls(parent != null ? parent : this._widget).forEach(function(item) { item.group.removeClass('has-error'); });
+        this._getValidationCtls(parent != null ? parent : this._widget).forEach(function(item) { item.group.removeClass('has-error'); item.group.attr('data-error-message', null); });
     },
 
     getText: function(key, defaultValue)
