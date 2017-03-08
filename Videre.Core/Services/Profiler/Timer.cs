@@ -11,6 +11,7 @@ namespace Videre.Core.Services.Profiler
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private readonly string _message;
+        private bool _info;
 
         public Timer(string message)
         {
@@ -18,10 +19,20 @@ namespace Videre.Core.Services.Profiler
             _stopwatch.Start();
         }
 
+        public Timer(string message, bool info)
+        {
+            _message = message;
+            _info = info;
+            _stopwatch.Start();
+        }
+
         public void Dispose()
         {
             _stopwatch.Stop();
-            Services.Logging.Logger.DebugFormat("{0} - {1}ms", _message, _stopwatch.ElapsedMilliseconds);
+            if (_info)
+                Services.Logging.Logger.InfoFormat("{0} - {1}ms", _message, _stopwatch.ElapsedMilliseconds);
+            else 
+                Services.Logging.Logger.DebugFormat("{0} - {1}ms", _message, _stopwatch.ElapsedMilliseconds);
             GC.SuppressFinalize(this);
         }
     }
