@@ -411,9 +411,12 @@ namespace Videre.Core.Services
             var updates = 0;
             foreach (var registration in widgetRegistrations)
             {
-                Logging.Logger.InfoFormat("Registering {0}", registration.GetType().ToString());
-                //var w = (Models.IWidgetRegistration)ObjectFactory.GetInstance(registration.PluginType);
-                updates += registration.Register();
+                using (new Videre.Core.Services.Profiler.Timer("Registering Widget: " + registration.GetType().ToString()))
+                {
+                    Logging.Logger.InfoFormat("Registering {0}", registration.GetType().ToString());
+                    //var w = (Models.IWidgetRegistration)ObjectFactory.GetInstance(registration.PluginType);
+                    updates += registration.Register();
+                }
             }
             updates += RegisterPortals(false);
             if (updates > 0)

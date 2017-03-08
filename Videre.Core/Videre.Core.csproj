@@ -276,6 +276,7 @@
     <Compile Include="Services\Package.cs" />
     <Compile Include="Services\Profiler\GlimpseSecurityPolicy.cs" />
     <Compile Include="Services\Profiler\GlimpseTimeline.cs" />
+    <Compile Include="Services\Profiler\Timer.cs" />
     <Compile Include="Services\Security.cs" />
     <Compile Include="Services\TokenParser.cs" />
     <Compile Include="Services\UI.cs" />
