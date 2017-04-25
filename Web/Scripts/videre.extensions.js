@@ -313,6 +313,16 @@ Array.indexOf = function _indexOf(array, item, start)
             }
             return ret;
         },
+        min: function(f)
+        {
+            var ret = 0;
+            for (var i = 0; i < this._getArray().length; i++)
+            {
+                var v = f(this._getArray()[i], i);
+                ret = !isNaN(v) && v < ret ? v : ret;
+            }
+            return ret;
+        },
         toDictionary: function(f)
         {
             var dict = {};
