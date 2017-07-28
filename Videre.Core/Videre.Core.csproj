@@ -61,8 +61,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=1.0.20.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.20\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
+    <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=1.0.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.23\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.Extensions, Version=2.0.10.0, Culture=neutral, processorArchitecture=MSIL">
@@ -199,6 +199,11 @@
     <Compile Include="Models\UserAuthentication.cs" />
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />
+    <Compile Include="Providers\LocaleCacheKeyProvider.cs" />
+    <Compile Include="Providers\UserCacheKeyProvider.cs" />
+    <Compile Include="Providers\UrlCacheKeyProvider.cs" />
+    <Compile Include="Providers\TemplateCacheKeyProvider.cs" />
+    <Compile Include="Providers\IWidgetCacheKeyProvider.cs" />
     <Compile Include="Providers\VidereAccountChangePasswordHandler.cs" />
     <Compile Include="Providers\VidereAccountVerificationHandler.cs" />
     <Compile Include="Providers\VidereAuthenticationRequestHandler.cs" />

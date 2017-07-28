@@ -143,6 +143,14 @@ namespace Videre.Core.Extensions.Bootstrap
             return DropDownList(id).Options(items).Append(Button().Icon("glyphicon glyphicon-plus").DataAttribute("action", "addclaim")).ControlType("claims-list");
         }
 
+        public IBootstrapDropDownList CacheKeyList(string id = null, List<string> selectedKeys = null)
+        {
+            selectedKeys = selectedKeys == null ? new List<string>() : selectedKeys;
+            var items = Services.Widget.GetWidgetCacheKeyProviderDict().Keys.Select(k => new SelectListItem() { Value = k, Text = k, Selected = selectedKeys.Contains(k) }).ToList();
+            this.Html.RegisterWebReferenceGroup("bootstrap-select");
+            return DropDownList(id).Options(items);
+        }
+
         public IBootstrapDropDownList AuthorizedList(string id = null)
         {
             var clientControl = Html.ViewData.Model as Videre.Core.Models.IClientControl;

@@ -35,6 +35,13 @@
     @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("WebReferences.Text", "Web References").GridSize(BootstrapUnits.GridSize.MediumDevice3), 
         Html.Bootstrap().DropDownList().Plugin(Plugin.BootstrapSelect).Options(CoreServices.Web.GetWebReferences().Select(r => new SelectListItem() { Text = r.Name, Value = r.Name } ).ToList()).DataColumn("WebReferences").Multiple(), BootstrapUnits.GridSize.MediumDevice9)
 
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("CacheTime.Text", "CacheTime").GridSize(BootstrapUnits.GridSize.MediumDevice3),
+        Html.Bootstrap().TextBox().DataColumn("CacheTime").DataType("number"), BootstrapUnits.GridSize.MediumDevice9)
+
+    @Html.Bootstrap().FormGroup(Html.Bootstrap().Label("CacheKeys.Text", "CacheKeys").GridSize(BootstrapUnits.GridSize.MediumDevice3),
+        Html.Bootstrap().CacheKeyList().DataColumn("CacheKeys").Multiple().Plugin(Plugin.BootstrapSelect).StyleAttribute("width", "379px"), BootstrapUnits.GridSize.MediumDevice9)
+
+
     <div id="@Model.GetId("AttributeList")" style="display: none;" class="form-horizontal">
     </div>
     <script id="@Model.GetId("AttributeListTemplate")" type="text/html">

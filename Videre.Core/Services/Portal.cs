@@ -306,6 +306,8 @@ namespace Videre.Core.Services
                         widget.SaveContentJson(widget.ContentJson);
                 }
 
+                Widget.ClearAllWidgetCacheEntries();
+
                 //after contentIds assigned, need to save them!
                 var res = Repository.StoreResource("Template", null, pageTemplate, userId);
                 return res.Id;
@@ -460,6 +462,9 @@ namespace Videre.Core.Services
                         //needed for initial update where we want to assign ContentIds and not json...   may cause issue with blanking out contentids by trying to blank out contentjson... TODO:
                         widget.SaveContentJson(widget.ContentJson);
                 }
+
+                Widget.ClearAllWidgetCacheEntries();
+
                 //after contentIds assigned, need to save them!
                 var res = Repository.StoreResource("LayoutTemplate", null, template, userId);
                 return res.Id;
@@ -703,6 +708,22 @@ namespace Videre.Core.Services
                 id++;
                 SetRequestContextData("NextClientId", id);
                 return "w" + id;
+            }
+        }
+
+        public static void SetCurrentClientId(int id)
+        {
+            lock (clientIdLock)
+            {
+                SetRequestContextData("NextClientId", id);
+            }
+        }
+
+        public static int GetCurrentClientId()
+        {
+            lock (clientIdLock)
+            {
+                return GetRequestContextData("NextClientId", 1);
             }
         }
 

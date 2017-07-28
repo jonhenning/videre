@@ -9,6 +9,8 @@ using Videre.Core.Models;
 using Videre.Core.Services;
 using Portal = Videre.Core.Services.Portal;
 using Widget = Videre.Core.Models.Widget;
+using System.IO;
+using System.Globalization;
 
 namespace Videre.Core.Extensions
 {
@@ -29,14 +31,14 @@ namespace Videre.Core.Extensions
         }
 
         // Methods
-        public static void RenderWidgets(this HtmlHelper helper, PageTemplate Template, string PaneName)
+        public static void RenderWidgets(this HtmlHelper helper, PageTemplate template, string paneName)
         {
-            if (Template != null)
+            if (template != null)
             {
-                foreach (var widget in Template.Widgets.Where(w => w.PaneName == PaneName && w.IsAuthorized))
+                foreach (var widget in template.Widgets.Where(w => w.PaneName == paneName && w.IsAuthorized))
                     RenderWidget(helper, widget);
 
-                foreach (var widget in Template.LayoutWidgets.Where(w => w.PaneName == PaneName && w.IsAuthorized))
+                foreach (var widget in template.LayoutWidgets.Where(w => w.PaneName == paneName && w.IsAuthorized))
                     RenderWidget(helper, widget);
             }
         }
@@ -52,7 +54,44 @@ namespace Videre.Core.Extensions
                         widget.ClientId = Portal.NextClientId();
                         try
                         {
-                            helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
+                            if (widget.CacheTime.HasValue)
+                            {
+                                var key = Services.Widget.GetWidgetCacheKey(widget);
+                                var scriptTypes = new List<string>() { "js", "documentreadyendjs", "documentreadyjs", "css", "inlinejs" };
+                                var scriptCounts = scriptTypes.Select(t => new { type = t, scriptCount = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, t).Count }).ToDictionary(t => t.type, t => t.scriptCount);
+                                var pulledFromCache = true;
+                                var currentClientId = Portal.GetCurrentClientId();
+                                var cachedItem = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry("VidereWidgetCache", TimeSpan.FromSeconds(widget.CacheTime.Value), key,  () =>
+                                {
+                                    var cachingWriter = new StringWriter(CultureInfo.InvariantCulture);
+                                    var originalWriter = helper.ViewContext.Writer;
+                                    helper.ViewContext.Writer = cachingWriter;
+                                    helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
+                                    helper.ViewContext.Writer = originalWriter;
+
+                                    //determine new scripts registered
+                                    var deltaScriptDict = new Dictionary<string, IEnumerable<ReferenceListItem>>();
+                                    foreach (var scriptType in scriptCounts.Keys)
+                                    {
+                                        var scripts = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, scriptType); //get newly registered scripts
+                                        if (scripts.Count > scriptCounts[scriptType])
+                                            deltaScriptDict[scriptType] = scripts.Skip(scriptCounts[scriptType]);
+                                    }
+                                    pulledFromCache = false;
+                                    return new { html = cachingWriter.ToString(), deltaScriptDict = deltaScriptDict, numberOfClientIdsTaken = Portal.GetCurrentClientId() - currentClientId };
+                                });
+                                if (pulledFromCache)    //if pulled from cache we need to register the references that would have been rendered
+                                {
+                                    Portal.SetCurrentClientId(Portal.GetCurrentClientId() + cachedItem.numberOfClientIdsTaken);
+                                    foreach (var scriptType in cachedItem.deltaScriptDict.Keys)
+                                        helper.RegisterReferenceListItems(scriptType, cachedItem.deltaScriptDict[scriptType]);
+                                }
+                                helper.ViewContext.Writer.Write(cachedItem.html);   //write out html for widget
+                            }
+                            else
+                            {
+                                helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
+                            }
                             helper.RegisterWebReferences(widget.WebReferences);
                         }
                         catch (Exception ex)
@@ -108,12 +147,24 @@ namespace Videre.Core.Extensions
             }
         }
 
+        //default param values cannot be added to and maintain compatibility (i.e. referencing code needs to be recompiled)...  it is a compiler trick
         public static void RenderWidget(this HtmlHelper helper, string manifestFullName, Dictionary<string, object> attributes = null, bool defer = false, string css = null, string style = null)
+        {
+            RenderWidget(helper, manifestFullName, null, null, attributes, defer, css, style);
+        }
+
+        public static void RenderWidget(this HtmlHelper helper, string manifestFullName, int? cacheTime, List<string> cacheKeys, Dictionary<string, object> attributes, bool defer, string css, string style)
         {
             var manifest = Services.Widget.GetWidgetManifest(manifestFullName);
             var widget = new Widget {ManifestId = manifest.Id, Css = css, Style = style};
             if (attributes != null)
                 widget.Attributes = attributes;
+            if (cacheTime.HasValue)
+            {
+                widget.CacheTime = cacheTime;
+                widget.CacheKeys = cacheKeys;
+            }
+
             RenderWidget(helper, widget, defer);
         }
 
