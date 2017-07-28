@@ -200,6 +200,7 @@
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />
     <Compile Include="Providers\LocaleCacheKeyProvider.cs" />
+    <Compile Include="Providers\TwoLevelViewCache.cs" />
     <Compile Include="Providers\UserCacheKeyProvider.cs" />
     <Compile Include="Providers\UrlCacheKeyProvider.cs" />
     <Compile Include="Providers\TemplateCacheKeyProvider.cs" />
