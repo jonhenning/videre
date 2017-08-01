@@ -398,6 +398,11 @@ namespace Videre.Core.Extensions
             return dict.ContainsKey(key.ToLower());
         }
 
+        public static ICollection<string> GetRegisteredKeys(HtmlHelper helper)
+        {
+            return GetRegisteredKeyDict(helper).Keys;
+        }
+
         public static void RegisterKey(HtmlHelper helper, string key)
         {
             var dict = GetRegisteredKeyDict(helper);

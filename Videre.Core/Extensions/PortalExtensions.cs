@@ -61,6 +61,8 @@ namespace Videre.Core.Extensions
                                 var scriptCounts = scriptTypes.Select(t => new { type = t, scriptCount = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, t).Count }).ToDictionary(t => t.type, t => t.scriptCount);
                                 var pulledFromCache = true;
                                 var currentClientId = Portal.GetCurrentClientId();
+                                var registeredKeys = HtmlExtensions.GetRegisteredKeys(helper);
+
                                 var cachedItem = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry("VidereWidgetCache", TimeSpan.FromSeconds(widget.CacheTime.Value), key,  () =>
                                 {
                                     var cachingWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -77,14 +79,27 @@ namespace Videre.Core.Extensions
                                         if (scripts.Count > scriptCounts[scriptType])
                                             deltaScriptDict[scriptType] = scripts.Skip(scriptCounts[scriptType]);
                                     }
+                                    var currentRegisteredKeys = HtmlExtensions.GetRegisteredKeys(helper);
+                                    var newlyRegisteredKeys = new List<string>();
+                                    foreach (var regKey in currentRegisteredKeys)
+                                    {
+                                        if (!registeredKeys.Contains(regKey))
+                                            newlyRegisteredKeys.Add(regKey);
+                                    }
+
                                     pulledFromCache = false;
-                                    return new { html = cachingWriter.ToString(), deltaScriptDict = deltaScriptDict, numberOfClientIdsTaken = Portal.GetCurrentClientId() - currentClientId };
+                                    return new { html = cachingWriter.ToString(), deltaScriptDict = deltaScriptDict, numberOfClientIdsTaken = Portal.GetCurrentClientId() - currentClientId, newlyRegisteredKeys = newlyRegisteredKeys };
                                 });
                                 if (pulledFromCache)    //if pulled from cache we need to register the references that would have been rendered
                                 {
                                     Portal.SetCurrentClientId(Portal.GetCurrentClientId() + cachedItem.numberOfClientIdsTaken);
                                     foreach (var scriptType in cachedItem.deltaScriptDict.Keys)
                                         helper.RegisterReferenceListItems(scriptType, cachedItem.deltaScriptDict[scriptType]);
+                                    foreach (var regKey in cachedItem.newlyRegisteredKeys)  //register any keys that would have been registered prior
+                                    {
+                                        if (!HtmlExtensions.IsKeyRegistered(helper, regKey))
+                                            HtmlExtensions.RegisterKey(helper, regKey);
+                                    }
                                 }
                                 helper.ViewContext.Writer.Write(cachedItem.html);   //write out html for widget
                             }
