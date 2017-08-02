@@ -63,6 +63,9 @@ namespace Videre.Core.Extensions
                                 var currentClientId = Portal.GetCurrentClientId();
                                 var registeredKeys = HtmlExtensions.GetRegisteredKeys(helper);
 
+                                if (helper.ViewContext.RequestContext.HttpContext.Request["nocache"] == "1")
+                                    CodeEndeavors.Distributed.Cache.Client.Service.ExpireCacheEntry("VidereWidgetCache", key);
+
                                 var cachedItem = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry("VidereWidgetCache", TimeSpan.FromSeconds(widget.CacheTime.Value), key,  () =>
                                 {
                                     var cachingWriter = new StringWriter(CultureInfo.InvariantCulture);
