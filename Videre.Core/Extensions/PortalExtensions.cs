@@ -11,6 +11,7 @@ using Portal = Videre.Core.Services.Portal;
 using Widget = Videre.Core.Models.Widget;
 using System.IO;
 using System.Globalization;
+using System.Collections.Concurrent;
 
 namespace Videre.Core.Extensions
 {
@@ -62,6 +63,7 @@ namespace Videre.Core.Extensions
                                 var pulledFromCache = true;
                                 var currentClientId = Portal.GetCurrentClientId();
                                 var registeredKeys = HtmlExtensions.GetRegisteredKeys(helper);
+                                var registeredClientLocalizationKeys = HtmlExtensions.GetRegisteredClientLocalizations(helper).Keys;
 
                                 if (helper.ViewContext.RequestContext.HttpContext.Request["nocache"] == "1")
                                     CodeEndeavors.Distributed.Cache.Client.Service.ExpireCacheEntry("VidereWidgetCache", key);
@@ -89,9 +91,16 @@ namespace Videre.Core.Extensions
                                         if (!registeredKeys.Contains(regKey))
                                             newlyRegisteredKeys.Add(regKey);
                                     }
+                                    var currentRegisterdClientLocalizations = HtmlExtensions.GetRegisteredClientLocalizations(helper);
+                                    var newlyRegisteredClientLocalizations = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
+                                    foreach (var regKey in currentRegisterdClientLocalizations.Keys)
+                                    {
+                                        if (!registeredClientLocalizationKeys.Contains(regKey))
+                                            newlyRegisteredClientLocalizations[regKey] = currentRegisterdClientLocalizations[regKey];
+                                    }
 
                                     pulledFromCache = false;
-                                    return new { html = cachingWriter.ToString(), deltaScriptDict = deltaScriptDict, numberOfClientIdsTaken = Portal.GetCurrentClientId() - currentClientId, newlyRegisteredKeys = newlyRegisteredKeys };
+                                    return new { html = cachingWriter.ToString(), deltaScriptDict = deltaScriptDict, numberOfClientIdsTaken = Portal.GetCurrentClientId() - currentClientId, newlyRegisteredKeys = newlyRegisteredKeys, newlyRegisteredClientLocalizations = newlyRegisteredClientLocalizations };
                                 });
                                 if (pulledFromCache)    //if pulled from cache we need to register the references that would have been rendered
                                 {
@@ -103,6 +112,7 @@ namespace Videre.Core.Extensions
                                         if (!HtmlExtensions.IsKeyRegistered(helper, regKey))
                                             HtmlExtensions.RegisterKey(helper, regKey);
                                     }
+                                    HtmlExtensions.RegisterClientLocalizations(helper, cachedItem.newlyRegisteredClientLocalizations);
                                 }
                                 helper.ViewContext.Writer.Write(cachedItem.html);   //write out html for widget
                             }

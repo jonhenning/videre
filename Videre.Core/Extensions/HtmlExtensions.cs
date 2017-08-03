@@ -147,7 +147,7 @@ namespace Videre.Core.Extensions
         public static void RegisterClientLocalizations(this HtmlHelper helper, string ns, Dictionary<string, string> localizations)
         {
             var scriptKey = "RegisteredClientLocalizations";
-            var registeredLocalizations = helper.GetContextItem<ConcurrentDictionary<string, ConcurrentDictionary<string, string>>>(scriptKey);
+            var registeredLocalizations = GetRegisteredClientLocalizations(helper);//.GetContextItem<ConcurrentDictionary<string, ConcurrentDictionary<string, string>>>(scriptKey);
 
             if (!registeredLocalizations.ContainsKey(ns))
                 registeredLocalizations[ns] = new ConcurrentDictionary<string, string>();
@@ -161,6 +161,17 @@ namespace Videre.Core.Extensions
             else
                 RegisterDocumentReadyScript(helper, scriptKey, script);
 
+        }
+
+        public static ConcurrentDictionary<string, ConcurrentDictionary<string, string>> GetRegisteredClientLocalizations(this HtmlHelper helper)   //needed for widget caching
+        {
+            return helper.GetContextItem<ConcurrentDictionary<string, ConcurrentDictionary<string, string>>>("RegisteredClientLocalizations");
+        }
+        public static void RegisterClientLocalizations(this HtmlHelper helper, ConcurrentDictionary<string, ConcurrentDictionary<string, string>> clientLocalizations) //needed for widget caching
+        {
+            var current = GetRegisteredClientLocalizations(helper);
+            foreach (var key in clientLocalizations.Keys)
+                current[key] = clientLocalizations[key];
         }
 
         private static string generateLocalizationItems(ConcurrentDictionary<string, ConcurrentDictionary<string, string>> localizations)
