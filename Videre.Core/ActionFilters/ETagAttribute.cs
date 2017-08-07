@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
@@ -42,6 +43,7 @@ public class ETagFilter : MemoryStream
 
         string clientToken = _request.Headers["If-None-Match"];
 
+        _response.Cache.SetLastModified(DateTime.UtcNow.AddDays(-30));  //allow chrome to cache this in memory cache...
         if (token != clientToken)
         {
             _response.AddHeader("ETag", token);

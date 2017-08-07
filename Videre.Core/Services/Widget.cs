@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeEndeavors.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,6 +16,39 @@ namespace Videre.Core.Services
             public string Id { get; internal set; }
 
             public Models.Widget Instance { get; internal set; }
+        }
+
+        private static Dictionary<string, Providers.IWidgetCacheKeyProvider> _widgetCacheKeyProviders = null;
+        public static Dictionary<string, Providers.IWidgetCacheKeyProvider> GetWidgetCacheKeyProviderDict()
+        {
+            if (_widgetCacheKeyProviders == null)
+                _widgetCacheKeyProviders = ReflectionExtensions.GetAllInstances<Providers.IWidgetCacheKeyProvider>().ToDictionary(p => p.Name);
+
+            return _widgetCacheKeyProviders;
+        }
+
+        public static string GetWidgetCacheKey(Models.Widget widget)
+        {
+            var key = "cid:" + widget.ClientId;
+            if (widget.CacheKeys != null)
+            {
+                var providers = GetWidgetCacheKeyProviderDict();
+                foreach (var cacheKey in widget.CacheKeys)
+                {
+                    if (providers.ContainsKey(cacheKey))
+                    {
+                        var customKey = providers[cacheKey].GetVaryByCustomString(widget);
+                        if (!string.IsNullOrEmpty(customKey))
+                            key += "~" + cacheKey + ":" + customKey;
+                    }
+                }
+            }
+            return key;
+        }
+
+        public static void ClearAllWidgetCacheEntries()
+        {
+            CodeEndeavors.Distributed.Cache.Client.Service.Clear("VidereWidgetCache");
         }
 
         public static WidgetIdentity Current

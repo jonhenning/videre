@@ -180,6 +180,14 @@ namespace Videre.Core.Services
             return dict[type];
         }
 
+        public static List<Models.ReferenceListItem> GetAttemptedRegistrationReferenceList(HtmlHelper helper, string type)
+        {
+            var dict = helper.GetContextItem<ConcurrentDictionary<string, List<Models.ReferenceListItem>>>("AttemptedReferenceList");
+            if (!dict.ContainsKey(type))
+                dict[type] = new List<Models.ReferenceListItem>();
+            return dict[type];
+        }
+
         private static List<Models.ReferenceListItem> GetUnrenderedMarkupList(HtmlHelper helper, string type)
         {
             var list = GetReferenceList(helper, type);

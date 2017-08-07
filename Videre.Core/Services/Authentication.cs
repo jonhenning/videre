@@ -318,6 +318,7 @@ namespace Videre.Core.Services
         {
             FormsAuthentication.SignOut();
             FederatedAuthentication.SessionAuthenticationModule.SignOut();
+            impersonatedUserId = null;  //remove impersonation (if any)
         }
 
         public static void RegisterAuthenticationProviders()

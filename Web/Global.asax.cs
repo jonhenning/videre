@@ -61,6 +61,13 @@ namespace Videre.Web
         {
             try
             {
+                //only support Razor for now - perf
+                //https://blogs.msdn.microsoft.com/marcinon/2011/08/16/optimizing-asp-net-mvc-view-lookup-performance/
+                ViewEngines.Engines.Clear();
+                var ve = new RazorViewEngine();
+                ve.ViewLocationCache = new Videre.Core.Providers.TwoLevelViewCache(ve.ViewLocationCache);
+                ViewEngines.Engines.Add(ve);
+
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
                 var logLevel = Services.Portal.GetAppSetting("LogLevel", 1);

@@ -54,6 +54,10 @@ namespace Videre.Core.Models
         
         public bool ShowHeader { get; set; }
         
+        public int? CacheTime { get; set; }
+
+        public List<string> CacheKeys { get; set; }
+
         public int Seq { get; set; }
 
         private List<string> _roles = new List<string>();

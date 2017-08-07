@@ -120,25 +120,34 @@ namespace Videre.Core.Extensions
         {
             //lock (_lockObj)
             //{
+            var referenceItem = new Models.ReferenceListItem() { RegistrationKey = key, Src = key, Text = script };
+            var type = runAtEnd ? "documentreadyendjs" : "documentreadyjs";
+            Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, type).Add(referenceItem); //always note we need it (for caching widgets)
+
             if (!IsKeyRegistered(helper, key))
             {
-                if (runAtEnd)
-                {
-                    Services.WebReferenceBundler.GetReferenceList(helper, "documentreadyendjs").Add(new Models.ReferenceListItem() { Src = key, Text = script } );
-                }
-                else
-                {
-                    Services.WebReferenceBundler.GetReferenceList(helper, "documentreadyjs").Add(new Models.ReferenceListItem() { Src = key, Text = script });
-                }
+                Services.WebReferenceBundler.GetReferenceList(helper, type).Add(referenceItem);
                 RegisterKey(helper, key);
             }
             //}
         }
 
+        public static void RegisterReferenceListItems(this HtmlHelper helper, string scriptType, IEnumerable<Models.ReferenceListItem> items)
+        {
+            foreach (var item in items)
+            {
+                if (!IsKeyRegistered(helper, item.RegistrationKey))
+                {
+                    Services.WebReferenceBundler.GetReferenceList(helper, scriptType).Add(item);
+                    RegisterKey(helper, item.RegistrationKey);
+                }
+            }
+        }
+
         public static void RegisterClientLocalizations(this HtmlHelper helper, string ns, Dictionary<string, string> localizations)
         {
             var scriptKey = "RegisteredClientLocalizations";
-            var registeredLocalizations = helper.GetContextItem<ConcurrentDictionary<string, ConcurrentDictionary<string, string>>>(scriptKey);
+            var registeredLocalizations = GetRegisteredClientLocalizations(helper);//.GetContextItem<ConcurrentDictionary<string, ConcurrentDictionary<string, string>>>(scriptKey);
 
             if (!registeredLocalizations.ContainsKey(ns))
                 registeredLocalizations[ns] = new ConcurrentDictionary<string, string>();
@@ -152,6 +161,17 @@ namespace Videre.Core.Extensions
             else
                 RegisterDocumentReadyScript(helper, scriptKey, script);
 
+        }
+
+        public static ConcurrentDictionary<string, ConcurrentDictionary<string, string>> GetRegisteredClientLocalizations(this HtmlHelper helper)   //needed for widget caching
+        {
+            return helper.GetContextItem<ConcurrentDictionary<string, ConcurrentDictionary<string, string>>>("RegisteredClientLocalizations");
+        }
+        public static void RegisterClientLocalizations(this HtmlHelper helper, ConcurrentDictionary<string, ConcurrentDictionary<string, string>> clientLocalizations) //needed for widget caching
+        {
+            var current = GetRegisteredClientLocalizations(helper);
+            foreach (var key in clientLocalizations.Keys)
+                current[key] = clientLocalizations[key];
         }
 
         private static string generateLocalizationItems(ConcurrentDictionary<string, ConcurrentDictionary<string, string>> localizations)
@@ -170,14 +190,18 @@ namespace Videre.Core.Extensions
         {
             //lock (_lockObj)
             //{
-                if (!IsKeyRegistered(helper, src))
-                {
-                    if (defer)
-                        Services.WebReferenceBundler.GetReferenceList(helper, "js").Add(new Models.ReferenceListItem() { Src = GetPath(src), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle });
-                    else
-                        helper.ViewContext.HttpContext.Response.Write(string.Format("<script src=\"{0}\" type=\"text/javascript\" {1}></script>", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
-                    RegisterKey(helper, src);
-                }
+            var referenceItem = new Models.ReferenceListItem() { RegistrationKey = src, Src = GetPath(src), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle };
+            if (defer)
+                Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, "js").Add(referenceItem); //always note we need it (for caching widgets)
+
+            if (!IsKeyRegistered(helper, src))
+            {
+                if (defer)
+                    Services.WebReferenceBundler.GetReferenceList(helper, "js").Add(referenceItem);
+                else
+                    helper.ViewContext.HttpContext.Response.Write(string.Format("<script src=\"{0}\" type=\"text/javascript\" {1}></script>", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
+                RegisterKey(helper, src);
+            }
             //}
         }
 
@@ -192,17 +216,18 @@ namespace Videre.Core.Extensions
 
         public static void RegisterStylesheet(this HtmlHelper helper, string src, bool defer = true, Dictionary<string, string> dataAttributes = null, bool excludeFromBundle = false)
         {
-            //lock (_lockObj)
-            //{
-                if (!IsKeyRegistered(helper, src))
-                {
-                    if (defer)
-                        Services.WebReferenceBundler.GetReferenceList(helper, "css").Add(new Models.ReferenceListItem() { Src = GetPath(src), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle });
-                    else
-                        helper.ViewContext.HttpContext.Response.Write(string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
-                    RegisterKey(helper, src);
-                }
-            //}
+            var referenceItem = new Models.ReferenceListItem() { RegistrationKey = src, Src = GetPath(src), DataAttributes = dataAttributes, ExcludeFromBundle = excludeFromBundle };
+            if (defer)
+                Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, "css").Add(referenceItem); //always note we need it (for caching widgets)
+
+            if (!IsKeyRegistered(helper, src))
+            {
+                if (defer)
+                    Services.WebReferenceBundler.GetReferenceList(helper, "css").Add(referenceItem);
+                else
+                    helper.ViewContext.HttpContext.Response.Write(string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
+                RegisterKey(helper, src);
+            }
         }
         public static string RenderScripts(this HtmlHelper helper)
         {
@@ -216,9 +241,12 @@ namespace Videre.Core.Extensions
 
         public static void ScriptMarkup(this HtmlHelper helper, string key, string script)
         {
+            var referenceItem = new Models.ReferenceListItem() { RegistrationKey = key, Src = key, Text = script };
+            Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, "inlinejs").Add(referenceItem); //always note we need it (for caching widgets)
+
             if (!IsKeyRegistered(helper, key))
             {
-                Services.WebReferenceBundler.GetReferenceList(helper, "inlinejs").Add(new Models.ReferenceListItem() { Src = key, Text = script });
+                Services.WebReferenceBundler.GetReferenceList(helper, "inlinejs").Add(referenceItem);
                 RegisterKey(helper, key);
             }
         }
@@ -379,6 +407,11 @@ namespace Videre.Core.Extensions
         {
             var dict = GetRegisteredKeyDict(helper);
             return dict.ContainsKey(key.ToLower());
+        }
+
+        public static ICollection<string> GetRegisteredKeys(HtmlHelper helper)
+        {
+            return GetRegisteredKeyDict(helper).Keys;
         }
 
         public static void RegisterKey(HtmlHelper helper, string key)
