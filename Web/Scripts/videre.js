@@ -218,7 +218,7 @@ videre.UI = {
         {
             if (e.keyCode == 13)
             {
-                func();
+                func(e);
                 return false;
             }
         });
