@@ -274,7 +274,9 @@ namespace Videre.Core.Extensions
         public static void RegisterCoreScripts(this HtmlHelper helper)
         {
             helper.RegisterWebReferenceGroup("videre");
-            helper.RegisterScript("~/ServerJS/GlobalClientTranslations", true, excludeFromBundle: true);
+            var locale = Services.Localization.CurrentUserLocale;
+            var timeZone = Account.GetUserTimeZone() != null ? Account.GetUserTimeZone().Id : "";
+            helper.RegisterScript(string.Format("~/ServerJS/GlobalClientTranslations?l={0}&tz={1}", locale, timeZone), true, excludeFromBundle: true);
 
             //todo: FIX!
             helper.ScriptMarkup("coreconstants", "var ROOT_URL = '" + HtmlExtensions.RootPath + "';");
