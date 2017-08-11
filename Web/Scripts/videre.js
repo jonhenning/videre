@@ -218,7 +218,7 @@ videre.UI = {
         {
             if (e.keyCode == 13)
             {
-                func(e);
+                func();
                 return false;
             }
         });
@@ -866,7 +866,7 @@ videre.widgets.base = videre.Class.extend(
         if (scope == null)
             scope = this._widget;
         if (scope == null)
-            scope = $(document);
+            scope = document;
         return scope.find(selector);
     },
 
