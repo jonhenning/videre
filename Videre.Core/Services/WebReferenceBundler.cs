@@ -143,16 +143,16 @@ namespace Videre.Core.Services
             if (!VersionScripts)
                 return src;
 
+            var urlParts = src.Split('?');
             if (!_referenceVersion.ContainsKey(src))
             {
-                var path = System.Web.Hosting.HostingEnvironment.MapPath(src);
+                var path = System.Web.Hosting.HostingEnvironment.MapPath(urlParts[0]);
                 var version = "0";
                 if (System.IO.File.Exists(path))
-                    version = new FileInfo(System.Web.Hosting.HostingEnvironment.MapPath(src)).LastWriteTime.ToString("yyyyMMddhhmmss");
+                    version = new FileInfo(System.Web.Hosting.HostingEnvironment.MapPath(urlParts[0])).LastWriteTime.ToString("yyyyMMddhhmmss");
                 _referenceVersion[src] = version;
             }
-            return src + "?v=" + _referenceVersion[src];
-
+            return urlParts[0] + "?v=" + _referenceVersion[src] + (urlParts.Length > 1 ? "&" + urlParts[1] : "");
         }
 
         public static string GenerateUnrenderedStylesheetMarkup(HtmlHelper helper)
