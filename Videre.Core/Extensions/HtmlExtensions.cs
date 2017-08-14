@@ -109,7 +109,7 @@ namespace Videre.Core.Extensions
 
         public static void RegisterScript(this HtmlHelper helper, string key, string script)
         {
-            if (!IsKeyRegistered(helper, key))
+            if (!IsKeyRegistered(helper, key.ToLower()))
             {
                 //todo: test
                 helper.ViewContext.HttpContext.Response.Write(string.Format("<script type=\"text/javascript\">{0}</script>", script));
@@ -124,10 +124,10 @@ namespace Videre.Core.Extensions
             var type = runAtEnd ? "documentreadyendjs" : "documentreadyjs";
             Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, type).Add(referenceItem); //always note we need it (for caching widgets)
 
-            if (!IsKeyRegistered(helper, key))
+            if (!IsKeyRegistered(helper, key.ToLower()))
             {
                 Services.WebReferenceBundler.GetReferenceList(helper, type).Add(referenceItem);
-                RegisterKey(helper, key);
+                RegisterKey(helper, key.ToLower());
             }
             //}
         }
@@ -136,10 +136,10 @@ namespace Videre.Core.Extensions
         {
             foreach (var item in items)
             {
-                if (!IsKeyRegistered(helper, item.RegistrationKey))
+                if (!IsKeyRegistered(helper, item.RegistrationKey.ToLower()))
                 {
                     Services.WebReferenceBundler.GetReferenceList(helper, scriptType).Add(item);
-                    RegisterKey(helper, item.RegistrationKey);
+                    RegisterKey(helper, item.RegistrationKey.ToLower());
                 }
             }
         }
@@ -194,20 +194,20 @@ namespace Videre.Core.Extensions
             if (defer)
                 Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, "js").Add(referenceItem); //always note we need it (for caching widgets)
 
-            if (!IsKeyRegistered(helper, src))
+            if (!IsKeyRegistered(helper, src.ToLower()))
             {
                 if (defer)
                     Services.WebReferenceBundler.GetReferenceList(helper, "js").Add(referenceItem);
                 else
                     helper.ViewContext.HttpContext.Response.Write(string.Format("<script src=\"{0}\" type=\"text/javascript\" {1}></script>", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
-                RegisterKey(helper, src);
+                RegisterKey(helper, src.ToLower());
             }
             //}
         }
 
         public static void RegisterStylesheet(this HtmlHelper helper, string key, string css)
         {
-            if (!IsKeyRegistered(helper, key))
+            if (!IsKeyRegistered(helper, key.ToLower()))
             {
                 //todo: test
                 helper.ViewContext.HttpContext.Response.Write(string.Format("<style>{0}</style>", css));
@@ -220,13 +220,13 @@ namespace Videre.Core.Extensions
             if (defer)
                 Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, "css").Add(referenceItem); //always note we need it (for caching widgets)
 
-            if (!IsKeyRegistered(helper, src))
+            if (!IsKeyRegistered(helper, src.ToLower()))
             {
                 if (defer)
                     Services.WebReferenceBundler.GetReferenceList(helper, "css").Add(referenceItem);
                 else
                     helper.ViewContext.HttpContext.Response.Write(string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" {1} />", GetPath(src), GetDataAttributeMarkup(dataAttributes)));
-                RegisterKey(helper, src);
+                RegisterKey(helper, src.ToLower());
             }
         }
         public static string RenderScripts(this HtmlHelper helper)
@@ -244,10 +244,10 @@ namespace Videre.Core.Extensions
             var referenceItem = new Models.ReferenceListItem() { RegistrationKey = key, Src = key, Text = script };
             Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, "inlinejs").Add(referenceItem); //always note we need it (for caching widgets)
 
-            if (!IsKeyRegistered(helper, key))
+            if (!IsKeyRegistered(helper, key.ToLower()))
             {
                 Services.WebReferenceBundler.GetReferenceList(helper, "inlinejs").Add(referenceItem);
-                RegisterKey(helper, key);
+                RegisterKey(helper, key.ToLower());
             }
         }
 
@@ -406,7 +406,7 @@ namespace Videre.Core.Extensions
         public static bool IsKeyRegistered(HtmlHelper helper, string key)
         {
             var dict = GetRegisteredKeyDict(helper);
-            return dict.ContainsKey(key.ToLower());
+            return dict.ContainsKey(key);
         }
 
         public static ICollection<string> GetRegisteredKeys(HtmlHelper helper)
@@ -417,7 +417,7 @@ namespace Videre.Core.Extensions
         public static void RegisterKey(HtmlHelper helper, string key)
         {
             var dict = GetRegisteredKeyDict(helper);
-            dict[key.ToLower()] = true;
+            dict[key] = true;
         }
 
         public static T GetContextItem<T>(this HtmlHelper helper, string key) where T : class, new()

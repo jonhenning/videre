@@ -224,10 +224,10 @@ namespace Videre.Core.Extensions
             helper.RegisterScript("~/scripts/widgets/videre.widgets.editor.base.js", true);
 
             var path = string.IsNullOrEmpty(manifest.EditorPath) ? "Widgets/Core/CommonEditor" : manifest.EditorPath;
-            if (!HtmlExtensions.IsKeyRegistered(helper, path))
+            if (!HtmlExtensions.IsKeyRegistered(helper, path.ToLower()))
             {
                 helper.RenderPartial(path, new WidgetEditor(manifest.Id) {ClientId = Portal.NextClientId()});
-                HtmlExtensions.RegisterKey(helper, path);
+                HtmlExtensions.RegisterKey(helper, path.ToLower());
             }
         }
 
