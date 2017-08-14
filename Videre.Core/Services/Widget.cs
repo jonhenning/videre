@@ -29,7 +29,7 @@ namespace Videre.Core.Services
 
         public static string GetWidgetCacheKey(Models.Widget widget)
         {
-            var key = "cid:" + widget.ClientId;
+            var key = "wmid:" + widget.ManifestId;
             if (widget.CacheKeys != null)
             {
                 var providers = GetWidgetCacheKeyProviderDict();
