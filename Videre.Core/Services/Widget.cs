@@ -29,7 +29,8 @@ namespace Videre.Core.Services
 
         public static string GetWidgetCacheKey(Models.Widget widget)
         {
-            var key = "wmid:" + widget.ManifestId;
+            //needs to include client id for now... registered scripts marry the clientid to the UI
+            var key = "wmid:" + widget.ManifestId + "~cid:" + widget.ClientId;  
             if (widget.CacheKeys != null)
             {
                 var providers = GetWidgetCacheKeyProviderDict();
