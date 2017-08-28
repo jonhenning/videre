@@ -11,6 +11,7 @@ using System.Web.Security;
 using CodeEndeavors.Extensions;
 using Videre.Core.Binders;
 using Services = Videre.Core.Services;
+using Videre.Core.Providers;
 
 namespace Videre.Web
 {
@@ -19,9 +20,21 @@ namespace Videre.Web
 
     public class MvcApplication : System.Web.HttpApplication
     {
+        private static List<IVidereHttpApplication> _applicationPlugins = null;
+        private static List<IVidereHttpApplication> applicationPlugins
+        {
+            get
+            {
+                if (_applicationPlugins == null)
+                    _applicationPlugins = ReflectionExtensions.GetAllInstances<IVidereHttpApplication>();
+                return _applicationPlugins;
+            }
+        }
+
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            applicationPlugins.ForEach(a => a.RegisterGlobalFilters(filters));
         }
 
         public static void RegisterRoutes(RouteCollection routes)
@@ -55,6 +68,7 @@ namespace Videre.Web
             if (Services.Portal.GetAppSetting("EnableRouteDebug", false))
                 RouteDebug.RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
 
+            applicationPlugins.ForEach(a => a.RegisterRoutes(routes));
         }
 
         protected void Application_Start()
@@ -92,6 +106,8 @@ namespace Videre.Web
                 RegisterGlobalFilters(GlobalFilters.Filters);
                 RegisterRoutes(RouteTable.Routes);
 
+                applicationPlugins.ForEach(a => a.Application_Start());
+
                 Core.Services.Repository.Dispose(); //application start is not same httpcontext as first request
             }
             catch (Exception ex)
@@ -110,6 +126,7 @@ namespace Videre.Web
             {
                 showErrorPage("[Application_Start]", " ", Services.Portal.ApplicationStartupException);
                 Services.Portal.HandleFailedStartup();
+                applicationPlugins.ForEach(a => a.Application_BeginRequest(sender, e));
             }
         }
 
@@ -136,6 +153,8 @@ namespace Videre.Web
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
         {
             Services.Authentication.ProcessAuthenticationTicket();
+            applicationPlugins.ForEach(a => a.Application_AuthenticateRequest(sender, e));
+
         }
 
         protected void SessionAuthenticationModule_SessionSecurityTokenReceived(object sender, System.IdentityModel.Services.SessionSecurityTokenReceivedEventArgs e)
@@ -159,6 +178,8 @@ namespace Videre.Web
             string shutDownMessage = (string)runtime.GetType().InvokeMember("_shutDownMessage", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField, null, runtime, null);
             string shutDownStack = (string)runtime.GetType().InvokeMember("_shutDownStack", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField, null, runtime, null);
             Services.Logging.Logger.Error(String.Format("\r\n\r\n_shutDownMessage={0}\r\n\r\n_shutDownStack={1}", shutDownMessage, shutDownStack));
+
+            applicationPlugins.ForEach(a => a.Application_End());
         }
 
 
@@ -169,6 +190,7 @@ namespace Videre.Web
 
         public void Application_EndRequest(object sender, EventArgs e)
         {
+            applicationPlugins.ForEach(a => a.Application_EndRequest(sender, e));
             Services.Repository.Dispose();
         }
 

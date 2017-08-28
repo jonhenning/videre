@@ -199,6 +199,7 @@
     <Compile Include="Models\UserAuthentication.cs" />
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />
+    <Compile Include="Providers\IVidereHttpApplication.cs" />
     <Compile Include="Providers\LocaleCacheKeyProvider.cs" />
     <Compile Include="Providers\WidgetCacheKeyProvider.cs" />
     <Compile Include="Providers\TwoLevelViewCache.cs" />
