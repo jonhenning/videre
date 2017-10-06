@@ -71,20 +71,20 @@
       <HintPath>..\packages\CodeEndeavors.Extensions.2.0.10\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.40.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.40\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.45.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.45\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.File, Version=2.0.40.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.File.2.0.40\lib\net45\CodeEndeavors.ResourceManager.File.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.File, Version=2.0.45.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.File.2.0.45\lib\net45\CodeEndeavors.ResourceManager.File.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.ServiceHost, Version=2.0.40.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.ServiceHost.2.0.40\lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.ServiceHost, Version=2.0.45.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.ServiceHost.2.0.45\lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.SQLServer, Version=2.0.40.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.0.40\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.SQLServer, Version=2.0.45.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.0.45\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.0.52.0, Culture=neutral, processorArchitecture=MSIL">
