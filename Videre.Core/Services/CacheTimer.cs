@@ -14,7 +14,7 @@ namespace Videre.Core.Services
         public static void Register()
         {
             Services.Logging.Logger.Debug("Cachetimer.Register");
-            var minutes = Portal.GetAppSetting("CacheTimerMinutes", 1);
+            var minutes = Portal.GetAppSetting("CacheTimerMinutes", 60);
             HttpRuntime.Cache.Add("_cacheTimer", "", null, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(minutes), CacheItemPriority.NotRemovable, new CacheItemRemovedCallback(OnElapsed));
         }
 
