@@ -1297,7 +1297,10 @@ if ($.views != null)
 
                 $.each(data.Values, function(idx, item)
                 {
-                    $('<option>').attr('value', item).html(item).appendTo(ctl);
+                    if (videre.typename(item) == 'object')
+                        $('<option>').attr('value', item.Value).html(item.Text).appendTo(ctl);
+                    else
+                        $('<option>').attr('value', item).html(item).appendTo(ctl);
                 });
                 var controlType = videre.UI._controlTypes[ctl.data('controltype')];
                 if (controlType != null && controlType.set != null)
