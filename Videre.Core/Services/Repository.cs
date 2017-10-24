@@ -89,7 +89,10 @@ namespace Videre.Core.Services
 
         public static Resource<T> StoreResource<T>(string type, string key, T data, string userId)
         {
-            return current.StoreResource<T>(type, key, data, userId);
+            using (new Videre.Core.Services.Profiler.Timer("StoreResource: " + type + "." + key, true))
+            {
+                return current.StoreResource<T>(type, key, data, userId);
+            }
         }
 
         public static void Delete<T>(Resource<T> resource)
