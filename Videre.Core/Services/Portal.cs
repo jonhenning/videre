@@ -297,19 +297,24 @@ namespace Videre.Core.Services
                     foreach (var widget in missing)
                         widget.RemoveContent();
                 }
-                Repository.StoreResource("Template", null, pageTemplate, userId);
 
+                var res = Repository.StoreResource("Template", null, pageTemplate, userId);
+                var hasContent = false;
                 foreach (var widget in pageTemplate.Widgets)
                 {
                     //widget.TemplateId = Template.Id;    //is this a hack?
                     if (widget.ContentJson != null)
+                    {
                         widget.SaveContentJson(widget.ContentJson);
+                        hasContent = true;
+                    }
                 }
 
                 Widget.ClearAllWidgetCacheEntries();
 
                 //after contentIds assigned, need to save them!
-                var res = Repository.StoreResource("Template", null, pageTemplate, userId);
+                if (hasContent)
+                    res = Repository.StoreResource("Template", null, pageTemplate, userId);
                 return res.Id;
             }
             throw new Exception(string.Format(

@@ -127,13 +127,19 @@ namespace Videre.Core.Services
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             var menu = Get(Portal.CurrentPortalId, name);
             if (menu == null)
+            {
                 menu = new Models.Menu()
                 {
                     Name = name,
                     PortalId = Portal.CurrentPortalId
                 };
-            menu.Text = text;
-            return Save(menu, userId);
+            }
+            if (menu.Text != text)
+            {
+                menu.Text = text;
+                return Save(menu, userId);
+            }
+            return menu.Id;
         }
 
         public static string Save(Models.Menu menu, string userId = null)
