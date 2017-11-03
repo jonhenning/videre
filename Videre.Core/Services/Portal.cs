@@ -299,21 +299,21 @@ namespace Videre.Core.Services
                 }
 
                 var res = Repository.StoreResource("Template", null, pageTemplate, userId);
-                var hasContent = false;
+                //var hasContent = false;
                 foreach (var widget in pageTemplate.Widgets)
                 {
                     //widget.TemplateId = Template.Id;    //is this a hack?
                     if (widget.ContentJson != null)
                     {
                         widget.SaveContentJson(widget.ContentJson);
-                        hasContent = true;
+                        //hasContent = true;
                     }
                 }
 
                 Widget.ClearAllWidgetCacheEntries();
 
                 //after contentIds assigned, need to save them!
-                if (hasContent)
+                //if (hasContent)
                     res = Repository.StoreResource("Template", null, pageTemplate, userId);
                 return res.Id;
             }
