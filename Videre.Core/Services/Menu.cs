@@ -134,7 +134,8 @@ namespace Videre.Core.Services
                     PortalId = Portal.CurrentPortalId
                 };
             }
-            if (menu.Text != text)
+            //portalId is not set on initial register.
+            if (menu.Text != text || string.IsNullOrEmpty(menu.Id) || (menu.PortalId != Services.Portal.CurrentPortalId))
             {
                 menu.Text = text;
                 return Save(menu, userId);
