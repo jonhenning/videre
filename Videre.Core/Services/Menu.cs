@@ -134,8 +134,12 @@ namespace Videre.Core.Services
                     PortalId = Portal.CurrentPortalId
                 };
             }
-            menu.Text = text;
-            return Save(menu, userId);
+            if (menu.Text != text)
+            {
+                menu.Text = text;
+                return Save(menu, userId);
+            }
+            return menu.Id;
         }
 
         public static string Save(Models.Menu menu, string userId = null)
