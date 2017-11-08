@@ -331,12 +331,20 @@ namespace Videre.Core.Services
 
         public static void RemoveAppOffline()
         {
-            var rootDir = Portal.ResolvePath("~/");
-            var fileName = Path.Combine(rootDir, "app_offline.htm");
-            if (System.IO.File.Exists(fileName))
+            try
             {
-                Logging.Logger.Info("Removing App Offline");
-                System.IO.File.Delete(fileName);
+                var rootDir = Portal.ResolvePath("~/");
+                var fileName = Path.Combine(rootDir, "app_offline.htm");
+                if (System.IO.File.Exists(fileName))
+                {
+                    Logging.Logger.Info("Removing App Offline");
+                    System.IO.File.Delete(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.Logger.Error(ex.Message);
+                throw;
             }
         }
 

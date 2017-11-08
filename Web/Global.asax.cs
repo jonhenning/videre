@@ -181,6 +181,7 @@ namespace Videre.Web
             Services.Logging.Logger.Error(String.Format("\r\n\r\n_shutDownMessage={0}\r\n\r\n_shutDownStack={1}", shutDownMessage, shutDownStack));
 
             applicationPlugins.ForEach(a => a.Application_End());
+            Services.Update.RemoveAppOffline();
         }
 
 

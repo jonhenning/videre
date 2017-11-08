@@ -224,66 +224,73 @@ namespace Videre.Core.Services
 
         public static bool InstallFile(string fileName, string portalId = null, bool removeFile = true)
         {
-            var rootDir = Portal.ResolvePath("~/");
-            var file = new FileInfo(fileName);
-            portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
-
-            if (file != null)
+            try
             {
-                switch (file.Extension.ToLower())
+                var rootDir = Portal.ResolvePath("~/");
+                var file = new FileInfo(fileName);
+                portalId = string.IsNullOrEmpty(portalId) ? Portal.CurrentPortalId : portalId;
+
+                if (file != null)
                 {
-                    case ".zip":
-                        {
-                            //todo: dependency checks
-                            var packageManifest = GetPackageManifest(fileName);
-                            
-                            var packageFileName = packageManifest != null ? AddPackage(fileName) : fileName;   //if zip has manifest put in package folder and install from there
-
-                            Logging.Logger.InfoFormat("Applying update for file: {0}", packageFileName);
-                            packageFileName.ExtractZip(rootDir, @"-package\.manifest;-\.json");
-
-                            //todo:  deferred package content apply or right now?  
-                            //ideally manifest will have the registration assembly listed and we can register right away then instantly apply
-                            ApplyPackageContent(packageFileName, portalId);
-
-                            ExtractNonContentJsonFiles(packageFileName);    //we want to allow json files to be extracted, just ignore the ones that are package content
-
-                            if (removeFile)
-                                System.IO.File.Delete(file.FullName);
-
-                            if (packageManifest != null)
+                    switch (file.Extension.ToLower())
+                    {
+                        case ".zip":
                             {
-                                var existingPackage = GetInstalledPackage(packageManifest.Name);
-                                if (existingPackage != null)
-                                    packageManifest.Id = existingPackage.Id; //todo: odd to do this..
-                                packageManifest.FileName = packageFileName;
-                                packageManifest.InstallDate = DateTime.UtcNow;
-                                Save(packageManifest);
-                            }
+                                //todo: dependency checks
+                                var packageManifest = GetPackageManifest(fileName);
 
-                            return true;
-                        }
-                    case ".json":
-                        {
-                            Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
-                            var portalExport = file.FullName.GetFileContents().ToObject<Models.PortalExport>();
-                            var hash = Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"));
-                            if (!Package.ImportHashExists(file.Name, hash))
-                            {
-                                Services.ImportExport.Import(portalExport, portalId);
-                                Package.AddAppliedImportHash(file.Name, hash);
+                                var packageFileName = packageManifest != null ? AddPackage(fileName) : fileName;   //if zip has manifest put in package folder and install from there
+
+                                Logging.Logger.InfoFormat("Applying update for file: {0}", packageFileName);
+                                packageFileName.ExtractZip(rootDir, @"-package\.manifest;-\.json");
+
+                                //todo:  deferred package content apply or right now?  
+                                //ideally manifest will have the registration assembly listed and we can register right away then instantly apply
+                                ApplyPackageContent(packageFileName, portalId);
+
+                                ExtractNonContentJsonFiles(packageFileName);    //we want to allow json files to be extracted, just ignore the ones that are package content
+
+                                if (removeFile)
+                                    System.IO.File.Delete(file.FullName);
+
+                                if (packageManifest != null)
+                                {
+                                    var existingPackage = GetInstalledPackage(packageManifest.Name);
+                                    if (existingPackage != null)
+                                        packageManifest.Id = existingPackage.Id; //todo: odd to do this..
+                                    packageManifest.FileName = packageFileName;
+                                    packageManifest.InstallDate = DateTime.UtcNow;
+                                    Save(packageManifest);
+                                }
+
+                                return true;
                             }
-                            if (removeFile)
-                                System.IO.File.Delete(file.FullName);
-                            return true;
-                        }
-                    default:
-                        {
-                            Logging.Logger.Error("Unknown File Extension: " + file.Extension);
-                            break;
-                            //throw new Exception("Unknown File Extension: " + file.Extension);
-                        }
+                        case ".json":
+                            {
+                                Logging.Logger.InfoFormat("Applying import for file: {0}", file.FullName);
+                                var portalExport = file.FullName.GetFileContents().ToObject<Models.PortalExport>();
+                                var hash = Package.GetJsonHash(portalExport.ToJson(ignoreType: "db"));
+                                if (!Package.ImportHashExists(file.Name, hash))
+                                {
+                                    Services.ImportExport.Import(portalExport, portalId);
+                                    Package.AddAppliedImportHash(file.Name, hash);
+                                }
+                                if (removeFile)
+                                    System.IO.File.Delete(file.FullName);
+                                return true;
+                            }
+                        default:
+                            {
+                                Logging.Logger.Error("Unknown File Extension: " + file.Extension);
+                                break;
+                                //throw new Exception("Unknown File Extension: " + file.Extension);
+                            }
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logging.Logger.Error(ex.Message);
             }
             return false;
         }
