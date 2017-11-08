@@ -295,10 +295,10 @@ namespace Videre.Core.Services
             var count = 0;
             var files = dir.GetFiles("*.zip");
 
-            if (files.Length > 0)
+            if (files.Length > 0 && !ApplyingUpdates)
             {
-                Logging.Logger.InfoFormat("ApplyUpdates for files {0}", files.Select(f => f.Name).ToJson());
                 ApplyingUpdates = true; //set flag to allow other code to short-circuit 
+                Logging.Logger.InfoFormat("ApplyUpdates for files {0}", files.Select(f => f.Name).ToJson());
                 SetAppOffline();
                 foreach (var file in files)
                     count += Package.InstallFile(file.FullName) ? 1 : 0;
