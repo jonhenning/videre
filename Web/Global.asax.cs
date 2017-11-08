@@ -169,6 +169,7 @@ namespace Videre.Web
 
         public void Application_End()
         {
+            Services.Update.ApplicationShutdown = true;
             //http://weblogs.asp.net/scottgu/archive/2005/12/14/433194.aspx
             HttpRuntime runtime = (HttpRuntime)typeof(System.Web.HttpRuntime).InvokeMember("_theRuntime", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetField, null, null, null);
 

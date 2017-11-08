@@ -196,6 +196,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app_offline.txt" />
     <Content Include="Content\images\document.png" />
     <Content Include="Content\images\folder.png" />
     <Content Include="Content\images\icon-rss.png" />

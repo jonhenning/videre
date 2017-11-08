@@ -43,6 +43,9 @@ namespace Videre.Core.Services
             }
         }
 
+        public static bool ApplyingUpdates { get; set; }
+        public static bool ApplicationShutdown { get; set; }
+
         //public static string PackageDir
         //{
         //    get
@@ -291,14 +294,50 @@ namespace Videre.Core.Services
             var dir = new DirectoryInfo(updateDir);
             var count = 0;
             var files = dir.GetFiles("*.zip");
-            foreach (var file in files)
-                count += Package.InstallFile(file.FullName) ? 1 : 0;
 
+            if (files.Length > 0)
+            {
+                Logging.Logger.InfoFormat("ApplyUpdates for files {0}", files.Select(f => f.Name).ToJson());
+                ApplyingUpdates = true; //set flag to allow other code to short-circuit 
+                SetAppOffline();
+                foreach (var file in files)
+                    count += Package.InstallFile(file.FullName) ? 1 : 0;
+
+                if (!ApplicationShutdown)   //force recycle, as we are not running registration logic during install and instally may not copy things to bin folder
+                {
+                    Logging.Logger.InfoFormat("Forcing Recycle due to install");
+                    HttpRuntime.UnloadAppDomain();
+                }
+                RemoveAppOffline();
+                ApplyingUpdates = false;
+            }
             //These are specific to a portal!
             //files = dir.GetFiles("*.json");
             //foreach (var file in files)
             //    count += InstallFile(file.FullName) ? 1 : 0;
             return count;
+        }
+
+        public static void SetAppOffline()
+        {
+            var rootDir = Portal.ResolvePath("~/");
+            var fileName = Path.Combine(rootDir, "app_offline.txt");
+            if (System.IO.File.Exists(fileName))
+            {
+                Logging.Logger.Info("Setting App Offline");
+                System.IO.File.Copy(fileName, Path.Combine(rootDir, "app_offline.htm"));
+            }
+        }
+
+        public static void RemoveAppOffline()
+        {
+            var rootDir = Portal.ResolvePath("~/");
+            var fileName = Path.Combine(rootDir, "app_offline.htm");
+            if (System.IO.File.Exists(fileName))
+            {
+                Logging.Logger.Info("Removing App Offline");
+                System.IO.File.Delete(fileName);
+            }
         }
 
         //todo: allowing passing in of objects, but currently using very little of them
@@ -411,14 +450,23 @@ namespace Videre.Core.Services
             var updates = 0;
             foreach (var registration in widgetRegistrations)
             {
-                using (new Videre.Core.Services.Profiler.Timer("Registering Widget: " + registration.GetType().ToString(), true))
+                if (!ApplyingUpdates)
                 {
-                    Logging.Logger.InfoFormat("Registering {0}", registration.GetType().ToString());
-                    //var w = (Models.IWidgetRegistration)ObjectFactory.GetInstance(registration.PluginType);
-                    updates += registration.Register();
+                    using (new Videre.Core.Services.Profiler.Timer("Registering Widget: " + registration.GetType().ToString(), true))
+                    {
+                        Logging.Logger.InfoFormat("Registering {0}", registration.GetType().ToString());
+                        //var w = (Models.IWidgetRegistration)ObjectFactory.GetInstance(registration.PluginType);
+                        updates += registration.Register();
+                    }
                 }
+                else
+                    Logging.Logger.InfoFormat("Not Registering Widget {0}.  Applying Updates", registration.GetType().ToString());
             }
-            updates += RegisterPortals(false);
+            if (!ApplyingUpdates)
+                updates += RegisterPortals(false);
+            else
+                Logging.Logger.InfoFormat("Not Registering Portals.  Applying Updates");
+
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();
 
