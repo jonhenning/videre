@@ -122,6 +122,8 @@ namespace Videre.Web
         public void Application_BeginRequest(object sender, EventArgs e)
         {
             //if (Application["ApplicationStartError"] != null)
+            log4net.ThreadContext.Properties["threadid"] = System.Threading.Thread.CurrentThread.ManagedThreadId;   //todo: find a non-specific log4net implementation for this...  
+
             if (Services.Portal.StartupFailed)
             {
                 showErrorPage("[Application_Start]", " ", Services.Portal.ApplicationStartupException);
