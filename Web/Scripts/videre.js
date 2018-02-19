@@ -520,7 +520,7 @@ videre.UI = {
             get: function(val, options)
             {
                 var format = options != null && options.format != null ? options.format : videre.localization.dateFormats.datetime;
-                var zone = options != null && options.zone != null ? options.zone : videre.localization.dateFormats.zone;
+                var zone = options != null && options.zone != null ? options.zone : videre.localization.dateFormats.zonename;
                 return val != null ? videre.parseDate(val, format, zone) : '';
             }
         },
