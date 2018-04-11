@@ -436,8 +436,11 @@ namespace Videre.Core.Services
             Mail.Send(adminUser.Email, adminUser.Email, "WelcomeEmail", subject, body, tokens);
         }
 
+        public static event EventHandler PreRegister;
+        public static event EventHandler PostRegister;
         public static void Register()
         {
+            PreRegister(null, new EventArgs());
             //if (Services.Portal.CurrentPortal != null)  //todo: best way to handle this?
             //{
             //    if (Services.Update.Register(new Videre.Core.Models.Portal() { Name = "Default" }) > 0)
@@ -449,6 +452,8 @@ namespace Videre.Core.Services
             Services.Authentication.RegisterAuthenticationProviders();
             Services.Authentication.RegisterAuthenticationResetProviders();
             Services.WebReferenceBundler.RegisterWebReferenceBundlers();
+
+            PostRegister(null, new EventArgs());
         }
 
         public static void RegisterWidgets()
