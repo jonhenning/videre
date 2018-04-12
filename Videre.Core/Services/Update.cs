@@ -11,11 +11,23 @@ using System.Web.Mvc;
 using CoreServices = Videre.Core.Services;
 using PaniciSoftware.FastTemplate.Common;
 using Videre.Core.Extensions;
+using Videre.Core.Models;
 
 namespace Videre.Core.Services
 {
     public class Update
     {
+        private static List<IApplicationRegistration> _registrationPlugins = null;
+        private static List<IApplicationRegistration> registrationPlugins
+        {
+            get
+            {
+                if (_registrationPlugins == null)
+                    _registrationPlugins = ReflectionExtensions.GetAllInstances<IApplicationRegistration>();
+                return _registrationPlugins;
+            }
+        }
+
         private static Dictionary<string, string> _adminRoleIdDict = new Dictionary<string, string>();
         public static string GetAdminRoleId(string portalId = null)
         {
@@ -436,11 +448,10 @@ namespace Videre.Core.Services
             Mail.Send(adminUser.Email, adminUser.Email, "WelcomeEmail", subject, body, tokens);
         }
 
-        public static event EventHandler PreRegister;
-        public static event EventHandler PostRegister;
         public static void Register()
         {
-            PreRegister(null, new EventArgs());
+            registrationPlugins.ForEach(a => a.Application_BeginRegister());
+
             //if (Services.Portal.CurrentPortal != null)  //todo: best way to handle this?
             //{
             //    if (Services.Update.Register(new Videre.Core.Models.Portal() { Name = "Default" }) > 0)
@@ -453,11 +464,13 @@ namespace Videre.Core.Services
             Services.Authentication.RegisterAuthenticationResetProviders();
             Services.WebReferenceBundler.RegisterWebReferenceBundlers();
 
-            PostRegister(null, new EventArgs());
+            registrationPlugins.ForEach(a => a.Application_EndRegister());
         }
 
         public static void RegisterWidgets()
         {
+            registrationPlugins.ForEach(a => a.Application_BeginRegisterWidgets());
+
             var widgetRegistrations = ReflectionExtensions.GetAllInstances<Models.IWidgetRegistration>();
 
             var updates = 0;
@@ -480,9 +493,11 @@ namespace Videre.Core.Services
             else
                 Logging.Logger.InfoFormat("Not Registering Portals.  Applying Updates");
 
+            registrationPlugins.ForEach(a => a.Application_PreRegisterWidgetsSave(updates));
             if (updates > 0)
                 CoreServices.Repository.SaveChanges();
 
+            registrationPlugins.ForEach(a => a.Application_EndRegisterWidgets(updates));
         }
 
         [Obsolete()]
