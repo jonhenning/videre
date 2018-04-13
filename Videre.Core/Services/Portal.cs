@@ -54,7 +54,18 @@ namespace Videre.Core.Services
         {
             if (_startupFailTime.HasValue && DateTimeOffset.Now.Subtract(_startupFailTime.Value).TotalSeconds > 5)
             {
-                HttpRuntime.UnloadAppDomain();
+                try
+                {
+                    HttpRuntime.UnloadAppDomain();
+                }
+                catch (Exception ex)
+                {
+                    Services.Logging.Logger.Error("UnloadAppDomain FAILED", ex);
+                    //ApplicationInsights has trouble if you dynamically load the module via DynamicModuleUtility.RegisterModule with unloading due to type resolve issue with System.Diagnostics
+                    //so...  lets do a major hack by forcing app restart by touching web.config... ugh!
+                    var webConfigFileName = Core.Services.Portal.ResolvePath("~/web.config");
+                    webConfigFileName.GetFileContents().WriteText(webConfigFileName);
+                }
             }
         }
 
@@ -319,7 +330,7 @@ namespace Videre.Core.Services
             }
             throw new Exception(string.Format(
                 Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
-                    "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template"));
+                    "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template:" + pageTemplate.ToJson()));
         }
 
         public static Models.Widget GetWidgetForTemplate(string widgetPaneName, string widgetManifestFullName, List<string> contentIds = null)

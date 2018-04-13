@@ -12,6 +12,7 @@ using CoreServices = Videre.Core.Services;
 using PaniciSoftware.FastTemplate.Common;
 using Videre.Core.Extensions;
 using Videre.Core.Models;
+using Videre.Core.Providers;
 
 namespace Videre.Core.Services
 {

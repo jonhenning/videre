@@ -71,28 +71,28 @@
       <HintPath>..\packages\CodeEndeavors.Extensions.2.0.10\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.48.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.48\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.56.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.56\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.File, Version=2.0.48.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.File.2.0.48\lib\net45\CodeEndeavors.ResourceManager.File.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.File, Version=2.0.56.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.File.2.0.56\lib\net45\CodeEndeavors.ResourceManager.File.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.ServiceHost, Version=2.0.48.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.ServiceHost.2.0.48\lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.ServiceHost, Version=2.0.56.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.ServiceHost.2.0.56\lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.SQLServer, Version=2.0.48.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.0.48\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.SQLServer, Version=2.0.56.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.0.56\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.0.58.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.0.58\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
+    <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.0.75.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.0.75\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=1.0.33.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Services.ResourceManager.ClientX.1.0.33\lib\net45\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
+    <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=1.0.39.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Services.ResourceManager.ClientX.1.0.39\lib\net45\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
@@ -277,7 +277,9 @@
     <Content Include="Content\themes\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\themes\fonts\glyphicons-halflings-regular.woff" />
     <None Include="SMTPSettings.config.debug" />
-    <None Include="log4net.config.debug" />
+    <None Include="log4net.config.debug">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -320,7 +322,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>17512</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

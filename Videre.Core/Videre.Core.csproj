@@ -69,8 +69,8 @@
       <HintPath>..\packages\CodeEndeavors.Extensions.2.0.10\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.48.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.48\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.56.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.56\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
@@ -195,20 +195,21 @@
     <Compile Include="Models\AuthenticatedUser.cs" />
     <Compile Include="Models\ImportExportContentJob.cs" />
     <Compile Include="Models\ImportHash.cs" />
-    <Compile Include="Models\IApplicationRegistration.cs" />
+    <Compile Include="Providers\IApplicationRegistration.cs" />
     <Compile Include="Models\NumberFormat.cs" />
     <Compile Include="Models\UserAuthentication.cs" />
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\ReferenceListItem.cs" />
     <Compile Include="Providers\IVidereHttpApplication.cs" />
     <Compile Include="Providers\LocaleCacheKeyProvider.cs" />
+    <Compile Include="Providers\VidereAccountChangePasswordHandler.cs" />
     <Compile Include="Providers\WidgetCacheKeyProvider.cs" />
     <Compile Include="Providers\TwoLevelViewCache.cs" />
     <Compile Include="Providers\UserCacheKeyProvider.cs" />
     <Compile Include="Providers\UrlCacheKeyProvider.cs" />
     <Compile Include="Providers\TemplateCacheKeyProvider.cs" />
     <Compile Include="Providers\IWidgetCacheKeyProvider.cs" />
-    <Compile Include="Providers\VidereAccountChangePasswordHandler.cs" />
+    <Compile Include="Providers\ApplicationRegistrationHandler.cs" />
     <Compile Include="Providers\VidereAccountVerificationHandler.cs" />
     <Compile Include="Providers\VidereAuthenticationRequestHandler.cs" />
     <Compile Include="Providers\IRequestHandler.cs" />

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 
-namespace Videre.Core.Models
+namespace Videre.Core.Providers
 {
     public interface IApplicationRegistration
     {

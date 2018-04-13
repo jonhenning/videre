@@ -105,6 +105,16 @@ namespace Videre.Core.Services
             current.DeleteAll<T>(type);
         }
 
+        public static string ObtainLock(string source, string ns)
+        {
+            return current.ObtainLock(source, ns);
+        }
+
+        public static bool RemoveLock(string source, string ns)
+        {
+            return current.RemoveLock(source, ns);
+        }
+
         private static ResourceRepository current
         {
             get
