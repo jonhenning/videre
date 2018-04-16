@@ -12,7 +12,7 @@ namespace Videre.Core.Providers
         string _lockSource = null;
         public void Application_BeginRegister()
         {
-            //_lockSource = Services.Repository.ObtainLock(Environment.MachineName, CoreServices.Portal.CurrentPortalId);
+            _lockSource = Services.Repository.ObtainLock(Environment.MachineName, CoreServices.Portal.CurrentPortalId);
         }
 
         public void Application_BeginRegisterWidgets()
@@ -26,13 +26,13 @@ namespace Videre.Core.Providers
         }
         public void Application_PreRegisterWidgetsSave(int updates)
         {
-            //if (updates > 0 && _lockSource != Environment.MachineName)
-            //    throw new Exception("Application Concurrency Error");
+            if (updates > 0 && _lockSource != Environment.MachineName)  
+                throw new Exception("Application Concurrency Error");
         }
 
         public void Application_EndRegisterWidgets(int updates)
         {
-            //Services.Repository.RemoveLock(Environment.MachineName, CoreServices.Portal.CurrentPortalId);
+            Services.Repository.RemoveLock(Environment.MachineName, CoreServices.Portal.CurrentPortalId);
         }
 
     }
