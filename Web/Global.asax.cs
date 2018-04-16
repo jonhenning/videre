@@ -12,6 +12,7 @@ using CodeEndeavors.Extensions;
 using Videre.Core.Binders;
 using Services = Videre.Core.Services;
 using Videre.Core.Providers;
+using System.Collections.Concurrent;
 
 namespace Videre.Web
 {
@@ -189,6 +190,7 @@ namespace Videre.Web
 
         public void Application_Error(object sender, EventArgs e)
         {
+            applicationPlugins.ForEach(a => a.Application_Error(sender, e));
             Services.Logging.Logger.Error("Application_Error", this.Server.GetLastError());
         }
 
@@ -198,11 +200,21 @@ namespace Videre.Web
             Services.Repository.Dispose();
         }
 
+        private static ConcurrentDictionary<string, System.Reflection.Assembly> _resolvedNames = new ConcurrentDictionary<string, System.Reflection.Assembly>();
         public Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            var assemblyName = new AssemblyName(args.Name);
-            if (assemblyName.Name != args.Name)
-                return Assembly.LoadWithPartialName(assemblyName.Name);
+            var name = new AssemblyName(args.Name);
+            if (name.Name != args.Name)
+            {
+                if (!_resolvedNames.ContainsKey(name.Name))
+                {
+                    Services.Logging.Logger.Info(string.Format("Videre.CurrentDomain_AssemblyResolve: {0} != {1}", name.Name, args.Name));
+                    _resolvedNames[name.Name] = System.Reflection.Assembly.LoadWithPartialName(name.Name);
+                }
+                else
+                    Services.Logging.Logger.Info(string.Format("Videre.CurrentDomain_AssemblyResolve (cached): {0} != {1}", name.Name, args.Name));
+                return _resolvedNames[name.Name];
+            }
             return null;
         }
 
