@@ -129,8 +129,9 @@ namespace Videre.Web
             {
                 showErrorPage("[Application_Start]", " ", Services.Portal.ApplicationStartupException);
                 Services.Portal.HandleFailedStartup();
-                applicationPlugins.ForEach(a => a.Application_BeginRequest(sender, e));
             }
+            else
+                applicationPlugins.ForEach(a => a.Application_BeginRequest(sender, e));
         }
 
         private void showErrorPage(string controllerName, string actionName, Exception exception)
