@@ -16,6 +16,27 @@ namespace Videre.Core.Services
     {
         private static AccountProviders.IAccountService _accountService;
 
+        private static List<Providers.IVerifyAccountProvider> _verifyAuthenticationProviders = null;
+
+        public static List<Providers.IVerifyAccountProvider> VerifyAuthenticationProviders
+        {
+            get
+            {
+                if (_verifyAuthenticationProviders == null)
+                    _verifyAuthenticationProviders = ReflectionExtensions.GetAllInstances<Providers.IVerifyAccountProvider>();
+                return _verifyAuthenticationProviders;
+            }
+        }
+
+        public static Providers.IVerifyAccountProvider VerifyAuthenticationProvider
+        {
+            get
+            {
+                return VerifyAuthenticationProviders.Where(p => p.Name == Services.Portal.GetPortalSetting("Account", "AccountVerificationProvider", "Videre")).FirstOrDefault();
+            }
+        }
+
+
         public static AccountProviders.IAccountService AccountService
         {
             get
@@ -30,13 +51,29 @@ namespace Videre.Core.Services
             }
         }
 
+        public static bool TwoPhaseAuthenticationEnabled
+        {
+            get
+            {
+                return AccountVerificationMode != "None" || UserTwoPhaseAuthenticationEnabled;
+            }
+        }
+
+        public static bool UserTwoPhaseAuthenticationEnabled
+        {
+            get
+            {
+                return Services.Portal.GetPortalAttribute("Authentication", "EnableTwoPhaseAuthentication", "No") == "Yes";
+            }
+        }
+
         public static List<Models.CustomDataElement> CustomUserElements
         {
             get
             {
                 var elements = AccountService.CustomUserElements;
 
-                if (Services.Portal.GetPortalAttribute("Authentication", "EnableTwoPhaseAuthentication", "No") == "Yes")
+                if (UserTwoPhaseAuthenticationEnabled)
                 {
                     //this seems a bit hacky to accomplish this here like this
                     if (!elements.Exists(e => e.Name == "Enable Two-Phase Authentication"))
@@ -164,6 +201,21 @@ namespace Videre.Core.Services
                 if (Authentication.IsAuthenticated)
                 {
                     var user = GetUserById(Authentication.AuthenticatedUserId, true);
+                    if (user == null)
+                        Core.Services.Authentication.RevokeAuthenticationTicket();
+                    return user;
+                }
+                return null;
+            }
+        }
+
+        public static Models.User CurrentNonImpersonatedUser
+        {
+            get
+            {
+                if (Authentication.IsAuthenticated)
+                {
+                    var user = GetUserById(Authentication.NonImpersonatedAuthenticatedUser.Id, true);
                     if (user == null)
                         Core.Services.Authentication.RevokeAuthenticationTicket();
                     return user;
@@ -554,13 +606,12 @@ namespace Videre.Core.Services
 
         public static string AccountVerificationUrl { get { return Services.Portal.ResolveUrl(Services.Portal.GetPortalAttribute("Account", "AccountVerificationUrl", "~/account/verify")); } }
 
-        [Obsolete("Use user.IsEmailVerified")]
-        public static bool IsAccountVerified(Models.User user)
+        //[Obsolete("Use user.IsEmailVerified")]
+        public static bool IsAccountVerified(IAuthorizationUser user)
         {
-            return user.IsEmailVerified;
-            //var code = user.GetClaimValue("Account Verification Code", "Videre Account Verification", "");
-            //var verifiedOn = user.GetClaimValue<string>("Account Verified On", "Videre Account Verification", null);
-            //return !string.IsNullOrEmpty(code) && verifiedOn != null;
+            if (VerifyAuthenticationProvider != null)
+                return VerifyAuthenticationProvider.IsAccountVerified(user);
+            return false;
         }
 
         public static bool VerifyAccount(string userId, string verificationCode)
@@ -570,70 +621,45 @@ namespace Videre.Core.Services
 
         public static bool VerifyAccount(string userId, string verificationCode, bool trust)
         {
-            var user = GetUserById(userId);
             var ret = false;
-            if (user != null)
+            if (VerifyAuthenticationProvider != null)
             {
-                if (user.GetClaimValue("Account Verification Code", "Videre Account Verification", "") == verificationCode)
+                var user = GetUserById(userId);
+                if (user != null)
                 {
-                    user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = "Videre Account Verification", Value = DateTime.UtcNow.ToJson() });
-
-                    if (UserRequiresTwoPhaseVerification() && !UserBrowserIsVerified())
-                        MarkUserBrowserVerified(trust);
-
-                    var claim = user.GetClaim("Account Verification Code", "Videre Account Verification");
-                    if (claim != null)
-                        user.Claims.Remove(claim);
-
-                    Account.SaveUser(user);
-                    Authentication.UpdateAuthenticationTicketPrincipal();
-                    ret = true;
+                    if (VerifyAuthenticationProvider.VerifyAccount(user, verificationCode, trust))
+                    {
+                        Account.SaveUser(user);
+                        Authentication.UpdateAuthenticationTicketPrincipal();
+                        ret = true;
+                    }
                 }
             }
-
             return ret;
         }
 
         //allow for admin verification
         public static bool VerifyAccount(string userId)
         {
-            var user = GetUserById(userId);
-            if (user != null)
+            if (VerifyAuthenticationProvider != null)
             {
-                if (!user.IsEmailVerified)
-                {
-                    user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = "Videre Account Verification", Value = DateTime.UtcNow.ToJson() });
+                var user = GetUserById(userId);
+                if (VerifyAuthenticationProvider.ForceVerifyAccount(user))  //true if needed save
                     Account.SaveUser(user);
-                }
                 return true;
             }
             return false;
         }
 
-        public static void MarkUserBrowserVerified(bool trust, string userId = null)
-        {
-            userId = string.IsNullOrEmpty(userId) ? Authentication.AuthenticatedUserId : userId;
-            var cookie = new HttpCookie("browserverification-" + userId, userId);
-            cookie.HttpOnly = true;
-            if (trust)
-                cookie.Expires = DateTime.Now.AddDays(ConfigurationManager.AppSettings.GetSetting("UserBrowserVerificationDays", 30));
-            else
-                cookie.Expires = DateTime.MinValue; //session cookie
-
-            HttpContext.Current.Response.AppendCookie(cookie);
-        }
-
         public static bool RemoveAccountVerification(string userId)
         {
-            var user = GetUserById(userId);
-            if (user != null)
+            if (VerifyAuthenticationProvider != null)
             {
-                var claims = user.Claims.Where(c => c.Issuer == "Videre Account Verification").ToList();
-                foreach (var claim in claims)
-                    user.Claims.Remove(claim);
-                if (claims.Count > 0)
+                var user = GetUserById(userId);
+                if (user != null)
                 {
-                    Account.SaveUser(user);
+                    if (VerifyAuthenticationProvider.RemoveAccountVerification(user))
+                        Account.SaveUser(user);
                     return true;
                 }
             }
@@ -642,49 +668,38 @@ namespace Videre.Core.Services
 
         public static bool IssueAccountVerificationCode(string userId)
         {
-            var user = GetUserById(userId);
-            var claim = user.GetClaim("Account Verification Code", "Videre Account Verification");
-            if (claim == null)
+            if (VerifyAuthenticationProvider != null)
             {
-                claim = new UserClaim() { Type = "Account Verification Code", Issuer = "Videre Account Verification", Value = System.Web.Security.Membership.GeneratePassword(8, 2) };
-                user.Claims.Add(claim);
-                Account.SaveUser(user);
-            }
-            sendVerificationCode(user, claim.Value);
-            return true;
-        }
-
-        public static bool UserRequiresTwoPhaseVerification(string id = null)
-        {
-            id = string.IsNullOrEmpty(id) ? Authentication.AuthenticatedUserId : id;
-            var user = GetUserById(id);
-            if (user != null)
-            {
-                var enabled = user.Attributes.GetSetting("Enable Two-Phase Authentication", false);
-                return enabled && !UserBrowserIsVerified(id);
+                var code = VerifyAuthenticationProvider.GenerateVerificationCode();
+                var user = GetUserById(userId);
+                if (VerifyAuthenticationProvider.IssueAccountVerificationCode(user, code))
+                    Account.SaveUser(user);
+                VerifyAuthenticationProvider.SendVerification(user, code);
+                return true;
             }
             return false;
         }
 
-        public static bool UserBrowserIsVerified(string userId = null)
+        public static bool UserRequiresTwoPhaseVerification(string id = null)
         {
-            var cookie = HttpContext.Current.Request.Cookies["browserverification-" + userId];
-            return cookie != null && cookie.Value == userId;    //todo:  value should be something simple like userId or move complicated like a hash of the userAgent???
+            if (Account.UserTwoPhaseAuthenticationEnabled)
+            {
+                Models.User user = null;
+                if (!string.IsNullOrEmpty(id))
+                    user = GetUserById(id);
+                else
+                    user = CurrentNonImpersonatedUser;
+                if (user != null)
+                    return UserRequiresTwoPhaseVerification(user);
+            }
+            return false;
         }
 
-        private static void sendVerificationCode(Models.User user, string code)
+        public static bool UserRequiresTwoPhaseVerification(Models.User user)
         {
-            var subject = Services.Localization.GetPortalText("PortalEmailAccountVerificationSubject.Text", "Account Verification Code");
-            var body = Services.Localization.GetPortalText("PortalEmailAccountVerificationBody.Text", "<p>Please verify your account by logging into <a href=\"$Url\">your account</a> and entering the following code when asked.</p><p><b><a href=\"$Url\">$Code</a></b></p>");
-            var tokens = new Dictionary<string, object>()
-                {
-                    {"Code", code},
-                    {"Url", Portal.RequestRootUrl.PathCombine(Account.AccountVerificationUrl) + "?code=" + HttpUtility.UrlEncode(code)}
-                };
-            if (!string.IsNullOrEmpty(Services.Portal.CurrentPortal.AdministratorEmail))
-                Services.Mail.Send(Services.Portal.CurrentPortal.AdministratorEmail, user.Email, "AccountVerification", subject, body, tokens, true);
-            else
-                throw new Exception(Services.Localization.GetExceptionText("AdministratorEmailNotSet.Text", "Administrator Email not set.  Please contact the portal administrator."));
+            if (Account.UserTwoPhaseAuthenticationEnabled)
+                return user.Attributes.GetSetting("Enable Two-Phase Authentication", false);
+            return false;
         }
 
         private static void Validate(Models.UserProfile userProfile)

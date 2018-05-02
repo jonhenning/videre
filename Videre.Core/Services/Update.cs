@@ -463,6 +463,7 @@ namespace Videre.Core.Services
             //Services.Update.RegisterImportExportProviders();
             Services.Authentication.RegisterAuthenticationProviders();
             Services.Authentication.RegisterAuthenticationResetProviders();
+            Services.Authentication.RegisterAccountVerificationProviders();
             Services.WebReferenceBundler.RegisterWebReferenceBundlers();
 
             registrationPlugins.ForEach(a => a.Application_EndRegister());

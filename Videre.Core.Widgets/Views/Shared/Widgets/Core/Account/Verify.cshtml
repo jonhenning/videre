@@ -15,14 +15,14 @@
     }
     var code = !string.IsNullOrEmpty(Request.QueryString["code"]) ? Request.QueryString["code"] : "";
 
-    var twoPhase = (CoreServices.Account.UserRequiresTwoPhaseVerification() && !CoreServices.Account.UserBrowserIsVerified());
+    var twoPhase = (CoreServices.Account.TwoPhaseAuthenticationEnabled);
     
     Html.RegisterControlPresenter("videre.widgets.account.verify", Model, new { returnUrl = returnUrl });
 
 if (CoreServices.Authentication.IsAuthenticated)
 {
     var user = CoreServices.Account.CurrentUser;
-    if (!user.IsEmailVerified || twoPhase)
+    if (!CoreServices.Account.IsAccountVerified(user))
     {
     <div id="@Model.GetId("Widget")" class="@Model.Css" style="@Model.Style">
         @{Html.RenderPartial("WidgetHeader", Model);}

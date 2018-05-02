@@ -542,7 +542,7 @@ namespace Videre.Core.Services
             {
                 user = processAuthenticationResult(authResult, persistant);
                 ret.UserId = user.Id;
-                ret.MustVerify = Account.AccountVerificationMode == "Passive" && !user.IsEmailVerified;  //Enforced will take care of it for us
+                ret.MustVerify = Account.AccountVerificationMode == "Passive" && !Account.IsAccountVerified(user); // user.IsEmailVerified;  //Enforced will take care of it for us
                 ret.MustChangePassword = userMustChangePassword(authResult);
             }
             else if (SupportsReset)
@@ -554,7 +554,7 @@ namespace Videre.Core.Services
                     issueAuthenticationTicket(user, true);
                     ret.UserId = user.Id;
                     ret.MustChangePassword = true;
-                    ret.MustVerify = Account.AccountVerificationMode == "Passive" && !user.IsEmailVerified;  //Enforced will take care of it for us
+                    ret.MustVerify = Account.AccountVerificationMode == "Passive" && !Account.IsAccountVerified(user);//!user.IsEmailVerified;  //Enforced will take care of it for us
                 }
             }
 
@@ -625,6 +625,18 @@ namespace Videre.Core.Services
 
             if (AuthenticationResetProvider != null)
                 AuthenticationResetProvider.InitializePersistence(Portal.GetAppSetting("AuthenticationResetConnection", ""));
+        }
+
+        public static void RegisterAccountVerificationProviders()
+        {
+            var providers = new List<string>();
+            providers.AddRange(Account.VerifyAuthenticationProviders.Select(b => b.Name));
+            var updates = CoreServices.Update.Register(new CoreModels.AttributeDefinition() { GroupName = "Account", Name = "AccountVerificationProvider", Values = providers, DefaultValue = "", Required = false, LabelKey = "VerifyAuthenticationProvider.Text", LabelText = "Verify Authentication Provider" });
+            if (updates > 0)
+                CoreServices.Repository.SaveChanges();
+
+            if (Account.VerifyAuthenticationProvider != null)
+                Account.VerifyAuthenticationProvider.Initialize(Portal.GetAppSetting("AccountVerificationConnection", ""));
         }
 
         public static List<IAuthenticationResetProvider> GetAuthenticationResetProviders()
