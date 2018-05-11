@@ -55,7 +55,9 @@ namespace Videre.Core.Models
         {
             get
             {
-                return HasClaim("Videre Account Verification", "Account Verified On", "*");
+                if (Account.VerifyAuthenticationProvider != null)
+                    return HasClaim(Account.VerifyAuthenticationProvider.Name, "Account Verified On", "*");
+                return false;
             }
         }
 

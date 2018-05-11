@@ -17,7 +17,7 @@ namespace Videre.Core.Providers
         {
             get
             {
-                return "Videre";
+                return "Videre Account Verification";
             }
         }
 
@@ -28,11 +28,11 @@ namespace Videre.Core.Providers
 
         public bool IsAccountVerified(IAuthorizationUser user)
         {
-            var userVerified = user.Claims.Where(c => c.Type.Equals("Account Verified On", System.StringComparison.InvariantCultureIgnoreCase) && c.Issuer.Equals("Videre Account Verification", System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault() != null;
+            var userVerified = user.Claims.Where(c => c.Type.Equals("Account Verified On", System.StringComparison.InvariantCultureIgnoreCase) && c.Issuer.Equals(Name, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault() != null;
             var browserVerified = userBrowserIsVerified(user.Id);
             return userVerified && browserVerified;
             //return user.IsEmailVerified;
-            //return user.GetClaimValue<string>("Account Verified On", "Videre Account Verification", null) != null;
+            //return user.GetClaimValue<string>("Account Verified On", Name, null) != null;
         }
 
         public string GenerateVerificationCode()
@@ -58,10 +58,10 @@ namespace Videre.Core.Providers
 
         public bool IssueAccountVerificationCode(User user, string code)
         {
-            var claim = user.GetClaim("Account Verification Code", "Videre Account Verification");
+            var claim = user.GetClaim("Account Verification Code", Name);
             if (claim == null)
             {
-                claim = new UserClaim() { Type = "Account Verification Code", Issuer = "Videre Account Verification", Value = code };
+                claim = new UserClaim() { Type = "Account Verification Code", Issuer = Name, Value = code };
                 user.Claims.Add(claim);
                 return true;
             }
@@ -72,7 +72,7 @@ namespace Videre.Core.Providers
         {
             if (!Account.IsAccountVerified(user)) //if (!user.IsEmailVerified)
             {
-                user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = "Videre Account Verification", Value = DateTime.UtcNow.ToJson() });
+                user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = Name, Value = DateTime.UtcNow.ToJson() });
                 return true;
             }
             return false;
@@ -80,14 +80,14 @@ namespace Videre.Core.Providers
 
         public bool VerifyAccount(Models.User user, string verificationCode, bool trust)
         {
-            if (user.GetClaimValue("Account Verification Code", "Videre Account Verification", "") == verificationCode)
+            if (user.GetClaimValue("Account Verification Code", Name, "") == verificationCode)
             {
-                user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = "Videre Account Verification", Value = DateTime.UtcNow.ToJson() });
+                user.Claims.Add(new UserClaim() { Type = "Account Verified On", Issuer = Name, Value = DateTime.UtcNow.ToJson() });
 
                 //if (UserRequiresTwoPhaseVerification(user.Id) && !UserBrowserIsVerified())
                 //    MarkUserBrowserVerified(trust);
 
-                var claim = user.GetClaim("Account Verification Code", "Videre Account Verification");
+                var claim = user.GetClaim("Account Verification Code", Name);
                 if (claim != null)
                     user.Claims.Remove(claim);
 
@@ -100,7 +100,7 @@ namespace Videre.Core.Providers
 
         public bool RemoveAccountVerification(Models.User user)
         {
-            var claims = user.Claims.Where(c => c.Issuer == "Videre Account Verification").ToList();
+            var claims = user.Claims.Where(c => c.Issuer == Name).ToList();
             foreach (var claim in claims)
                 user.Claims.Remove(claim);
 

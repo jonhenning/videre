@@ -164,7 +164,10 @@ namespace Videre.Core.Models
         {
             get
             {
-                return GetClaimValue<string>("Account Verified On", "Videre Account Verification", null) != null;
+                if (Account.VerifyAuthenticationProvider != null)
+                    return GetClaimValue<string>(Account.VerifyAuthenticationProvider.Name, "Videre Account Verification", null) != null;
+                return false;
+                //return GetClaimValue<string>("Account Verified On", "Videre Account Verification", null) != null;
             }
         }
 
