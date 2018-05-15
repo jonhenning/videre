@@ -54,12 +54,17 @@ namespace Videre.Core.Extensions
 
         public static void RegisterWebReferenceGroup(this HtmlHelper helper, string name)
         {
-            var refs = Services.Web.GetWebReferences(); 
-            //if (refs.Count == 0)    //todo: detect compat mode (query string???)
-            //    refs = Services.Web.GetDefaultWebReferences();
-            var groupRefs = refs.Where(r => r.Group.Equals(name, StringComparison.InvariantCultureIgnoreCase)).OrderByDescending(r => r.DependencyGroups.Count);
-            foreach (var r in groupRefs.OrderBy(r => r.Sequence))
-                RegisterWebReference(helper, r.Name);
+            var registered = Services.Portal.GetRequestContextData<bool>("RegisterWebReferenceGroup-" + name, false);
+            if (!registered)
+            {
+                var refs = Services.Web.GetWebReferences();
+                //if (refs.Count == 0)    //todo: detect compat mode (query string???)
+                //    refs = Services.Web.GetDefaultWebReferences();
+                var groupRefs = refs.Where(r => r.Group.Equals(name, StringComparison.InvariantCultureIgnoreCase)).OrderByDescending(r => r.DependencyGroups.Count);
+                foreach (var r in groupRefs.OrderBy(r => r.Sequence))
+                    RegisterWebReference(helper, r.Name);
+                Services.Portal.SetRequestContextData("RegisterWebReferenceGroup-" + name, true);
+            }
         }
         
         //public static void RegisterDataTableScript(this HtmlHelper helper)
