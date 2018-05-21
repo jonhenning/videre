@@ -140,6 +140,7 @@ namespace Videre.Core.Services
             {
                 SessionSecurityToken token = null;
                 FederatedAuthentication.SessionAuthenticationModule.TryReadSessionTokenFromCookie(out token);
+                Portal.SetRequestContextData<Models.User>("VidereUserRequestCache-" + NonImpersonatedAuthenticatedUser.Id, null);
                 var user = Account.GetUserById(NonImpersonatedAuthenticatedUser.Id);    //grab updated user
                 FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(
                     new SessionSecurityToken(getClaimsPrincipal(user), token.Context, token.ValidFrom, token.ValidTo)
