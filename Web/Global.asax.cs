@@ -209,11 +209,11 @@ namespace Videre.Web
             {
                 if (!_resolvedNames.ContainsKey(name.Name))
                 {
-                    Services.Logging.Logger.Info(string.Format("Videre.CurrentDomain_AssemblyResolve: {0} != {1}", name.Name, args.Name));
+                    Services.Logging.Logger.Debug(string.Format("Videre.CurrentDomain_AssemblyResolve: {0} != {1}", name.Name, args.Name));
                     _resolvedNames[name.Name] = System.Reflection.Assembly.LoadWithPartialName(name.Name);
                 }
                 else
-                    Services.Logging.Logger.Info(string.Format("Videre.CurrentDomain_AssemblyResolve (cached): {0} != {1}", name.Name, args.Name));
+                    Services.Logging.Logger.Debug(string.Format("Videre.CurrentDomain_AssemblyResolve (cached): {0} != {1}", name.Name, args.Name));
                 return _resolvedNames[name.Name];
             }
             return null;
