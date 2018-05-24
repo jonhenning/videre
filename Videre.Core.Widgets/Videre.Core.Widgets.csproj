@@ -60,8 +60,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=1.0.23.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.23\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
+    <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.24\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.Extensions, Version=2.0.10.0, Culture=neutral, processorArchitecture=MSIL">
