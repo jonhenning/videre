@@ -82,7 +82,7 @@ namespace Videre.Core.Extensions
                                     {
                                         var scripts = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, scriptType); //get newly registered scripts
                                         if (scripts.Count > scriptCounts[scriptType])
-                                            deltaScriptDict[scriptType] = scripts.Skip(scriptCounts[scriptType]);
+                                            deltaScriptDict[scriptType] = scripts.Skip(scriptCounts[scriptType]).JsonClone();
                                     }
                                     var currentRegisteredKeys = HtmlExtensions.GetRegisteredKeys(helper);
                                     var newlyRegisteredKeys = new List<string>();
