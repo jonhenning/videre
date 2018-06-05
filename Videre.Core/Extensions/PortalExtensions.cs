@@ -96,7 +96,7 @@ namespace Videre.Core.Extensions
                                     foreach (var regKey in currentRegisterdClientLocalizations.Keys)
                                     {
                                         if (!registeredClientLocalizationKeys.Contains(regKey))
-                                            newlyRegisteredClientLocalizations[regKey] = currentRegisterdClientLocalizations[regKey];
+                                            newlyRegisteredClientLocalizations[regKey] = currentRegisterdClientLocalizations[regKey].JsonClone();
                                     }
 
                                     pulledFromCache = false;
@@ -112,7 +112,11 @@ namespace Videre.Core.Extensions
                                         if (!HtmlExtensions.IsKeyRegistered(helper, regKey))
                                             HtmlExtensions.RegisterKey(helper, regKey);
                                     }
-                                    HtmlExtensions.RegisterClientLocalizations(helper, cachedItem.newlyRegisteredClientLocalizations);
+
+                                    foreach (var regKey in cachedItem.newlyRegisteredClientLocalizations.Keys)  
+                                        HtmlExtensions.RegisterClientLocalizations(helper, regKey, cachedItem.newlyRegisteredClientLocalizations[regKey].ToDictionary(entry => entry.Key, entry => entry.Value));
+
+                                    //HtmlExtensions.RegisterClientLocalizations(helper, cachedItem.newlyRegisteredClientLocalizations);
                                 }
                                 helper.ViewContext.Writer.Write(cachedItem.html);   //write out html for widget
                             }
