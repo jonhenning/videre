@@ -28,7 +28,7 @@ namespace Videre.Core.WebReferenceBundler
 
                     bundle.Orderer = new PassthruBundleOrderer();
                     BundleTable.Bundles.Add(bundle);
-                    BundleTable.EnableOptimizations = true; // enableOptimizations;
+                    BundleTable.EnableOptimizations = enableOptimizations;
                     sb.AppendLine(System.Web.Optimization.Scripts.Render(src).ToHtmlString());
                 }
                 else
