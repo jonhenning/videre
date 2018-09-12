@@ -105,6 +105,11 @@ namespace Videre.Core.Extensions
                                 if (pulledFromCache)    //if pulled from cache we need to register the references that would have been rendered
                                 {
                                     Portal.SetCurrentClientId(Portal.GetCurrentClientId() + cachedItem.numberOfClientIdsTaken);
+
+                                    //Register url segments so cached widgets can have access to id even though id script is cached as previous one
+                                    if (Core.Services.Portal.CurrentUrlMatchedGroups.Count > 0)
+                                        HtmlExtensions.RegisterDocumentReadyScript(helper, "currentMatchedUrlGroups", "videre._currentMatchedUrlGroups = " + Core.Services.Portal.CurrentUrlMatchedGroups.ToJson());
+
                                     foreach (var scriptType in cachedItem.deltaScriptDict.Keys)
                                         helper.RegisterReferenceListItems(scriptType, cachedItem.deltaScriptDict[scriptType]);
                                     foreach (var regKey in cachedItem.newlyRegisteredKeys)  //register any keys that would have been registered prior
@@ -118,12 +123,14 @@ namespace Videre.Core.Extensions
 
                                     //HtmlExtensions.RegisterClientLocalizations(helper, cachedItem.newlyRegisteredClientLocalizations);
                                 }
+
                                 helper.ViewContext.Writer.Write(cachedItem.html);   //write out html for widget
                             }
                             else
                             {
                                 helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
                             }
+
                             helper.RegisterWebReferences(widget.WebReferences);
                         }
                         catch (Exception ex)

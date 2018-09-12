@@ -5,6 +5,7 @@
     _lastLog: new Date(),
     _timers: {},
     _csrfToken: null,
+    _currentMatchedUrlGroups: {},
     registerNamespace: function(namespacePath)
     {
         var rootObject = window;
@@ -150,6 +151,13 @@
     {
         var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
         return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    },
+
+    getCurrentUrlSegment: function(key, defaultValue)
+    {
+        if (videre._currentMatchedUrlGroups != null && videre._currentMatchedUrlGroups[key] != null)
+            return videre._currentMatchedUrlGroups[key];
+        return defaultValue;
     },
 
     ajax: function(url, data, success, error, ctx, options)
