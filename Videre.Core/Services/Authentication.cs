@@ -308,6 +308,7 @@ namespace Videre.Core.Services
                 {
                     var cookie = new HttpCookie("impersonateId", value);
                     cookie.HttpOnly = true; //no need for client to see this - regardless its still protected by secureactivity
+                    cookie.Domain = CoreServices.Portal.GetAppSetting<string>("ImpersonateDomain", null);
                     if (string.IsNullOrEmpty(value))
                         cookie.Expires = DateTime.Now.AddDays(-1);
                     HttpContext.Current.Response.AppendCookie(cookie);
