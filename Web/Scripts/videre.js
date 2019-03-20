@@ -343,7 +343,7 @@ videre.UI = {
         {
             var ctl = $(element);
             var val = Object.deepGet(data, ctl.data('column'));
-            var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+            var controlType = videre.UI.getControlType(ctl);
             if (controlType != null && controlType.set != null)
                 controlType.set(ctl, val, data);    //
             else
@@ -393,7 +393,7 @@ videre.UI = {
         if (ctl.length > 1)
             ctl = ctl.first();
 
-        var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+        var controlType = videre.UI.getControlType(ctl);
         if (controlType != null && controlType.get != null)
             return controlType.get(ctl);
         else
@@ -425,7 +425,7 @@ videre.UI = {
         if (dataType != null && dataType.get != null && ctl.data('datatype') != 'datetime' && ctl.data('datatype') != 'date') //cannot lose timezone (or reset it).  
             val = dataType.get(val, ctl.data());
 
-        var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+        var controlType = videre.UI.getControlType(ctl);
         if (controlType != null && controlType.set != null)
             controlType.set(ctl, val, data);
         else
@@ -446,7 +446,7 @@ videre.UI = {
 
     setControlEnabled: function(ctl, enabled)
     {
-        var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+        var controlType = videre.UI.getControlType(ctl);
         if (controlType != null && controlType.enable != null)
             controlType.enable(ctl, enabled);
         else
@@ -486,12 +486,26 @@ videre.UI = {
 
     validateControlType: function(type, ctl)
     {
-        var item = videre.UI._controlTypes[type];
+        var item = videre.UI.getControlType(ctl);
         if (item != null)
             return item.isValid != null ? item.isValid(ctl) : true; // always valid if not otherwise specified
         else
             alert('Invalid control type: ' + type); //todo: what to do?
         return true;
+    },
+
+    getControlType: function(ctl)
+    {
+        var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+        if (controlType == null)
+        {
+            for (var name in videre.UI._controlTypes)   //todo: perf?
+            {
+                if (videre.UI._controlTypes[name].isControlType != null && videre.UI._controlTypes[name].isControlType(ctl))
+                    return videre.UI._controlTypes[name];
+            }
+        }
+        return controlType;
     },
 
     _controlTypes: {},
@@ -1310,7 +1324,7 @@ if ($.views != null)
                     else
                         $('<option>').attr('value', item).html(item).appendTo(ctl);
                 });
-                var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+                var controlType = videre.UI.getControlType(ctl);
                 if (controlType != null && controlType.set != null)
                 {
                     controlType.set(ctl, dataValue);
@@ -1333,7 +1347,7 @@ if ($.views != null)
                 if (!String.isNullOrEmpty(dataValue))
                 {
                     //ideally setControlValue would do _dataTypes check, but causes recursive calls...  refactoring in order
-                    var controlType = videre.UI._controlTypes[ctl.data('controltype')];
+                    var controlType = videre.UI.getControlType(ctl);
                     if (controlType != null && controlType.set != null)
                     {
                         controlType.set(ctl, dataValue);
