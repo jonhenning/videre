@@ -295,16 +295,16 @@ namespace Videre.Core.Services
                 : pageTemplate.PortalId;
             //strip empty urls
             pageTemplate.Urls = pageTemplate.Urls.Where(u => !string.IsNullOrEmpty(u)).ToList();
-
-            if (!IsDuplicate(pageTemplate))
+            var dup = GetDuplicate(pageTemplate);
+            if (dup == null)
             {
                 var prevTemplate = GetPageTemplateById(pageTemplate.Id);
 
                 if (prevTemplate != null)
                 {
                     var missing = (from p in prevTemplate.Widgets
-                        where !(from w in pageTemplate.Widgets select w.Id).Contains(p.Id)
-                        select p);
+                                   where !(from w in pageTemplate.Widgets select w.Id).Contains(p.Id)
+                                   select p);
                     foreach (var widget in missing)
                         widget.RemoveContent();
                 }
@@ -325,12 +325,16 @@ namespace Videre.Core.Services
 
                 //after contentIds assigned, need to save them!
                 //if (hasContent)
-                    res = Repository.StoreResource("Template", null, pageTemplate, userId);
+                res = Repository.StoreResource("Template", null, pageTemplate, userId);
                 return res.Id;
             }
-            throw new Exception(string.Format(
-                Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
-                    "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template:" + pageTemplate.ToJson()));
+            else
+            {
+                Services.Logging.Logger.Error(string.Format(
+                    Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
+                        "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template:" + pageTemplate.ToJson()));
+                return dup.Id;
+            }
         }
 
         public static Models.Widget GetWidgetForTemplate(string widgetPaneName, string widgetManifestFullName, List<string> contentIds = null)
@@ -429,6 +433,20 @@ namespace Videre.Core.Services
                     )).Any(t => t != null);
         }
 
+        public static PageTemplate GetDuplicate(PageTemplate pageTemplate)
+        {
+            var templates = GetPageTemplates(pageTemplate.PortalId);
+
+            if (pageTemplate.IsDefault)
+                return templates.Where(t => t.IsDefault && (t.Authenticated == pageTemplate.Authenticated || t.Authenticated == null || pageTemplate.Authenticated == null) && t.Id != pageTemplate.Id).FirstOrDefault();
+            else
+                return pageTemplate.Urls.Select(url => templates.FirstOrDefault(t2 => t2.Urls.Contains(url)
+                    && t2.PortalId == pageTemplate.PortalId
+                    && (t2.Authenticated == pageTemplate.Authenticated || t2.Authenticated == null || pageTemplate.Authenticated == null)   //for now allow duplicate urls as long as authentication different
+                    && t2.Id != pageTemplate.Id
+                    )).FirstOrDefault();
+        }
+
         public static List<LayoutTemplate> GetLayoutTemplates(string portalId = null)
         {
             portalId = string.IsNullOrEmpty(portalId) ? CurrentPortalId : portalId;
@@ -458,14 +476,15 @@ namespace Videre.Core.Services
         {
             userId = string.IsNullOrEmpty(userId) ? Account.AuditId : userId;
             template.PortalId = string.IsNullOrEmpty(template.PortalId) ? CurrentPortalId : template.PortalId;
-            if (!IsDuplicate(template))
+            var dup = GetDuplicate(template);
+            if (dup == null)
             {
                 var prevTemplate = GetPageTemplateById(template.Id);
                 if (prevTemplate != null)
                 {
                     var missing = (from p in prevTemplate.Widgets
-                        where !(from w in template.Widgets select w.Id).Contains(p.Id)
-                        select p);
+                                   where !(from w in template.Widgets select w.Id).Contains(p.Id)
+                                   select p);
                     foreach (var widget in missing)
                         widget.RemoveContent();
                 }
@@ -485,9 +504,13 @@ namespace Videre.Core.Services
                 var res = Repository.StoreResource("LayoutTemplate", null, template, userId);
                 return res.Id;
             }
-            throw new Exception( string.Format(
-                Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
-                "{0} already exists.   Duplicates Not Allowed.", "Core"), "LayoutTemplate"));
+            else
+            {
+                Services.Logging.Logger.Error(string.Format(
+                    Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
+                    "{0} already exists.   Duplicates Not Allowed.", "Core"), "LayoutTemplate"));
+                return dup.Id;
+            }
         }
 
         public static int RegisterLayoutTemplate(string layoutName, string layoutViewName, string themeName, string widgetPaneName, string widgetManifestFullName)
@@ -569,6 +592,11 @@ namespace Videre.Core.Services
             var t = GetLayoutTemplate(template.PortalId, template.LayoutName);
             return t != null && t.Id != template.Id;
         }
+        public static LayoutTemplate GetDuplicate(LayoutTemplate template)
+        {
+            var t = GetLayoutTemplate(template.PortalId, template.LayoutName);
+            return t != null && t.Id != template.Id ? t : null;
+        }
 
         public static List<Models.Portal> GetPortals()
         {
@@ -613,10 +641,13 @@ namespace Videre.Core.Services
                 Repository.StoreResource("Portal", null, portal, userId);
             }
             else
-                throw new Exception(
+            {
+                Services.Logging.Logger.Error(
                     string.Format(
                         Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
                             "{0} already exists.   Duplicates Not Allowed.", "Core"), "Portal"));
+                return false;
+            }
             return true;
         }
 
