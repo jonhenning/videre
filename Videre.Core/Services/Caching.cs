@@ -17,7 +17,8 @@ namespace Videre.Core.Services
             {
                 CacheClient.Service.RegisterCache("VidereRequestCache", "{cacheType: 'CodeEndeavors.Distributed.Cache.Client.Web.HttpRequestCache'}");
                 CacheClient.Service.RegisterCache("VidereFileCache", "{cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'}");
-                CacheClient.Service.RegisterCache("VidereWidgetCache", "{cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'}");
+
+                CacheClient.Service.RegisterCache("VidereWidgetCache", Portal.GetAppSetting("WidgetCacheConnection", "{cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'}"));
                 _initialized = true;
             }
         }
