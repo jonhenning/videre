@@ -768,6 +768,7 @@ var JSON; if (!JSON) { JSON = {} } (function() { function f(n) { return n < 10 ?
 
 videre.widgets = {
     registeredWidgets: [],
+    widgetPackages: [],
 
     register: function(id, type, properties)
     {
@@ -778,6 +779,11 @@ videre.widgets = {
         return ctl;
     },
 
+    registerPackage: function(pkg)
+    {
+        videre.widgets.widgetPackages.push(pkg);
+    },
+
     find: function(id)
     {
         return videre.widgets.registeredWidgets[id];
@@ -786,6 +792,24 @@ videre.widgets = {
     findFirstByType: function(type)
     {
         return this.findByType(type).singleOrDefault();
+    },
+
+    findFirstPackageByType: function(type)
+    {
+        return new Promise(function(resolve, reject)
+        {
+            var object = videre.widgets.findByType(type).singleOrDefault();
+            if (object == null)
+            {
+                videre.widgets.renderPackage(function(d) { return d.clientPresenterType == type; }, function(args)
+                {
+                    object = videre.widgets.findFirstByType(type);
+                    resolve({ object: object, rendered: args.rendered, package: args.package });
+                });
+            }
+            else
+                resolve({ object: object, rendered: false, package: null });
+        });      
     },
 
     findByType: function(type)
@@ -811,7 +835,48 @@ videre.widgets = {
                     setter.apply(target, [val]);
             }
         }
+    },
+
+    renderPackage: function(lookup, cb)
+    {
+        var pkg = videre.widgets.widgetPackages.where(lookup).firstOrDefault();
+        if (pkg != null)
+        {
+            if (!pkg.rendered)
+            {
+                var widget = $(pkg.html);
+                $('body').append(widget);
+                videre.UI.nnr.initializeControls(widget);
+                videre.UI.nnr.decorateRequired(widget);
+
+                var scriptReferences = pkg.deltaScriptDict.js;
+                for (var i = 0; i < scriptReferences.length; i++)
+                    $('head').append('<script src="' + scriptReferences[i].Src + '"><\/script>');
+
+                var inlineReferences = pkg.deltaScriptDict.inlinejs;
+                for (var i = 0; i < inlineReferences.length; i++)
+                    eval(inlineReferences[i].Text);
+
+
+                setTimeout(function()
+                {
+                    var documentReadyReferences = pkg.deltaScriptDict.documentreadyjs;
+                    for (var i = 0; i < documentReadyReferences.length; i++)
+                        eval(documentReadyReferences[i].Text);
+                    jQuery.ready();// think this will fire the new events only - https://stackoverflow.com/questions/7135752/can-i-call-document-ready-to-re-activate-all-on-load-event-handlers
+                    setTimeout(function()
+                    {
+                        pkg.rendered = true;
+                        cb({ package: pkg, rendered: true });
+                    }, 0);
+
+                }, 0);
+            }
+            else 
+                cb({package: pkg, rendered: false});
+        }
     }
+
 };
 
 videre.widgets.base = videre.Class.extend(

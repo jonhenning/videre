@@ -55,76 +55,70 @@ namespace Videre.Core.Extensions
                         widget.ClientId = Portal.NextClientId();
                         try
                         {
-                            if (widget.CacheTime.HasValue)
+                            if (widget.CacheTime.HasValue || widget.RenderAsPackage)
                             {
                                 var key = Services.Widget.GetWidgetCacheKey(widget);
                                 var scriptTypes = new List<string>() { "js", "documentreadyendjs", "documentreadyjs", "css", "inlinejs" };
-                                var scriptCounts = scriptTypes.Select(t => new { type = t, scriptCount = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, t).Count }).ToDictionary(t => t.type, t => t.scriptCount);
+                                var originalScripts = scriptTypes.Select(t => new { type = t, list = WebReferenceBundler.GetReferenceList(helper, t) }).JsonClone();    
                                 var pulledFromCache = true;
-                                var currentClientId = Portal.GetCurrentClientId();
-                                var registeredKeys = HtmlExtensions.GetRegisteredKeys(helper);
-                                var registeredClientLocalizationKeys = HtmlExtensions.GetRegisteredClientLocalizations(helper).Keys;
+                                renderData renderedData = null;
 
-                                if (helper.ViewContext.RequestContext.HttpContext.Request["nocache"] == "1")
-                                    CodeEndeavors.Distributed.Cache.Client.Service.ExpireCacheEntry("VidereWidgetCache", key);
-
-                                var cachedItem = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry("VidereWidgetCache", TimeSpan.FromSeconds(widget.CacheTime.Value), key,  () =>
+                                if (widget.CacheTime.HasValue)
                                 {
-                                    var cachingWriter = new StringWriter(CultureInfo.InvariantCulture);
-                                    var originalWriter = helper.ViewContext.Writer;
-                                    helper.ViewContext.Writer = cachingWriter;
-                                    helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
-                                    helper.ViewContext.Writer = originalWriter;
+                                    if (helper.ViewContext.RequestContext.HttpContext.Request["nocache"] == "1")
+                                        CodeEndeavors.Distributed.Cache.Client.Service.ExpireCacheEntry("VidereWidgetCache", key);
 
-                                    //determine new scripts registered
-                                    var deltaScriptDict = new Dictionary<string, IEnumerable<ReferenceListItem>>();
-                                    foreach (var scriptType in scriptCounts.Keys)
+                                    renderedData = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry("VidereWidgetCache", TimeSpan.FromSeconds(widget.CacheTime.Value), key, () =>
                                     {
-                                        var scripts = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, scriptType); //get newly registered scripts
-                                        if (scripts.Count > scriptCounts[scriptType])
-                                            deltaScriptDict[scriptType] = scripts.Skip(scriptCounts[scriptType]).JsonClone();
-                                    }
-                                    var currentRegisteredKeys = HtmlExtensions.GetRegisteredKeys(helper);
-                                    var newlyRegisteredKeys = new List<string>();
-                                    foreach (var regKey in currentRegisteredKeys)
-                                    {
-                                        if (!registeredKeys.Contains(regKey))
-                                            newlyRegisteredKeys.Add(regKey);
-                                    }
-                                    var currentRegisterdClientLocalizations = HtmlExtensions.GetRegisteredClientLocalizations(helper);
-                                    var newlyRegisteredClientLocalizations = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
-                                    foreach (var regKey in currentRegisterdClientLocalizations.Keys)
-                                    {
-                                        if (!registeredClientLocalizationKeys.Contains(regKey))
-                                            newlyRegisteredClientLocalizations[regKey] = currentRegisterdClientLocalizations[regKey].JsonClone();
-                                    }
+                                       pulledFromCache = false;
+                                       return getRenderData(helper, widget, scriptTypes);
+                                    });
+                                }
+                                else
+                                    renderedData = getRenderData(helper, widget, scriptTypes);
 
-                                    pulledFromCache = false;
-                                    return new { html = cachingWriter.ToString(), deltaScriptDict = deltaScriptDict, numberOfClientIdsTaken = Portal.GetCurrentClientId() - currentClientId, newlyRegisteredKeys = newlyRegisteredKeys, newlyRegisteredClientLocalizations = newlyRegisteredClientLocalizations };
-                                });
                                 if (pulledFromCache)    //if pulled from cache we need to register the references that would have been rendered
                                 {
-                                    Portal.SetCurrentClientId(Portal.GetCurrentClientId() + cachedItem.numberOfClientIdsTaken);
+                                    Portal.SetCurrentClientId(Portal.GetCurrentClientId() + renderedData.numberOfClientIdsTaken);
 
                                     //Register url segments so cached widgets can have access to id even though id script is cached as previous one
                                     if (Core.Services.Portal.CurrentUrlMatchedGroups.Count > 0)
                                         HtmlExtensions.RegisterDocumentReadyScript(helper, "currentMatchedUrlGroups", "videre._currentMatchedUrlGroups = " + Core.Services.Portal.CurrentUrlMatchedGroups.ToJson());
 
-                                    foreach (var scriptType in cachedItem.deltaScriptDict.Keys)
-                                        helper.RegisterReferenceListItems(scriptType, cachedItem.deltaScriptDict[scriptType]);
-                                    foreach (var regKey in cachedItem.newlyRegisteredKeys)  //register any keys that would have been registered prior
+                                    //don't register script if load on demand, will do from client
+                                    if (!widget.RenderAsPackage)
                                     {
-                                        if (!HtmlExtensions.IsKeyRegistered(helper, regKey))
-                                            HtmlExtensions.RegisterKey(helper, regKey);
+                                        foreach (var scriptType in renderedData.deltaScriptDict.Keys)
+                                            helper.RegisterReferenceListItems(scriptType, renderedData.deltaScriptDict[scriptType]);
+                                        foreach (var regKey in renderedData.newlyRegisteredKeys)  //register any keys that would have been registered prior
+                                        {
+                                            if (!HtmlExtensions.IsKeyRegistered(helper, regKey))
+                                                HtmlExtensions.RegisterKey(helper, regKey);
+                                        }
+
+                                        foreach (var regKey in renderedData.newlyRegisteredClientLocalizations.Keys)
+                                            HtmlExtensions.RegisterClientLocalizations(helper, regKey, renderedData.newlyRegisteredClientLocalizations[regKey].ToDictionary(entry => entry.Key, entry => entry.Value));
                                     }
-
-                                    foreach (var regKey in cachedItem.newlyRegisteredClientLocalizations.Keys)  
-                                        HtmlExtensions.RegisterClientLocalizations(helper, regKey, cachedItem.newlyRegisteredClientLocalizations[regKey].ToDictionary(entry => entry.Key, entry => entry.Value));
-
-                                    //HtmlExtensions.RegisterClientLocalizations(helper, cachedItem.newlyRegisteredClientLocalizations);
                                 }
 
-                                helper.ViewContext.Writer.Write(cachedItem.html);   //write out html for widget
+                                if (widget.RenderAsPackage)
+                                {
+                                    //reset scripts - since we needed to use writer to get contents, we need to remove scripts for ondemand as we don't need them yet
+                                    foreach (var scripts in originalScripts)
+                                    {
+                                        var referenceList = WebReferenceBundler.GetReferenceList(helper, scripts.type);
+                                        //if (referenceList.ContainsKey(scripts.type))
+                                        if (referenceList != null)
+                                        {
+                                            referenceList.Clear();
+                                            referenceList.AddRange(scripts.list);
+                                        }
+                                    }
+                                    //registerPackage: function(clientId, type, pkg)
+                                    helper.RegisterDocumentReadyScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson().Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
+                                }
+                                else
+                                    helper.ViewContext.Writer.Write(renderedData.html);   //write out html for widget
                             }
                             else
                             {
@@ -142,6 +136,64 @@ namespace Videre.Core.Extensions
                 else
                     DeferredWidgets.Add(widget);
             }
+        }
+
+        //todo: move?
+        private class renderData
+        {
+            public string clientId { get; set; }
+            public string html { get; set; }
+            public Dictionary<string, IEnumerable<ReferenceListItem>> deltaScriptDict { get; set; }
+            public int numberOfClientIdsTaken { get; set; }
+            public List<string> newlyRegisteredKeys { get; set; }
+            public ConcurrentDictionary<string, ConcurrentDictionary<string, string>> newlyRegisteredClientLocalizations { get; set; }
+            public string clientPresenterType { get; set; }
+        }
+
+        private static renderData getRenderData(HtmlHelper helper, Models.Widget widget, List<string> scriptTypes)
+        {
+            var scriptCounts = scriptTypes.Select(t => new { type = t, scriptCount = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, t).Count }).ToDictionary(t => t.type, t => t.scriptCount);
+            var currentClientId = Portal.GetCurrentClientId();
+            var registeredKeys = HtmlExtensions.GetRegisteredKeys(helper);
+            var registeredClientLocalizationKeys = HtmlExtensions.GetRegisteredClientLocalizations(helper).Keys;
+
+            var cachingWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var originalWriter = helper.ViewContext.Writer;
+            helper.ViewContext.Writer = cachingWriter;
+            helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
+            helper.ViewContext.Writer = originalWriter;
+
+            //determine new scripts registered
+            var deltaScriptDict = new Dictionary<string, IEnumerable<ReferenceListItem>>();
+            foreach (var scriptType in scriptCounts.Keys)
+            {
+                var scripts = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, scriptType); //get newly registered scripts
+                if (scripts.Count > scriptCounts[scriptType])
+                {
+                    //deltaScriptDict[scriptType] = scripts.Skip(scriptCounts[scriptType]).JsonClone();
+
+                    var newScripts = scripts.Skip(scriptCounts[scriptType]).JsonClone();
+                    //IMPORTANT:  attempted list does not look for duplicates... though it should be done in videre core... we need to only have non-duplicates here...
+                    newScripts = newScripts.Distinct(s => s.RegistrationKey).ToList();  //todo: does this keep order???  it needs to!
+                    deltaScriptDict[scriptType] = newScripts;
+                }
+            }
+            var currentRegisteredKeys = HtmlExtensions.GetRegisteredKeys(helper);
+            var newlyRegisteredKeys = new List<string>();
+            foreach (var regKey in currentRegisteredKeys)
+            {
+                if (!registeredKeys.Contains(regKey))
+                    newlyRegisteredKeys.Add(regKey);
+            }
+            var currentRegisterdClientLocalizations = HtmlExtensions.GetRegisteredClientLocalizations(helper);
+            var newlyRegisteredClientLocalizations = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
+            foreach (var regKey in currentRegisterdClientLocalizations.Keys)
+            {
+                if (!registeredClientLocalizationKeys.Contains(regKey))
+                    newlyRegisteredClientLocalizations[regKey] = currentRegisterdClientLocalizations[regKey].JsonClone();
+            }
+
+            return new renderData() { clientId = widget.ClientId, html = cachingWriter.ToString(), deltaScriptDict = deltaScriptDict, numberOfClientIdsTaken = Portal.GetCurrentClientId() - currentClientId, newlyRegisteredKeys = newlyRegisteredKeys, newlyRegisteredClientLocalizations = newlyRegisteredClientLocalizations, clientPresenterType = widget.ClientPresenterType };
         }
 
         public static void RenderLayoutHeader(this HtmlHelper helper)
@@ -194,6 +246,10 @@ namespace Videre.Core.Extensions
 
         public static void RenderWidget(this HtmlHelper helper, string manifestFullName, int? cacheTime, List<string> cacheKeys, Dictionary<string, object> attributes, bool defer, string css, string style)
         {
+            RenderWidget(helper, manifestFullName, cacheTime, cacheKeys, attributes, defer, css, style, false);
+        }
+        public static void RenderWidget(this HtmlHelper helper, string manifestFullName, int? cacheTime, List<string> cacheKeys, Dictionary<string, object> attributes, bool defer, string css, string style, bool renderAsPackage)
+        {
             var manifest = Services.Widget.GetWidgetManifest(manifestFullName);
             var widget = new Widget {ManifestId = manifest.Id, Css = css, Style = style};
             if (attributes != null)
@@ -203,6 +259,7 @@ namespace Videre.Core.Extensions
                 widget.CacheTime = cacheTime;
                 widget.CacheKeys = cacheKeys;
             }
+            widget.RenderAsPackage = renderAsPackage;
 
             RenderWidget(helper, widget, defer);
         }

@@ -53,7 +53,10 @@ namespace Videre.Core.Models
         public string PaneName { get; set; }
         
         public bool ShowHeader { get; set; }
-        
+
+        public bool RenderAsPackage { get; set; }
+        public string ClientPresenterType { get; set; }
+
         public int? CacheTime { get; set; }
 
         public List<string> CacheKeys { get; set; }
@@ -168,6 +171,8 @@ namespace Videre.Core.Models
             properties["wid"] = Id;
             properties["mns"] = Manifest.FullName;
             //properties["user"] = Services.Account.GetClientUser();
+
+            ClientPresenterType = clientType;   //used for LoadOnDemand (only server side)
 
             helper.RegisterDocumentReadyScript(
                 ClientId + "Presenter",
