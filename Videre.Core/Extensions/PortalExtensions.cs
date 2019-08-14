@@ -59,7 +59,9 @@ namespace Videre.Core.Extensions
                             {
                                 var key = Services.Widget.GetWidgetCacheKey(widget);
                                 var scriptTypes = new List<string>() { "js", "documentreadyendjs", "documentreadyjs", "css", "inlinejs" };
-                                var originalScripts = scriptTypes.Select(t => new { type = t, list = WebReferenceBundler.GetReferenceList(helper, t) }).JsonClone();    
+                                var originalScripts = scriptTypes.Select(t => new { type = t, list = WebReferenceBundler.GetReferenceList(helper, t) }).JsonClone();
+                                var originalRegisteredKeys = HtmlExtensions.GetRegisteredKeys(helper).JsonClone();
+                                var originalRegisteredGroups = Services.WebReferenceBundler.GetWebReferenceGroups(helper).JsonClone();
                                 var pulledFromCache = true;
                                 renderData renderedData = null;
 
@@ -114,6 +116,19 @@ namespace Videre.Core.Extensions
                                             referenceList.AddRange(scripts.list);
                                         }
                                     }
+                                    //clear registeredKeys
+                                    var keys = HtmlExtensions.GetRegisteredKeys(helper);
+                                    keys.Where(k => !originalRegisteredKeys.Contains(k)).ToList().ForEach(k => HtmlExtensions.UnregisterKey(helper, k));
+
+
+                                    //clear registered groups
+                                    var groups = WebReferenceBundler.GetWebReferenceGroups(helper);
+                                    if (groups != null)
+                                    {
+                                        groups.Clear();
+                                        groups.AddRange(originalRegisteredGroups);
+                                    }
+
                                     //registerPackage: function(clientId, type, pkg)
                                     helper.RegisterDocumentReadyScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson().Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
                                 }

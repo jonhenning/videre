@@ -54,8 +54,10 @@ namespace Videre.Core.Extensions
 
         public static void RegisterWebReferenceGroup(this HtmlHelper helper, string name)
         {
-            var registered = Services.Portal.GetRequestContextData<bool>("RegisterWebReferenceGroup-" + name, false);
-            if (!registered)
+            var registeredGroups = Services.WebReferenceBundler.GetWebReferenceGroups(helper);
+            //var registered = Services.Portal.GetRequestContextData<bool>("RegisterWebReferenceGroup-" + name, false);
+            //if (!registered)
+            if (!registeredGroups.Contains(name))
             {
                 var refs = Services.Web.GetWebReferences();
                 //if (refs.Count == 0)    //todo: detect compat mode (query string???)
@@ -63,7 +65,8 @@ namespace Videre.Core.Extensions
                 var groupRefs = refs.Where(r => r.Group.Equals(name, StringComparison.InvariantCultureIgnoreCase)).OrderByDescending(r => r.DependencyGroups.Count);
                 foreach (var r in groupRefs.OrderBy(r => r.Sequence))
                     RegisterWebReference(helper, r.Name);
-                Services.Portal.SetRequestContextData("RegisterWebReferenceGroup-" + name, true);
+                //Services.Portal.SetRequestContextData("RegisterWebReferenceGroup-" + name, true);
+                registeredGroups.Add(name);
             }
         }
         
@@ -423,6 +426,14 @@ namespace Videre.Core.Extensions
         {
             var dict = GetRegisteredKeyDict(helper);
             dict[key] = true;
+        }
+
+        public static bool UnregisterKey(HtmlHelper helper, string key)
+        {
+            var dict = GetRegisteredKeyDict(helper);
+            bool removed;
+            dict.TryRemove(key, out removed);
+            return removed;
         }
 
         public static T GetContextItem<T>(this HtmlHelper helper, string key) where T : class, new()

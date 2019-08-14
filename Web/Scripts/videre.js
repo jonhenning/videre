@@ -794,14 +794,14 @@ videre.widgets = {
         return this.findByType(type).singleOrDefault();
     },
 
-    findFirstPackageByType: function(type)
+    findFirstPackageByType: function(type, initializeCallback)
     {
         return new Promise(function(resolve, reject)
         {
             var object = videre.widgets.findByType(type).singleOrDefault();
             if (object == null)
             {
-                videre.widgets.renderPackage(function(d) { return d.clientPresenterType == type; }, function(args)
+                videre.widgets.renderPackage(function(d) { return d.clientPresenterType == type; }, initializeCallback, function(args)
                 {
                     object = videre.widgets.findFirstByType(type);
                     resolve({ object: object, rendered: args.rendered, package: args.package });
@@ -837,7 +837,7 @@ videre.widgets = {
         }
     },
 
-    renderPackage: function(lookup, cb)
+    renderPackage: function(lookup, initializeCallback, finishCallback)
     {
         var pkg = videre.widgets.widgetPackages.where(lookup).firstOrDefault();
         if (pkg != null)
@@ -846,17 +846,38 @@ videre.widgets = {
             {
                 var widget = $(pkg.html);
                 $('body').append(widget);
-                videre.UI.nnr.initializeControls(widget);
-                videre.UI.nnr.decorateRequired(widget);
+
+                var registeredAlready = function(ref, type)
+                {
+                    return videre.widgets.widgetPackages.where(function(d) { return d.rendered && d.deltaScriptDict[type] != null && d.deltaScriptDict[type].where(function(j) { return j.Src == ref.Src; }).length > 0; }).length > 0;
+                };
+
+                var cssReferences = pkg.deltaScriptDict.css;
+                for (var i = 0; i < cssReferences.length; i++)
+                {
+                    if (!registeredAlready(cssReferences[i], 'css'))
+                        $('head').append('<link href="' + cssReferences[i].Src + '" type="text/css" rel="stylesheet" />');   //todo: support data-attributes?
+                }
+
+                if (initializeCallback)
+                    initializeCallback({ stage: 'html', package: pkg, widget: widget });
 
                 var scriptReferences = pkg.deltaScriptDict.js;
                 for (var i = 0; i < scriptReferences.length; i++)
-                    $('head').append('<script src="' + scriptReferences[i].Src + '"><\/script>');
+                {
+                    if (!registeredAlready(scriptReferences[i], 'js'))
+                        $('head').append('<script src="' + scriptReferences[i].Src + '"><\/script>');
+                }
+
+                if (initializeCallback)
+                    initializeCallback({ stage: 'js', package: pkg, widget: widget });
 
                 var inlineReferences = pkg.deltaScriptDict.inlinejs;
                 for (var i = 0; i < inlineReferences.length; i++)
                     eval(inlineReferences[i].Text);
 
+                if (initializeCallback)
+                    initializeCallback({ stage: 'inline', package: pkg, widget: widget });
 
                 setTimeout(function()
                 {
@@ -864,16 +885,21 @@ videre.widgets = {
                     for (var i = 0; i < documentReadyReferences.length; i++)
                         eval(documentReadyReferences[i].Text);
                     jQuery.ready();// think this will fire the new events only - https://stackoverflow.com/questions/7135752/can-i-call-document-ready-to-re-activate-all-on-load-event-handlers
+
+                    if (initializeCallback)
+                        initializeCallback({ stage: 'ready', package: pkg, widget: widget });
+
                     setTimeout(function()
                     {
                         pkg.rendered = true;
-                        cb({ package: pkg, rendered: true });
+                        if (finishCallback)
+                            finishCallback({ package: pkg, rendered: true, widget: widget });
                     }, 0);
 
                 }, 0);
             }
             else 
-                cb({package: pkg, rendered: false});
+                finishCallback({ package: pkg, rendered: false, widget: widget });
         }
     }
 

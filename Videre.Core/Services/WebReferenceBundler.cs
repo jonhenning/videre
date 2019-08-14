@@ -172,6 +172,11 @@ namespace Videre.Core.Services
             return sb.ToString();
         }
 
+        public static List<string> GetWebReferenceGroups(HtmlHelper helper)
+        {
+            return helper.GetContextItem<List<string>>("WebReferenceGroups");
+        }
+
         public static List<Models.ReferenceListItem> GetReferenceList(HtmlHelper helper, string type)
         {
             var dict = helper.GetContextItem<ConcurrentDictionary<string, List<Models.ReferenceListItem>>>("ReferenceList");
