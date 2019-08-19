@@ -798,7 +798,7 @@ videre.widgets = {
     {
         return new Promise(function(resolve, reject)
         {
-            var object = videre.widgets.findByType(type).singleOrDefault();
+            var object = videre.widgets.findFirstByType(type);
             if (object == null)
             {
                 videre.widgets.renderPackage(function(d) { return d.clientPresenterType == type; }, initializeCallback, function(args)
@@ -852,7 +852,7 @@ videre.widgets = {
                     return videre.widgets.widgetPackages.where(function(d) { return d.rendered && d.deltaScriptDict[type] != null && d.deltaScriptDict[type].where(function(j) { return j.Src == ref.Src; }).length > 0; }).length > 0;
                 };
 
-                var cssReferences = pkg.deltaScriptDict.css;
+                var cssReferences = pkg.deltaScriptDict.css != null ? pkg.deltaScriptDict.css : [];
                 for (var i = 0; i < cssReferences.length; i++)
                 {
                     if (!registeredAlready(cssReferences[i], 'css'))
@@ -862,7 +862,7 @@ videre.widgets = {
                 if (initializeCallback)
                     initializeCallback({ stage: 'html', package: pkg, widget: widget });
 
-                var scriptReferences = pkg.deltaScriptDict.js;
+                var scriptReferences = pkg.deltaScriptDict.js != null ? pkg.deltaScriptDict.js : [];
                 for (var i = 0; i < scriptReferences.length; i++)
                 {
                     if (!registeredAlready(scriptReferences[i], 'js'))
@@ -872,7 +872,7 @@ videre.widgets = {
                 if (initializeCallback)
                     initializeCallback({ stage: 'js', package: pkg, widget: widget });
 
-                var inlineReferences = pkg.deltaScriptDict.inlinejs;
+                var inlineReferences = pkg.deltaScriptDict.inlinejs != null ? pkg.deltaScriptDict.inlinejs : [];
                 for (var i = 0; i < inlineReferences.length; i++)
                     eval(inlineReferences[i].Text);
 
@@ -881,7 +881,7 @@ videre.widgets = {
 
                 setTimeout(function()
                 {
-                    var documentReadyReferences = pkg.deltaScriptDict.documentreadyjs;
+                    var documentReadyReferences = pkg.deltaScriptDict.documentreadyjs != null ? pkg.deltaScriptDict.documentreadyjs : [];
                     for (var i = 0; i < documentReadyReferences.length; i++)
                         eval(documentReadyReferences[i].Text);
                     jQuery.ready();// think this will fire the new events only - https://stackoverflow.com/questions/7135752/can-i-call-document-ready-to-re-activate-all-on-load-event-handlers
