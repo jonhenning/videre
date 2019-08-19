@@ -894,6 +894,8 @@ videre.widgets = {
                         pkg.rendered = true;
                         if (finishCallback)
                             finishCallback({ package: pkg, rendered: true, widget: widget });
+                        if (initializeCallback)
+                            initializeCallback({ stage: 'complete', package: pkg, widget: widget });
                     }, 0);
 
                 }, 0);
