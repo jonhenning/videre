@@ -63,8 +63,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=1.0.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.26\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
+    <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=1.0.29.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.29\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.Extensions, Version=2.0.10.0, Culture=neutral, processorArchitecture=MSIL">
@@ -87,8 +87,8 @@
       <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.0.56\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.1.8\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
+    <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.1.9\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=1.0.39.0, Culture=neutral, processorArchitecture=MSIL">
