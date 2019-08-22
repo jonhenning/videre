@@ -60,6 +60,7 @@ namespace Videre.Core.Extensions
                                 var key = Services.Widget.GetWidgetCacheKey(widget);
                                 var scriptTypes = new List<string>() { "js", "documentreadyendjs", "documentreadyjs", "css", "inlinejs" };
                                 var originalScripts = scriptTypes.Select(t => new { type = t, list = WebReferenceBundler.GetReferenceList(helper, t) }).JsonClone();
+                                var originalAttemptedScripts = scriptTypes.Select(t => new { type = t, list = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, t) }).JsonClone();
                                 var originalRegisteredKeys = HtmlExtensions.GetRegisteredKeys(helper).JsonClone();
                                 var originalRegisteredGroups = Services.WebReferenceBundler.GetWebReferenceGroups(helper).JsonClone();
                                 var pulledFromCache = true;
@@ -72,12 +73,15 @@ namespace Videre.Core.Extensions
 
                                     renderedData = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry("VidereWidgetCache", TimeSpan.FromSeconds(widget.CacheTime.Value), key, () =>
                                     {
-                                       pulledFromCache = false;
-                                       return getRenderData(helper, widget, scriptTypes);
+                                        pulledFromCache = false;
+                                        return getRenderData(helper, widget, scriptTypes);
                                     });
                                 }
                                 else
+                                {
+                                    pulledFromCache = false;
                                     renderedData = getRenderData(helper, widget, scriptTypes);
+                                }
 
                                 if (pulledFromCache)    //if pulled from cache we need to register the references that would have been rendered
                                 {
@@ -116,6 +120,19 @@ namespace Videre.Core.Extensions
                                             referenceList.AddRange(scripts.list);
                                         }
                                     }
+
+                                    //reset attempted scripts as well - difference between attempted and regular is that regular won't attempt to register if already been registered once...  
+                                    foreach (var scripts in originalAttemptedScripts)
+                                    {
+                                        var referenceList = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, scripts.type);
+                                        //if (referenceList.ContainsKey(scripts.type))
+                                        if (referenceList != null)
+                                        {
+                                            referenceList.Clear();
+                                            referenceList.AddRange(scripts.list);
+                                        }
+                                    }
+
                                     //clear registeredKeys
                                     var keys = HtmlExtensions.GetRegisteredKeys(helper);
                                     keys.Where(k => !originalRegisteredKeys.Contains(k)).ToList().ForEach(k => HtmlExtensions.UnregisterKey(helper, k));
