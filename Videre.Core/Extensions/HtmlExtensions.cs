@@ -140,6 +140,22 @@ namespace Videre.Core.Extensions
             //}
         }
 
+        public static void RegisterPackageScript(this HtmlHelper helper, string key, string script)
+        {
+            //lock (_lockObj)
+            //{
+            var referenceItem = new Models.ReferenceListItem() { RegistrationKey = key.ToLower(), Src = key, Text = script };
+            var type = "packagejs";
+            //Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, type).Add(referenceItem); //always note we need it (for caching widgets)
+
+            if (!IsPackageKeyRegistered(helper, referenceItem.RegistrationKey))
+            {
+                Services.WebReferenceBundler.GetReferenceList(helper, type).Add(referenceItem);
+                RegisterPackageKey(helper, referenceItem.RegistrationKey);
+            }
+            //}
+        }
+
         public static void RegisterReferenceListItems(this HtmlHelper helper, string scriptType, IEnumerable<Models.ReferenceListItem> items)
         {
             foreach (var item in items)
@@ -417,6 +433,12 @@ namespace Videre.Core.Extensions
             return dict.ContainsKey(key);
         }
 
+        public static bool IsPackageKeyRegistered(HtmlHelper helper, string key)
+        {
+            var dict = GetRegisteredPackageDict(helper);
+            return dict.ContainsKey(key);
+        }
+
         public static ICollection<string> GetRegisteredKeys(HtmlHelper helper)
         {
             return GetRegisteredKeyDict(helper).Keys;
@@ -425,6 +447,11 @@ namespace Videre.Core.Extensions
         public static void RegisterKey(HtmlHelper helper, string key)
         {
             var dict = GetRegisteredKeyDict(helper);
+            dict[key] = true;
+        }
+        public static void RegisterPackageKey(HtmlHelper helper, string key)
+        {
+            var dict = GetRegisteredPackageDict(helper);
             dict[key] = true;
         }
 
@@ -456,6 +483,11 @@ namespace Videre.Core.Extensions
         private static ConcurrentDictionary<string, bool> GetRegisteredKeyDict(HtmlHelper helper)
         {
             return GetContextItem<ConcurrentDictionary<string, bool>>(helper, "KeyRegisteredDict");
+        }
+
+        private static ConcurrentDictionary<string, bool> GetRegisteredPackageDict(HtmlHelper helper)
+        {
+            return GetContextItem<ConcurrentDictionary<string, bool>>(helper, "PackageKeyRegisteredDict");
         }
 
         private static MvcHtmlString GetControlGroup(Models.IClientControl widget, string id, string textKey, string defaultText, string controlMarkup, string controlsCss = "")

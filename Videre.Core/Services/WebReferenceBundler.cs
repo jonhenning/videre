@@ -126,6 +126,13 @@ namespace Videre.Core.Services
             }
             SetMarkupListRendered(helper, "documentreadyjs");
 
+            listItems = GetUnrenderedMarkupList(helper, "packagejs");
+            if (listItems.Count > 0)
+            {
+                sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", listItems.Select(l => l.Text))));
+            }
+            SetMarkupListRendered(helper, "packagejs");
+
             listItems = GetUnrenderedMarkupList(helper, "documentreadyendjs");
             if (listItems.Count > 0)
             {

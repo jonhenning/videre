@@ -12,6 +12,7 @@ using Widget = Videre.Core.Models.Widget;
 using System.IO;
 using System.Globalization;
 using System.Collections.Concurrent;
+using CodeEndeavors.Extensions.Serialization;
 
 namespace Videre.Core.Extensions
 {
@@ -147,7 +148,7 @@ namespace Videre.Core.Extensions
                                     }
 
                                     //registerPackage: function(clientId, type, pkg)
-                                    helper.RegisterDocumentReadyScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson().Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
+                                    helper.RegisterPackageScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson(ignoreType: "client").Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
                                 }
                                 else
                                     helper.ViewContext.Writer.Write(renderedData.html);   //write out html for widget
@@ -177,7 +178,9 @@ namespace Videre.Core.Extensions
             public string html { get; set; }
             public Dictionary<string, IEnumerable<ReferenceListItem>> deltaScriptDict { get; set; }
             public int numberOfClientIdsTaken { get; set; }
+            [SerializeIgnore(new string[] { "client" })]
             public List<string> newlyRegisteredKeys { get; set; }
+            [SerializeIgnore(new string[] { "client" })]
             public ConcurrentDictionary<string, ConcurrentDictionary<string, string>> newlyRegisteredClientLocalizations { get; set; }
             public string clientPresenterType { get; set; }
         }
