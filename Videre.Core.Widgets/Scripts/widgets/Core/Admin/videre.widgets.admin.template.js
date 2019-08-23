@@ -472,7 +472,7 @@ videre.widgets.admin.template = videre.widgets.base.extend(
     _createWidgetContainer: function(manifestId, genId)
     {
         var manifest = this._manifestDataDict[manifestId];
-        var name = manifest.Title;
+        var name = manifest != null ? manifest.Title : 'UNKNOWN MANIFEST';
         return $(String.format(
             '<div class="navbar navbar-default widget-container" id="{0}" style="min-height: 20px;">' +
                 '<div class="navbar-collapse collapse">' +

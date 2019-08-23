@@ -188,7 +188,7 @@ namespace Videre.Core.Models
 
         public string GetContentJson(string ignoreType = null)
         {
-            var provider = Manifest.GetContentProvider();
+            var provider = Manifest != null ? Manifest.GetContentProvider() : null;
             return provider != null ? provider.GetJson(ContentIds, ignoreType) : null;
         }
 

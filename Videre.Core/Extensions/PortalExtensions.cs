@@ -49,13 +49,13 @@ namespace Videre.Core.Extensions
         {
             if (widget.IsAuthorized)
             {
-                if (!defer)
+                try
                 {
-                    using (Videre.Core.Services.Profiler.Timeline.Capture("Rendering Widget: " + widget.Manifest.Name))
+                    if (!defer)
                     {
-                        widget.ClientId = Portal.NextClientId();
-                        try
+                        using (Videre.Core.Services.Profiler.Timeline.Capture("Rendering Widget: " + widget.Manifest.Name))
                         {
+                            widget.ClientId = Portal.NextClientId();
                             if (widget.CacheTime.HasValue || widget.RenderAsPackage)
                             {
                                 var key = Services.Widget.GetWidgetCacheKey(widget);
@@ -110,7 +110,7 @@ namespace Videre.Core.Extensions
 
                                         foreach (var item in renderedData.registeredPackageScripts)
                                             HtmlExtensions.RegisterPackageScript(helper, item.RegistrationKey, item.Text);
-                                        
+
                                     }
                                 }
 
@@ -154,7 +154,7 @@ namespace Videre.Core.Extensions
                                     }
 
                                     //registerPackage: function(clientId, type, pkg)
-                                    helper.RegisterPackageScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson(ignoreType: "client").Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
+                                    helper.RegisterPackageScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson(pretty: false, ignoreType: "client").Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
                                 }
                                 else
                                     helper.ViewContext.Writer.Write(renderedData.html);   //write out html for widget
@@ -166,14 +166,14 @@ namespace Videre.Core.Extensions
 
                             helper.RegisterWebReferences(widget.WebReferences);
                         }
-                        catch (Exception ex)
-                        {
-                            helper.RenderPartial("Widgets/Core/Error", widget, new ViewDataDictionary { { "Exception", ex } });
-                        }
                     }
+                    else
+                        DeferredWidgets.Add(widget);
                 }
-                else
-                    DeferredWidgets.Add(widget);
+                catch (Exception ex)
+                {
+                    helper.RenderPartial("Widgets/Core/Error", widget, new ViewDataDictionary { { "Exception", ex } });
+                }
             }
         }
 
@@ -294,7 +294,7 @@ namespace Videre.Core.Extensions
         public static void RenderWidget(this HtmlHelper helper, string manifestFullName, int? cacheTime, List<string> cacheKeys, Dictionary<string, object> attributes, bool defer, string css, string style, bool renderAsPackage)
         {
             var manifest = Services.Widget.GetWidgetManifest(manifestFullName);
-            var widget = new Widget {ManifestId = manifest.Id, Css = css, Style = style};
+            var widget = new Widget { ManifestId = manifest.Id, Css = css, Style = style };
             if (attributes != null)
                 widget.Attributes = attributes;
             if (cacheTime.HasValue)
@@ -337,7 +337,7 @@ namespace Videre.Core.Extensions
             var path = string.IsNullOrEmpty(manifest.EditorPath) ? "Widgets/Core/CommonEditor" : manifest.EditorPath;
             if (!HtmlExtensions.IsKeyRegistered(helper, path.ToLower()))
             {
-                helper.RenderPartial(path, new WidgetEditor(manifest.Id) {ClientId = Portal.NextClientId()});
+                helper.RenderPartial(path, new WidgetEditor(manifest.Id) { ClientId = Portal.NextClientId() });
                 HtmlExtensions.RegisterKey(helper, path.ToLower());
             }
         }
@@ -423,9 +423,9 @@ namespace Videre.Core.Extensions
                 foreach (var file in theme.Files)
                 {
                     if (file.Type == ReferenceFileType.Css)
-                        helper.RegisterStylesheet(file.Path, true, new Dictionary<string, string> {{"type", "theme"}});
+                        helper.RegisterStylesheet(file.Path, true, new Dictionary<string, string> { { "type", "theme" } });
                     if (file.Type == ReferenceFileType.Script)
-                        helper.RegisterScript(file.Path, true, new Dictionary<string, string> {{"type", "theme"}});
+                        helper.RegisterScript(file.Path, true, new Dictionary<string, string> { { "type", "theme" } });
                 }
             }
             else
