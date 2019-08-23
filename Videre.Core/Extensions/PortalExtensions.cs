@@ -75,7 +75,9 @@ namespace Videre.Core.Extensions
                                     renderedData = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry("VidereWidgetCache", TimeSpan.FromSeconds(widget.CacheTime.Value), key, () =>
                                     {
                                         pulledFromCache = false;
-                                        return getRenderData(helper, widget, scriptTypes);
+                                        var ret = getRenderData(helper, widget, scriptTypes);
+                                        ret.registeredPackageScripts = HtmlExtensions.GetRegisteredPackageScripts(helper);  //no need to determine new ones...   registration will only register once
+                                        return ret;
                                     });
                                 }
                                 else
@@ -105,6 +107,10 @@ namespace Videre.Core.Extensions
 
                                         foreach (var regKey in renderedData.newlyRegisteredClientLocalizations.Keys)
                                             HtmlExtensions.RegisterClientLocalizations(helper, regKey, renderedData.newlyRegisteredClientLocalizations[regKey].ToDictionary(entry => entry.Key, entry => entry.Value));
+
+                                        foreach (var item in renderedData.registeredPackageScripts)
+                                            HtmlExtensions.RegisterPackageScript(helper, item.RegistrationKey, item.Text);
+                                        
                                     }
                                 }
 
@@ -175,14 +181,16 @@ namespace Videre.Core.Extensions
         private class renderData
         {
             public string clientId { get; set; }
-            public string html { get; set; }
+            public string clientPresenterType { get; set; }
             public Dictionary<string, IEnumerable<ReferenceListItem>> deltaScriptDict { get; set; }
             public int numberOfClientIdsTaken { get; set; }
             [SerializeIgnore(new string[] { "client" })]
             public List<string> newlyRegisteredKeys { get; set; }
             [SerializeIgnore(new string[] { "client" })]
             public ConcurrentDictionary<string, ConcurrentDictionary<string, string>> newlyRegisteredClientLocalizations { get; set; }
-            public string clientPresenterType { get; set; }
+            [SerializeIgnore(new string[] { "client" })]
+            public List<Models.ReferenceListItem> registeredPackageScripts { get; set; }
+            public string html { get; set; }
         }
 
         private static renderData getRenderData(HtmlHelper helper, Models.Widget widget, List<string> scriptTypes)

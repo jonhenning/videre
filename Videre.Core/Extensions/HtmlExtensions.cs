@@ -145,16 +145,21 @@ namespace Videre.Core.Extensions
             //lock (_lockObj)
             //{
             var referenceItem = new Models.ReferenceListItem() { RegistrationKey = key.ToLower(), Src = key, Text = script };
-            var type = "packagejs";
             //Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, type).Add(referenceItem); //always note we need it (for caching widgets)
 
             if (!IsPackageKeyRegistered(helper, referenceItem.RegistrationKey))
             {
-                Services.WebReferenceBundler.GetReferenceList(helper, type).Add(referenceItem);
+                GetRegisteredPackageScripts(helper).Add(referenceItem);
                 RegisterPackageKey(helper, referenceItem.RegistrationKey);
             }
             //}
         }
+
+        public static List<Models.ReferenceListItem> GetRegisteredPackageScripts(this HtmlHelper helper)
+        {
+            return Services.WebReferenceBundler.GetReferenceList(helper, "packagejs");
+        }
+
 
         public static void RegisterReferenceListItems(this HtmlHelper helper, string scriptType, IEnumerable<Models.ReferenceListItem> items)
         {
