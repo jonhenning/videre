@@ -769,6 +769,8 @@ var JSON; if (!JSON) { JSON = {} } (function() { function f(n) { return n < 10 ?
 videre.widgets = {
     registeredWidgets: [],
     widgetPackages: [],
+    bundledScripts: [],
+    bundledCss: [],
 
     register: function(id, type, properties)
     {
@@ -851,10 +853,19 @@ videre.widgets = {
                 {
                     var registered = videre.widgets.widgetPackages.where(function(d) { return d.rendered && d.deltaScriptDict[type] != null && d.deltaScriptDict[type].where(function(j) { return j.Src == ref.Src; }).length > 0; }).length > 0;
 
+                    //will only work for non-bundled scripts...
                     if (type == 'css')
-                        $('link').each(function() { if ($(this).attr('href') == ref.Src) { registered = true; }});
+                    {
+                        $('link').each(function() { if ($(this).attr('href') == ref.Src) { registered = true; } });
+                        if (videre.widgets.bundledCss.contains(ref.Src))
+                            registered = true;
+                    }
                     else
-                        $('script').each(function() { if ($(this).attr('src') == ref.Src) { registered = true; }});
+                    {
+                        $('script').each(function() { if ($(this).attr('src') == ref.Src) { registered = true; } });
+                        if (videre.widgets.bundledScripts.contains(ref.Src))
+                            registered = true;
+                    }
 
                     if (registered)
                         videre.log('ALREADY REGISTERED: ' + ref.Src);

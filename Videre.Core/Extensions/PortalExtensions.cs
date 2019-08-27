@@ -195,7 +195,7 @@ namespace Videre.Core.Extensions
                                     //}
 
                                     //registerPackage: function(clientId, type, pkg)
-                                    helper.RegisterPackageScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson(pretty: true, ignoreType: "client").Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
+                                    helper.RegisterPackageScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson(pretty: false, ignoreType: "client").Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
                                 }
                                 else
                                     helper.ViewContext.Writer.Write(renderedData.html);   //write out html for widget

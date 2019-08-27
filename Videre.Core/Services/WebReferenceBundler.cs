@@ -104,7 +104,12 @@ namespace Videre.Core.Services
             var listItems = GetUnrenderedMarkupList(helper, "js");
 
             if (WebReferenceBundleProvider != null)
-                sb.AppendLine(WebReferenceBundleProvider.BundleScripts(GetBundlingLists(listItems), EnableBundleOptimizations));
+            {
+                var bundledList = GetBundlingLists(listItems);
+                sb.AppendLine(WebReferenceBundleProvider.BundleScripts(bundledList, EnableBundleOptimizations));
+                if (bundledList.Count > 0)
+                    sb.AppendLine(string.Format("<script type=\"text/javascript\">videre.widgets.bundledScripts.addRange({0})</script>", bundledList.SelectMany(r => r.Items.Select(i => i.Src)).ToJson()));
+            }
             else
             {
                 foreach (var item in listItems)
@@ -168,7 +173,12 @@ namespace Videre.Core.Services
 
             var listItems = GetUnrenderedMarkupList(helper, "css");
             if (WebReferenceBundleProvider != null)
-                sb.AppendLine(WebReferenceBundleProvider.BundleCss(GetBundlingLists(listItems), EnableBundleOptimizations));
+            {
+                var bundledList = GetBundlingLists(listItems);
+                sb.AppendLine(WebReferenceBundleProvider.BundleCss(bundledList, EnableBundleOptimizations));
+                if (bundledList.Count > 0)
+                    sb.AppendLine(string.Format("<script type=\"text/javascript\">videre.widgets.bundledCss.addRange({0})</script>", bundledList.SelectMany(r => r.Items.Select(i => i.Src)).ToJson()));
+            }
             else
             {
                 foreach (var item in listItems)
