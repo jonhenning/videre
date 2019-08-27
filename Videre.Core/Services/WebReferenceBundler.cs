@@ -179,6 +179,7 @@ namespace Videre.Core.Services
             return sb.ToString();
         }
 
+        [Obsolete()]
         public static List<string> GetWebReferenceGroups(HtmlHelper helper)
         {
             return helper.GetContextItem<List<string>>("WebReferenceGroups");

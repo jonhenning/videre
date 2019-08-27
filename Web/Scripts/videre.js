@@ -849,7 +849,18 @@ videre.widgets = {
 
                 var registeredAlready = function(ref, type)
                 {
-                    return videre.widgets.widgetPackages.where(function(d) { return d.rendered && d.deltaScriptDict[type] != null && d.deltaScriptDict[type].where(function(j) { return j.Src == ref.Src; }).length > 0; }).length > 0;
+                    var registered = videre.widgets.widgetPackages.where(function(d) { return d.rendered && d.deltaScriptDict[type] != null && d.deltaScriptDict[type].where(function(j) { return j.Src == ref.Src; }).length > 0; }).length > 0;
+
+                    if (type == 'css')
+                        $('link').each(function() { if ($(this).attr('href') == ref.Src) { registered = true; }});
+                    else
+                        $('script').each(function() { if ($(this).attr('src') == ref.Src) { registered = true; }});
+
+                    if (registered)
+                        videre.log('ALREADY REGISTERED: ' + ref.Src);
+                    else
+                        videre.log('REGISTERING: ' + ref.Src);
+                    return registered;
                 };
 
                 var cssReferences = pkg.deltaScriptDict.css != null ? pkg.deltaScriptDict.css : [];

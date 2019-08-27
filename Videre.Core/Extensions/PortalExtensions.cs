@@ -45,6 +45,36 @@ namespace Videre.Core.Extensions
             }
         }
 
+        public static ConcurrentStack<Models.Widget> GetRenderedWidgetStack(HtmlHelper helper)
+        {
+            return helper.GetContextItem<ConcurrentStack<Models.Widget>>("RenderedWidgetStack");
+        }
+        public static ConcurrentDictionary<string, List<Models.Widget>> GetWidgetChildrenDictionary(HtmlHelper helper)
+        {
+            return helper.GetContextItem<ConcurrentDictionary<string, List<Models.Widget>>>("WidgetChildrenDictionary");
+        }
+
+        public static List<Models.Widget> GetWidgetChildren(HtmlHelper helper, string id)
+        {
+            var dict = GetWidgetChildrenDictionary(helper);
+            if (!dict.ContainsKey(id))
+                dict[id] = new List<Models.Widget>();
+            return dict[id];
+        }
+
+        public static ConcurrentDictionary<string, List<string>> GetWidgetControlDictionary(HtmlHelper helper)
+        {
+            return helper.GetContextItem<ConcurrentDictionary<string, List<string>>>("WidgetControlDictionary");
+        }
+
+        public static List<string> GetWidgetControls(HtmlHelper helper, string id)
+        {
+            var dict = GetWidgetControlDictionary(helper);
+            if (!dict.ContainsKey(id))
+                dict[id] = new List<string>();
+            return dict[id];
+        }
+
         public static void RenderWidget(this HtmlHelper helper, Widget widget, bool defer = false)
         {
             if (widget.IsAuthorized)
@@ -53,9 +83,20 @@ namespace Videre.Core.Extensions
                 {
                     if (!defer)
                     {
+                        Models.Widget parent = null;
+                        var widgetStack = GetRenderedWidgetStack(helper);
+                        if (widgetStack.IsEmpty)
+                            parent = new Widget() { ClientId = "ROOT" };
+                        else
+                            widgetStack.TryPeek(out parent);
+
+                        widget.ClientId = Portal.NextClientId();
+                        GetWidgetChildren(helper, parent.ClientId).Add(widget);
+
+                        widgetStack.Push(widget);     //need to be able to detect if ANY parent was a RenderAsPackage
+
                         using (Videre.Core.Services.Profiler.Timeline.Capture("Rendering Widget: " + widget.Manifest.Name))
                         {
-                            widget.ClientId = Portal.NextClientId();
                             if (widget.CacheTime.HasValue || widget.RenderAsPackage)
                             {
                                 var key = Services.Widget.GetWidgetCacheKey(widget);
@@ -63,7 +104,7 @@ namespace Videre.Core.Extensions
                                 var originalScripts = scriptTypes.Select(t => new { type = t, list = WebReferenceBundler.GetReferenceList(helper, t) }).JsonClone();
                                 var originalAttemptedScripts = scriptTypes.Select(t => new { type = t, list = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, t) }).JsonClone();
                                 var originalRegisteredKeys = HtmlExtensions.GetRegisteredKeys(helper).JsonClone();
-                                var originalRegisteredGroups = Services.WebReferenceBundler.GetWebReferenceGroups(helper).JsonClone();
+                                //var originalRegisteredGroups = Services.WebReferenceBundler.GetWebReferenceGroups(helper).JsonClone();
                                 var pulledFromCache = true;
                                 renderData renderedData = null;
 
@@ -146,15 +187,15 @@ namespace Videre.Core.Extensions
 
 
                                     //clear registered groups
-                                    var groups = WebReferenceBundler.GetWebReferenceGroups(helper);
-                                    if (groups != null)
-                                    {
-                                        groups.Clear();
-                                        groups.AddRange(originalRegisteredGroups);
-                                    }
+                                    //var groups = WebReferenceBundler.GetWebReferenceGroups(helper);
+                                    //if (groups != null)
+                                    //{
+                                    //    groups.Clear();
+                                    //    groups.AddRange(originalRegisteredGroups);
+                                    //}
 
                                     //registerPackage: function(clientId, type, pkg)
-                                    helper.RegisterPackageScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson(pretty: false, ignoreType: "client").Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
+                                    helper.RegisterPackageScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson(pretty: true, ignoreType: "client").Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
                                 }
                                 else
                                     helper.ViewContext.Writer.Write(renderedData.html);   //write out html for widget
@@ -173,6 +214,12 @@ namespace Videre.Core.Extensions
                 catch (Exception ex)
                 {
                     helper.RenderPartial("Widgets/Core/Error", widget, new ViewDataDictionary { { "Exception", ex } });
+                }
+                finally
+                {
+                    Models.Widget o;
+                    var s = GetRenderedWidgetStack(helper);
+                    s.TryPop(out o);
                 }
             }
         }
@@ -324,8 +371,19 @@ namespace Videre.Core.Extensions
                 var control = new Models.Control(path);
                 if (separateNamespace)
                     control.ClientId = Portal.NextClientId();
+
+                Models.Widget parent = null;
+                var widgetStack = GetRenderedWidgetStack(helper);
+                //if (widgetStack.IsEmpty)
+                //    parent = new Widget() { ClientId = "ROOT" };
+                //else
+                    widgetStack.TryPeek(out parent);
+
+                var pathAndName = path.PathCombine(name, "/");
+                GetWidgetControls(helper, parent.ClientId).Add(pathAndName);
+
                 //it would be nice if the ViewDataDictionary accepted anonymous objects
-                helper.RenderPartial("Controls/" + path.PathCombine(name, "/"), control, new ViewDataDictionary(viewData.ToJson().ToObject<ViewDataDictionary>()));
+                helper.RenderPartial("Controls/" + pathAndName, control, new ViewDataDictionary(viewData.ToJson().ToObject<ViewDataDictionary>()));
                 return control.ClientId;
             }
         }

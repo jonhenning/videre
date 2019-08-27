@@ -54,11 +54,10 @@ namespace Videre.Core.Extensions
 
         public static void RegisterWebReferenceGroup(this HtmlHelper helper, string name)
         {
-            var registeredGroups = Services.WebReferenceBundler.GetWebReferenceGroups(helper);
-            //var registered = Services.Portal.GetRequestContextData<bool>("RegisterWebReferenceGroup-" + name, false);
-            //if (!registered)
-            if (!registeredGroups.Contains(name))
-            {
+            //No longer do this on group level..  script level should be enough
+            //var registeredGroups = Services.WebReferenceBundler.GetWebReferenceGroups(helper);
+            //if (!registeredGroups.Contains(name))
+            //{
                 var refs = Services.Web.GetWebReferences();
                 //if (refs.Count == 0)    //todo: detect compat mode (query string???)
                 //    refs = Services.Web.GetDefaultWebReferences();
@@ -66,8 +65,8 @@ namespace Videre.Core.Extensions
                 foreach (var r in groupRefs.OrderBy(r => r.Sequence))
                     RegisterWebReference(helper, r.Name);
                 //Services.Portal.SetRequestContextData("RegisterWebReferenceGroup-" + name, true);
-                registeredGroups.Add(name);
-            }
+            //    registeredGroups.Add(name);
+            //}
         }
         
         //public static void RegisterDataTableScript(this HtmlHelper helper)
