@@ -816,7 +816,15 @@ videre.widgets = {
 
     findByType: function(type)
     {
-        var t = eval(type);
+        var t = null;
+        try
+        {
+            t = eval(type);
+        }
+        catch (error)
+        {
+            videre.log('type not found: ' + type);
+        }
         if (t != null)
             return videre.widgets.registeredWidgets.getValues().where(function(c) { return c instanceof t; });
         return [];
