@@ -136,10 +136,20 @@ namespace Videre.Core.Extensions
                                         HtmlExtensions.RegisterDocumentReadyScript(helper, "currentMatchedUrlGroups", "videre._currentMatchedUrlGroups = " + Core.Services.Portal.CurrentUrlMatchedGroups.ToJson());
 
                                     //don't register script if load on demand, will do from client
-                                    if (!widget.RenderAsPackage)
+                                    if (widget.RenderAsPackage)
+                                    {
+                                        //we want to only register js and css (always) for perf
+                                        foreach (var scriptType in renderedData.deltaScriptDict.Keys)
+                                        {
+                                            if (scriptType == "js" || scriptType == "css")
+                                                helper.RegisterReferenceListItems(scriptType, renderedData.deltaScriptDict[scriptType]);
+                                        }
+                                    }
+                                    else //if (!widget.RenderAsPackage)
                                     {
                                         foreach (var scriptType in renderedData.deltaScriptDict.Keys)
                                             helper.RegisterReferenceListItems(scriptType, renderedData.deltaScriptDict[scriptType]);
+
                                         foreach (var regKey in renderedData.newlyRegisteredKeys)  //register any keys that would have been registered prior
                                         {
                                             if (!HtmlExtensions.IsKeyRegistered(helper, regKey))
@@ -154,36 +164,46 @@ namespace Videre.Core.Extensions
 
                                     }
                                 }
-
+                                var keysToKeep = new List<string>();
                                 if (widget.RenderAsPackage)
                                 {
                                     //reset scripts - since we needed to use writer to get contents, we need to remove scripts for ondemand as we don't need them yet
                                     foreach (var scripts in originalScripts)
                                     {
-                                        var referenceList = WebReferenceBundler.GetReferenceList(helper, scripts.type);
-                                        //if (referenceList.ContainsKey(scripts.type))
-                                        if (referenceList != null)
+                                        if (scripts.type != "js" && scripts.type != "css")  //we want to only register js and css (always) for perf
                                         {
-                                            referenceList.Clear();
-                                            referenceList.AddRange(scripts.list);
+                                            var referenceList = WebReferenceBundler.GetReferenceList(helper, scripts.type);
+                                            //if (referenceList.ContainsKey(scripts.type))
+                                            if (referenceList != null)
+                                            {
+                                                referenceList.Clear();
+                                                referenceList.AddRange(scripts.list);
+                                            }
                                         }
+                                        else
+                                            keysToKeep.AddRange(scripts.list.Select(s => s.RegistrationKey));
                                     }
 
                                     //reset attempted scripts as well - difference between attempted and regular is that regular won't attempt to register if already been registered once...  
                                     foreach (var scripts in originalAttemptedScripts)
                                     {
-                                        var referenceList = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, scripts.type);
-                                        //if (referenceList.ContainsKey(scripts.type))
-                                        if (referenceList != null)
+                                        if (scripts.type != "js" && scripts.type != "css")  //we want to only register js and css (always) for perf
                                         {
-                                            referenceList.Clear();
-                                            referenceList.AddRange(scripts.list);
+                                            var referenceList = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, scripts.type);
+                                            //if (referenceList.ContainsKey(scripts.type))
+                                            if (referenceList != null)
+                                            {
+                                                referenceList.Clear();
+                                                referenceList.AddRange(scripts.list);
+                                            }
                                         }
+                                        else
+                                            keysToKeep.AddRange(scripts.list.Select(s => s.RegistrationKey));
                                     }
 
                                     //clear registeredKeys
                                     var keys = HtmlExtensions.GetRegisteredKeys(helper);
-                                    keys.Where(k => !originalRegisteredKeys.Contains(k)).ToList().ForEach(k => HtmlExtensions.UnregisterKey(helper, k));
+                                    keys.Where(k => !originalRegisteredKeys.Contains(k) && !keysToKeep.Contains(k)).ToList().ForEach(k => HtmlExtensions.UnregisterKey(helper, k));
 
 
                                     //clear registered groups
