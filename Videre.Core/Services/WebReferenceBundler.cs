@@ -124,28 +124,22 @@ namespace Videre.Core.Services
             }
             SetMarkupListRendered(helper, "inlinejs");
 
-            listItems = GetUnrenderedMarkupList(helper, "documentreadyjs");
-            if (listItems.Count > 0)
-            {
-                sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", listItems.Select(l => l.Text))));
-            }
-            SetMarkupListRendered(helper, "documentreadyjs");
-
-            listItems = GetUnrenderedMarkupList(helper, "packagejs");
-            if (listItems.Count > 0)
-            {
-                sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", listItems.Select(l => l.Text))));
-            }
-            SetMarkupListRendered(helper, "packagejs");
-
-            listItems = GetUnrenderedMarkupList(helper, "documentreadyendjs");
-            if (listItems.Count > 0)
-            {
-                sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", listItems.Select(l => l.Text))));
-            }
-            SetMarkupListRendered(helper, "documentreadyendjs");
+            renderReadyScripts(helper, new List<string>() { "documentreadyjs", "documentreadyjs-nocache", "packagejs", "documentreadyendjs", "documentreadyendjs-nocache" }, sb);
 
             return sb.ToString();
+        }
+
+        private static void renderReadyScripts(HtmlHelper helper, List<string> types, System.Text.StringBuilder sb)
+        {
+            foreach (var type in types)
+            {
+                var listItems = GetUnrenderedMarkupList(helper, type);
+                if (listItems.Count > 0)
+                {
+                    sb.AppendLine(string.Format("<script type=\"text/javascript\">$(document).ready(function() {{{0}}});</script>", String.Join("\r\n", listItems.Select(l => l.Text))));
+                }
+                SetMarkupListRendered(helper, type);
+            }
         }
 
         //todo: use cache or just static var...

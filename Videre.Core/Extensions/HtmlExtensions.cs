@@ -125,10 +125,17 @@ namespace Videre.Core.Extensions
 
         public static void RegisterDocumentReadyScript(this HtmlHelper helper, string key, string script, bool runAtEnd = false)
         {
+            RegisterDocumentReadyScript(helper, key, script, runAtEnd, false);
+        }
+
+        public static void RegisterDocumentReadyScript(this HtmlHelper helper, string key, string script, bool runAtEnd, bool noCache)
+        {
             //lock (_lockObj)
             //{
             var referenceItem = new Models.ReferenceListItem() { RegistrationKey = key.ToLower(), Src = key, Text = script };
             var type = runAtEnd ? "documentreadyendjs" : "documentreadyjs";
+            if (noCache)
+                type += "-nocache";
             Services.WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, type).Add(referenceItem); //always note we need it (for caching widgets)
 
             if (!IsKeyRegistered(helper, referenceItem.RegistrationKey))

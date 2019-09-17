@@ -95,12 +95,15 @@ namespace Videre.Core.Extensions
 
                         widgetStack.Push(widget);     //need to be able to detect if ANY parent was a RenderAsPackage
 
+
                         using (Videre.Core.Services.Profiler.Timeline.Capture("Rendering Widget: " + widget.Manifest.Name))
                         {
                             if (widget.CacheTime.HasValue || widget.RenderAsPackage)
                             {
                                 var key = Services.Widget.GetWidgetCacheKey(widget);
-                                var scriptTypes = new List<string>() { "js", "documentreadyendjs", "documentreadyjs", "css", "inlinejs" };
+                                var scriptTypes = new List<string>() { "js", "documentreadyendjs", "documentreadyjs", "documentreadyendjs-nocache", "documentreadyjs-nocache", "css", "inlinejs" };
+                                var noCacheScriptTypes = new List<string>() { "js", "documentreadyendjs-nocache", "documentreadyjs-nocache", "css" };   //we want to only register js and css (always) for perf
+
                                 var originalScripts = scriptTypes.Select(t => new { type = t, list = WebReferenceBundler.GetReferenceList(helper, t) }).JsonClone();
                                 var originalAttemptedScripts = scriptTypes.Select(t => new { type = t, list = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, t) }).JsonClone();
                                 var originalRegisteredKeys = HtmlExtensions.GetRegisteredKeys(helper).JsonClone();
@@ -141,7 +144,7 @@ namespace Videre.Core.Extensions
                                         //we want to only register js and css (always) for perf
                                         foreach (var scriptType in renderedData.deltaScriptDict.Keys)
                                         {
-                                            if (scriptType == "js" || scriptType == "css")
+                                            if (noCacheScriptTypes.Contains(scriptType))
                                                 helper.RegisterReferenceListItems(scriptType, renderedData.deltaScriptDict[scriptType]);
                                         }
                                     }
@@ -170,7 +173,7 @@ namespace Videre.Core.Extensions
                                     //reset scripts - since we needed to use writer to get contents, we need to remove scripts for ondemand as we don't need them yet
                                     foreach (var scripts in originalScripts)
                                     {
-                                        if (scripts.type != "js" && scripts.type != "css")  //we want to only register js and css (always) for perf
+                                        if (!noCacheScriptTypes.Contains(scripts.type))  //we want to only register js and css (always) for perf
                                         {
                                             var referenceList = WebReferenceBundler.GetReferenceList(helper, scripts.type);
                                             //if (referenceList.ContainsKey(scripts.type))
@@ -187,7 +190,7 @@ namespace Videre.Core.Extensions
                                     //reset attempted scripts as well - difference between attempted and regular is that regular won't attempt to register if already been registered once...  
                                     foreach (var scripts in originalAttemptedScripts)
                                     {
-                                        if (scripts.type != "js" && scripts.type != "css")  //we want to only register js and css (always) for perf
+                                        if (!noCacheScriptTypes.Contains(scripts.type))  //we want to only register js and css (always) for perf
                                         {
                                             var referenceList = WebReferenceBundler.GetAttemptedRegistrationReferenceList(helper, scripts.type);
                                             //if (referenceList.ContainsKey(scripts.type))
@@ -215,7 +218,13 @@ namespace Videre.Core.Extensions
                                     //}
 
                                     //registerPackage: function(clientId, type, pkg)
-                                    helper.RegisterPackageScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", renderedData.ToJson(pretty: false, ignoreType: "client").Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
+                                    var data = renderedData.JsonClone();
+                                    foreach (var noCacheType in noCacheScriptTypes)
+                                    {
+                                        if (data.deltaScriptDict.ContainsKey(noCacheType))
+                                            data.deltaScriptDict.Remove(noCacheType);
+                                    }
+                                    helper.RegisterPackageScript(widget.ClientId + "RegisterPackage", string.Format("videre.widgets.registerPackage({0});", data.ToJson(pretty: true, ignoreType: "client").Replace("</", "<\\/")));   //Replace to allow closing </script> tags in html, not sure I fully understand this, nor whether this should be in more locations - JH - 7/9/2014
                                 }
                                 else
                                     helper.ViewContext.Writer.Write(renderedData.html);   //write out html for widget
