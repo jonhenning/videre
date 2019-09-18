@@ -147,6 +147,13 @@ namespace Videre.Core.Extensions
                                             if (noCacheScriptTypes.Contains(scriptType))
                                                 helper.RegisterReferenceListItems(scriptType, renderedData.deltaScriptDict[scriptType]);
                                         }
+
+                                        //we need to register keys that are ALWAYS_REG
+                                        foreach (var regKey in renderedData.newlyRegisteredKeys.Where(r => r.ToLower().Contains("_always_reg_")))  //hack - we need a way to ensure a key always gets registered...  using name for this.
+                                        {
+                                            if (!HtmlExtensions.IsKeyRegistered(helper, regKey))
+                                                HtmlExtensions.RegisterKey(helper, regKey);
+                                        }
                                     }
                                     else //if (!widget.RenderAsPackage)
                                     {
@@ -206,6 +213,9 @@ namespace Videre.Core.Extensions
 
                                     //clear registeredKeys
                                     var keys = HtmlExtensions.GetRegisteredKeys(helper);
+
+                                    keysToKeep.AddRange(keys.Where(r => r.ToLower().Contains("_always_reg_")));
+
                                     keys.Where(k => !originalRegisteredKeys.Contains(k) && !keysToKeep.Contains(k)).ToList().ForEach(k => HtmlExtensions.UnregisterKey(helper, k));
 
 
@@ -218,6 +228,8 @@ namespace Videre.Core.Extensions
                                     //}
 
                                     //registerPackage: function(clientId, type, pkg)
+
+                                    //remove scripts that we know we registered already
                                     var data = renderedData.JsonClone();
                                     foreach (var noCacheType in noCacheScriptTypes)
                                     {
