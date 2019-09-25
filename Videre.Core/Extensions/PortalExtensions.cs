@@ -506,7 +506,7 @@ namespace Videre.Core.Extensions
                 throw new Exception("Unknown Timezone: " + timeZone);
 
             helper.RegisterWebReferenceGroup("videre");
-            helper.RegisterScript("~/ServerJS/TimeZoneInformation/" + tz.Id, defer: true, excludeFromBundle: true);
+            helper.RegisterScript("~/ServerJS/TimeZoneInformation/" + tz.Id + "/", defer: true, excludeFromBundle: true);
         }
 
         public static void RegisterTheme(this HtmlHelper helper, PageTemplate template)
