@@ -30,7 +30,8 @@ namespace Videre.Core.WebReferenceBundler
                         bundle = new Bundle(src).Include(list.Items.Select(i => "~/" + i.Src).ToArray());
 
                     bundle.Orderer = new PassthruBundleOrderer();
-                    BundleTable.Bundles.Add(bundle);
+                    if (BundleTable.Bundles.GetBundleFor(bundle.Path) == null)
+                        BundleTable.Bundles.Add(bundle);
                     BundleTable.EnableOptimizations = enableOptimizations;
                     sb.AppendLine(System.Web.Optimization.Scripts.Render(src).ToHtmlString());
                 }
@@ -60,7 +61,8 @@ namespace Videre.Core.WebReferenceBundler
                     //});
 
                     bundle.Orderer = new PassthruBundleOrderer();
-                    BundleTable.Bundles.Add(bundle);
+                    if (BundleTable.Bundles.GetBundleFor(bundle.Path) == null)
+                        BundleTable.Bundles.Add(bundle);
                     BundleTable.EnableOptimizations = enableOptimizations;
                     sb.AppendLine(System.Web.Optimization.Styles.Render(src).ToHtmlString());
                 }
