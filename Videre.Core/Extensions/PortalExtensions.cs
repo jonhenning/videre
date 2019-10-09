@@ -274,7 +274,7 @@ namespace Videre.Core.Extensions
             public int numberOfClientIdsTaken { get; set; }
             [SerializeIgnore(new string[] { "client" })]
             public List<string> newlyRegisteredKeys { get; set; }
-            [SerializeIgnore(new string[] { "client" })]
+            //[SerializeIgnore(new string[] { "client" })]
             public ConcurrentDictionary<string, ConcurrentDictionary<string, string>> newlyRegisteredClientLocalizations { get; set; }
             [SerializeIgnore(new string[] { "client" })]
             public List<Models.ReferenceListItem> registeredPackageScripts { get; set; }
@@ -293,7 +293,7 @@ namespace Videre.Core.Extensions
             helper.ViewContext.Writer = cachingWriter;
             helper.RenderPartial("Widgets/" + widget.Manifest.FullName, widget);
             helper.ViewContext.Writer = originalWriter;
-
+            
             //determine new scripts registered
             var deltaScriptDict = new Dictionary<string, IEnumerable<ReferenceListItem>>();
             foreach (var scriptType in scriptCounts.Keys)

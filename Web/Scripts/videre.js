@@ -909,6 +909,20 @@ videre.widgets = {
                 if (initializeCallback)
                     initializeCallback({ stage: 'inline', package: pkg, widget: widget });
 
+                //videre.localization.items.addRange([{\"ns\":\"Operations.General/AuditViewer\",\"key\":\"ShowOnlyDifferences.Client\",\"value\":\"Show Only Differences\"},{\"ns\":\"Operations.General/AuditViewer\",\"key\":\"ShowAll.Client\",\"value\":\"Show All\"}]);
+                if (pkg.newlyRegisteredClientLocalizations != null)
+                {
+                    for (var ns in pkg.newlyRegisteredClientLocalizations)
+                    {
+                        for (var key in pkg.newlyRegisteredClientLocalizations[ns])
+                        {
+                            var loc = { ns: ns, key: key, value: pkg.newlyRegisteredClientLocalizations[ns][key] };
+                            videre.localization.items.push(loc);
+                            videre.log('registering client localization: ' + videre.serialize(loc));
+                        }
+                    }
+                }
+
                 setTimeout(function()
                 {
                     var documentReadyReferences = pkg.deltaScriptDict.documentreadyjs != null ? pkg.deltaScriptDict.documentreadyjs : [];
