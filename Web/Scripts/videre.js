@@ -6,6 +6,7 @@
     _timers: {},
     _csrfToken: null,
     _currentMatchedUrlGroups: {},
+    _jsonReplacer: null,    //allow for json serializer to be globally use a replacer 
     registerNamespace: function(namespacePath)
     {
         var rootObject = window;
@@ -28,6 +29,8 @@
 
     serialize: function(s, replacer, space)
     {
+        if (replacer == null)
+            replacer = videre._jsonReplacer;
         return JSON.stringify(s, replacer, space);
     },
 
@@ -169,6 +172,7 @@
                 options.headers = {};
             options.headers.RequestVerificationToken = videre._csrfToken;
         }
+
         return $.ajax({
             type: options.type || "POST",
             url: videre.resolveUrl(url),
