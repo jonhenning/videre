@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using CodeEndeavors.Extensions;
 
 namespace Videre.Core.Binders
 {
@@ -21,7 +22,8 @@ namespace Videre.Core.Binders
             request.InputStream.Position = 0;
             var jsonStringData = new StreamReader(request.InputStream).ReadToEnd();
             //var jsonStringData = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonStringData);
+            //var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonStringData);
+            var dict = jsonStringData.ToObject<Dictionary<string, object>>();   //use standard conversion so plugins to settings can be used
             if (dict.ContainsKey(bindingContext.ModelName))
             {
                 var settings = new JsonSerializerSettings()

@@ -65,8 +65,8 @@
       <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.29\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.Extensions, Version=2.0.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Extensions.2.0.14\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
+    <Reference Include="CodeEndeavors.Extensions, Version=2.0.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Extensions.2.0.15\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.56.0, Culture=neutral, processorArchitecture=MSIL">
