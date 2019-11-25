@@ -22,7 +22,7 @@ namespace Videre.Core.Providers
             {
                 if (CoreServices.Authentication.IsAuthenticated)    //only do enforcement if authenticated
                 {
-                    if (!CoreServices.Account.IsAccountVerified(CoreServices.Authentication.AuthenticatedUser)) // determine if user is verified
+                    if (!CoreServices.Account.IsAccountVerified(CoreServices.Authentication.NonImpersonatedAuthenticatedUser)) // determine if user is verified
                     {
                         if ((CoreServices.Account.AccountVerificationMode == "Enforced") || (CoreServices.Account.UserRequiresTwoPhaseVerification()))  // either the portal is enforcing it or the user is enforcing it
                         {
