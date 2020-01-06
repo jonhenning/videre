@@ -14,6 +14,7 @@ namespace Videre.Core.Models
             //RoleIds = new List<string>();
             ExcludeRoleIds = new List<string>();
             Claims = new List<UserClaim>();
+            ExcludeClaims = new List<Models.UserClaim>();
             WebReferences = new List<string>();
         }
         private string _layoutViewName = null;
@@ -36,6 +37,7 @@ namespace Videre.Core.Models
 
         public bool? Authenticated { get; set; }
         public List<UserClaim> Claims { get; set; }
+        public List<UserClaim> ExcludeClaims { get; set; }
         //public List<string> RoleIds { get; set; }
         public List<string> ExcludeRoleIds { get; set; }
 

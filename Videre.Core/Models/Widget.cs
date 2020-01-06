@@ -21,6 +21,7 @@ namespace Videre.Core.Models
             WebReferences = new List<string>();
             ExcludeRoleIds = new List<string>();
             Claims = new List<UserClaim>();
+            ExcludeClaims = new List<Models.UserClaim>();
             EditClaims = new List<UserClaim>();
         }
 
@@ -97,6 +98,7 @@ namespace Videre.Core.Models
         }
 
         public List<Models.UserClaim> Claims {get;set;}
+        public List<Models.UserClaim> ExcludeClaims { get; set; }
         public List<Models.UserClaim> EditClaims { get; set; }
 
         public List<string> ExcludeRoleIds { get; set; }

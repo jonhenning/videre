@@ -13,6 +13,7 @@ namespace Videre.Core.Services
         List<string> RoleIds { get; set; }
         List<string> ExcludeRoleIds { get; set; }
         List<UserClaim> Claims { get; set; }
+        List<UserClaim> ExcludeClaims { get; set; }
     }
 
     public interface IAuthorizationUser
@@ -42,8 +43,8 @@ namespace Videre.Core.Services
         public static bool IsAuthorized(IAuthorizationUser user, IAuthorizationEntity entity)
         {
             if (user != null)
-                return IsAuthorized(user != null, user.RoleIds, user.Claims, entity.Authenticated, entity.RoleIds, entity.ExcludeRoleIds, entity.Claims);
-            return IsAuthorized(false, null, null, entity.Authenticated, entity.RoleIds, entity.ExcludeRoleIds, entity.Claims);
+                return IsAuthorized(user != null, user.RoleIds, user.Claims, entity.Authenticated, entity.RoleIds, entity.ExcludeRoleIds, entity.Claims, entity.ExcludeClaims);
+            return IsAuthorized(false, null, null, entity.Authenticated, entity.RoleIds, entity.ExcludeRoleIds, entity.Claims, entity.ExcludeClaims);
         }
 
         public static bool IsAuthorized(IAuthorizationUser user, List<UserClaim> claims)
@@ -51,7 +52,7 @@ namespace Videre.Core.Services
             return user != null && claims.Exists(ec => user.Claims.Exists(uc => claimMatches(uc, ec)));
         }
 
-        private static bool IsAuthorized(bool userAuthenticated, List<string> userRoleIds, List<UserClaim> userClaims, bool? entityAuthenticated, List<string> entityRoleIds, List<string> entityExcludeRoleIds, List<UserClaim> entityClaims)
+        private static bool IsAuthorized(bool userAuthenticated, List<string> userRoleIds, List<UserClaim> userClaims, bool? entityAuthenticated, List<string> entityRoleIds, List<string> entityExcludeRoleIds, List<UserClaim> entityClaims, List<UserClaim> excludeEntityClaims)
         {
             if (userRoleIds == null)
                 userRoleIds = new List<string>();
@@ -63,13 +64,17 @@ namespace Videre.Core.Services
                 entityExcludeRoleIds = new List<string>();
             if (entityClaims == null)
                 entityClaims = new List<UserClaim>();
+            if (excludeEntityClaims == null)
+                excludeEntityClaims = new List<Models.UserClaim>();
 
             if (entityAuthenticated == false && userAuthenticated)
                 return false;
             if (entityAuthenticated == true && userAuthenticated == false)
                 return false;
-            
+
             if (entityExcludeRoleIds.Exists(id => userRoleIds.Contains(id)))    //if exlcude role exists then not authorized regardless of other roles/claims
+                return false;
+            if (excludeEntityClaims.Exists(ec => userClaims.Exists(uc => claimMatches(uc, ec))))    //if exlcude claim exists then not authorized regardless of other roles/claims
                 return false;
 
             if (entityRoleIds.Count == 0 && entityClaims.Count == 0)    //if no permissions assigned to resource your in!
