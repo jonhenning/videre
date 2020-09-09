@@ -20,6 +20,8 @@ Web/Scripts/widgets/*
 Web/Scripts/controls/*
 Web/Scripts/camera*/*
 logs/*
+.vs/
+
 *.suo
 *.pubxml
 # mstest test results
