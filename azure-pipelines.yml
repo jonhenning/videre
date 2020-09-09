@@ -1,0 +1,70 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  PackageVersion: '2.3.$(Build.BuildID).0'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '$(solution)'
+    feedsToUse: 'config'
+    nugetConfigPath: 'nuget.config'
+
+- task: Assembly-Info-NetFramework@2
+  inputs:
+    Path: '$(Build.SourcesDirectory)'
+    FileNames: '**\AssemblyInfo.cs'
+    InsertAttributes: false
+    FileEncoding: 'auto'
+    WriteBOM: false
+    Title: 'Code Endeavors Service Host'
+    Description: 'Code Endeavors Service Host'
+    Company: 'Code Endeavors, Inc.'
+    VersionNumber: '$(PackageVersion)'
+    FileVersionNumber: '$(PackageVersion)'
+    InformationalVersion: '$(PackageVersion)'
+    LogLevel: 'verbose'
+    FailOnWarning: false
+
+- task: VSBuild@1
+  inputs:
+    solution: '**\*.sln'
+
+- task: NuGetCommand@2
+  inputs:
+    command: pack
+    packagesToPack: '$(Build.SourcesDirectory)/redist/Videre.Core.nuspec'
+    versioningScheme: byEnvVar
+    versionEnvVar: 'PackageVersion'
+    packDestination: '$(Build.SourcesDirectory)/redist'
+   
+- task: NuGetCommand@2
+  displayName: 'NuGet push'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.SourcesDirectory)/redist/*.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'ac758a19-2517-4b8d-9d83-43bd02106e50'
+    allowPackageConflicts: false
+
+# - task: NuGetCommand@2
+#   inputs:
+#     command: 'push'
+#     packagesToPush: '$(Build.SourcesDirectory)/redist/*.nupkg'
+#     nuGetFeedType: 'external'
+#     publishFeedCredentials: 'Nuget.org'
