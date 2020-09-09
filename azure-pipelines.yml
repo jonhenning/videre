@@ -32,8 +32,8 @@ steps:
     InsertAttributes: false
     FileEncoding: 'auto'
     WriteBOM: false
-    Title: 'Code Endeavors Service Host'
-    Description: 'Code Endeavors Service Host'
+    Title: 'Code Endeavors Videre CMS'
+    Description: 'Code Endeavors Videre CMS'
     Company: 'Code Endeavors, Inc.'
     VersionNumber: '$(PackageVersion)'
     FileVersionNumber: '$(PackageVersion)'
