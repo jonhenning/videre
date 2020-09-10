@@ -51,7 +51,7 @@ steps:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/redist/Videre.Core.nuspec'
     versioningScheme: byEnvVar
-    versionEnvVar: '$(Version.MajorMinor).${Version.Revision)
+    versionEnvVar: '$(Version.MajorMinor).${Version.Revision)'
     packDestination: '$(Build.SourcesDirectory)/redist'
    
 # - task: NuGetCommand@2
