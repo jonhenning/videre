@@ -36,9 +36,9 @@ steps:
     Title: 'Code Endeavors Videre CMS'
     Description: 'Code Endeavors Videre CMS'
     Company: 'Code Endeavors, Inc.'
-    VersionNumber: '$(Version.MajorMinor).${Version.Revision)'
-    FileVersionNumber: '$(Version.MajorMinor).${Version.Revision)'
-    InformationalVersion: '$(Version.MajorMinor).${Version.Revision)'
+    VersionNumber: '$(Version.MajorMinor).$(Version.Revision)'
+    FileVersionNumber: '$(Version.MajorMinor).$(Version.Revision)'
+    InformationalVersion: '$(Version.MajorMinor).$(Version.Revision)'
     LogLevel: 'verbose'
     FailOnWarning: false
 
@@ -51,7 +51,7 @@ steps:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/redist/Videre.Core.nuspec'
     versioningScheme: byEnvVar
-    versionEnvVar: '$(Version.MajorMinor).${Version.Revision)'
+    versionEnvVar: '$(Version.MajorMinor).$(Version.Revision)'
     packDestination: '$(Build.SourcesDirectory)/redist'
    
 # - task: NuGetCommand@2
