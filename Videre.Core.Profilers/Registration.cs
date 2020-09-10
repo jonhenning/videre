@@ -5,7 +5,7 @@ using System.Web;
 using Videre.Core.Models;
 using Videre.Core.Services;
 
-namespace Videre.Core.Profilers.Views
+namespace Videre.Core.Profilers
 {
     public class Registration : IWidgetRegistration
     {

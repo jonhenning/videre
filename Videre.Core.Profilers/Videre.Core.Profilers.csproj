@@ -120,7 +120,7 @@
   <ItemGroup>
     <Compile Include="StackExchangeProfiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Registration.cs" />
+    <Compile Include="Registration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="build.targets" />
