@@ -1,0 +1,15 @@
+﻿@using System.Collections.Generic;
+@using Videre.Core.Extensions;
+@using Models = Videre.Core.Models;
+@using Videre.Core.Services;
+@using StackExchange.Profiling
+
+@model Models.Widget
+
+
+    @if (Security.IsActivityAuthorized("Profiler", "MiniProfiler"))
+    {
+        @MiniProfiler.RenderIncludes();
+    }
+
+
