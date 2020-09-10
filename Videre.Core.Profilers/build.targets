@@ -49,8 +49,9 @@
             <Output TaskParameter="Include" ItemName="DebugWidgets" />
         </CreateItem>
         <CreateItem Include="
-                $(TargetDir)Microsoft.*.dll;
-                $(TargetDir)DotNetOpenAuth.*.dll;
+                $(TargetDir)MiniProfiler.dll;
+                $(TargetDir)MiniProfiler.Mvc5.dll;
+                $(TargetDir)MiniProfiler.Shared.dll;
                 $(TargetDir)$(Name).dll;
                 $(MSBuildProjectDirectory)\**\*.cshtml;
                 $(MSBuildProjectDirectory)\package.manifest;
