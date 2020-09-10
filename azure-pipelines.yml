@@ -15,6 +15,7 @@ variables:
   buildConfiguration: 'Release'
   Version.MajorMinor: '2.2'
   Version.Revision: $[counter(variables['Version.MajorMinor'], 188)]
+  PackageVersion: '$(Version.MajorMinor).$(Version.Revision)'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -36,9 +37,9 @@ steps:
     Title: 'Code Endeavors Videre CMS'
     Description: 'Code Endeavors Videre CMS'
     Company: 'Code Endeavors, Inc.'
-    VersionNumber: '$(Version.MajorMinor).$(Version.Revision).0'
-    FileVersionNumber: '$(Version.MajorMinor).$(Version.Revision).0'
-    InformationalVersion: '$(Version.MajorMinor).$(Version.Revision).0'
+    VersionNumber: '$(PackageVersion)'
+    FileVersionNumber: '$(PackageVersion)'
+    InformationalVersion: '$(PackageVersion)'
     LogLevel: 'verbose'
     FailOnWarning: false
 
@@ -51,7 +52,7 @@ steps:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/redist/Videre.Core.nuspec'
     versioningScheme: byEnvVar
-    versionEnvVar: '$(Version.MajorMinor).$(Version.Revision).0'
+    versionEnvVar: 'PackageVersion'
     packDestination: '$(Build.SourcesDirectory)/redist'
    
 # - task: NuGetCommand@2
