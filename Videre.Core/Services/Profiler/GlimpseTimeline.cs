@@ -8,42 +8,37 @@ using System.Web;
 
 namespace Videre.Core.Services.Profiler
 {
-    //http://stackoverflow.com/a/28152114
-    public static class Timeline
-    {
-        public static IDisposable Capture(string eventName)
-        {
-#pragma warning disable 618
-            var timer = GlimpseConfiguration.GetConfiguredTimerStrategy()();
-            if (timer == null)
-                return null;
-            var broker = GlimpseConfiguration.GetConfiguredMessageBroker();
-            if (broker == null)
-                return null;
-#pragma warning restore 618
-            return new TimelineCapture(timer, broker, eventName);
-        }
-
-    }
-
-    public class TimelineCapture : IDisposable
+    
+    
+    public class GlimpseTimeline : IProfileCapture
     {
         private readonly string _eventName;
         private readonly IExecutionTimer _timer;
         private readonly IMessageBroker _broker;
         private readonly TimeSpan _startOffset;
 
-        public TimelineCapture(IExecutionTimer timer, IMessageBroker broker, string eventName)
+        public GlimpseTimeline(string eventName)
+        {
+#pragma warning disable 618
+            _timer = GlimpseConfiguration.GetConfiguredTimerStrategy()();
+            _broker = GlimpseConfiguration.GetConfiguredMessageBroker();
+#pragma warning restore 618
+            _eventName = eventName;
+        }
+
+        public GlimpseTimeline(IExecutionTimer timer, IMessageBroker broker, string eventName)
         {
             _timer = timer;
             _broker = broker;
             _eventName = eventName;
-            _startOffset = _timer.Start();
+            if (_timer != null)
+                _startOffset = _timer.Start();
         }
 
         public void Dispose()
         {
-            _broker.Publish(new TimelineMessage(_eventName, _timer.Stop(_startOffset)));
+            if (_broker != null && _timer != null)
+                _broker.Publish(new TimelineMessage(_eventName, _timer.Stop(_startOffset)));
         }
     }
 

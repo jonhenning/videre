@@ -19,7 +19,7 @@ namespace Videre.Core.Profilers
             get
             {
                 if (!_isEnabled.HasValue)
-                    _isEnabled = Videre.Core.Services.Portal.GetAppSetting("MiniProfilerEnabled", true);
+                    _isEnabled = Videre.Core.Services.Portal.GetAppSetting("Profiler", "") == "StackExchange";
                 return _isEnabled ?? false;
             }
         }
@@ -135,6 +135,12 @@ namespace Videre.Core.Profilers
                 // This is in the MiniProfiler.EF6 NuGet package.
                 // MiniProfilerEF6.Initialize();
 
+                MiniProfiler.Settings.Results_Authorize = request => {
+                    return Videre.Core.Services.Authentication.IsAuthenticated && Videre.Core.Services.Account.CurrentUser.IsActivityAuthorized("Profiler", "MiniProfiler");
+                };
+                MiniProfiler.Settings.Results_List_Authorize = request => {
+                    return Videre.Core.Services.Authentication.IsAuthenticated && Videre.Core.Services.Account.CurrentUser.IsActivityAuthorized("Profiler", "MiniProfiler");
+                };
 
                 MiniProfiler.Settings.PopupStartHidden = Videre.Core.Services.Portal.GetAppSetting("MiniProfilerStartHidden", false);
                 MiniProfiler.Settings.PopupRenderPosition = RenderPosition.BottomRight;
