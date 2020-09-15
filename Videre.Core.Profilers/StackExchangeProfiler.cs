@@ -63,7 +63,7 @@ namespace Videre.Core.Profilers
         {
             if (isEnabled)
             {
-                MiniProfiler.Stop();   // Be sure to stop the profiler!
+                MiniProfiler.Stop(discardResults: false);   // Be sure to stop the profiler!
             }
         }
 
@@ -160,6 +160,7 @@ namespace Videre.Core.Profilers
         {
             if (isEnabled)
             {
+                MiniProfilerHandler.RegisterRoutes();
                 routes.IgnoreRoute(routePrefix + "/{*pathInfo}");
             }
         }

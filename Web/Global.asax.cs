@@ -59,6 +59,8 @@ namespace Videre.Web
                 namespaces: new string[] { "Videre.Web.Controllers" }
             );
 
+            applicationPlugins.ForEach(a => a.RegisterRoutes(routes));
+
             //the route controller is the "catch all"
             routes.MapRoute(
                 "Route", // Route name
@@ -69,7 +71,6 @@ namespace Videre.Web
             if (Services.Portal.GetAppSetting("EnableRouteDebug", false))
                 RouteDebug.RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
 
-            applicationPlugins.ForEach(a => a.RegisterRoutes(routes));
         }
 
         protected void Application_Start()
