@@ -12,7 +12,7 @@ namespace Videre.Core.Services.Profiler
     //http://stackoverflow.com/a/28152114
     public static class Timeline
     {
-        private static string _profilerName = Portal.GetAppSetting("Profiler", "") + "Timeline";
+        private static string _profilerName = Portal.GetAppSetting("Profiler.Name", "") + "Timeline";
         private static Type _captureType = null;
 
         public static IDisposable Capture(string eventName)

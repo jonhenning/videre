@@ -19,7 +19,7 @@ namespace Videre.Core.Profilers
             get
             {
                 if (!_isEnabled.HasValue)
-                    _isEnabled = Videre.Core.Services.Portal.GetAppSetting("Profiler", "") == "StackExchange";
+                    _isEnabled = Videre.Core.Services.Portal.GetAppSetting("Profiler.Name", "") == "StackExchange";
                 return _isEnabled ?? false;
             }
         }
