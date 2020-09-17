@@ -7,5 +7,6 @@
     <add key="FileDir" value="~/App_Data/FileRepo"/>
     <add key="EnableRouteDebug" value="false"/>
     <add key="aspnet:MaxJsonDeserializerMembers" value="10000" />
-    <add key="Profiler" value="StackExchange"/>
+    <add key="Profiler.Enabled" value="false"/>
+    <add key="Profiler.Name" value="StackExchange"/>
 </appSettings>
