@@ -14,7 +14,19 @@ namespace Videre.Core.Profilers
             int updates = 0;
             updates += Update.Register(new List<Models.WidgetManifest>()
             {
-                new Models.WidgetManifest() { Path = "Core/Profilers", Name = "MiniProfilerScripts", Title = "Mini Profiler Scripts", Category = "Profilers" },
+                new Models.WidgetManifest() { Path = "Core/Profilers", Name = "MiniProfilerScripts", Title = "Mini Profiler Scripts", Category = "Profilers", AttributeDefinitions = {
+                        new AttributeDefinition()
+                        {
+                            Name = "StartHidden",
+                            Values = new List<string>() { "Yes", "No" },
+                            DefaultValue = "No",
+                            Required = false,
+                            LabelKey = "StartHidden.Text",
+                            LabelText = "Start Hidden",
+                            ControlType = "bootstrap-select"
+                        },
+                    }
+                },
             });
             return updates;
         }

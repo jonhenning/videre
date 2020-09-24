@@ -9,7 +9,8 @@
 
     @if (Security.IsActivityAuthorized("Profiler", "MiniProfiler"))
     {
-        @MiniProfiler.RenderIncludes();
+        var startHidden = Model.GetAttribute("StartHidden", "No") == "Yes";
+        @MiniProfiler.RenderIncludes(startHidden: startHidden);
     }
 
 
