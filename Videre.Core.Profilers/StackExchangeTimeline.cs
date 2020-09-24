@@ -15,7 +15,8 @@ namespace Videre.Core.Profilers
         private Timing _serverTiming = null;
         public StackExchangeTimeline(string eventName)
         {
-            _timing = MiniProfiler.Current.CustomTiming("Videre", eventName);
+            if (MiniProfiler.Current != null)
+                _timing = MiniProfiler.Current.CustomTiming("Videre", eventName);
         }
 
         public string Results
@@ -25,7 +26,8 @@ namespace Videre.Core.Profilers
                 if (_timing != null)
                 {
                     _timing.Stop();
-                    _timingJson = MiniProfiler.Current.Root.ToJson();
+                    if (MiniProfiler.Current != null && MiniProfiler.Current.Root != null)
+                        _timingJson = MiniProfiler.Current.Root.ToJson();
                     _timing = null;
                 }
                 return _timingJson;
@@ -54,7 +56,7 @@ namespace Videre.Core.Profilers
                 _timing.Stop();
                 _timing = null;
             }
-            if (_serverTiming != null)
+            if (_serverTiming != null && MiniProfiler.Current != null && MiniProfiler.Current.Root != null)
             {
                 MiniProfiler.Current.Root.AddChild(_serverTiming);
             }
