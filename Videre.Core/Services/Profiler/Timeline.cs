@@ -13,17 +13,21 @@ namespace Videre.Core.Services.Profiler
     public static class Timeline
     {
         private static string _profilerName = Portal.GetAppSetting("Profiler.Name", "") + "Timeline";
+        private static bool _isEnabled = Portal.GetAppSetting("Profiler.Enabled", false);
         private static Type _captureType = null;
 
         public static IDisposable Capture(string eventName)
         {
-            if (_captureType == null)
+            if (_isEnabled)
             {
-                var types = typeof(IProfileCapture).GetAllTypes();
-                _captureType = types.Where(t => t.Name == _profilerName).FirstOrDefault();
+                if (_captureType == null)
+                {
+                    var types = typeof(IProfileCapture).GetAllTypes();
+                    _captureType = types.Where(t => t.Name == _profilerName).FirstOrDefault();
+                }
+                if (_captureType != null)
+                    return (IProfileCapture)Activator.CreateInstance(_captureType, eventName);
             }
-            if (_captureType != null)
-                return (IProfileCapture)Activator.CreateInstance(_captureType, eventName);
             return new NoOpProfileCapture(eventName);
         }
     }
