@@ -9,7 +9,8 @@
         <RedistDir>$(RootDir)\redist</RedistDir>
         <DeployDir>$(RootDir)\Web</DeployDir>
         <CommonLibDir>$(RootDir)\lib</CommonLibDir>
-        <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
+        <ProvisioningDir></ProvisioningDir>
+      <MSBuildTasksDir>$(CommonLibDir)\MSBuildTargets</MSBuildTasksDir>
     </PropertyGroup>
     <ItemGroup>
         <DeployDirs Include="$(DeployDir)" />
@@ -65,6 +66,7 @@
     <Target Name="Deploy">
         <!--<MakeDir Directories="$(DeployDir)\_updates"/>-->
         <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="%(DeployDirs.FullPath)\_updates" />
+        <Copy SourceFiles="$(RedistDir)\$(ZipName)" DestinationFolder="%(ProvisioningDirs.FullPath)" Condition="$(ProvisioningDir) != ''" />
     </Target>
 
 </Project>
