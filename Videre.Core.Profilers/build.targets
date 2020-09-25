@@ -15,6 +15,9 @@
     <ItemGroup>
         <DeployDirs Include="$(DeployDir)" />
     </ItemGroup>
+    <ItemGroup>
+        <ProvisioningDirs Include="$(ProvisioningDir)" />
+    </ItemGroup>
     <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets')"/>
 
     <Target Name="AfterBuild">
