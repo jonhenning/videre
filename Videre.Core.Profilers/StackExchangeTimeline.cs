@@ -49,6 +49,11 @@ namespace Videre.Core.Profilers
             //}
         }
 
+        public void Step(string name)
+        {
+            MiniProfiler.Current?.Step(name);
+        }
+
         public void Dispose()
         {
             if (_timing != null)
