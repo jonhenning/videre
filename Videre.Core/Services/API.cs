@@ -5,6 +5,7 @@ using System.Web.Helpers;
 using Videre.Core.ActionResults;
 using System.Web;
 using System.Threading.Tasks;
+using Videre.Core.Services.Profiler;
 
 namespace Videre.Core.Services
 {
@@ -23,22 +24,25 @@ namespace Videre.Core.Services
 
         public static JsonResult<T> Execute<T>(JsonResultHandler<T> codeFunc, bool verifyAntiForgeryToken) where T : new()
         {
-            var result = new JsonResult<T>();
-            try
+            using (var capture = Timeline.Capture("API.Execute"))
             {
-                if (verifyAntiForgeryToken && AntiForgeryTokenVerification)
-                    VerifyAntiForgeryToken();
-                codeFunc(result);
+                var result = new JsonResult<T>();
+                try
+                {
+                    if (verifyAntiForgeryToken && AntiForgeryTokenVerification)
+                        VerifyAntiForgeryToken();
+                    codeFunc(result);
+                }
+                catch (Exception ex)
+                {
+                    //todo: some flag needed to show friendly errors 
+                    result.AddError(ex);
+                    Logging.Logger.Error("API Error", ex);
+                    if (ex.InnerException != null)
+                        result.AddError(ex.InnerException);
+                }
+                return result;
             }
-            catch (Exception ex)
-            {
-                //todo: some flag needed to show friendly errors 
-                result.AddError(ex);
-                Logging.Logger.Error("API Error", ex);
-                if (ex.InnerException != null)
-                    result.AddError(ex.InnerException);
-            }
-            return result;
         }
 
         public async static Task<JsonResult<T>> ExecuteAsync<T>(JsonResultAsyncHandler<T> codeFunc, bool verifyAntiForgeryToken) where T : new()

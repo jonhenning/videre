@@ -1,4 +1,6 @@
 ﻿using CodeEndeavors.Extensions;
+using CodeEndeavors.ServiceHost.Common.Services;
+using CodeEndeavors.ServiceHost.Common.Services.Profiler;
 using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
@@ -8,62 +10,53 @@ using Videre.Core.Services.Profiler;
 
 namespace Videre.Core.Profilers
 {
-    public class StackExchangeTimeline : IProfileCapture, CodeEndeavors.ServiceHost.Common.Services.Profiler.IServiceHostProfilerCapture
+    public class StackExchangeTimeline : IProfileCapture, IServiceHostProfilerCapture
     {
-        CustomTiming _timing = null;
+        private IDisposable _step = null;
         private string _timingJson = null;
-        private Timing _serverTiming = null;
+        private string _results = null;
         public StackExchangeTimeline(string eventName)
         {
-            if (MiniProfiler.Current != null)
-                _timing = MiniProfiler.Current.CustomTiming("Videre", eventName);
+            _step = MiniProfiler.Current?.Step(eventName + " " + StackExchange.Profiling.Helpers.StackTraceSnippet.Get());
         }
 
         public string Results
         {
             get
             {
-                if (_timing != null)
-                {
-                    _timing.Stop();
-                    if (MiniProfiler.Current != null && MiniProfiler.Current.Root != null)
-                        _timingJson = MiniProfiler.Current.Root.ToJson();
-                    _timing = null;
-                }
+                if (_timingJson == null)
+                    _timingJson = MiniProfiler.ToJson();
                 return _timingJson;
             }
         }
 
         public void AppendResults(string results)
         {
-            //try
-            //{
-            if (!string.IsNullOrEmpty(results))
-            {
-                _serverTiming = results.ToObject<Timing>();
-            }
-            //}
-            //catch (Exception ex)
-            //{
-            //TODO: LOG IT
-            //}
+            _results = results;
         }
+        //public void AppendResults(string results)
+        //{
+        //    if (!string.IsNullOrEmpty(results))
+        //    {
+        //        var profiler = MiniProfiler.FromJson(results);
+        //        //profiler?.Root?.Children.ForEach(child => MiniProfiler.Current?.Head?.AddChild(child));
+        //        profiler?.GetTimingHierarchy().ToList().ForEach(child => MiniProfiler.Current?.Head?.AddChild(child));
+        //    }
+        //}
 
-        public void Step(string name)
+        public IDisposable CustomTiming(string category, string commandString)
         {
-            MiniProfiler.Current?.Step(name);
+            IDisposable ret = (IDisposable)MiniProfiler.Current?.CustomTiming(category, commandString);
+            return ret != null ? ret : new NoOpDisposable();
         }
 
         public void Dispose()
         {
-            if (_timing != null)
+            _step?.Dispose();
+            if (!string.IsNullOrEmpty(_results))
             {
-                _timing.Stop();
-                _timing = null;
-            }
-            if (_serverTiming != null && MiniProfiler.Current != null && MiniProfiler.Current.Root != null)
-            {
-                MiniProfiler.Current.Root.AddChild(_serverTiming);
+                var profiler = MiniProfiler.FromJson(_results);
+                profiler?.Root?.Children.ForEach(child => MiniProfiler.Current?.Head?.AddChild(child));
             }
         }
     }
