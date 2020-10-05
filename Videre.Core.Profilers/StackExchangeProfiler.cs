@@ -1,4 +1,5 @@
-﻿using StackExchange.Profiling;
+﻿using CodeEndeavors.ServiceHost.Common.Services;
+using StackExchange.Profiling;
 using StackExchange.Profiling.Mvc;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,15 @@ namespace Videre.Core.Profilers
         {
             if (isEnabled)
             {
-                MiniProfiler.Stop(discardResults: false);   // Be sure to stop the profiler!
+                try
+                {
+                    if (MiniProfiler.Current != null)
+                        MiniProfiler.Stop(discardResults: false);   // Be sure to stop the profiler!
+                }
+                catch (Exception ex)
+                {
+                    Logging.Error(ex);
+                }
             }
         }
 
