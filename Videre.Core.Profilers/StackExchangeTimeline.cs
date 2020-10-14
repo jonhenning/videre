@@ -15,11 +15,11 @@ namespace Videre.Core.Profilers
         private IDisposable _step = null;
         private string _timingJson = null;
         private string _results = null;
-        private decimal? _startMilliseconds;
+        //private decimal? _startMilliseconds;
         public StackExchangeTimeline(string eventName)
         {
             _step = MiniProfiler.Current?.Step(eventName + " " + StackExchange.Profiling.Helpers.StackTraceSnippet.Get());
-            _startMilliseconds = MiniProfiler.Current?.Head?.StartMilliseconds;
+            //_startMilliseconds = MiniProfiler.Current?.Head.StartMilliseconds;
         }
 
         public string Results
@@ -58,8 +58,8 @@ namespace Videre.Core.Profilers
             if (!string.IsNullOrEmpty(_results))
             {
                 var profiler = MiniProfiler.FromJson(_results);
-                if (profiler.Root != null && _startMilliseconds.HasValue)
-                    profiler.Root.StartMilliseconds = _startMilliseconds.Value;
+                if (profiler.Root != null && MiniProfiler.Current != null && MiniProfiler.Current.Head != null)
+                    profiler.Root.StartMilliseconds = MiniProfiler.Current.Head.StartMilliseconds;
 
                 profiler?.Root?.Children.ForEach(child => MiniProfiler.Current?.Head?.AddChild(child));
             }
