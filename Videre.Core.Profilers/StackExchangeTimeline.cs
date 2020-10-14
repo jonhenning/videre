@@ -4,6 +4,7 @@ using CodeEndeavors.ServiceHost.Common.Services.Profiler;
 using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using Videre.Core.Services.Profiler;
@@ -15,11 +16,13 @@ namespace Videre.Core.Profilers
         private IDisposable _step = null;
         private string _timingJson = null;
         private string _results = null;
-        //private decimal? _startMilliseconds;
+        private decimal? _startMilliseconds = null;
+        private Stopwatch _sw = new Stopwatch();
         public StackExchangeTimeline(string eventName)
         {
+            _startMilliseconds = MiniProfiler.Current?.Head.StartMilliseconds;
+            _sw.Start();
             _step = MiniProfiler.Current?.Step(eventName + " " + StackExchange.Profiling.Helpers.StackTraceSnippet.Get());
-            //_startMilliseconds = MiniProfiler.Current?.Head.StartMilliseconds;
         }
 
         public string Results
@@ -55,13 +58,20 @@ namespace Videre.Core.Profilers
         public void Dispose()
         {
             _step?.Dispose();
+            _sw.Stop();
             if (!string.IsNullOrEmpty(_results))
             {
-                var profiler = MiniProfiler.FromJson(_results);
-                if (profiler.Root != null && MiniProfiler.Current != null && MiniProfiler.Current.Head != null)
-                    profiler.Root.StartMilliseconds = MiniProfiler.Current.Head.StartMilliseconds;
-
-                profiler?.Root?.Children.ForEach(child => MiniProfiler.Current?.Head?.AddChild(child));
+                //var profiler = MiniProfiler.FromJson(_results);
+                var children = _results.ToObject<List<Timing>>();
+                children.ForEach(child =>
+                {
+                    if (_startMilliseconds.HasValue)
+                    {
+                        child.StartMilliseconds = _startMilliseconds.Value;
+                        child.DurationMilliseconds = _sw.ElapsedMilliseconds;
+                    }
+                    MiniProfiler.Current?.Head?.AddChild(child);
+                });
             }
         }
     }
