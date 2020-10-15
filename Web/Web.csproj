@@ -91,8 +91,8 @@
       <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.1.101\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=1.0.39.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Services.ResourceManager.ClientX.1.0.39\lib\net45\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
+    <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=2.0.121.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Services.ResourceManager.ClientX.2.0.121\lib\net45\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
