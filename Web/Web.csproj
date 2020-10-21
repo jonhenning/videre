@@ -87,8 +87,8 @@
       <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.0.56\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.1.101.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.1.101\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
+    <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.1.103.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.1.103\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=2.0.121.0, Culture=neutral, processorArchitecture=MSIL">
@@ -184,6 +184,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\MemoryTimerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\InstallerController.cs" />
     <Compile Include="Controllers\ServerJSController.cs" />

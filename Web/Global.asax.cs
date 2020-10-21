@@ -13,6 +13,7 @@ using Videre.Core.Binders;
 using Services = Videre.Core.Services;
 using Videre.Core.Providers;
 using System.Collections.Concurrent;
+using CodeEndeavors.ServiceHost.Common.Services.Profiler;
 
 namespace Videre.Web
 {
@@ -46,6 +47,13 @@ namespace Videre.Web
             routes.IgnoreRoute("favicon.ico");  //todo: eventually allow portal to map this... for now ignore!
 
             routes.MapRoute(
+                "_memorytimings", // Route name
+                "_memorytimings/{action}/{key}", // URL with parameters
+                new { controller = "MemoryTimer", action = "", key = UrlParameter.Optional },
+                namespaces: new string[] { "Videre.Web.Controllers" }
+            );
+
+            routes.MapRoute(
                 "ServerJS", // Route name
                 "ServerJS/{action}/{key}", // URL with parameters
                 new { controller = "ServerJS", action = "", key = UrlParameter.Optional },
@@ -77,40 +85,61 @@ namespace Videre.Web
         {
             try
             {
-                //only support Razor for now - perf
-                //https://blogs.msdn.microsoft.com/marcinon/2011/08/16/optimizing-asp-net-mvc-view-lookup-performance/
-                ViewEngines.Engines.Clear();
-                var ve = new RazorViewEngine();
-                ve.ViewLocationCache = new Videre.Core.Providers.TwoLevelViewCache(ve.ViewLocationCache);
-                ViewEngines.Engines.Add(ve);
+                using (var timer = new MemoryTimer("Application_Start"))
+                {
+                    using (var timing = new MemoryTiming(timer, "ViewEngines"))
+                    {
+                        //only support Razor for now - perf
+                        //https://blogs.msdn.microsoft.com/marcinon/2011/08/16/optimizing-asp-net-mvc-view-lookup-performance/
+                        ViewEngines.Engines.Clear();
+                        var ve = new RazorViewEngine();
+                        ve.ViewLocationCache = new Videre.Core.Providers.TwoLevelViewCache(ve.ViewLocationCache);
+                        ViewEngines.Engines.Add(ve);
+                    }
 
-                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+                    using (var timing = new MemoryTiming(timer, "Logging Setup"))
+                    {
+                        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-                var logLevel = Services.Portal.GetAppSetting("LogLevel", 1);
+                        var logLevel = Services.Portal.GetAppSetting("LogLevel", 1);
 
-                CodeEndeavors.ResourceManager.Logging.LogLevel = (CodeEndeavors.ResourceManager.Logging.LoggingLevel)logLevel;
-                CodeEndeavors.ResourceManager.Logging.OnLoggingMessage += (message) => { Services.Logging.Logger.Info("ResourceManager: " + message); };
+                        CodeEndeavors.ResourceManager.Logging.LogLevel = (CodeEndeavors.ResourceManager.Logging.LoggingLevel)logLevel;
+                        CodeEndeavors.ResourceManager.Logging.OnLoggingMessage += (message) => { Services.Logging.Logger.Info("ResourceManager: " + message); };
 
-                CodeEndeavors.Distributed.Cache.Client.Logging.LogLevel = (CodeEndeavors.Distributed.Cache.Client.Logging.LoggingLevel)logLevel;
-                CodeEndeavors.Distributed.Cache.Client.Logging.OnLoggingMessage += (message) => { Services.Logging.Logger.Info("Cache: " + message); };
+                        CodeEndeavors.Distributed.Cache.Client.Logging.LogLevel = (CodeEndeavors.Distributed.Cache.Client.Logging.LoggingLevel)logLevel;
+                        CodeEndeavors.Distributed.Cache.Client.Logging.OnLoggingMessage += (message) => { Services.Logging.Logger.Info("Cache: " + message); };
 
-                Services.Logging.Logger.Debug("Application_Start");
+                        Services.Logging.Logger.Debug("Application_Start");
+                    }
+                    using (var timing = new MemoryTiming(timer, "WatchForUpdates"))
+                        Services.Update.WatchForUpdates();
+                    using (var timing = new MemoryTiming(timer, "CacheTimer Register"))
+                        Services.CacheTimer.Register();
+                    using (var timing = new MemoryTiming(timer, "Register AutoUpdate"))
+                        Services.Search.RegisterForAutoUpdate();
 
-                Services.Update.WatchForUpdates();
-                Services.CacheTimer.Register();
-                Services.Search.RegisterForAutoUpdate();
+                    using (var timing = new MemoryTiming(timer, "Servides Update Register"))
+                        Services.Update.Register();
 
-                Services.Update.Register();
-                AreaRegistration.RegisterAllAreas();    //todo: not really needed anymore!
+                    using (var timing = new MemoryTiming(timer, "Routes, Binders Areas"))
+                    {
+                        AreaRegistration.RegisterAllAreas();    //todo: not really needed anymore!
 
-                ModelBinders.Binders.DefaultBinder = new JsonNetModelBinder();
+                        ModelBinders.Binders.DefaultBinder = new JsonNetModelBinder();
 
-                RegisterGlobalFilters(GlobalFilters.Filters);
-                RegisterRoutes(RouteTable.Routes);
+                        RegisterGlobalFilters(GlobalFilters.Filters);
+                        RegisterRoutes(RouteTable.Routes);
+                    }
 
-                applicationPlugins.ForEach(a => a.Application_Start());
+                    applicationPlugins.ForEach(a =>
+                    {
+                        using (var timing = new MemoryTiming(timer, a.GetType().Name + " Plugin Application_Start"))
+                            a.Application_Start();
+                    });
 
-                Core.Services.Repository.Dispose(); //application start is not same httpcontext as first request
+                    using (var timing = new MemoryTiming(timer, "Repository Dispose"))
+                        Core.Services.Repository.Dispose(); //application start is not same httpcontext as first request
+                }
             }
             catch (Exception ex)
             {
