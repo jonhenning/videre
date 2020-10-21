@@ -20,7 +20,7 @@ namespace Videre.Core.Profilers
         private Stopwatch _sw = new Stopwatch();
         public StackExchangeTimeline(string eventName)
         {
-            _startMilliseconds = MiniProfiler.Current?.Head.StartMilliseconds;
+            _startMilliseconds = MiniProfiler.Current?.Head?.StartMilliseconds;
             _sw.Start();
             _step = MiniProfiler.Current?.Step(eventName + " " + StackExchange.Profiling.Helpers.StackTraceSnippet.Get());
         }
