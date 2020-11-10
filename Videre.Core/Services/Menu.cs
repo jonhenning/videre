@@ -113,6 +113,18 @@ namespace Videre.Core.Services
                     }
                 }
 
+                if (newItem.ExcludeClaims != null)
+                {
+                    foreach (var claim in newItem.ExcludeClaims)
+                    {
+                        if (!item.ExcludeClaims.Exists(c => c.Issuer == claim.Issuer && c.Type == claim.Type && c.Value == claim.Value))
+                        {
+                            item.ExcludeClaims.Add(claim);
+                            updates++;
+                        }
+                    }
+                }
+
                 if (updates > 0)
                     Menu.Save(menu);
 
