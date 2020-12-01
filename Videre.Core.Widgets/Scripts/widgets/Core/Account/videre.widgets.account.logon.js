@@ -149,6 +149,18 @@ videre.widgets.account.logon = videre.widgets.base.extend(
                 this.refreshForgeryToken();
                 this.showChangePasswordDialog();
             }
+            else if (this._loginResult.WarnChangePasswordMessage != null)
+            {
+                var self = this;
+                videre.UI.prompt(videre.UI.getNextId(), 'Password Expiring', this._loginResult.WarnChangePasswordMessage, null,
+                    [{
+                        text: 'Ok', css: 'btn-primary', close: true, handler: function()
+                        {
+                            self._handleLoginSuccess();
+                            return true;
+                        }
+                    }]);
+            }
             else if (this._loginResult.UserId != null)
                 this._handleLoginSuccess();
         }

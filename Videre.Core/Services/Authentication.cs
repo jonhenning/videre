@@ -23,6 +23,7 @@ namespace Videre.Core.Services
         public bool MustChangePassword { get; set; }
         public bool MustVerify { get; set; }
         public string RedirectUrl { get; set; }
+        public string WarnChangePasswordMessage { get; set; }
     }
 
     public class AuthenticationResult
@@ -546,6 +547,7 @@ namespace Videre.Core.Services
                 ret.UserId = user.Id;
                 ret.MustVerify = Account.AccountVerificationMode == "Passive" && !Account.IsAccountVerified(user); // user.IsEmailVerified;  //Enforced will take care of it for us
                 ret.MustChangePassword = userMustChangePassword(authResult);
+                ret.WarnChangePasswordMessage = getPasswordWarnMessage(authResult);
             }
             else if (SupportsReset)
             {
@@ -571,6 +573,14 @@ namespace Videre.Core.Services
             get
             {
                 return Services.Portal.GetPortalAttribute<int?>("Authentication", "PasswordExpiresDays", null);
+            }
+        }
+
+        public static int? PasswordWarnDays
+        {
+            get
+            {
+                return Services.Portal.GetPortalAttribute<int?>("Authentication", "PasswordWarnDays", null);
             }
         }
 
@@ -710,6 +720,17 @@ namespace Videre.Core.Services
         private static bool userMustChangePassword(AuthenticationResult authResult)
         {
             return (PasswordExpiresDays.HasValue && (authResult.LastPasswordChanged.HasValue == false || authResult.LastPasswordChanged.Value.AddDays(PasswordExpiresDays.Value) < DateTime.UtcNow));
+        }
+
+        private static string getPasswordWarnMessage(AuthenticationResult authResult)
+        {
+            if (PasswordExpiresDays.HasValue && PasswordWarnDays.HasValue)
+            {
+                var daysTillExpire = (int)DateTimeOffset.UtcNow.Subtract(authResult.LastPasswordChanged.Value.AddDays(PasswordExpiresDays.Value)).TotalDays * -1;
+                if (PasswordWarnDays.Value >= daysTillExpire)
+                    return string.Format(Services.Localization.GetPortalText("PasswordExpiresWarning.Text", "You must change your password in {0} day(s)"), daysTillExpire);
+            }
+            return null;
         }
 
         private static void removeEnforcePasswordChangeClaim(string userId)
