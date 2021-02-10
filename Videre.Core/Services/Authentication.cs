@@ -719,7 +719,8 @@ namespace Videre.Core.Services
 
         private static bool userMustChangePassword(AuthenticationResult authResult)
         {
-            return (PasswordExpiresDays.HasValue && (authResult.LastPasswordChanged.HasValue == false || authResult.LastPasswordChanged.Value.AddDays(PasswordExpiresDays.Value) < DateTime.UtcNow));
+            return (PasswordExpiresDays.HasValue && (authResult.LastPasswordChanged.HasValue == false || authResult.LastPasswordChanged.Value.AddDays(PasswordExpiresDays.Value) < DateTime.UtcNow))
+                || (authResult.ExtraData != null && authResult.ExtraData.ContainsKey("MustChangePassword"));
         }
 
         private static string getPasswordWarnMessage(AuthenticationResult authResult)
