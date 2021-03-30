@@ -264,3 +264,6 @@ input[data-controltype="checkbox"] {
 }
 
 
+.bootstrap-select {
+    z-index:auto!important;
+}
