@@ -332,7 +332,7 @@ namespace Videre.Core.Services
             {
                 Services.Logging.Logger.Error(string.Format(
                     Localization.GetLocalization(LocalizationType.Exception, "DuplicateResource.Error",
-                        "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template:" + pageTemplate.ToJson()));
+                        "{0} already exists.   Duplicates Not Allowed.", "Core"), "Template:" + pageTemplate.Id));
                 return dup.Id;
             }
         }
