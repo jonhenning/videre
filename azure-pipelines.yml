@@ -79,6 +79,7 @@ steps:
     repositoryName: '$(Build.Repository.Name)'
     action: 'create'
     target: '$(Build.SourceVersion)'
+    assets: '$(Build.SourcesDirectory)/redist/*'
     tagSource: 'manual'
     tag: 'v$(PackageVersion)'
     releaseNotesSource: 'input'
