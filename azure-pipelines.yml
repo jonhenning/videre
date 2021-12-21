@@ -80,9 +80,9 @@ steps:
     #action: 'create' 
     #target: '$(Build.SourceVersion)' 
     #tagSource: 'manual' 
-    #tag: '$(PackageVersion)
+    #tag: '$(PackageVersion)'
     #title: '$(PackageVersion)'
-    #assets: '$(Build.ArtifactStagingDirectory)/*' # Optional
+    #assets: '$(Build.SourcesDirectory)/redist/*' # Optional
     #assetUploadMode: 'delete' # Optional. Options: delete, replace
     #isDraft: false # Optional
     #isPreRelease: false # Optional
