@@ -79,7 +79,9 @@ steps:
     #repositoryName: '$(Build.Repository.Name)' 
     #action: 'create' 
     #target: '$(Build.SourceVersion)' 
-    #tagSource: 'auto' 
+    #tagSource: 'manual' 
+    #tag: '$(PackageVersion)
+    #title: '$(PackageVersion)'
     #assets: '$(Build.ArtifactStagingDirectory)/*' # Optional
     #assetUploadMode: 'delete' # Optional. Options: delete, replace
     #isDraft: false # Optional
