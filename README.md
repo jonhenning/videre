@@ -1,4 +1,4 @@
-### Videre CMS - http://viderecms.com
+### Videre CMS - https://viderecms.net
 Videre is a Content Management System (CMS) built with Microsoft technologies (C#, ASP.NET MVC, Razor) in the back-end and Bootstrap, jQuery, and jsRender for the UI and client.  
 
 It strives to provide a simple implementation of some complex features like
