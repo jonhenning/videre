@@ -49,6 +49,7 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         this.getControl('btnNew').click(videre.createDelegate(this, this._onNewClicked));
         this.getControl('btnCreate').click(videre.createDelegate(this, this._onCreateClicked));
         this.getControl('ddlPortals').change(videre.createDelegate(this, this._onPortalChanged));
+        this.getControl('btnRecycle').click(videre.createDelegate(this, this._onRecycleClicked));
         this._selectedPortal = this._portalDict[this._selectedPortalId];
 
         //todo: fix theme for multi-portals!
@@ -88,6 +89,21 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
         for(var key in this._attributeDefs)
             this.persistData(portal.Attributes, false, this.getControl('tab' + this._getSafeGroupName(key)));
         this.ajax('~/core/Portal/SavePortal', { portal: portal }, this._delegates.onSaveReturn);
+    },
+
+    recycle: function()
+    {
+        if (confirm('Are you sure you wish to recycle this application?'))
+        {
+            this.ajax('~/core/Portal/RecycleApp', null, function(result)
+            {
+                if (!result.HasError && result.Data)
+                {
+                    alert('Application Recycle command sent.  Press Ok to Refresh page');
+                    window.location.href = window.location.href;
+                }
+            });
+        }
     },
 
     newPortal: function()
@@ -131,6 +147,11 @@ videre.widgets.admin.portal = videre.widgets.base.extend(
     _onSaveClicked: function(e)
     {
         this.save();
+    },
+
+    _onRecycleClicked: function(e)
+    {
+        this.recycle();
     },
 
     _onNewClicked: function(e)

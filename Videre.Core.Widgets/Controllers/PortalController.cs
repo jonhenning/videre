@@ -27,6 +27,26 @@ namespace Videre.Core.Widgets.Controllers
             });
         }
 
+        public JsonResult<bool> RecycleApp()
+        {
+            return API.Execute<bool>(r =>
+            {
+                Security.VerifyActivityAuthorized("Portal", "Administration");
+                try
+                {
+                    //System.Web.HttpRuntime.UnloadAppDomain();
+                    //System.Web.Hosting.HostingEnvironment.InitiateShutdown();
+                    var configFile = Portal.ResolvePath("~/web.config");
+                    System.IO.File.SetLastWriteTimeUtc(configFile, DateTime.UtcNow);
+                    r.Data = true;
+                }
+                catch (Exception ex)
+                {
+                    r.AddError(ex.Message);
+                }
+            });
+        }
+
         public JsonResult<dynamic> SavePortal(CoreModels.Portal portal)
         {
             return API.Execute<dynamic>(r =>
