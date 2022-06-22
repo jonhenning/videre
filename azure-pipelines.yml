@@ -3,21 +3,20 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
+name: 2.4.$(Rev:r)
+
 trigger:
-- master
+- 2.4
 
 pr: none
 
 pool:
-  vmImage: 'windows-2019'
+  vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  Version.MajorMinor: '2.2'
-  Version.Revision: $[counter(variables['Version.MajorMinor'], 188)]
-  PackageVersion: '$(Version.MajorMinor).$(Version.Revision)'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -39,9 +38,9 @@ steps:
     Title: 'Code Endeavors Videre CMS'
     Description: 'Code Endeavors Videre CMS'
     Company: 'Code Endeavors, Inc.'
-    VersionNumber: '$(PackageVersion)'
-    FileVersionNumber: '$(PackageVersion)'
-    InformationalVersion: '$(PackageVersion)'
+    VersionNumber: '$(Build.BuildNumber)'
+    FileVersionNumber: '$(Build.BuildNumber)'
+    InformationalVersion: '$(Build.BuildNumber)'
     LogLevel: 'verbose'
     FailOnWarning: false
 
@@ -53,8 +52,7 @@ steps:
   inputs:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/redist/Videre.Core.nuspec'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'PackageVersion'
+    versioningScheme: byBuildNumber
     packDestination: '$(Build.SourcesDirectory)/redist'
    
 # - task: NuGetCommand@2
@@ -82,7 +80,7 @@ steps:
     action: 'create'
     target: '$(Build.SourceVersion)'
     tagSource: 'manual'
-    tag: 'v$(PackageVersion)'
+    tag: 'v$(Build.BuildNumber)'
     releaseNotesFile: 'releasenotes.md'
     assets: '$(Build.SourcesDirectory)/redist/*.zip'
     changeLogCompareToRelease: 'lastFullRelease'
