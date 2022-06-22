@@ -73,15 +73,15 @@ steps:
 
 # GitHub Release
 # Create, edit, or delete a GitHub release
-- task: GitHubRelease@0
-  inputs:
-    gitHubConnection: 'VidereGithub'
-    repositoryName: '$(Build.Repository.Name)'
-    action: 'create'
-    target: '$(Build.SourceVersion)'
-    tagSource: 'manual'
-    tag: 'v$(Build.BuildNumber)'
-    releaseNotesFile: 'releasenotes.md'
-    assets: '$(Build.SourcesDirectory)/redist/*.zip'
-    changeLogCompareToRelease: 'lastFullRelease'
-    changeLogType: 'commitBased'
+# - task: GitHubRelease@0
+#   inputs:
+#     gitHubConnection: 'VidereGithub'
+#     repositoryName: '$(Build.Repository.Name)'
+#     action: 'create'
+#     target: '$(Build.SourceVersion)'
+#     tagSource: 'manual'
+#     tag: 'v$(Build.BuildNumber)'
+#     releaseNotesFile: 'releasenotes.md'
+#     assets: '$(Build.SourcesDirectory)/redist/*.zip'
+#     changeLogCompareToRelease: 'lastFullRelease'
+#     changeLogType: 'commitBased'
