@@ -65,8 +65,8 @@
     <Reference Include="CodeEndeavors.Extensions, Version=2.1.62.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodeEndeavors.Extensions.2.1.62\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.1.8\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager, Version=2.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.1.9\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.3.11, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.3.3\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>

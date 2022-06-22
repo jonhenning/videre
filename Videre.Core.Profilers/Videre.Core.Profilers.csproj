@@ -53,11 +53,11 @@
     <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.2.1.8\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.Extensions, Version=2.1.62.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Extensions.2.1.62\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
+    <Reference Include="CodeEndeavors.Extensions, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Extensions.2.1.4\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.1.8\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager, Version=2.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.1.9\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
     </Reference>
     <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.2.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.2.5\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>

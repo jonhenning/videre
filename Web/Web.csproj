@@ -67,26 +67,26 @@
     <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.2.1.8\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.Extensions, Version=2.1.62.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Extensions.2.1.62\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
+    <Reference Include="CodeEndeavors.Extensions, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Extensions.2.1.4\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.1.8\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager, Version=2.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.1.9\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.File, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.File.2.1.8\lib\net45\CodeEndeavors.ResourceManager.File.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.File, Version=2.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.File.2.1.9\lib\net45\CodeEndeavors.ResourceManager.File.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.ServiceHost, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.ServiceHost.2.1.8\lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.ServiceHost, Version=2.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.ServiceHost.2.1.9\lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.SQLServer, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.1.8\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.SQLServer, Version=2.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ResourceManager.SQLServer.2.1.9\lib\net45\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
     </Reference>
     <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.2.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.2.5\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.Services.ResourceManager.ClientX.2.1.8\lib\net45\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
+    <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX, Version=2.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Services.ResourceManager.ClientX.2.1.9\lib\net45\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
