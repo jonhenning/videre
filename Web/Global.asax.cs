@@ -14,6 +14,7 @@ using Services = Videre.Core.Services;
 using Videre.Core.Providers;
 using System.Collections.Concurrent;
 using CodeEndeavors.ServiceHost.Common.Services.Profiler;
+using System.Linq;
 
 namespace Videre.Web
 {
@@ -124,6 +125,18 @@ namespace Videre.Web
                     using (var timing = new MemoryTiming(timer, "Routes, Binders Areas"))
                     {
                         AreaRegistration.RegisterAllAreas();    //todo: not really needed anymore!
+
+
+                        var jsonValueProviderFactory = Videre.Core.Services.Portal.GetAppSetting("JsonValueProviderFactory", "");
+
+                        if (!string.IsNullOrEmpty(jsonValueProviderFactory))
+                        {
+                            var provider = ReflectionExtensions.GetAllInstances<IJsonValueProviderFactory>().Where(p => p.Name.Equals(jsonValueProviderFactory, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                            if (provider != null)
+                                provider.Swap();
+                            else
+                                Services.Logging.Logger.Error("JsonValueProviderFactory not found: " + jsonValueProviderFactory);
+                        }
 
                         ModelBinders.Binders.DefaultBinder = new JsonNetModelBinder();
 
